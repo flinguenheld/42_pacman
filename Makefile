@@ -7,7 +7,7 @@ helix:
 	uv run hx .
 
 debug:
-	uv run python ${NAME}
+	uv run python ${NAME} test_config.json
 
 clean:
 	uv cache clean
