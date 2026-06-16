@@ -1,4 +1,18 @@
 {
   "highscore_filename": "test.txt",
-  "lives": 15
+  "lives": 15,
+  "pacgum": 42,
+
+  "points_per_ghost": 10,
+  "points_per_pacgum": 50,
+  "points_per_super_pacgum": 200,
+
+  // Comment C
+  /* Comment C */
+  #  Comment Python
+  """ Comment Python """
+  ''' Comment Python '''
+
+  "seed": 42,
+  "level_max_time": 90
 }

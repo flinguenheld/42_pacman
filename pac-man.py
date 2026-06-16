@@ -1,17 +1,28 @@
-from src.config.config import read_config, ConfigError
-
-# def usage()->str:
-#     return "pac-man"
+import sys
+from termcolor import cprint
+from src.utils.usage import print_usage
+from src.config.utils import get_config, ConfigError
 
 
 def main() -> None:
-    print("Hello from 42-pacman!")
 
     try:
-        read_config()
+        if len(sys.argv) != 2:
+            raise ConfigError("Wrong argument.")
+
+        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+            print_usage()
+            exit()
+
+        else:
+            get_config(sys.argv[1])
+
+        print("Hello from 42-pacman!")
 
     except ConfigError as e:
-        print(f"Error: {e}")
+        cprint(f"Error: {e}\n", "light_red")
+        print_usage(file=sys.stderr)
+        exit(1)
 
 
 if __name__ == "__main__":
