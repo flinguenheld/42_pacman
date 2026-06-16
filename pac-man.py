@@ -1,3 +1,4 @@
+from src.visual.vmain import VMain
 import sys
 from termcolor import cprint
 from src.utils.usage import print_usage
@@ -16,6 +17,9 @@ def main() -> None:
 
         else:
             get_config(sys.argv[1])
+            window = VMain()
+            window.setup()
+            window.run()
 
         print("Hello from 42-pacman!")
 
