@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by [nopons](https://github.com/npons971), [flinguen](https://linguenheld.net/)*
+*This project has been created as part of the 42 curriculum by [yguardio](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dogster.com%2Fwp-content%2Fuploads%2F2024%2F03%2FBelgian-Malinois-e1687773644653.jpeg&f=1&nofb=1&ipt=ca1a3f1c8be458d97acbcc912e6c039bae22087c69654d231ae137c8fa62bff8), [flinguen](https://linguenheld.net/)*
 
 ### 42_pacman
 Ghosts! More ghosts!

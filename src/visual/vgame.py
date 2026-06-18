@@ -1,10 +1,14 @@
 import arcade
+from arcade import SpriteList
 
 from src.visual import ViewNames
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.x = 100
@@ -13,11 +17,7 @@ class VGame(arcade.View):
         self.vel_x = 0
         self.vel_y = 0
 
-        self.all_sprites = arcade.SpriteList()
-
-        # def setup(self):
-        # def on_show_view(self):
-        """Set up the game here. Call this function to restart the game."""
+        self.all_sprites: SpriteList = arcade.SpriteList()
 
         self.player = arcade.Sprite("src/visual/sprites/hen.png", 1)
 
@@ -26,18 +26,20 @@ class VGame(arcade.View):
         # self.player.left = 10
         self.all_sprites.append(self.player)
 
-    def on_show_view(self):
+    def setup(self) -> None:
+        """Set up the game here. Call this function to restart the game."""
+        pass
+
+    def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
 
-    def on_draw(self):
-        """Draw everything"""
+    # ########################################################################
+    # ##################################################### DRAW / UPDATE ####
+    def on_draw(self) -> None:
         self.clear()
-
         self.all_sprites.draw()
 
-        # arcade.finish_render()
-
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: int | float) -> None:
         speed = 200
         self.player.center_x += self.vel_x * delta_time * speed
         self.player.center_y += self.vel_y * delta_time * speed
@@ -47,7 +49,9 @@ class VGame(arcade.View):
         elif self.vel_y != 0:
             self.player.angle -= 1
 
-    def on_key_press(self, symbol, modifiers):
+    # ########################################################################
+    # ############################################################## KEYS ####
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         if symbol == arcade.key.LEFT:
             self.vel_x = -1
         if symbol == arcade.key.RIGHT:
@@ -60,7 +64,7 @@ class VGame(arcade.View):
         if symbol == arcade.key.M:
             self.window.switch_view(ViewNames.VIEW_MENU)
 
-    def on_key_release(self, symbol, modifiers):
+    def on_key_release(self, symbol: int, modifiers: int) -> None:
 
         self.player.angle += 10
 
