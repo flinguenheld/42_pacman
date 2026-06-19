@@ -7,9 +7,13 @@ requires-python = ">=3.13"
 dependencies = [
     "arcade>=3.3.3",
     "flake8>=7.3.0",
+    "mazegenerator",
     "mypy>=2.1.0",
     "pydantic>=2.13.4",
     "ruff>=0.15.17",
     "termcolor>=3.3.0",
     "ty>=0.0.49",
 ]
+
+[tool.uv.sources]
+mazegenerator = { path = "mazegenerator-00001-py3-none-any.whl" }

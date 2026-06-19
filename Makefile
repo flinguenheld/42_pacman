@@ -1,7 +1,7 @@
-NAME="pac-man.py"
+NAME=pac-man.py
 
 install:
-	uv sync
+	UV_SKIP_WHEEL_FILENAME_CHECK=1 uv sync
 
 helix:
 	uv run hx .
@@ -10,7 +10,6 @@ debug:
 	uv run python ${NAME} test_config.json
 
 clean:
-	uv cache clean
 	rm -rf __pycache__ .mypy_cache .venv
 
 lint:
