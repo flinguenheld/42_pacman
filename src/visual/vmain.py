@@ -4,6 +4,7 @@ import arcade
 from src.visual import ViewNames
 from src.visual.vgame import VGame
 from src.visual.vmenu import VMenu
+from mazegenerator import MazeGenerator
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░█▀█░▀█▀░█▀█░░
@@ -15,7 +16,9 @@ class VMain(arcade.Window):
 
     def __init__(self) -> None:
         super().__init__(VMain.WIDTH, self.HEIGHT, "Hello")
-
+        self.maze_generator = MazeGenerator()
+        self.maze_generator.generate()
+        print(self.maze_generator.maze)
         self.vmenu = VMenu()
         self.vgame = VGame()
 
