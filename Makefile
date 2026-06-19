@@ -4,10 +4,10 @@ install:
 	UV_SKIP_WHEEL_FILENAME_CHECK=1 uv sync
 
 helix:
-	uv run hx .
+	UV_SKIP_WHEEL_FILENAME_CHECK=1 uv run hx .
 
 debug:
-	uv run python ${NAME} test_config.json
+	UV_SKIP_WHEEL_FILENAME_CHECK=1 uv run python ${NAME} test_config.json
 
 clean:
 	rm -rf __pycache__ .mypy_cache .venv
