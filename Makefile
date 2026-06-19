@@ -1,21 +1,22 @@
-NAME="pac-man.py"
+NAME=pac-man.py
+UV=UV_SKIP_WHEEL_FILENAME_CHECK=1 uv
+
 
 install:
-	uv sync
+	${UV} sync
 
 helix:
-	uv run hx .
+	${UV} run hx .
 
 debug:
-	uv run python ${NAME} test_config.json
+	${UV} run python ${NAME} test_config.json
 
 clean:
-	uv cache clean
 	rm -rf __pycache__ .mypy_cache .venv
 
 lint:
-	uv run flake8 . --extend-exclude '.venv/'
-	uv run mypy . --warn-return-any \
+	${UV} run flake8 . --extend-exclude '.venv/'
+	${UV} run mypy . --warn-return-any \
 			--warn-unused-ignores \
 			--ignore-missing-imports \
 			--disallow-untyped-defs \
