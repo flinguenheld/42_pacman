@@ -1,7 +1,7 @@
 import arcade
 from arcade import SpriteList
 
-from src.visual import ViewNames
+from src.visual import VNames
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -52,17 +52,20 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        if symbol == arcade.key.LEFT:
-            self.vel_x = -1
-        if symbol == arcade.key.RIGHT:
-            self.vel_x = 1
-        if symbol == arcade.key.UP:
-            self.vel_y = 1
-        if symbol == arcade.key.DOWN:
-            self.vel_y = -1
 
         if symbol == arcade.key.M:
-            self.window.switch_view(ViewNames.VIEW_MENU)
+            self.window.switch_view(VNames.VIEW_MENU)
+        elif symbol == arcade.key.P:
+            self.window.switch_view(VNames.VIEW_PAUSE)
+
+        elif symbol == arcade.key.LEFT:
+            self.vel_x = -1
+        elif symbol == arcade.key.RIGHT:
+            self.vel_x = 1
+        elif symbol == arcade.key.UP:
+            self.vel_y = 1
+        elif symbol == arcade.key.DOWN:
+            self.vel_y = -1
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
 
@@ -70,9 +73,9 @@ class VGame(arcade.View):
 
         if symbol == arcade.key.LEFT:
             self.vel_x = 0
-        if symbol == arcade.key.RIGHT:
+        elif symbol == arcade.key.RIGHT:
             self.vel_x = 0
-        if symbol == arcade.key.UP:
+        elif symbol == arcade.key.UP:
             self.vel_y = 0
-        if symbol == arcade.key.DOWN:
+        elif symbol == arcade.key.DOWN:
             self.vel_y = 0

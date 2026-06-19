@@ -1,9 +1,10 @@
 from __future__ import annotations
+from src.visual.vpause import VPause
 
 import arcade
-from src.visual import ViewNames
 from src.visual.vgame import VGame
 from src.visual.vmenu import VMenu
+from src.visual import VNames, VData
 from mazegenerator import MazeGenerator
 
 
@@ -11,14 +12,14 @@ from mazegenerator import MazeGenerator
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░░█░░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░░
 class VMain(arcade.Window):
-    HEIGHT = 800
-    WIDTH = 1000
-
     def __init__(self) -> None:
-        super().__init__(VMain.WIDTH, self.HEIGHT, "Hello")
+        super().__init__(VData.WIDTH, VData.HEIGHT, "Pac-man")
         self.maze_generator = MazeGenerator()
         self.maze_generator.generate()
         print(self.maze_generator.maze)
+
+        arcade.resources.load_kenney_fonts()
+
         self.vmenu = VMenu()
         self.vgame = VGame()
 
@@ -30,9 +31,11 @@ class VMain(arcade.Window):
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
-    def switch_view(self, to: ViewNames) -> None:
+    def switch_view(self, to: VNames) -> None:
         match to:
-            case ViewNames.VIEW_MENU:
+            case VNames.VIEW_MENU:
                 self.show_view(self.vmenu)
-            case ViewNames.VIEW_GAME:
+            case VNames.VIEW_GAME:
                 self.show_view(self.vgame)
+            case VNames.VIEW_PAUSE:
+                self.show_view(VPause())

@@ -2,7 +2,7 @@ from arcade.gui import UIEvent
 import arcade
 import arcade.gui
 
-from src.visual import ViewNames
+from src.visual import VNames
 
 # GUI tutorial ##
 # https://api.arcade.academy/en/latest/tutorials/menu/index.html
@@ -44,15 +44,15 @@ class VMenu(arcade.View):
         # button events --
         @bt_play.event("on_click")
         def on_click_play_button(event: UIEvent) -> None:
-            self.window.switch_view(ViewNames.VIEW_GAME)
+            self.window.switch_view(VNames.VIEW_GAME)
 
         @bt_options.event("on_click")
         def on_click_options_button(event: UIEvent) -> None:
-            self.window.switch_view(ViewNames.VIEW_GAME)
+            self.window.switch_view(VNames.VIEW_GAME)
 
         @bt_scores.event("on_click")
         def on_click_scores_button(event: UIEvent) -> None:
-            self.window.switch_view(ViewNames.VIEW_GAME)
+            self.window.switch_view(VNames.VIEW_GAME)
 
         @bt_exit.event("on_click")
         def on_click_exit_button(event: UIEvent) -> None:
@@ -99,4 +99,4 @@ class VMenu(arcade.View):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.window.switch_view(ViewNames.VIEW_GAME)
+        self.window.switch_view(VNames.VIEW_GAME)
