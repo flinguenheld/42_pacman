@@ -14,11 +14,15 @@ class VNames(Enum):
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░░█░░█▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀▀░░▀░▀░░▀░░▀░▀░░
 class VData:
-    HEIGHT: int = 800
-    WIDTH: int = 1000
+    HEIGHT: int = 1000
+    WIDTH: int = 1200
 
     CENTER_X: int = WIDTH // 2
     CENTER_Y: int = HEIGHT // 2
 
     FONT_SIZE: int = 15
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
+
+    SPRITES = "src/visual/sprites/"
+    SPRITE_SIZE = 24
+    SPRITE_SHIFT = 50
