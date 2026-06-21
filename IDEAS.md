@@ -1,0 +1,2 @@
+- Maze class (MazeGenerator wrapper)
+    - Store maze data as Set of 2D coordinates
