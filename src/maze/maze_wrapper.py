@@ -10,7 +10,9 @@ from dataclasses import dataclass, field
 class Maze:
     seed: int = 42
     size: Vec2 = Vec2(15, 15)
-    maze: dict[Vec2, str] = field(init=False, default_factory=dict)
+    walls: dict[Vec2, str] = field(init=False, default_factory=dict)
+    paths: set[Vec2] = field(init=False, default_factory=set)
+    forty_two: set[Vec2] = field(init=False, default_factory=set)
     raw_maze: list[list[int]] = field(init=False, default_factory=list)
 
     # ########################################################################
@@ -23,8 +25,34 @@ class Maze:
         ).maze
 
     # ########################################################################
+    # ######################################################## BUILD PATH ####
+    def build_path(self):
+
+        for raw_y, row in enumerate(reversed(self.raw_maze)):
+            for raw_x, value in enumerate(row):
+                # Get real coordinates
+                y = raw_y * 2 + 1
+                x = raw_x * 2 + 1
+
+        for y in range(len(self.raw_maze) * 2):
+            for x in range(len(self.raw_maze[0]) * 2):
+                # Reverse -_-'
+                rev_y = len(self.raw_maze) * 2 - y
+
+                point = Vec2(x, rev_y)
+
+                # Do not add 42
+                if x % 2 != 0 and y % 2 != 0:
+                    if self.raw_maze[y // 2][x // 2] & 0b1111 == 0b1111:
+                        self.forty_two.add(point)
+                        continue
+
+                if point not in self.walls:
+                    self.paths.add(point)
+
+    # ########################################################################
     # ######################################################## BUILD MAZE ####
-    def build_maze(self) -> None:
+    def build_walls(self) -> None:
         """
         Loop in the raw maze to fill maze
         !! Arcade works from bottom left with X, Y !!
@@ -54,12 +82,12 @@ class Maze:
 
         def add_maze_entry(where: Vec2, what: str) -> None:
             """Add what in where and sort letters"""
-            if where in self.maze:
-                if what not in self.maze[where]:
-                    self.maze[where] += what
-                    self.maze[where] = "".join(sorted(self.maze[where]))
+            if where in self.walls:
+                if what not in self.walls[where]:
+                    self.walls[where] += what
+                    self.walls[where] = "".join(sorted(self.walls[where]))
             else:
-                self.maze[where] = what
+                self.walls[where] = what
 
         # Loop in the maze draw where it's open
         for raw_y, row in enumerate(reversed(self.raw_maze)):

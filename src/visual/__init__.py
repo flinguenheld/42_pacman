@@ -23,7 +23,7 @@ class VData:
     FONT_SIZE: int = 15
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 
-    SPRITES = "sprites/"
+    SPRITES = "sprites"
     SPRITE_SIZE = 32
     # SPRITE_SIZE = 16
     SPRITE_SHIFT = 50
