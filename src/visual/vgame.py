@@ -3,9 +3,9 @@ from __future__ import annotations
 import arcade
 from arcade import SpriteList, Vec2
 
-from src.visual.swall import SWall
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
+from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
 from src.visual.sprites.sforty_two import SFortyTwo
 
