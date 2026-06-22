@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import arcade
 from arcade import SpriteList, Vec2
 
+from src.visual.swall import SWall
 from src.visual import VNames, VData
-from src.maze.maze_wrapper import Maze
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -18,7 +20,7 @@ class VGame(arcade.View):
         self.vel_x = 0
         self.vel_y = 0
 
-        self.walls: SpriteList = arcade.SpriteList()
+        self.walls: SWall = SWall()
         self.all_sprites: SpriteList = arcade.SpriteList()
 
         self.player = arcade.Sprite(VData.SPRITES + "hen.png", 1)
@@ -33,18 +35,9 @@ class VGame(arcade.View):
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
 
-        self.maze_gen = Maze(42, Vec2(15, 15))
-        self.maze_gen.generate_new_maze()
-        self.maze_gen.build_maze()
-
-        for point, value in self.maze_gen.maze.items():
-            self.walls.append(
-                arcade.Sprite(
-                    path_or_texture=f"{VData.SPRITES}wall_{value}.png",
-                    center_x=VData.SPRITE_SHIFT + VData.SPRITE_SIZE * point.x,
-                    center_y=VData.SPRITE_SHIFT + VData.SPRITE_SIZE * point.y,
-                )
-            )
+        self.walls.new_maze(42, Vec2(20, 20))
+        self.walls.change_style(SWall.Style.Basic)
+        # self.walls.change_style(WallSprites.Style.Tree)
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
@@ -54,7 +47,7 @@ class VGame(arcade.View):
     def on_draw(self) -> None:
         self.clear()
         self.all_sprites.draw()
-        self.walls.draw()
+        self.walls.sprites.draw()
 
     def on_update(self, delta_time: int | float) -> None:
         speed = 200
@@ -74,6 +67,8 @@ class VGame(arcade.View):
             self.window.switch_view(VNames.VIEW_MENU)
         elif symbol == arcade.key.P:
             self.window.switch_view(VNames.VIEW_PAUSE)
+        elif symbol == arcade.key.S:
+            self.walls.change_style(SWall.Style.Tree)
 
         elif symbol == arcade.key.LEFT:
             self.vel_x = -1

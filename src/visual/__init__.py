@@ -14,8 +14,8 @@ class VNames(Enum):
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░░█░░█▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀▀░░▀░▀░░▀░░▀░▀░░
 class VData:
-    HEIGHT: int = 1000
-    WIDTH: int = 1200
+    HEIGHT: int = 2000
+    WIDTH: int = 2200
 
     CENTER_X: int = WIDTH // 2
     CENTER_Y: int = HEIGHT // 2
@@ -23,6 +23,7 @@ class VData:
     FONT_SIZE: int = 15
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 
-    SPRITES = "src/visual/sprites/"
-    SPRITE_SIZE = 24
+    SPRITES = "sprites/"
+    SPRITE_SIZE = 32
+    # SPRITE_SIZE = 16
     SPRITE_SHIFT = 50

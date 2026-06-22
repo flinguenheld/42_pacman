@@ -25,16 +25,6 @@ class Maze:
     # ########################################################################
     # ######################################################## BUILD MAZE ####
     def build_maze(self) -> None:
-
-        def add_maze_entry(where: Vec2, what: str) -> None:
-            """Add what in where and sort letters"""
-            if where in self.maze:
-                if what not in self.maze[where]:
-                    self.maze[where] += what
-                    self.maze[where] = "".join(sorted(self.maze[where]))
-            else:
-                self.maze[where] = what
-
         """
         Loop in the raw maze to fill maze
         !! Arcade works from bottom left with X, Y !!
@@ -61,6 +51,15 @@ class Maze:
              6  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
                 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
         """
+
+        def add_maze_entry(where: Vec2, what: str) -> None:
+            """Add what in where and sort letters"""
+            if where in self.maze:
+                if what not in self.maze[where]:
+                    self.maze[where] += what
+                    self.maze[where] = "".join(sorted(self.maze[where]))
+            else:
+                self.maze[where] = what
 
         # Loop in the maze draw where it's open
         for raw_y, row in enumerate(reversed(self.raw_maze)):
