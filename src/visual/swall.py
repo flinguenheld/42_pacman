@@ -1,6 +1,6 @@
 from __future__ import annotations
-import random
 
+import random
 import arcade
 from arcade import Vec2
 
@@ -13,24 +13,23 @@ from src.visual.sprites.sprites import Sprites
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class SWall(Sprites):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__("wall")
 
     # ########################################################################
     # ############################################################ RELOAD ####
     def reload(self, data: dict[Vec2, str] | set[Vec2]) -> None:
-        super().reload(data)
 
         if not isinstance(data, dict):
             raise ValueError("SWall only accepts a dictionary as data.")
 
         # --
-        self.sprites.clear()
+        super().reload_info()
         for point, value in data.items():
-            if self.info["wall"]["from_list"]:
-                file_name = random.choice(self.info["wall"]["files"])
-                path_sprite = f"{self.path}/{file_name}.png"
-            else:
+            if self.info["wall"]["angles"]:
                 path_sprite = f"{self.path}/{value}.png"
+            else:
+                file_name = random.choice(self._list_files(self.file_basename))
+                path_sprite = f"{self.path}/{file_name}"
 
             self.sprites.append(
                 arcade.Sprite(

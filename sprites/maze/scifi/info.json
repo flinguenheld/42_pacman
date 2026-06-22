@@ -1,0 +1,7 @@
+{
+  "url": "https://kenney.nl/assets/sci-fi-rts",
+  "size": 128,
+  "wall":{
+    "angles": true
+  }
+}

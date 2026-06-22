@@ -1,13 +1,7 @@
 {
+  "url": "https://kenney.nl/assets/retro-textures-fantasy",
   "size": 64,
   "wall":{
-    "from_list": true,
-    "files": ["timber_square_planks", "timber_square_planks_boarded", "timber_square_planks_cross", "timber_square_planks_diagonal"]
-  },
-  "floor":{
-    "files": ["floor", "floor_damaged"]
-  },
-  "forty_two":{
-    "files": ["window_square_pane_lit"]
+    "angles": false
   }
 }

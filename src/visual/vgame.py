@@ -1,5 +1,4 @@
 from __future__ import annotations
-from src.visual.sprites.sforty_two import SFortyTwo
 
 import arcade
 from arcade import SpriteList, Vec2
@@ -8,7 +7,30 @@ from src.visual.swall import SWall
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.sfloor import SFloor
-from src.visual.sprites.sprites import Sprites
+from src.visual.sprites.sforty_two import SFortyTwo
+
+
+# TODO: KEEP ?? - RENAME ?? - MOVE ??
+class SpriteManager:
+    def __init__(self) -> None:
+        self.walls: SWall = SWall()
+        self.floors: SFloor = SFloor()
+        self.forty_two: SFortyTwo = SFortyTwo()
+
+    def next_style(self) -> None:
+        self.walls.next_style()
+        self.floors.next_style()
+        self.forty_two.next_style()
+
+    def reload(self, maze: Maze) -> None:
+        self.walls.reload(maze.walls)
+        self.floors.reload(maze.floors)
+        self.forty_two.reload(maze.forty_two)
+
+    def draw(self) -> None:
+        self.walls.sprites.draw()
+        self.floors.sprites.draw()
+        self.forty_two.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -24,21 +46,14 @@ class VGame(arcade.View):
         self.vel_x = 0
         self.vel_y = 0
 
-        # TODO: CREATE A MANAGER #####################
-        # TODO: CREATE A MANAGER #####################
-        # TODO: CREATE A MANAGER #####################
-        self.walls: SWall = SWall()
-        self.floors: SFloor = SFloor()
-        self.forty_two: SFortyTwo = SFortyTwo()
+        self.sprite_manager = SpriteManager()
 
-        self.all_sprites: SpriteList = arcade.SpriteList()
-
+        self.sprite_test: SpriteList = arcade.SpriteList()
         self.player = arcade.Sprite(VData.SPRITES + "/hen.png", 1)
 
         self.player.center_y = 150
         self.player.center_x = 150
-        # self.player.left = 10
-        self.all_sprites.append(self.player)
+        self.sprite_test.append(self.player)
 
         self.setup()
 
@@ -47,9 +62,7 @@ class VGame(arcade.View):
 
         # Create a maze
         self.new_maze(42, Vec2(20, 20))
-
-        self.change_style(SWall.Style.Fantasy)
-        # self.walls.change_style(WallSprites.Style.Tree)
+        self.sprite_manager.reload(self.maze_gen)
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
@@ -60,29 +73,14 @@ class VGame(arcade.View):
         self.maze_gen = Maze(seed, size)
         self.maze_gen.generate_new_maze()
         self.maze_gen.build_walls()
-        self.maze_gen.build_path()
-
-    def change_style(self, style: Sprites.Style):
-        self.walls.style = style
-        self.walls.reload(self.maze_gen.walls)
-
-        # TODO: RENAME MAZE_GEN PATH -> FLOOR ???
-        self.floors.style = style
-        self.floors.reload(self.maze_gen.paths)
-
-        self.forty_two.style = style
-        self.forty_two.reload(self.maze_gen.forty_two)
+        self.maze_gen.build_floors()
 
     # ########################################################################
     # ##################################################### DRAW / UPDATE ####
     def on_draw(self) -> None:
         self.clear()
-        self.all_sprites.draw()
-
-        # TODO: add a draw method in SWall ?
-        self.walls.sprites.draw()
-        self.floors.sprites.draw()
-        self.forty_two.sprites.draw()
+        self.sprite_manager.draw()
+        self.sprite_test.draw()
 
     def on_update(self, delta_time: int | float) -> None:
         speed = 200
@@ -104,13 +102,8 @@ class VGame(arcade.View):
             self.window.switch_view(VNames.VIEW_PAUSE)
 
         elif symbol == arcade.key.S:
-            match self.walls.current:
-                case SWall.Style.Basic:
-                    self.walls.change_style(SWall.Style.Tree)
-                case SWall.Style.Tree:
-                    self.walls.change_style(SWall.Style.PixelWater)
-                case SWall.Style.PixelWater:
-                    self.walls.change_style(SWall.Style.Basic)
+            self.sprite_manager.next_style()
+            self.sprite_manager.reload(self.maze_gen)
 
         elif symbol == arcade.key.LEFT:
             self.vel_x = -1

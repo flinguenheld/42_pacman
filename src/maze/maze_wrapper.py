@@ -11,7 +11,7 @@ class Maze:
     seed: int = 42
     size: Vec2 = Vec2(15, 15)
     walls: dict[Vec2, str] = field(init=False, default_factory=dict)
-    paths: set[Vec2] = field(init=False, default_factory=set)
+    floors: set[Vec2] = field(init=False, default_factory=set)
     forty_two: set[Vec2] = field(init=False, default_factory=set)
     raw_maze: list[list[int]] = field(init=False, default_factory=list)
 
@@ -24,31 +24,24 @@ class Maze:
             seed=self.seed,
         ).maze
 
+    # TODO: SET REAL COORDINATES HERE ??????? with the size ????????
+
     # ########################################################################
-    # ######################################################## BUILD PATH ####
-    def build_path(self):
-
-        for raw_y, row in enumerate(reversed(self.raw_maze)):
-            for raw_x, value in enumerate(row):
-                # Get real coordinates
-                y = raw_y * 2 + 1
-                x = raw_x * 2 + 1
-
+    # ###################################################### BUILD FLOORS ####
+    def build_floors(self) -> None:
         for y in range(len(self.raw_maze) * 2):
             for x in range(len(self.raw_maze[0]) * 2):
-                # Reverse -_-'
-                rev_y = len(self.raw_maze) * 2 - y
+                reversed_y = len(self.raw_maze) * 2 - y
+                point = Vec2(x, reversed_y)
 
-                point = Vec2(x, rev_y)
-
-                # Do not add 42
+                # Keep fortytwo in its own set
                 if x % 2 != 0 and y % 2 != 0:
                     if self.raw_maze[y // 2][x // 2] & 0b1111 == 0b1111:
                         self.forty_two.add(point)
                         continue
 
                 if point not in self.walls:
-                    self.paths.add(point)
+                    self.floors.add(point)
 
     # ########################################################################
     # ######################################################## BUILD MAZE ####

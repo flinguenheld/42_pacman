@@ -1,0 +1,7 @@
+{
+  "url": "https://kenney.nl/assets/medieval-rts",
+  "size": 128,
+  "wall":{
+    "angles": true
+  }
+}

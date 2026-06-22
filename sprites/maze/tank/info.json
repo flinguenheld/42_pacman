@@ -1,0 +1,7 @@
+{
+  "url": "https://kenney.nl/assets/top-down-tanks",
+  "size": 128,
+  "wall":{
+    "angles": true
+  }
+}
