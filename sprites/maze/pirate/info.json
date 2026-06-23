@@ -1,0 +1,10 @@
+{
+  "url": "https://kenney.nl/assets/tiny-town",
+  "size": 16,
+  "wall":{
+    "angles": true
+  },
+  "floor":{
+    "angles": false
+  }
+}

@@ -21,7 +21,7 @@ class Sprites:
         Medieval = "medieval"
         Scifi = "scifi"
         Tank = "tank"
-        Test = "test"
+        Test = "pirate"
 
     def __init__(self, folder: str) -> None:
         self.sprites: SpriteList = SpriteList()
@@ -60,8 +60,10 @@ class Sprites:
     def add_sub_sprite(self, center: Vec2, iner: Vec2, filename: str):
         def to_real_coordinate(point: Vec2) -> Vec2:
             return Vec2(
-                VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE * 3,
-                VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE * 3,
+                VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE * 2,
+                VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE * 2,
+                # VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE * 3,
+                # VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE * 3,
             )
 
         # Real coordinates --
@@ -69,14 +71,15 @@ class Sprites:
         path_sprite = f"{self.path}/{file_name}"
         point = to_real_coordinate(center)
         point = Vec2(
-            point.x + VData.SPRITE_SIZE * iner.x,
-            point.y + VData.SPRITE_SIZE * iner.y,
+            point.x + VData.SPRITE_SIZE * iner.x * 0.5,
+            point.y + VData.SPRITE_SIZE * iner.y * 0.5,
         )
 
         self.sprites.append(
             arcade.Sprite(
                 path_or_texture=path_sprite,
-                scale=0.25,
+                # scale=0.25,
+                scale=1,
                 center_x=point.x,
                 center_y=point.y,
             )
@@ -128,10 +131,10 @@ class Sprites:
 
             self.add_sub_sprite(point, Vec2(0, 0), "middle")
 
-            strait(is_top, Vec2(0, 1), "top")
-            strait(is_bot, Vec2(0, -1), "bot")
-            strait(is_right, Vec2(1, 0), "right")
-            strait(is_left, Vec2(-1, 0), "left")
+            # strait(is_top, Vec2(0, 1), "top")
+            # strait(is_bot, Vec2(0, -1), "bot")
+            # strait(is_right, Vec2(1, 0), "right")
+            # strait(is_left, Vec2(-1, 0), "left")
 
             angles(is_left, is_top, is_top_left, Vec2(-1, 1), "left", "top")
             angles(is_right, is_top, is_top_right, Vec2(1, 1), "right", "top")
