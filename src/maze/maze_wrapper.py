@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 class Maze:
     seed: int = 42
     size: Vec2 = Vec2(15, 15)
-    walls: dict[Vec2, str] = field(init=False, default_factory=dict)
+    walls: set[Vec2] = field(init=False, default_factory=set)
     floors: set[Vec2] = field(init=False, default_factory=set)
     forty_two: set[Vec2] = field(init=False, default_factory=set)
     raw_maze: list[list[int]] = field(init=False, default_factory=list)
@@ -73,15 +73,6 @@ class Maze:
                 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
         """
 
-        def add_maze_entry(where: Vec2, what: str) -> None:
-            """Add what in where and sort letters"""
-            if where in self.walls:
-                if what not in self.walls[where]:
-                    self.walls[where] += what
-                    self.walls[where] = "".join(sorted(self.walls[where]))
-            else:
-                self.walls[where] = what
-
         # Loop in the maze draw where it's open
         for raw_y, row in enumerate(reversed(self.raw_maze)):
             for raw_x, value in enumerate(row):
@@ -91,21 +82,21 @@ class Maze:
 
                 # --
                 if value & 0b0001 == 0b0001:  # Top
-                    add_maze_entry(Vec2(x, y + 1), "LR")
-                    add_maze_entry(Vec2(x - 1, y + 1), "R")
-                    add_maze_entry(Vec2(x + 1, y + 1), "L")
+                    self.walls.add(Vec2(x, y + 1))
+                    self.walls.add(Vec2(x - 1, y + 1))
+                    self.walls.add(Vec2(x + 1, y + 1))
 
                 if value & 0b0100 == 0b0100:  # Bottom
-                    add_maze_entry(Vec2(x, y - 1), "LR")
-                    add_maze_entry(Vec2(x - 1, y - 1), "R")
-                    add_maze_entry(Vec2(x + 1, y - 1), "L")
+                    self.walls.add(Vec2(x, y - 1))
+                    self.walls.add(Vec2(x - 1, y - 1))
+                    self.walls.add(Vec2(x + 1, y - 1))
 
                 if value & 0b1000 == 0b1000:  # Left
-                    add_maze_entry(Vec2(x - 1, y), "BT")
-                    add_maze_entry(Vec2(x - 1, y - 1), "T")
-                    add_maze_entry(Vec2(x - 1, y + 1), "B")
+                    self.walls.add(Vec2(x - 1, y))
+                    self.walls.add(Vec2(x - 1, y - 1))
+                    self.walls.add(Vec2(x - 1, y + 1))
 
                 if value & 0b0010 == 0b0010:  # Right
-                    add_maze_entry(Vec2(x + 1, y), "BT")
-                    add_maze_entry(Vec2(x + 1, y - 1), "T")
-                    add_maze_entry(Vec2(x + 1, y + 1), "B")
+                    self.walls.add(Vec2(x + 1, y))
+                    self.walls.add(Vec2(x + 1, y - 1))
+                    self.walls.add(Vec2(x + 1, y + 1))

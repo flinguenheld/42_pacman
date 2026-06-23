@@ -52,17 +52,33 @@ class Sprites:
         self.sprites.clear()
 
     # ########################################################################
+    # ################################################### ANGLED FILENAME ####
+    def get_angled_filename(self, point: Vec2, data: set[Vec2]) -> str:
+        file_name = self.file_basename + "_"
+
+        if Vec2(point.x, point.y - 1) in data:
+            file_name += "B"
+        if Vec2(point.x - 1, point.y) in data:
+            file_name += "L"
+        if Vec2(point.x + 1, point.y) in data:
+            file_name += "R"
+        if Vec2(point.x, point.y + 1) in data:
+            file_name += "T"
+
+        return file_name
+
+    # ########################################################################
     # ############################################################ RELOAD ####
-    def reload(self, data: dict[Vec2, str] | set[Vec2]) -> None:
+    def reload(self, data: set[Vec2]) -> None:
 
-        if not isinstance(data, set):
-            raise ValueError("Sprite only accepts a set as data.")
-
-        # --
         self.reload_info()
         for point in data:
-            file_name = random.choice(self._list_files(self.file_basename))
-            path_sprite = f"{self.path}/{file_name}"
+            if self.info[self.file_basename]["angles"]:
+                file_name = self.get_angled_filename(point, data)
+                path_sprite = f"{self.path}/{file_name}.png"
+            else:
+                file_name = random.choice(self._list_files(self.file_basename))
+                path_sprite = f"{self.path}/{file_name}"
 
             self.sprites.append(
                 arcade.Sprite(

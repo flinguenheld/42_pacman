@@ -3,5 +3,8 @@
   "size": 128,
   "wall":{
     "angles": true
+  },
+  "floor":{
+    "angles": false
   }
 }
