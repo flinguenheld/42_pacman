@@ -20,17 +20,17 @@ class SpriteManager:
     def next_style(self) -> None:
         self.walls.next_style()
         self.floors.next_style()
-        self.forty_two.next_style()
+        # self.forty_two.next_style()
 
     def reload(self, maze: Maze) -> None:
-        self.walls.reload(maze.walls)
+        self.walls.reload(maze.walls.union(maze.forty_two))
         self.floors.reload(maze.floors)
-        self.forty_two.reload(maze.forty_two)
+        # self.forty_two.reload(maze.forty_two)
 
     def draw(self) -> None:
         self.walls.sprites.draw()
         self.floors.sprites.draw()
-        self.forty_two.sprites.draw()
+        # self.forty_two.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -61,11 +61,11 @@ class VGame(arcade.View):
         """Set up the game here. Call this function to restart the game."""
 
         # Create a maze
-        self.new_maze(42, Vec2(20, 20))
+        self.new_maze(42, Vec2(15, 15))
         self.sprite_manager.reload(self.maze_gen)
 
     def on_show_view(self) -> None:
-        arcade.set_background_color(arcade.color.WHITE_SMOKE)
+        arcade.set_background_color(arcade.color.WARM_BLACK)
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
