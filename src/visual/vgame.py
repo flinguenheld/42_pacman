@@ -7,6 +7,7 @@ from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
+from src.visual.vplayer import Player
 
 
 # TODO: KEEP ?? - RENAME ?? - MOVE ??
@@ -44,10 +45,8 @@ class VGame(arcade.View):
         self.sprite_manager = SpriteManager()
 
         self.sprite_test: SpriteList[Sprite] = arcade.SpriteList()
-        self.player = arcade.Sprite(VData.SPRITES + "/hen.png", 1)
+        self.player = Player()
 
-        self.player.center_y = 150
-        self.player.center_x = 150
         self.sprite_test.append(self.player)
 
         self.setup()
@@ -78,14 +77,7 @@ class VGame(arcade.View):
         self.sprite_test.draw()
 
     def on_update(self, delta_time: int | float) -> None:
-        speed = 200
-        self.player.center_x += self.vel_x * delta_time * speed
-        self.player.center_y += self.vel_y * delta_time * speed
-
-        if self.vel_x != 0:
-            self.player.angle += 1
-        elif self.vel_y != 0:
-            self.player.angle -= 1
+        self.player.update(delta_time)
 
     # ########################################################################
     # ############################################################## KEYS ####
@@ -100,24 +92,8 @@ class VGame(arcade.View):
             self.sprite_manager.next_style()
             self.sprite_manager.reload(self.maze_gen)
 
-        elif symbol == arcade.key.LEFT:
-            self.vel_x = -1
-        elif symbol == arcade.key.RIGHT:
-            self.vel_x = 1
-        elif symbol == arcade.key.UP:
-            self.vel_y = 1
-        elif symbol == arcade.key.DOWN:
-            self.vel_y = -1
+        self.player.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
 
-        self.player.angle += 10
-
-        if symbol == arcade.key.LEFT:
-            self.vel_x = 0
-        elif symbol == arcade.key.RIGHT:
-            self.vel_x = 0
-        elif symbol == arcade.key.UP:
-            self.vel_y = 0
-        elif symbol == arcade.key.DOWN:
-            self.vel_y = 0
+        self.player.on_key_release(symbol, modifiers)
