@@ -10,6 +10,8 @@ from dataclasses import dataclass, field
 class Maze:
     seed: int = 42
     size: Vec2 = Vec2(15, 15)
+    entry: Vec2 = Vec2(1, 1)
+    exit: Vec2 = Vec2(13, 13)
     walls: set[Vec2] = field(init=False, default_factory=set)
     floors: set[Vec2] = field(init=False, default_factory=set)
     forty_two: set[Vec2] = field(init=False, default_factory=set)
@@ -18,11 +20,14 @@ class Maze:
     # ########################################################################
     # ################################################# GENERATE NEW MAZE ####
     def generate_new_maze(self) -> None:
-        self.raw_maze = MazeGenerator(
+        maze_gen = MazeGenerator(
             size=(int(self.size.x), int(self.size.y)),
+            entry_cell=(int(self.entry.x), int(self.entry.y)),
+            exit_cell=(int(self.exit.x), int(self.exit.y)),
             perfect=False,
             seed=self.seed,
-        ).maze
+        )
+        self.raw_maze = maze_gen.maze
 
     # TODO: SET REAL COORDINATES HERE ??????? with the size ????????
 
