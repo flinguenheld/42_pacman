@@ -1,4 +1,5 @@
 from __future__ import annotations
+import time
 
 import os
 import re
@@ -21,7 +22,7 @@ class Sprites:
         Medieval = "medieval"
         Scifi = "scifi"
         Tank = "tank"
-        Test = "test"
+        Test = "pirate"
 
     def __init__(self, folder: str) -> None:
         self.sprites: SpriteList = SpriteList()
@@ -54,28 +55,48 @@ class Sprites:
         self.scale = self._get_scale(self.info["size"])
         self.path = f"{self.path}/{self.folder}"
         self.sprites.clear()
+        random.seed(time.time())
 
     # ########################################################################
     # #################################################### ADD SUB SPRITE ####
-    def add_sprite(self, center: Vec2, filename: str) -> None:
+    def add_sprite(self, center: Vec2, filename: str, angle: int = 0) -> None:
         def to_real_coordinate(point: Vec2) -> Vec2:
             return Vec2(
                 VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE,
                 VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE,
             )
 
-        file_name = random.choice(self._list_allowed_files(filename))
+        # file_name = random.choice(self._list_allowed_files(filename))
+
+        file_name = self._randomly_pick(
+            self._list_allowed_files(filename), self.info["more_probable"]
+        )
+
         path_sprite = f"{self.path}/{file_name}"
         real_point = to_real_coordinate(center)
 
-        self.sprites.append(
-            arcade.Sprite(
-                path_or_texture=path_sprite,
-                scale=self._get_scale(self.info["size"]),
-                center_x=real_point.x,
-                center_y=real_point.y,
-            )
+        # self.sprites.append(
+        #     arcade.Sprite(
+        #         path_or_texture=path_sprite,
+        #         scale=self._get_scale(self.info["size"]),
+        #         center_x=real_point.x,
+        #         center_y=real_point.y,
+        #     )
+        # )
+
+        if file_name in self.info["no_rotation"]:
+            angle = 0
+
+        sprite = arcade.Sprite(
+            path_or_texture=path_sprite,
+            scale=self._get_scale(self.info["size"]),
+            # scale=-abs(self._get_scale(self.info["size"])),
+            center_x=real_point.x,
+            center_y=real_point.y,
+            angle=angle,
         )
+        # blah = sprite.texture.flip_horizontally()
+        self.sprites.append(sprite)
 
     # ########################################################################
     # ####################################################### SPRITE INFO ####
@@ -89,9 +110,27 @@ class Sprites:
 
     # ########################################################################
     # ######################################################## LIST FILES ####
+
+    # TODO: CLEAN THAT --------------------------------
+    # TODO: CLEAN THAT --------------------------------
+    # TODO: CLEAN THAT --------------------------------
+
     def _list_allowed_files(self, start: str) -> list[str]:
+        # print(f"Get these files: {start}")
         reg = re.compile(f"""^{start}\d?\.png$""")
         return [file for file in os.listdir(self.path) if reg.match(file)]
+
+    # ########################################################################
+    # ##################################################### RANDOMLY PICK ####
+    def _randomly_pick(self, choices: list[str], more_prob: list[str]) -> str:
+
+        mp = next((c for c in choices if c in more_prob), None)
+
+        if mp:
+            if random.randint(0, 10) < 7:
+                return mp
+
+        return random.choice(choices)
 
     # ########################################################################
     # ############################################################# SCALE ####
