@@ -44,10 +44,8 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
-        self.sprite_test: SpriteList[Sprite] = arcade.SpriteList()
-        self.player = Player()
-
-        self.sprite_test.append(self.player)
+        self.player: Player | None = None
+        self.player_sprite_list: SpriteList[Player] | None = None
 
         self.setup()
 
@@ -57,6 +55,10 @@ class VGame(arcade.View):
         # Create a maze
         self.new_maze(42, Vec2(15, 15))
         self.sprite_manager.reload(self.maze_gen)
+        self.player = Player(self.maze_gen.entry, self.sprite_manager.walls)
+
+        self.player_sprite_list = arcade.SpriteList()
+        self.player_sprite_list.append(self.player)
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WARM_BLACK)
@@ -72,11 +74,18 @@ class VGame(arcade.View):
     # ########################################################################
     # ##################################################### DRAW / UPDATE ####
     def on_draw(self) -> None:
+        assert self.player_sprite_list is not None, (
+            "Player sprite list is not initialized"
+        )
         self.clear()
         self.sprite_manager.draw()
-        self.sprite_test.draw()
+        self.player_sprite_list.draw()
+        self.player_sprite_list.draw_hit_boxes(
+            color=arcade.color.RED, line_thickness=2
+        )
 
     def on_update(self, delta_time: int | float) -> None:
+        assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
 
     # ########################################################################
@@ -92,8 +101,9 @@ class VGame(arcade.View):
             self.sprite_manager.next_style()
             self.sprite_manager.reload(self.maze_gen)
 
+        assert self.player is not None, "Player is not initialized"
         self.player.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-
+        assert self.player is not None, "Player is not initialized"
         self.player.on_key_release(symbol, modifiers)
