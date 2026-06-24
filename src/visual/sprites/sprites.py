@@ -7,7 +7,7 @@ import random
 from enum import Enum
 from typing import Any
 from json import load as json_load
-from arcade import SpriteList, Vec2
+from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
 
@@ -24,7 +24,7 @@ class Sprites:
         Test = "test"
 
     def __init__(self, folder: str) -> None:
-        self.sprites: SpriteList = SpriteList()
+        self.sprites: SpriteList[Sprite] = SpriteList()
         self.style = Sprites.Style.Test
         self.info: dict[str, Any] = {}
         self.folder = folder

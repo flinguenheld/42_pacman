@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import arcade
-from arcade import SpriteList, Vec2
+from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
@@ -43,7 +43,7 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
-        self.sprite_test: SpriteList = arcade.SpriteList()
+        self.sprite_test: SpriteList[Sprite] = arcade.SpriteList()
         self.player = arcade.Sprite(VData.SPRITES + "/hen.png", 1)
 
         self.player.center_y = 150
