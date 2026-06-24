@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import arcade
-from arcade import Sprite, SpriteList, Vec2
+from arcade import Rect, Sprite, SpriteList, Vec2
 
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
@@ -43,11 +43,19 @@ class VGame(arcade.View):
         self.vel_y = 0
 
         self.sprite_manager = SpriteManager()
-
+        self.camera = arcade.Camera2D(
+            viewport=arcade.types.Viewport(
+                left=0,
+                bottom=0,
+                width=VData.WIDTH,
+                height=VData.HEIGHT,
+            )
+        )
         self.player: Player | None = None
         self.player_sprite_list: SpriteList[Player] | None = None
 
         self.setup()
+        self.camera.use()
 
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
