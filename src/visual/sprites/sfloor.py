@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from arcade import Vec2
 from src.visual.sprites.sprites import Sprites
 
 
@@ -8,3 +10,9 @@ from src.visual.sprites.sprites import Sprites
 class SFloor(Sprites):
     def __init__(self) -> None:
         super().__init__("floor")
+
+    def reload(self, floors: set[Vec2]):
+        self.reload_info()
+
+        for point in floors:
+            self.add_sprite(point, "floor")

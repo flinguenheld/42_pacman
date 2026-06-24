@@ -7,7 +7,6 @@ from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
-from src.visual.sprites.sforty_two import SFortyTwo
 
 
 # TODO: KEEP ?? - RENAME ?? - MOVE ??
@@ -15,22 +14,18 @@ class SpriteManager:
     def __init__(self) -> None:
         self.walls: SWall = SWall()
         self.floors: SFloor = SFloor()
-        self.forty_two: SFortyTwo = SFortyTwo()
 
     def next_style(self) -> None:
         self.walls.next_style()
         self.floors.next_style()
-        # self.forty_two.next_style()
 
     def reload(self, maze: Maze) -> None:
-        self.walls.reload(maze.walls.union(maze.forty_two))
+        self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)
-        # self.forty_two.reload(maze.forty_two)
 
     def draw(self) -> None:
         self.walls.sprites.draw()
         self.floors.sprites.draw()
-        # self.forty_two.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
