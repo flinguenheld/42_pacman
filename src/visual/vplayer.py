@@ -1,19 +1,19 @@
 from arcade import Sprite, Vec2, key
 import arcade
 
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VData
 from src.visual.sprites.swall import SWall
 
 
 class Player(Sprite):
-    def __init__(self, start_pos: Vec2, walls: SWall) -> None:
+    def __init__(self, start_grid_pos: Vec2, walls: SWall) -> None:
+        center = maze_grid_to_world_coords(start_grid_pos)
         super().__init__(
             VData.SPRITES + "/hen.png",
             scale=0.3,
-            center_x=start_pos.x * VData.SPRITE_SIZE
-            + VData.SPRITE_SHIFT,
-            center_y=start_pos.y * VData.SPRITE_SIZE
-            + VData.SPRITE_SHIFT,
+            center_x=center.x,
+            center_y=center.y,
         )
         self.speed: int = 10
         self.walls: SWall = walls

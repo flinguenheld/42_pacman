@@ -9,6 +9,7 @@ from typing import Any
 from json import load as json_load
 from arcade import Sprite, SpriteList, Vec2
 
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VData
 
 
@@ -58,15 +59,9 @@ class Sprites:
     # ########################################################################
     # #################################################### ADD SUB SPRITE ####
     def add_sprite(self, center: Vec2, filename: str) -> None:
-        def to_real_coordinate(point: Vec2) -> Vec2:
-            return Vec2(
-                VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE,
-                VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE,
-            )
-
         file_name = random.choice(self._list_allowed_files(filename))
         path_sprite = f"{self.path}/{file_name}"
-        real_point = to_real_coordinate(center)
+        real_point = maze_grid_to_world_coords(center)
 
         self.sprites.append(
             arcade.Sprite(
