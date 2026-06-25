@@ -27,6 +27,8 @@ class Maze:
             perfect=False,
             seed=self.seed,
         )
+        self.entry = Vec2(maze_gen.maze_entry[0], maze_gen.maze_entry[1])
+        self.exit = Vec2(maze_gen.maze_exit[0], maze_gen.maze_exit[1])
         self.raw_maze = maze_gen.maze
 
     # TODO: SET REAL COORDINATES HERE ??????? with the size ????????
@@ -34,6 +36,7 @@ class Maze:
     # ########################################################################
     # ###################################################### BUILD FLOORS ####
     def build_floors(self) -> None:
+        self.floors.clear()
         for y in range(len(self.raw_maze) * 2):
             for x in range(len(self.raw_maze[0]) * 2):
                 reversed_y = len(self.raw_maze) * 2 - y
@@ -77,6 +80,7 @@ class Maze:
              6  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
                 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
         """
+        self.walls.clear()
 
         # Loop in the maze draw where it's open
         for raw_y, row in enumerate(reversed(self.raw_maze)):
