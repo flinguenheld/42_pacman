@@ -17,6 +17,7 @@ class SWall(Sprites):
     def reload(self, walls: set[Vec2], floors: set[Vec2]) -> None:
 
         self.reload_info()
+        return
 
         for point in walls:
             is_floor_top = Vec2(point.x, point.y + 1) in floors

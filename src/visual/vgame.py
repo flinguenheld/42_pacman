@@ -25,8 +25,9 @@ class SpriteManager:
         self.floors.reload(maze.floors)
 
     def draw(self) -> None:
-        self.walls.sprites.draw()
-        self.floors.sprites.draw()
+        pass
+        # self.walls.sprites.draw()
+        # self.floors.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░

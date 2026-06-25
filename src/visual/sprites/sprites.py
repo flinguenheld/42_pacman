@@ -19,7 +19,7 @@ from src.visual import VData
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░░
 class Sprites:
     class Style(Enum):
-        Pirate = "pirate"
+        Pirate = "pirate_green"
 
     def __init__(self, folder: str) -> None:
         self.sprites: SpriteList[Sprite] = SpriteList()
@@ -51,6 +51,13 @@ class Sprites:
         self.scale = self._get_scale(self.info["size"])
         self.path = f"{self.path}/{self.folder}"
         self.sprites.clear()
+
+        print(self.info)
+
+        # TODO: LOAD THE PNG AND CREATE THE DICT OF SPRITES
+        # TODO: LOAD THE PNG AND CREATE THE DICT OF SPRITES
+        # TODO: LOAD THE PNG AND CREATE THE DICT OF SPRITES
+        # TODO: LOAD THE PNG AND CREATE THE DICT OF SPRITES
 
     # ########################################################################
     # ######################################################## ADD SPRITE ####

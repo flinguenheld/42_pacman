@@ -14,5 +14,6 @@ class SFloor(Sprites):
     def reload(self, floors: set[Vec2]) -> None:
         self.reload_info()
 
+        return
         for point in floors:
             self.add_sprite(point, "floor")

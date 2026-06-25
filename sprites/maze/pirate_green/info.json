@@ -1,0 +1,7 @@
+{
+  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "size": 16,
+  "lines": {"wall_angle": 5, "wall_corridor": 10, "wall_end": 2, "wall_full": 10, "special": 3},
+  "no_rotation": {"wall_full": 2, "wall_full": 5},
+  "more_probable": {"wall_full": 0}
+}
