@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import arcade
-from arcade import Rect, Sprite, SpriteList, Vec2
+from arcade import SpriteList, Vec2
 
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
