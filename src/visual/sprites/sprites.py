@@ -57,7 +57,7 @@ class Sprites:
     def add_sprite(self, center: Vec2, filename: str, angle: int = 0) -> None:
         file_name = self._get_file(filename, self.info["more_probable"])
         path_sprite = f"{self.path}/{file_name}"
-        real_point = maze_grid_to_world_coords(center)
+        real_point = maze_grid_to_world_coords(center, scale=1.0)
 
         if file_name in self.info["no_rotation"]:
             angle = 0
