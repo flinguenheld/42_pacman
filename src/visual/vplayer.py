@@ -8,10 +8,8 @@ from src.visual.sprites.swall import SWall
 
 
 class Player(Sprite):
-    def __init__(self, start_grid_pos: Vec2, walls: SWall) -> None:
-        center = maze_grid_to_world_coords(start_grid_pos, scale=2.0) - Vec2(
-            VData.SPRITE_SIZE / 2, VData.SPRITE_SIZE / 2
-        )
+    def __init__(self, start_pos: Vec2, walls: SWall) -> None:
+        center = start_pos - (VData.SPRITE_SIZE / 2)
         super().__init__(
             VData.SPRITES + "/hen.png",
             scale=0.3,

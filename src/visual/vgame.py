@@ -3,6 +3,7 @@ from __future__ import annotations
 import arcade
 from arcade import SpriteList, Vec2
 
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
@@ -65,13 +66,16 @@ class VGame(arcade.View):
         # Create a maze
         self.new_maze(42, Vec2(15, 15))
         self.sprite_manager.reload(self.maze_gen)
-        self.player = Player(self.maze_gen.entry, self.sprite_manager.walls)
+        self.player = Player(maze_grid_to_world_coords(self.maze_gen.entry, scale=2.0), self.sprite_manager.walls)
 
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player)
 
         self.pacgum_list = arcade.SpriteList()
-        self.pacgum_list.append(PacGum(self.maze_gen.exit))
+        for floor in self.maze_gen.floors:
+            if floor == self.maze_gen.entry or floor == self.maze_gen.exit:
+                continue
+            self.pacgum_list.append(PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT))
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WARM_BLACK)
