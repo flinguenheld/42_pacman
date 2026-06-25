@@ -8,8 +8,9 @@ import random
 from enum import Enum
 from typing import Any
 from json import load as json_load
-from arcade import SpriteList, Vec2
+from arcade import Sprite, SpriteList, Vec2
 
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VData
 
 
@@ -21,7 +22,7 @@ class Sprites:
         Pirate = "pirate"
 
     def __init__(self, folder: str) -> None:
-        self.sprites: SpriteList = SpriteList()
+        self.sprites: SpriteList[Sprite] = SpriteList()
         self.style = Sprites.Style.Pirate
         self.info: dict[str, Any] = {}
         self.folder = folder
@@ -54,15 +55,9 @@ class Sprites:
     # ########################################################################
     # ######################################################## ADD SPRITE ####
     def add_sprite(self, center: Vec2, filename: str, angle: int = 0) -> None:
-        def to_real_coordinate(point: Vec2) -> Vec2:
-            return Vec2(
-                VData.SPRITE_SHIFT + point.x * VData.SPRITE_SIZE,
-                VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE,
-            )
-
         file_name = self._get_file(filename, self.info["more_probable"])
         path_sprite = f"{self.path}/{file_name}"
-        real_point = to_real_coordinate(center)
+        real_point = maze_grid_to_world_coords(center)
 
         if file_name in self.info["no_rotation"]:
             angle = 0

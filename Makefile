@@ -8,7 +8,7 @@ install:
 helix:
 	${UV} run hx .
 
-debug:
+run:
 	${UV} run python ${NAME} test_config.json
 
 clean:
@@ -22,4 +22,4 @@ lint:
 			--disallow-untyped-defs \
 			--check-untyped-defs \
 
-.PHONY: install helix debug clean lint
+.PHONY: install helix run clean lint
