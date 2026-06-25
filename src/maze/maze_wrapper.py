@@ -11,7 +11,7 @@ class Maze:
     seed: int = 42
     size: Vec2 = Vec2(15, 15)
     entry: Vec2 = Vec2(1, 1)
-    exit: Vec2 = Vec2(13, 13)
+    exit: Vec2 = Vec2(14, 14)
     walls: set[Vec2] = field(init=False, default_factory=set)
     floors: set[Vec2] = field(init=False, default_factory=set)
     forty_two: set[Vec2] = field(init=False, default_factory=set)
