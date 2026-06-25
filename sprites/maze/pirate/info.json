@@ -1,0 +1,6 @@
+{
+  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "size": 16,
+  "no_rotation": ["full3.png", "full4.png", "full5.png", "full6.png", "full7.png", "full8.png"],
+  "more_probable": ["full1.png", "floor1.png"]
+}

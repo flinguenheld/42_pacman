@@ -1,7 +1,31 @@
-import arcade
-from arcade import SpriteList
+from __future__ import annotations
 
-from src.visual import VNames
+import arcade
+from arcade import SpriteList, Vec2
+
+from src.visual import VNames, VData
+from src.maze.maze_wrapper import Maze
+from src.visual.sprites.swall import SWall
+from src.visual.sprites.sfloor import SFloor
+
+
+# TODO: KEEP ?? - RENAME ?? - MOVE ??
+class SpriteManager:
+    def __init__(self) -> None:
+        self.walls: SWall = SWall()
+        self.floors: SFloor = SFloor()
+
+    def next_style(self) -> None:
+        self.walls.next_style()
+        self.floors.next_style()
+
+    def reload(self, maze: Maze) -> None:
+        self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
+        self.floors.reload(maze.floors)
+
+    def draw(self) -> None:
+        self.walls.sprites.draw()
+        self.floors.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -17,27 +41,41 @@ class VGame(arcade.View):
         self.vel_x = 0
         self.vel_y = 0
 
-        self.all_sprites: SpriteList = arcade.SpriteList()
+        self.sprite_manager = SpriteManager()
 
-        self.player = arcade.Sprite("src/visual/sprites/hen.png", 1)
+        self.sprite_test: SpriteList = arcade.SpriteList()
+        self.player = arcade.Sprite(VData.SPRITES + "/hen.png", 1)
 
         self.player.center_y = 150
         self.player.center_x = 150
-        # self.player.left = 10
-        self.all_sprites.append(self.player)
+        self.sprite_test.append(self.player)
+
+        self.setup()
 
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
-        pass
+
+        # Create a maze
+        self.new_maze(42, Vec2(15, 15))
+        self.sprite_manager.reload(self.maze_gen)
 
     def on_show_view(self) -> None:
-        arcade.set_background_color(arcade.color.WHITE_SMOKE)
+        arcade.set_background_color(arcade.color.WARM_BLACK)
+
+    # ########################################################################
+    # ########################################################## NEW MAZE ####
+    def new_maze(self, seed: int, size: Vec2) -> None:
+        self.maze_gen = Maze(seed, size)
+        self.maze_gen.generate_new_maze()
+        self.maze_gen.build_walls()
+        self.maze_gen.build_floors()
 
     # ########################################################################
     # ##################################################### DRAW / UPDATE ####
     def on_draw(self) -> None:
         self.clear()
-        self.all_sprites.draw()
+        self.sprite_manager.draw()
+        self.sprite_test.draw()
 
     def on_update(self, delta_time: int | float) -> None:
         speed = 200
@@ -57,6 +95,10 @@ class VGame(arcade.View):
             self.window.switch_view(VNames.VIEW_MENU)
         elif symbol == arcade.key.P:
             self.window.switch_view(VNames.VIEW_PAUSE)
+
+        elif symbol == arcade.key.S:
+            self.sprite_manager.next_style()
+            self.sprite_manager.reload(self.maze_gen)
 
         elif symbol == arcade.key.LEFT:
             self.vel_x = -1
