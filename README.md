@@ -1,11 +1,9 @@
 *This project has been created as part of the 42 curriculum by [yguardio](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dogster.com%2Fwp-content%2Fuploads%2F2024%2F03%2FBelgian-Malinois-e1687773644653.jpeg&f=1&nofb=1&ipt=ca1a3f1c8be458d97acbcc912e6c039bae22087c69654d231ae137c8fa62bff8), [flinguen](https://linguenheld.net/)*
 
-### 42_pacman
+## 42_pacman
 Ghosts! More ghosts!
 
-#### Description
-
-#### Instructions
+### Description
 
 ### Instructions
 This project uses [UV](https://docs.astral.sh/uv/) for automatic virtual environment management.  
@@ -24,7 +22,7 @@ uv run python pac-man.py [CONFIG_FILE]
 uv run python pac-man.py --help
 ```
 
-#### Configuration
+### Configuration
 
 It allows you to override default values.  
 The file as to be a valid JSON.  
@@ -48,17 +46,17 @@ Here the available keys:
   #  Comment Python
 }
 ```
-#### Resources
+### Resources
 [UV](https://docs.astral.sh/uv/)  
 [Arcade](https://api.arcade.academy/en/stable/index.html)
 
 
-#### Highscore
+### Highscore
 
-#### Maze Generation
+### Maze Generation
 
-#### Implementation
+### Implementation
 
-#### General Software Architecture
+### General Software Architecture
 
-#### Project Management
+### Project Management
