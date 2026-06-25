@@ -7,6 +7,7 @@ from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
+from src.visual.vpacgum import PacGum
 from src.visual.vplayer import Player
 
 
@@ -54,6 +55,7 @@ class VGame(arcade.View):
         self.player: Player | None = None
         self.player_sprite_list: SpriteList[Player] | None = None
 
+        self.pacgum_list: SpriteList[PacGum] | None = None
         self.setup()
         self.camera.use()
 
@@ -67,6 +69,9 @@ class VGame(arcade.View):
 
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player)
+
+        self.pacgum_list = arcade.SpriteList()
+        self.pacgum_list.append(PacGum(self.maze_gen.exit))
 
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WARM_BLACK)
@@ -85,11 +90,18 @@ class VGame(arcade.View):
         assert self.player_sprite_list is not None, (
             "Player sprite list is not initialized"
         )
+        assert self.pacgum_list is not None, (
+            "PacGum sprite list is not initialized"
+        )
         self.clear()
         self.sprite_manager.draw()
         self.player_sprite_list.draw()
         self.player_sprite_list.draw_hit_boxes(
             color=arcade.color.RED, line_thickness=2
+        )
+        self.pacgum_list.draw()
+        self.pacgum_list.draw_hit_boxes(
+            color=arcade.color.GREEN, line_thickness=2
         )
 
     def on_update(self, delta_time: int | float) -> None:
