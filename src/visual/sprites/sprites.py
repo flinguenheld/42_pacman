@@ -1,8 +1,8 @@
 from __future__ import annotations
-import time
 
 import os
 import re
+import time
 import arcade
 import random
 from enum import Enum
@@ -18,15 +18,11 @@ from src.visual import VData
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░░
 class Sprites:
     class Style(Enum):
-        Fantasy = "fantasy"
-        Medieval = "medieval"
-        Scifi = "scifi"
-        Tank = "tank"
-        Test = "pirate"
+        Pirate = "pirate"
 
     def __init__(self, folder: str) -> None:
         self.sprites: SpriteList = SpriteList()
-        self.style = Sprites.Style.Test
+        self.style = Sprites.Style.Pirate
         self.info: dict[str, Any] = {}
         self.folder = folder
         self.scale = 1.0
@@ -35,30 +31,28 @@ class Sprites:
     # ########################################################################
     # ######################################################## NEXT STYLE ####
     def next_style(self) -> None:
-        match self.style:
-            case Sprites.Style.Fantasy:
-                self.style = Sprites.Style.Medieval
-            case Sprites.Style.Medieval:
-                self.style = Sprites.Style.Scifi
-            case Sprites.Style.Scifi:
-                self.style = Sprites.Style.Tank
 
-            case _:
-                self.style = Sprites.Style.Fantasy
+        self.style = Sprites.Style.Pirate
+
+        # match self.style:
+        #     case Sprites.Style.Test:
+        # case Sprites.Style.Fantasy:
+        #     self.style = Sprites.Style.Medieval
+        # case _:
+        #     self.style = Sprites.Style.Fantasy
 
     # ########################################################################
-    # ####################################################### RELOAD DATA ####
+    # ####################################################### RELOAD INFO ####
     def reload_info(self) -> None:
-        # TODO keep info ??
+        random.seed(time.time())
         self.path = f"{VData.SPRITES}/maze/{self.style.value}"
-        self.info = self._open_info(self.path)
+        self.info = self._open_info_file(self.path)
         self.scale = self._get_scale(self.info["size"])
         self.path = f"{self.path}/{self.folder}"
         self.sprites.clear()
-        random.seed(time.time())
 
     # ########################################################################
-    # #################################################### ADD SUB SPRITE ####
+    # ######################################################## ADD SPRITE ####
     def add_sprite(self, center: Vec2, filename: str, angle: int = 0) -> None:
         def to_real_coordinate(point: Vec2) -> Vec2:
             return Vec2(
@@ -66,41 +60,26 @@ class Sprites:
                 VData.SPRITE_SHIFT + point.y * VData.SPRITE_SIZE,
             )
 
-        # file_name = random.choice(self._list_allowed_files(filename))
-
-        file_name = self._randomly_pick(
-            self._list_allowed_files(filename), self.info["more_probable"]
-        )
-
+        file_name = self._get_file(filename, self.info["more_probable"])
         path_sprite = f"{self.path}/{file_name}"
         real_point = to_real_coordinate(center)
-
-        # self.sprites.append(
-        #     arcade.Sprite(
-        #         path_or_texture=path_sprite,
-        #         scale=self._get_scale(self.info["size"]),
-        #         center_x=real_point.x,
-        #         center_y=real_point.y,
-        #     )
-        # )
 
         if file_name in self.info["no_rotation"]:
             angle = 0
 
-        sprite = arcade.Sprite(
-            path_or_texture=path_sprite,
-            scale=self._get_scale(self.info["size"]),
-            # scale=-abs(self._get_scale(self.info["size"])),
-            center_x=real_point.x,
-            center_y=real_point.y,
-            angle=angle,
+        self.sprites.append(
+            arcade.Sprite(
+                path_or_texture=path_sprite,
+                scale=self._get_scale(self.info["size"]),
+                center_x=real_point.x,
+                center_y=real_point.y,
+                angle=angle,
+            )
         )
-        # blah = sprite.texture.flip_horizontally()
-        self.sprites.append(sprite)
 
     # ########################################################################
     # ####################################################### SPRITE INFO ####
-    def _open_info(self, path: str) -> dict[str, Any]:
+    def _open_info_file(self, path: str) -> dict[str, Any]:
         try:
             with open(f"{path}/info.json", "r") as file:
                 info: dict[str, Any] = json_load(file)
@@ -109,28 +88,26 @@ class Sprites:
             raise FileNotFoundError(f"info.json not found in {path}")
 
     # ########################################################################
-    # ######################################################## LIST FILES ####
+    # ########################################################## GET FILE ####
+    def _get_file(self, filename: str, more_probables: list[str]) -> str:
+        """List all files in the current path which are named with a number
+        filename1, filename2 ...
+        Then randomly select one.
+        Apply a bias if a file is in the more_probables list."""
 
-    # TODO: CLEAN THAT --------------------------------
-    # TODO: CLEAN THAT --------------------------------
-    # TODO: CLEAN THAT --------------------------------
+        def list_allowed_files(start: str) -> list[str]:
+            reg = re.compile(f"""^{start}\d?\.png$""")  # noqa: W605
+            return [file for file in os.listdir(self.path) if reg.match(file)]
 
-    def _list_allowed_files(self, start: str) -> list[str]:
-        # print(f"Get these files: {start}")
-        reg = re.compile(f"""^{start}\d?\.png$""")
-        return [file for file in os.listdir(self.path) if reg.match(file)]
+        def randomly_pick(choices: list[str]) -> str:
+            more_prob = next((c for c in choices if c in more_probables), None)
+            if more_prob and random.randint(0, 10) < 7:
+                return more_prob
+            return random.choice(choices)
 
-    # ########################################################################
-    # ##################################################### RANDOMLY PICK ####
-    def _randomly_pick(self, choices: list[str], more_prob: list[str]) -> str:
-
-        mp = next((c for c in choices if c in more_prob), None)
-
-        if mp:
-            if random.randint(0, 10) < 7:
-                return mp
-
-        return random.choice(choices)
+        # --
+        files = list_allowed_files(filename)
+        return randomly_pick(files)
 
     # ########################################################################
     # ############################################################# SCALE ####

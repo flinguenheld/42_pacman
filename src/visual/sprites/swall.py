@@ -1,5 +1,4 @@
 from __future__ import annotations
-import time
 import random
 
 from arcade import Vec2
@@ -26,7 +25,6 @@ class SWall(Sprites):
             is_floor_left = Vec2(point.x - 1, point.y) in floors
 
             filename = "full"
-            random.seed(time.time())
             angle = random.choice([0, 90, 180, 270])
 
             match (is_floor_top, is_floor_right, is_floor_bot, is_floor_left):
@@ -86,7 +84,12 @@ class SWall(Sprites):
 
     # ########################################################################
     # ###################################################### EXTRA ANGLES ####
-    def add_extra_angles(self, point: Vec2, walls, floors) -> None:
+    def add_extra_angles(
+        self,
+        point: Vec2,
+        walls: set[Vec2],
+        floors: set[Vec2],
+    ) -> None:
         is_floor_top_left = Vec2(point.x - 1, point.y + 1) in floors
         is_floor_top_right = Vec2(point.x + 1, point.y + 1) in floors
         is_floor_bot_left = Vec2(point.x - 1, point.y - 1) in floors

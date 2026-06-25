@@ -11,7 +11,7 @@ class SFloor(Sprites):
     def __init__(self) -> None:
         super().__init__("floor")
 
-    def reload(self, floors: set[Vec2]):
+    def reload(self, floors: set[Vec2]) -> None:
         self.reload_info()
 
         for point in floors:
