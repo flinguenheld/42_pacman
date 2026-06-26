@@ -29,3 +29,7 @@ class VData:
     SQUARE_SIZE = SPRITE_SIZE * 3
     # TODO: FIND A WAY TO CENTER THE MAZE
     SPRITE_SHIFT = 50
+
+
+class StyleRENAME(Enum):
+    Pirate = "pirate_green"

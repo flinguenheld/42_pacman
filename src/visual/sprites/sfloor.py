@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import random
 from arcade import Vec2
+from src.visual.vatlas import VAtlas
 from src.visual.sprites.sprites import Sprites
 
 
@@ -8,12 +10,14 @@ from src.visual.sprites.sprites import Sprites
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█░░░█░█░█░█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░
 class SFloor(Sprites):
-    def __init__(self) -> None:
-        super().__init__("floor")
+    def __init__(self, atlas: VAtlas) -> None:
+        super().__init__(atlas, "floor_")
 
     def reload(self, floors: set[Vec2]) -> None:
-        self.reload_info()
 
-        return
+        # TODO: ADAPT THE ROTATION #########################################
+        # TODO: ADAPT THE ROTATION #########################################
+        # TODO: ADAPT THE ROTATION #########################################
         for point in floors:
-            self.add_sprite(point, "floor")
+            angle = random.choice([0, 90, 180, 270])
+            self.add_sprite(f"{self.base_name}floor", point, 1, angle)

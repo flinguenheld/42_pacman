@@ -1,4 +1,5 @@
 from __future__ import annotations
+from src.visual.vatlas import VAtlas
 
 import arcade
 from arcade import SpriteList, Vec2
@@ -13,20 +14,64 @@ from src.visual.vplayer import Player
 # TODO: KEEP ?? - RENAME ?? - MOVE ??
 class SpriteManager:
     def __init__(self) -> None:
-        self.walls: SWall = SWall()
-        self.floors: SFloor = SFloor()
+        self.atlas = VAtlas()
+        self.walls: SWall = SWall(self.atlas)
+        # self.floors: SFloor = SFloor()
 
     def next_style(self) -> None:
-        self.walls.next_style()
-        self.floors.next_style()
+        # self.walls.next_style()
+        # self.floors.next_style()
+        self.atlas.next_style()
 
     def reload(self, maze: Maze) -> None:
+
+        self.atlas.load_info()
+        self.atlas.load_textures()
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
-        self.floors.reload(maze.floors)
+        # self.floors.reload(maze.floors)
+
+        # def draw(self) -> None:
+
+        # scale = 3
+        # y = 100
+        # self.sprite_list = SpriteList()
+        # for entry, textures in self.atlas.textures.items():
+        #     y += 16 * scale
+        #     x = 100
+        #     print(f"nb textures: {len(textures)}   new line -> {entry}")
+
+        #     # REGULAR -----------------------------------
+        #     for tex in textures:
+        #         # print("add one")
+
+        #         if isinstance(tex, arcade.TextureAnimation):
+        #             sprite = arcade.TextureAnimationSprite(
+        #                 animation=tex,
+        #                 scale=scale,
+        #                 center_x=x,
+        #                 center_y=y,
+        #             )
+        #         else:
+        #             sprite = arcade.Sprite(
+        #                 path_or_texture=tex,
+        #                 scale=scale,
+        #                 center_x=x,
+        #                 center_y=y,
+        #             )
+
+        #         self.sprite_list.append(sprite)
+        #         x += 16 * scale
+
+    def update(self, delta_time):
+        # self.sprite_list.update_animation(delta_time)
+        self.walls.update_animation(delta_time)
 
     def draw(self) -> None:
-        pass
-        # self.walls.sprites.draw()
+        # self.sprite_list.draw()
+        # print("blah")
+
+        # pass
+        self.walls.sprites.draw()
         # self.floors.sprites.draw()
 
 
@@ -96,6 +141,11 @@ class VGame(arcade.View):
     def on_update(self, delta_time: int | float) -> None:
         assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
+
+        # TEST #############################################
+        # TEST #############################################
+        # TEST #############################################
+        self.sprite_manager.update(delta_time)
 
     # ########################################################################
     # ############################################################## KEYS ####
