@@ -6,7 +6,7 @@ from typing import Any
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
-from src.visual.vatlas import VAtlas
+from src.visual.vatlas import VAtlas, VTile
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░█▀▀░░
@@ -19,6 +19,9 @@ class Sprites:
         self.info: dict[str, Any] = {}
         self.atlas = atlas
 
+    def clear(self):
+        self.sprites.clear()
+
     # ########################################################################
     # ######################################################## ADD SPRITE ####
     def add_sprite(
@@ -29,19 +32,21 @@ class Sprites:
         angle: int,
     ) -> None:
 
-        texture = self._pick_texture(texture_name, False)
+        tile = self._pick_texture(texture_name)
+        if tile.no_rotation:
+            angle = 0
 
-        if isinstance(texture, arcade.TextureAnimation):
+        if isinstance(tile.texture, arcade.TextureAnimation):
             sprite = arcade.TextureAnimationSprite(
-                animation=texture,
+                animation=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
                 scale=scale,
-                angle=angle,
             )
+            sprite.angle = angle
         else:
             sprite = arcade.Sprite(
-                path_or_texture=texture,
+                path_or_texture=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
                 scale=scale,
@@ -52,12 +57,16 @@ class Sprites:
 
     # ########################################################################
     # ###################################################### PICK TEXTURE ####
-    def _pick_texture(self, who: str, first_more_probable: bool):
+    def _pick_texture(self, who: str) -> VTile:
 
-        if first_more_probable and random.randint(0, 10) < 7:
-            return self.atlas.textures[who][0]
+        # if first_more_probable and random.randint(0, 10) < 7:
+        #     return self.atlas.textures[who][0]
 
-        return random.choice(self.atlas.textures[who])
+        tile = [t for t in self.atlas.textures[who]]
+        weights = [w.probability / 100 for w in self.atlas.textures[who]]
+
+        return random.choices(tile, weights, k=1)[0]
+        # return random.choice(self.atlas.textures[who])
 
     # ########################################################################
     # ############################################################# SCALE ####

@@ -23,7 +23,7 @@ class VData:
     FONT_SIZE: int = 15
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 
-    SPRITES = "sprites"
+    TEXTURES = "textures"
     # TODO: I PUT 32 BUT IT COULD BE IN THE CONFIGURATION FILE
     SPRITE_SIZE = 32
     SQUARE_SIZE = SPRITE_SIZE * 3

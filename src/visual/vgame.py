@@ -16,11 +16,9 @@ class SpriteManager:
     def __init__(self) -> None:
         self.atlas = VAtlas()
         self.walls: SWall = SWall(self.atlas)
-        # self.floors: SFloor = SFloor()
+        self.floors: SFloor = SFloor(self.atlas)
 
     def next_style(self) -> None:
-        # self.walls.next_style()
-        # self.floors.next_style()
         self.atlas.next_style()
 
     def reload(self, maze: Maze) -> None:
@@ -28,43 +26,12 @@ class SpriteManager:
         self.atlas.load_info()
         self.atlas.load_textures()
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
-        # self.floors.reload(maze.floors)
-
-        # def draw(self) -> None:
-
-        # scale = 3
-        # y = 100
-        # self.sprite_list = SpriteList()
-        # for entry, textures in self.atlas.textures.items():
-        #     y += 16 * scale
-        #     x = 100
-        #     print(f"nb textures: {len(textures)}   new line -> {entry}")
-
-        #     # REGULAR -----------------------------------
-        #     for tex in textures:
-        #         # print("add one")
-
-        #         if isinstance(tex, arcade.TextureAnimation):
-        #             sprite = arcade.TextureAnimationSprite(
-        #                 animation=tex,
-        #                 scale=scale,
-        #                 center_x=x,
-        #                 center_y=y,
-        #             )
-        #         else:
-        #             sprite = arcade.Sprite(
-        #                 path_or_texture=tex,
-        #                 scale=scale,
-        #                 center_x=x,
-        #                 center_y=y,
-        #             )
-
-        #         self.sprite_list.append(sprite)
-        #         x += 16 * scale
+        self.floors.reload(maze.floors)
 
     def update(self, delta_time):
         # self.sprite_list.update_animation(delta_time)
         self.walls.update_animation(delta_time)
+        self.floors.update_animation(delta_time)
 
     def draw(self) -> None:
         # self.sprite_list.draw()
@@ -72,7 +39,7 @@ class SpriteManager:
 
         # pass
         self.walls.sprites.draw()
-        # self.floors.sprites.draw()
+        self.floors.sprites.draw()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░

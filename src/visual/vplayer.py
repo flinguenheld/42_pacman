@@ -11,7 +11,7 @@ class Player(Sprite):
     def __init__(self, start_grid_pos: Vec2, walls: SWall) -> None:
         center = maze_grid_to_world_coords(start_grid_pos)
         super().__init__(
-            VData.SPRITES + "/hen.png",
+            VData.TEXTURES + "/hen.png",
             scale=0.3,
             center_x=center.x,
             center_y=center.y,

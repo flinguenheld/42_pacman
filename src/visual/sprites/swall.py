@@ -16,6 +16,8 @@ class SWall(Sprites):
     # ############################################################ RELOAD ####
     def reload(self, walls: set[Vec2], floors: set[Vec2]) -> None:
 
+        self.clear()
+
         for point in walls:
             is_floor_top = Vec2(point.x, point.y + 1) in floors
             is_floor_right = Vec2(point.x + 1, point.y) in floors
@@ -40,41 +42,41 @@ class SWall(Sprites):
                     texture_name = "simple"
                     angle = 270
 
-                # # --
-                # case (True, False, True, False):
-                #     texture_name = "corridor"
-                #     angle = random.choice([0, 180])
-                # case (False, True, False, True):
-                #     texture_name = "corridor"
-                #     angle = random.choice([90, 270])
+                # --
+                case (True, False, True, False):
+                    texture_name = "corridor"
+                    angle = random.choice([0, 180])
+                case (False, True, False, True):
+                    texture_name = "corridor"
+                    angle = random.choice([90, 270])
 
-                # # --
-                # case (True, True, False, True):
-                #     texture_name = "end"
-                #     angle = 0
-                # case (True, True, True, False):
-                #     texture_name = "end"
-                #     angle = 90
-                # case (False, True, True, True):
-                #     texture_name = "end"
-                #     angle = 180
-                # case (True, False, True, True):
-                #     texture_name = "end"
-                #     angle = 270
+                # --
+                case (True, True, False, True):
+                    texture_name = "end"
+                    angle = 0
+                case (True, True, True, False):
+                    texture_name = "end"
+                    angle = 90
+                case (False, True, True, True):
+                    texture_name = "end"
+                    angle = 180
+                case (True, False, True, True):
+                    texture_name = "end"
+                    angle = 270
 
-                # # --
-                # case (True, True, False, False):
-                #     texture_name = "angle"
-                #     angle = 0
-                # case (False, True, True, False):
-                #     texture_name = "angle"
-                #     angle = 90
-                # case (False, False, True, True):
-                #     texture_name = "angle"
-                #     angle = 180
-                # case (True, False, False, True):
-                #     texture_name = "angle"
-                #     angle = 270
+                # --
+                case (True, True, False, False):
+                    texture_name = "angle"
+                    angle = 0
+                case (False, True, True, False):
+                    texture_name = "angle"
+                    angle = 90
+                case (False, False, True, True):
+                    texture_name = "angle"
+                    angle = 180
+                case (True, False, False, True):
+                    texture_name = "angle"
+                    angle = 270
 
             # TODO: ADD SCALE ###############################################
             self.add_sprite(
