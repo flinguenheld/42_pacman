@@ -38,8 +38,8 @@ class SpriteManager:
         # print("blah")
 
         # pass
-        self.walls.sprites.draw()
-        self.floors.sprites.draw()
+        self.walls.sprites.draw(pixelated=True)
+        self.floors.sprites.draw(pixelated=True)
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░

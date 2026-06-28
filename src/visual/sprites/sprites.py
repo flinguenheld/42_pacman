@@ -27,10 +27,14 @@ class Sprites:
         center: Vec2,
         scale: int,
         angle: int,
+        force_first: bool = False,
     ) -> None:
 
         # ############################### PICK TEXTURE ####
         def pick_texture(who: str) -> VTile:
+            if force_first:
+                return self.atlas.textures[who][0]
+
             tile = [t for t in self.atlas.textures[who]]
             weights = [w.probability / 100 for w in self.atlas.textures[who]]
 

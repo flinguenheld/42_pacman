@@ -51,6 +51,15 @@
       ]
     },
     {
+      "name": "wall_extra_angle",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
       "name": "wall_full",
       "nb": 1,
       "probability": 90,
