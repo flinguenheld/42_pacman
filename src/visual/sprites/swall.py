@@ -61,67 +61,80 @@ class SWall(Sprites):
             is_wall_left = Vec2(point.x - 1, point.y) in walls
 
             # --
-            texture_name = "full"
+            texture_name = "F"
             angle = random.choice([0, 90, 180, 270])
             point_world = maze_grid_to_world_coords(point)
 
             match (is_floor_top, is_floor_right, is_floor_bot, is_floor_left):
                 case (False, False, True, False):
-                    texture_name = "simple"
-                    angle = 0
+                    texture_name = "B"
+                    # texture_name = "simple"
+                    # angle = 0
                 case (False, False, False, True):
-                    texture_name = "simple"
-                    angle = 90
+                    texture_name = "L"
+                    # texture_name = "simple"
+                    # angle = 90
                 case (True, False, False, False):
-                    texture_name = "simple"
-                    angle = 180
+                    texture_name = "T"
+                    # texture_name = "simple"
+                    # angle = 180
                 case (False, True, False, False):
-                    texture_name = "simple"
-                    angle = 270
+                    texture_name = "R"
+                    # texture_name = "simple"
+                    # angle = 270
 
                 # --
                 case (True, False, True, False):
-                    texture_name = "corridor"
-                    angle = random.choice([0, 180])
+                    texture_name = "BT"
+                    # angle = random.choice([0, 180])
                 case (False, True, False, True):
-                    texture_name = "corridor"
-                    angle = random.choice([90, 270])
+                    texture_name = "LR"
+                    # angle = random.choice([90, 270])
 
-                # --
-                case (True, True, False, True):
-                    texture_name = "end"
-                    angle = 0
-                case (True, True, True, False):
-                    texture_name = "end"
-                    angle = 90
-                case (False, True, True, True):
-                    texture_name = "end"
-                    angle = 180
-                case (True, False, True, True):
-                    texture_name = "end"
-                    angle = 270
+                # # --
+                # case (True, True, False, True):
+                #     texture_name = "LRT"
+                #     # texture_name = "end"
+                #     # angle = 0
+                # case (True, True, True, False):
+                #     texture_name = "BRT"
+                #     # texture_name = "end"
+                #     # angle = 90
+                # case (False, True, True, True):
+                #     texture_name = "BLR"
+                #     # texture_name = "end"
+                #     # angle = 180
+                # case (True, False, True, True):
+                #     texture_name = "BLT"
+                #     # texture_name = "end"
+                #     # angle = 270
 
                 # --
                 case (True, True, False, False):
-                    texture_name = "angle"
-                    angle = 0
+                    texture_name = "RT"
+                    # texture_name = "angle"
+                    # angle = 0
                 case (False, True, True, False):
-                    texture_name = "angle"
-                    angle = 90
+                    texture_name = "BR"
+                    # texture_name = "angle"
+                    # angle = 90
                 case (False, False, True, True):
-                    texture_name = "angle"
-                    angle = 180
+                    texture_name = "BL"
+                    # texture_name = "angle"
+                    # angle = 180
                 case (True, False, False, True):
-                    texture_name = "angle"
-                    angle = 270
+                    texture_name = "LT"
+                    # texture_name = "angle"
+                    # angle = 270
 
             # Avoid special overlay on a thing
-            force_first = texture_name == "full" and (
-                is_floor_bot_left
-                or is_floor_bot_right
-                or is_floor_top_left
-                or is_floor_top_right
-            )
+            # force_first = texture_name == "full" and (
+            #     is_floor_bot_left
+            #     or is_floor_bot_right
+            #     or is_floor_top_left
+            #     or is_floor_top_right
+            # )
+            force_first = False
 
             # TODO: ADD SCALE ###############################################
             # TODO: ADD SCALE ###############################################
@@ -134,4 +147,4 @@ class SWall(Sprites):
             )
 
             # --
-            add_extra_angles()
+            # add_extra_angles()

@@ -1,0 +1,138 @@
+{
+  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "default_width": 16,
+  "default_height": 16,
+  "lines": [
+    {
+      "name": "wall_LT",
+      "nb": 4,
+      "width": 16,
+      "height": 16,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_RT",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_T",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_L",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_R",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_BL",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_BR",
+      "nb": 1,
+      "probability": 90,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_B",
+      "nb": 10,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_F",
+      "nb": 1,
+      "probability": 100,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_BT",
+      "nb": 1,
+      "probability": 90,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_LR",
+      "nb": 1,
+      "probability": 90,
+      "animated": true,
+      "duration": [
+        2000,
+        400
+      ]
+    },
+    {
+      "name": "wall_extra_LT",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_RT",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_BR",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_BL",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "floor_full",
+      "nb": 1,
+      "probability": 90
+    },
+    {
+      "name": "floor_full",
+      "nb": 2,
+      "probability": 10
+    }
+  ]
+}

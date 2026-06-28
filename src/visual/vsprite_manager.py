@@ -13,7 +13,7 @@ class SpriteManager:
         self.atlas = VAtlas()
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
-        self.style: Style = Style.PIRATE
+        self.style: Style = Style.TINY_BATTLE
 
     # ########################################################################
     # ######################################################## NEXT STYLE ####
