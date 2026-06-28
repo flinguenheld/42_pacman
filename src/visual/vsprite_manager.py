@@ -33,7 +33,7 @@ class SpriteManager:
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time):
+    def update(self, delta_time: int | float) -> None:
         self.walls.update_animation(delta_time)
         self.floors.update_animation(delta_time)
 

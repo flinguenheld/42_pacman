@@ -46,23 +46,24 @@ class Sprites:
             angle = 0
 
         if isinstance(tile.texture, arcade.TextureAnimation):
-            sprite = arcade.TextureAnimationSprite(
+            sprite_animation: Sprite = arcade.TextureAnimationSprite(
                 animation=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
                 scale=scale,
             )
-            sprite.angle = angle
+            sprite_animation.angle = angle
+            self.sprites.append(sprite_animation)
         else:
-            sprite = arcade.Sprite(
-                path_or_texture=tile.texture,
-                center_x=center.x,
-                center_y=center.y,
-                scale=scale,
-                angle=angle,
+            self.sprites.append(
+                arcade.Sprite(
+                    path_or_texture=tile.texture,
+                    center_x=center.x,
+                    center_y=center.y,
+                    scale=scale,
+                    angle=angle,
+                )
             )
-
-        self.sprites.append(sprite)
 
     # ########################################################################
     # ############################################################# SCALE ####
@@ -79,5 +80,5 @@ class Sprites:
 
     # ########################################################################
     # ################################################## UPDATE ANIMATION ####
-    def update_animation(self, delta_time) -> None:
+    def update_animation(self, delta_time: int | float) -> None:
         self.sprites.update_animation(delta_time)

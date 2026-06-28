@@ -32,7 +32,7 @@ class VAtlas:
     # ########################################################################
     # ############################################################## LOAD ####
     def load(self, new_style: Style) -> None:
-        self.style: Style = new_style
+        self.style = new_style
         self._load_info()
         self._load_textures()
 

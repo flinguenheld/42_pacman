@@ -23,15 +23,23 @@ class Player(Sprite):
         half_w: float = self.width / 2
         half_h: float = self.height / 2
         self.hit_box = HitBox(
-            points=[(-half_w, -half_h), (half_w, -half_h), (half_w, half_h), (-half_w, half_h)],
+            points=[
+                (-half_w, -half_h),
+                (half_w, -half_h),
+                (half_w, half_h),
+                (-half_w, half_h),
+            ],
             position=self.position,
-            scale=Vec2(hitbox_scale, hitbox_scale)
+            scale=Vec2(hitbox_scale, hitbox_scale),
         )
 
     def update(self, delta_time: float = 1 / 60) -> None:
-        # Resolve movement per-axis to avoid corner tunneling and multi-wall phasing.
+        # Resolve movement per-axis to avoid corner
+        # tunneling and multi-wall phasing.
         self.center_x += self.change_x
-        collided_x: list[Sprite] = arcade.check_for_collision_with_list(self, self.walls.sprites)
+        collided_x: list[Sprite] = arcade.check_for_collision_with_list(
+            self, self.walls.sprites
+        )
         if self.change_x > 0:
             for wall in collided_x:
                 self.right = min(self.right, wall.left)
@@ -40,14 +48,15 @@ class Player(Sprite):
                 self.left = max(self.left, wall.right)
 
         self.center_y += self.change_y
-        collided_y: list[Sprite] = arcade.check_for_collision_with_list(self, self.walls.sprites)
+        collided_y: list[Sprite] = arcade.check_for_collision_with_list(
+            self, self.walls.sprites
+        )
         if self.change_y > 0:
             for wall in collided_y:
                 self.top = min(self.top, wall.bottom)
         elif self.change_y < 0:
             for wall in collided_y:
                 self.bottom = max(self.bottom, wall.top)
-
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         # Handle player movement based on key presses
