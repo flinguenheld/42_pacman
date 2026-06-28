@@ -19,9 +19,6 @@ class Sprites:
         self.info: dict[str, Any] = {}
         self.atlas = atlas
 
-    def clear(self):
-        self.sprites.clear()
-
     # ########################################################################
     # ######################################################## ADD SPRITE ####
     def add_sprite(
@@ -32,7 +29,15 @@ class Sprites:
         angle: int,
     ) -> None:
 
-        tile = self._pick_texture(texture_name)
+        # ############################### PICK TEXTURE ####
+        def pick_texture(who: str) -> VTile:
+            tile = [t for t in self.atlas.textures[who]]
+            weights = [w.probability / 100 for w in self.atlas.textures[who]]
+
+            return random.choices(tile, weights, k=1)[0]
+
+        # ####################################
+        tile = pick_texture(texture_name)
         if tile.no_rotation:
             angle = 0
 
@@ -56,22 +61,19 @@ class Sprites:
         self.sprites.append(sprite)
 
     # ########################################################################
-    # ###################################################### PICK TEXTURE ####
-    def _pick_texture(self, who: str) -> VTile:
-
-        # if first_more_probable and random.randint(0, 10) < 7:
-        #     return self.atlas.textures[who][0]
-
-        tile = [t for t in self.atlas.textures[who]]
-        weights = [w.probability / 100 for w in self.atlas.textures[who]]
-
-        return random.choices(tile, weights, k=1)[0]
-        # return random.choice(self.atlas.textures[who])
-
-    # ########################################################################
     # ############################################################# SCALE ####
+    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
+    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
+    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
     def _get_scale(self, size: int) -> float:
         return VData.SPRITE_SIZE / size
 
+    # ########################################################################
+    # ############################################################# CLEAR ####
+    def clear(self):
+        self.sprites.clear()
+
+    # ########################################################################
+    # ################################################## UPDATE ANIMATION ####
     def update_animation(self, delta_time):
         self.sprites.update_animation(delta_time)

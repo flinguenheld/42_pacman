@@ -1,41 +1,54 @@
 {
   "url": "https://kenney.nl/assets/monochrome-pirates",
-  "size": 16,
+  "default_width": 16,
+  "default_height": 16,
   "lines": [
     {
       "name": "wall_simple",
       "nb": 4,
+      "width": 16,
+      "height": 16,
       "animated": true,
-      "duration_first": 2000,
-      "duration": 400
+      "duration": [
+        2000,
+        400
+      ]
     },
     {
       "name": "wall_simple",
       "nb": 4,
       "animated": true,
-      "duration_first": 2000,
-      "duration": 400
+      "duration": [
+        2000,
+        400
+      ]
     },
     {
       "name": "wall_angle",
       "nb": 4,
       "animated": true,
-      "duration_first": 2000,
-      "duration": 400
+      "duration": [
+        2000,
+        400
+      ]
     },
     {
       "name": "wall_corridor",
       "nb": 4,
       "animated": true,
-      "duration_first": 2000,
-      "duration": 400
+      "duration": [
+        2000,
+        400
+      ]
     },
     {
       "name": "wall_end",
       "nb": 4,
       "animated": true,
-      "duration_first": 2000,
-      "duration": 400
+      "duration": [
+        2000,
+        400
+      ]
     },
     {
       "name": "wall_full",
@@ -59,8 +72,9 @@
       "name": "wall_full",
       "nb": 6,
       "animated": true,
-      "duration_first": 250,
-      "duration": 250,
+      "duration": [
+        250
+      ],
       "probability": 5
     },
     {

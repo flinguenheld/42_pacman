@@ -6,38 +6,114 @@ from src.visual import StyleRENAME, VData
 from arcade import TextureAnimation, Texture
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░▀█▀░█░░░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░█░░░█░░█░░░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░▀░░▀▀▀░▀▀▀░▀▀▀░░
 @dataclass
 class VTile:
     texture: Texture | TextureAnimation
-    no_rotation: bool = False
+    width: int
+    height: int
     probability: int = 100
+    no_rotation: bool = False
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▀█▀░█░░░█▀█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀█░░█░░█░░░█▀█░▀▀█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░░▀░░▀▀▀░▀░▀░▀▀▀░░
 class VAtlas:
+    INFO_FILENAME = "info.json"
+
     def __init__(self):
         self.style = StyleRENAME.Pirate
         self.info: dict[str, Any] = dict()
         self.textures: dict[str, list[VTile]] = dict()
 
-    @property
-    def size(self) -> int:
-        return self.info["size"]
+    # ########################################################################
+    # ############################################################## LOAD ####
+    def load(self, new_style: StyleRENAME) -> None:
+        self.style: StyleRENAME = new_style
+        self._load_info()
+        self._load_textures()
 
     # ########################################################################
-    # ######################################################## NEXT STYLE ####
-    def next_style(self) -> None:
-        self.style: StyleRENAME = StyleRENAME.Pirate
-
-    # ########################################################################
-    # #################################################### LOAD INFO FILE ####
-    def load_info(self) -> None:
-
+    # ############################################# LOAD INFORMATION FILE ####
+    def _load_info(self) -> None:
         self.path = f"{VData.TEXTURES}/{self.style.value}"
         self.info = self._open_info_file(self.path)
-        print(self.info)
+        self.default_width = self.info["default_width"]
+        self.default_height = self.info["default_height"]
 
-    def get_option(
-        self, data: dict[str, Any], option: str, default: Any
+    # ########################################################################
+    # ##################################################### LOAD TEXTURES ####
+    def _load_textures(self):
+        width = -1
+        height = -1
+        self.textures.clear()
+        sheet = arcade.load_spritesheet(f"{self.path}/sheet.png")
+
+        # #################################### REGULAR #######
+        def add_regular(y: int, data_line: dict[str, Any]) -> None:
+
+            for x in range(data_line["nb"]):
+                x *= width
+                texture = sheet.get_texture(arcade.LBWH(x, y, width, height))
+                self.textures[data_line["name"]].append(
+                    VTile(
+                        texture,
+                        width,
+                        height,
+                        self._get_data(data_line, "probability", 100),
+                        self._get_data(data_line, "no_rotation", False),
+                    )
+                )
+
+        # ################################### ANIMATED #######
+        def add_animation(y: int, data: dict[str, Any]) -> None:
+            keyframes = []
+
+            duration = -1
+            for x in range(data["nb"]):
+                if x < len(data["duration"]):
+                    duration = data["duration"][x]
+
+                x *= width
+                texture = sheet.get_texture(arcade.LBWH(x, y, width, height))
+                keyframes.append(arcade.TextureKeyframe(texture, duration))
+
+            animation = arcade.TextureAnimation(keyframes=keyframes)
+            self.textures[data_line["name"]].append(
+                VTile(
+                    animation,
+                    width,
+                    height,
+                    self._get_data(data_line, "probability", 100),
+                    self._get_data(data_line, "no_rotation", False),
+                )
+            )
+
+        # #################################################
+        # ####################################################
+        for y, data_line in enumerate(self.info["lines"]):
+            width = self._get_data(data_line, "width", self.default_width)
+            height = self._get_data(data_line, "height", self.default_height)
+            y *= height
+
+            if data_line["name"] not in self.textures:
+                self.textures[data_line["name"]] = list()
+
+            if self._get_data(data_line, "animated", False):
+                add_animation(y, data_line)
+            else:
+                add_regular(y, data_line)
+
+    # ########################################################################
+    # ######################################################## GET OPTION ####
+    def _get_data(
+        self,
+        data: dict[str, Any],
+        option: str,
+        default: Any,
     ) -> Any:
 
         if option in data:
@@ -45,66 +121,10 @@ class VAtlas:
         return default
 
     # ########################################################################
-    # ##################################################### LOAD TEXTURES ####
-    def load_textures(self):
-        self.textures.clear()
-        size = self.info["size"]
-        sheet = arcade.load_spritesheet(f"{self.path}/sheet.png")
-
-        def add_regular(y: int, data_line: dict[str, Any]) -> None:
-
-            for x in range(data_line["nb"]):
-                x *= size
-                texture = sheet.get_texture(arcade.LBWH(x, y, size, size))
-                self.textures[data_line["name"]].append(
-                    VTile(
-                        texture,
-                        self.get_option(data_line, "no_rotation", False),
-                        self.get_option(data_line, "probability", 100),
-                    )
-                )
-
-        def add_animation(y: int, data: dict[str, Any]) -> None:
-            keyframes = []
-
-            for x in range(data["nb"]):
-                x *= size
-                texture = sheet.get_texture(arcade.LBWH(x, y, size, size))
-
-                if x == 0:
-                    duration = data["duration_first"]
-                else:
-                    duration = data["duration"]
-
-                keyframes.append(arcade.TextureKeyframe(texture, duration))
-
-            animation = arcade.TextureAnimation(keyframes=keyframes)
-            self.textures[data_line["name"]].append(
-                VTile(
-                    animation,
-                    self.get_option(data_line, "no_rotation", False),
-                    self.get_option(data_line, "probability", 100),
-                )
-            )
-
-        # ###################################################
-        # #####################################################
-        for y, data_line in enumerate(self.info["lines"]):
-            y *= self.info["size"]
-
-            if data_line["name"] not in self.textures:
-                self.textures[data_line["name"]] = list()
-
-            if self.get_option(data_line, "animated", False):
-                add_animation(y, data_line)
-            else:
-                add_regular(y, data_line)
-
-    # ########################################################################
-    # ####################################################### SPRITE INFO ####
+    # #################################################### OPEN JSON FILE ####
     def _open_info_file(self, path: str) -> dict[str, Any]:
         try:
-            with open(f"{path}/info.json", "r") as file:
+            with open(f"{path}/{VAtlas.INFO_FILENAME}", "r") as file:
                 info: dict[str, Any] = json_load(file)
                 return info
         except OSError:

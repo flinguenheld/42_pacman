@@ -15,7 +15,6 @@ class SWall(Sprites):
     # ########################################################################
     # ############################################################ RELOAD ####
     def reload(self, walls: set[Vec2], floors: set[Vec2]) -> None:
-
         self.clear()
 
         for point in walls:

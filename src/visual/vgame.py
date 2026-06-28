@@ -4,7 +4,7 @@ from src.visual.vatlas import VAtlas
 import arcade
 from arcade import SpriteList, Vec2
 
-from src.visual import VNames, VData
+from src.visual import VNames, VData, StyleRENAME
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
@@ -19,12 +19,12 @@ class SpriteManager:
         self.floors: SFloor = SFloor(self.atlas)
 
     def next_style(self) -> None:
-        self.atlas.next_style()
+        self.atlas.load(StyleRENAME.Pirate)
 
     def reload(self, maze: Maze) -> None:
-
-        self.atlas.load_info()
-        self.atlas.load_textures()
+        # self.atlas._load_info()
+        # self.atlas._load_textures()
+        self.atlas.load(StyleRENAME.Pirate)
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)
 

@@ -17,9 +17,6 @@ class SFloor(Sprites):
     def reload(self, floors: set[Vec2]) -> None:
 
         self.clear()
-        # TODO: ADAPT THE ROTATION #########################################
-        # TODO: ADAPT THE ROTATION #########################################
-        # TODO: ADAPT THE ROTATION #########################################
         for point in floors:
             angle = random.choice([0, 90, 180, 270])
             point_world = maze_grid_to_world_coords(point)
