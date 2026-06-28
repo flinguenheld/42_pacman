@@ -74,10 +74,10 @@ class Sprites:
 
     # ########################################################################
     # ############################################################# CLEAR ####
-    def clear(self):
+    def clear(self) -> None:
         self.sprites.clear()
 
     # ########################################################################
     # ################################################## UPDATE ANIMATION ####
-    def update_animation(self, delta_time):
+    def update_animation(self, delta_time) -> None:
         self.sprites.update_animation(delta_time)

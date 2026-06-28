@@ -31,5 +31,6 @@ class VData:
     SPRITE_SHIFT = 50
 
 
-class StyleRENAME(Enum):
-    Pirate = "pirate_green"
+class Style(Enum):
+    PIRATE = "pirate"
+    PIRATE_GREEN = "pirate_green"

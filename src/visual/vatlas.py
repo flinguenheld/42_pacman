@@ -2,7 +2,7 @@ import arcade
 from typing import Any
 from dataclasses import dataclass
 from json import load as json_load
-from src.visual import StyleRENAME, VData
+from src.visual import Style, VData
 from arcade import TextureAnimation, Texture
 
 
@@ -24,15 +24,15 @@ class VTile:
 class VAtlas:
     INFO_FILENAME = "info.json"
 
-    def __init__(self):
-        self.style = StyleRENAME.Pirate
+    def __init__(self) -> None:
+        self.style = Style.PIRATE
         self.info: dict[str, Any] = dict()
         self.textures: dict[str, list[VTile]] = dict()
 
     # ########################################################################
     # ############################################################## LOAD ####
-    def load(self, new_style: StyleRENAME) -> None:
-        self.style: StyleRENAME = new_style
+    def load(self, new_style: Style) -> None:
+        self.style: Style = new_style
         self._load_info()
         self._load_textures()
 
@@ -46,7 +46,7 @@ class VAtlas:
 
     # ########################################################################
     # ##################################################### LOAD TEXTURES ####
-    def _load_textures(self):
+    def _load_textures(self) -> None:
         width = -1
         height = -1
         self.textures.clear()

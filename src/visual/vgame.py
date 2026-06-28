@@ -1,45 +1,12 @@
 from __future__ import annotations
-from src.visual.vatlas import VAtlas
 
 import arcade
 from arcade import SpriteList, Vec2
 
-from src.visual import VNames, VData, StyleRENAME
+from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
-from src.visual.sprites.swall import SWall
-from src.visual.sprites.sfloor import SFloor
 from src.visual.vplayer import Player
-
-
-# TODO: KEEP ?? - RENAME ?? - MOVE ??
-class SpriteManager:
-    def __init__(self) -> None:
-        self.atlas = VAtlas()
-        self.walls: SWall = SWall(self.atlas)
-        self.floors: SFloor = SFloor(self.atlas)
-
-    def next_style(self) -> None:
-        self.atlas.load(StyleRENAME.Pirate)
-
-    def reload(self, maze: Maze) -> None:
-        # self.atlas._load_info()
-        # self.atlas._load_textures()
-        self.atlas.load(StyleRENAME.Pirate)
-        self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
-        self.floors.reload(maze.floors)
-
-    def update(self, delta_time):
-        # self.sprite_list.update_animation(delta_time)
-        self.walls.update_animation(delta_time)
-        self.floors.update_animation(delta_time)
-
-    def draw(self) -> None:
-        # self.sprite_list.draw()
-        # print("blah")
-
-        # pass
-        self.walls.sprites.draw(pixelated=True)
-        self.floors.sprites.draw(pixelated=True)
+from src.visual.vsprite_manager import SpriteManager
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -70,6 +37,8 @@ class VGame(arcade.View):
         self.setup()
         self.camera.use()
 
+    # ########################################################################
+    # ############################################################# SETUP ####
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
 
@@ -81,6 +50,8 @@ class VGame(arcade.View):
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player)
 
+    # ########################################################################
+    # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WARM_BLACK)
 
