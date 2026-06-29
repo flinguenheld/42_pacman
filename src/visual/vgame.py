@@ -3,32 +3,14 @@ from __future__ import annotations
 import arcade
 from arcade import SpriteList, Vec2
 
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VNames, VData
+from src.visual.vpacgum import PacGum
+from src.visual.vplayer import Player
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
-from src.visual.vpacgum import PacGum
-from src.visual.vplayer import Player
-
-
-# TODO: KEEP ?? - RENAME ?? - MOVE ??
-class SpriteManager:
-    def __init__(self) -> None:
-        self.walls: SWall = SWall()
-        self.floors: SFloor = SFloor()
-
-    def next_style(self) -> None:
-        self.walls.next_style()
-        self.floors.next_style()
-
-    def reload(self, maze: Maze) -> None:
-        self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
-        self.floors.reload(maze.floors)
-
-    def draw(self) -> None:
-        self.walls.sprites.draw()
-        self.floors.sprites.draw()
+from src.visual.vsprite_manager import SpriteManager
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -60,13 +42,18 @@ class VGame(arcade.View):
         self.setup()
         self.camera.use()
 
+    # ########################################################################
+    # ############################################################# SETUP ####
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
 
         # Create a maze
         self.new_maze(42, Vec2(15, 15))
         self.sprite_manager.reload(self.maze_gen)
-        self.player = Player(maze_grid_to_world_coords(self.maze_gen.entry, scale=2.0), self.sprite_manager.walls)
+        self.player = Player(
+            maze_grid_to_world_coords(self.maze_gen.entry, scale=2.0),
+            self.sprite_manager.walls,
+        )
 
         self.player_sprite_list = arcade.SpriteList()
         self.player_sprite_list.append(self.player)
@@ -75,8 +62,12 @@ class VGame(arcade.View):
         for floor in self.maze_gen.floors:
             if floor == self.maze_gen.entry or floor == self.maze_gen.exit:
                 continue
-            self.pacgum_list.append(PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT))
+            self.pacgum_list.append(
+                PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT)
+            )
 
+    # ########################################################################
+    # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
         arcade.set_background_color(arcade.color.WARM_BLACK)
 
@@ -111,6 +102,11 @@ class VGame(arcade.View):
     def on_update(self, delta_time: int | float) -> None:
         assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
+
+        # TEST #############################################
+        # TEST #############################################
+        # TEST #############################################
+        self.sprite_manager.update(delta_time)
 
     # ########################################################################
     # ############################################################## KEYS ####

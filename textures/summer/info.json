@@ -1,0 +1,237 @@
+{
+  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "default_width": 32,
+  "default_height": 32,
+  "lines": [
+    {
+      "name": "wall_with_floor_on_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_bottom_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_right_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_right_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_right_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_right_bottom",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_extra_corner_bot_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_extra_corner_top_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_extra_corner_bot_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_extra_corner_top_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 1,
+      "probability": 95
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 4,
+      "animated": true,
+      "probability": 5,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 4,
+      "animated": true,
+      "probability": 5,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 4,
+      "animated": true,
+      "probability": 5,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 4,
+      "animated": true,
+      "probability": 5,
+      "duration": [
+        4000,
+        300
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 6,
+      "animated": true,
+      "probability": 5,
+      "duration": [
+        250
+      ]
+    },
+    {
+      "name": "floor_full",
+      "nb": 1,
+      "probability": 95
+    },
+    {
+      "name": "floor_full",
+      "nb": 10,
+      "probability": 5
+    }
+  ]
+}

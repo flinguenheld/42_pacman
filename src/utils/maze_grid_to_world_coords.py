@@ -16,4 +16,5 @@ def maze_grid_to_world_coords(grid_pos: Vec2, scale: float = 2.0) -> Vec2:
     sprite_size: float = VData.SPRITE_SIZE
     sprite_shift: float = VData.SPRITE_SHIFT
 
-    return (grid_pos * sprite_size + sprite_shift) * scale
+    # return (grid_pos * sprite_size + sprite_shift) * scale
+    return (grid_pos * sprite_size + sprite_shift) * 1

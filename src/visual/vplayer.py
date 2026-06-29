@@ -1,17 +1,17 @@
-from arcade import Sprite, Vec2, key
 import arcade
-from arcade.hitbox import HitBox
 
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 from src.visual import VData
+from arcade.hitbox import HitBox
+from arcade import Sprite, Vec2, key
 from src.visual.sprites.swall import SWall
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 class Player(Sprite):
     def __init__(self, start_pos: Vec2, walls: SWall) -> None:
         center = start_pos - (VData.SPRITE_SIZE / 2)
         super().__init__(
-            VData.SPRITES + "/hen.png",
+            VData.TEXTURES + "/hen.png",
             scale=0.3,
             center_x=center.x,
             center_y=center.y,
@@ -34,7 +34,8 @@ class Player(Sprite):
         )
 
     def update(self, delta_time: float = 1 / 60) -> None:
-        # Resolve movement per-axis to avoid corner tunneling and multi-wall phasing.
+        # Resolve movement per-axis to avoid corner
+        # tunneling and multi-wall phasing.
         self.center_x += self.change_x
         collided_x: list[Sprite] = arcade.check_for_collision_with_list(
             self, self.walls.sprites

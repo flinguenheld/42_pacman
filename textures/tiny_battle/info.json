@@ -1,0 +1,99 @@
+{
+  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "default_width": 16,
+  "default_height": 16,
+  "lines": [
+    {
+      "name": "wall_with_floor_on_top",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_right",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_bottom_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_right_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_right_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 1,
+      "probability": 100,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_LT",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_RT",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_BR",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "wall_extra_BL",
+      "nb": 1,
+      "no_rotation": true
+    },
+    {
+      "name": "floor_full",
+      "nb": 1,
+      "probability": 90
+    },
+    {
+      "name": "floor_full",
+      "nb": 2,
+      "probability": 10
+    }
+  ]
+}
