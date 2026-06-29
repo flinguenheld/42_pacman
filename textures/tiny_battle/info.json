@@ -4,105 +4,66 @@
   "default_height": 16,
   "lines": [
     {
-      "name": "wall_LT",
-      "nb": 4,
-      "width": 16,
-      "height": 16,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_top",
+      "nb": 1
     },
     {
-      "name": "wall_RT",
-      "nb": 4,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_right",
+      "nb": 1
     },
     {
-      "name": "wall_T",
-      "nb": 4,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_bottom",
+      "nb": 1
     },
     {
-      "name": "wall_L",
-      "nb": 4,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_left",
+      "nb": 1
     },
     {
-      "name": "wall_R",
-      "nb": 4,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_top_right",
+      "nb": 1
     },
     {
-      "name": "wall_BL",
-      "nb": 4,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_right_bottom",
+      "nb": 1
     },
     {
-      "name": "wall_BR",
-      "nb": 1,
-      "probability": 90,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_top_left",
+      "nb": 1
     },
     {
-      "name": "wall_B",
-      "nb": 10,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
+      "name": "wall_with_floor_on_bottom_left",
+      "nb": 1
     },
     {
-      "name": "wall_F",
+      "name": "wall_with_floor_on_top_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_right_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_right_bottom",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_open_full",
       "nb": 1,
       "probability": 100,
       "no_rotation": true
-    },
-    {
-      "name": "wall_BT",
-      "nb": 1,
-      "probability": 90,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
-    },
-    {
-      "name": "wall_LR",
-      "nb": 1,
-      "probability": 90,
-      "animated": true,
-      "duration": [
-        2000,
-        400
-      ]
     },
     {
       "name": "wall_extra_LT",

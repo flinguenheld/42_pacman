@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-import random
 from arcade import Vec2
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.sprites import Sprites
@@ -18,7 +15,5 @@ class SFloor(Sprites):
 
         self.clear()
         for point in floors:
-            angle = random.choice([0, 90, 180, 270])
             point_world = maze_grid_to_world_coords(point)
-
-            self.add_sprite(f"{self.base_name}full", point_world, 2, angle)
+            self.add_sprite(f"{self.base_name}full", point_world, 2)

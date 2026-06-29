@@ -1,6 +1,6 @@
 import arcade
 from typing import Any
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from json import load as json_load
 from src.visual import Style, VData
 from arcade import TextureAnimation, Texture
@@ -15,7 +15,7 @@ class VTile:
     width: int
     height: int
     probability: int = 100
-    no_rotation: bool = False
+    allowed_angles: list[int] = field(default_factory=lambda: [0])
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▀█▀░█░░░█▀█░█▀▀░░
@@ -64,7 +64,7 @@ class VAtlas:
                         width,
                         height,
                         self._get_data(data_line, "probability", 100),
-                        self._get_data(data_line, "no_rotation", False),
+                        self._get_data(data_line, "allowed_rotation", [0]),
                     )
                 )
 
@@ -88,7 +88,7 @@ class VAtlas:
                     width,
                     height,
                     self._get_data(data_line, "probability", 100),
-                    self._get_data(data_line, "no_rotation", False),
+                    self._get_data(data_line, "allowed_rotation", [0]),
                 )
             )
 

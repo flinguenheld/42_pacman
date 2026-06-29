@@ -1,3 +1,5 @@
+import time
+import random
 from src.visual import Style
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
@@ -13,20 +15,23 @@ class SpriteManager:
         self.atlas = VAtlas()
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
-        self.style: Style = Style.TINY_BATTLE
+        self.style: Style = Style.SUMMER
 
     # ########################################################################
     # ######################################################## NEXT STYLE ####
     def next_style(self) -> None:
         match self.style:
-            case Style.PIRATE:
-                self.style = Style.PIRATE_GREEN
-            case Style.PIRATE_GREEN:
-                self.style = Style.PIRATE
+            case Style.SUMMER:
+                self.style = Style.SUMMER
+            # case Style.PIRATE:
+            #     self.style = Style.PIRATE_GREEN
+            # case Style.PIRATE_GREEN:
+            #     self.style = Style.PIRATE
 
     # ########################################################################
     # ############################################################ RELOAD ####
     def reload(self, maze: Maze) -> None:
+        random.seed(time.time())
         self.atlas.load(self.style)
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)
