@@ -1,3 +1,4 @@
+from typing import ClassVar
 from arcade import Vec2
 from mazegenerator import MazeGenerator
 from dataclasses import dataclass, field
@@ -8,8 +9,10 @@ from dataclasses import dataclass, field
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 @dataclass
 class Maze:
+    WIDTH: ClassVar[int] = 15
+    HEIGHT: ClassVar[int] = 10
+
     seed: int = 42
-    size: Vec2 = Vec2(15, 15)
     entry: Vec2 = Vec2(1, 1)
     exit: Vec2 = Vec2(14, 14)
     walls: set[Vec2] = field(init=False, default_factory=set)
@@ -21,7 +24,7 @@ class Maze:
     # ################################################# GENERATE NEW MAZE ####
     def generate_new_maze(self) -> None:
         maze_gen = MazeGenerator(
-            size=(int(self.size.x), int(self.size.y)),
+            size=(Maze.WIDTH, Maze.HEIGHT),
             entry_cell=(int(self.entry.x), int(self.entry.y)),
             exit_cell=(int(self.exit.x), int(self.exit.y)),
             perfect=False,

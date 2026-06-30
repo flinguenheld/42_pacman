@@ -94,10 +94,10 @@ class VGame(arcade.View):
         self.player_sprite_list.draw_hit_boxes(
             color=arcade.color.RED, line_thickness=2
         )
-        self.pacgum_list.draw()
-        self.pacgum_list.draw_hit_boxes(
-            color=arcade.color.GREEN, line_thickness=2
-        )
+        # self.pacgum_list.draw()
+        # self.pacgum_list.draw_hit_boxes(
+        #     color=arcade.color.GREEN, line_thickness=2
+        # )
 
     def on_update(self, delta_time: int | float) -> None:
         assert self.player is not None, "Player is not initialized"

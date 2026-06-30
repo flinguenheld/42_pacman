@@ -5,6 +5,7 @@ from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
 from src.visual.vatlas import VAtlas, VTile
+from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░█▀▀░░
@@ -39,6 +40,7 @@ class Sprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
+        center = maze_grid_to_world_coords(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
             sprite_animation: Sprite = arcade.TextureAnimationSprite(

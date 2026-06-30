@@ -15,5 +15,5 @@ class SFloor(Sprites):
 
         self.clear()
         for point in floors:
-            point_world = maze_grid_to_world_coords(point)
-            self.add_sprite(f"{self.base_name}full", point_world, 2)
+            # point_world = maze_grid_to_world_coords(point)
+            self.add_sprite(f"{self.base_name}full", point, 2)

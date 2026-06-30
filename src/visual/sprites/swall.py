@@ -2,7 +2,6 @@ from arcade import Vec2
 from functools import partial
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.sprites import Sprites
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░█░█▀█░█░░░█░░░░
@@ -36,7 +35,7 @@ class SWall(Sprites):
             # TODO: ADD SCALE ###############################################
             add = partial(
                 self.add_sprite,
-                center=maze_grid_to_world_coords(point),
+                center=point,
                 scale=2,
             )
 
@@ -71,7 +70,7 @@ class SWall(Sprites):
             is_wall_on_left = Vec2(point.x - 1, point.y) in walls
 
             # --
-            point_world = maze_grid_to_world_coords(point)
+            # point_world = maze_grid_to_world_coords(point)
             texture_name = "with_floor_on"
 
             if is_floor_on_top:
@@ -93,7 +92,7 @@ class SWall(Sprites):
             self.add_sprite(
                 # f"{self.base_name}{texture_name}",
                 f"{self.base_name}{texture_name.removeprefix('_')}",
-                point_world,
+                point,
                 2,
                 force_first_choice,
             )
