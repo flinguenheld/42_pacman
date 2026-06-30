@@ -26,6 +26,7 @@ class Sprites:
         center: Vec2,
         scale: int,
         force_first: bool = False,
+        no_blahblah: bool = False,
     ) -> None:
         # ############################### PICK TEXTURE ####
         def pick_texture(who: str) -> VTile:
@@ -40,7 +41,8 @@ class Sprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        center = maze_grid_to_world_coords(center)
+        if not no_blahblah:
+            center = maze_grid_to_world_coords(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
             sprite_animation: Sprite = arcade.TextureAnimationSprite(

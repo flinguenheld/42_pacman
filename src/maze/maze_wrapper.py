@@ -1,3 +1,5 @@
+from src.visual import VData
+from itertools import count
 from typing import ClassVar
 from arcade import Vec2
 from mazegenerator import MazeGenerator
@@ -53,6 +55,26 @@ class Maze:
 
                 if point not in self.walls:
                     self.floors.add(point)
+
+    # ########################################################################
+    # ################################################## BUILD BACKGROUND ####
+    def background(self):
+
+        blah = set()
+
+        for x in range(VData.SPRITE_SIZE // 2, VData.WIDTH, VData.SPRITE_SIZE):
+            for y in range(
+                VData.SPRITE_SIZE // 2, VData.HEIGHT, VData.SPRITE_SIZE
+            ):
+                pt = Vec2(x, y)
+                # if pt not in self.walls:
+                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                blah.add(Vec2(x, y))
+
+        return blah
 
     # ########################################################################
     # ######################################################## BUILD MAZE ####

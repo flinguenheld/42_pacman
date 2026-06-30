@@ -1,7 +1,6 @@
 from arcade import Vec2
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.sprites import Sprites
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█░░░█▀█░█▀█░█▀▄░░

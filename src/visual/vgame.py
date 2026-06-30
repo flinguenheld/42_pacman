@@ -7,9 +7,7 @@ from src.visual import VNames, VData
 from src.visual.vpacgum import PacGum
 from src.visual.vplayer import Player
 from src.maze.maze_wrapper import Maze
-from src.visual.sprites.swall import SWall
-from src.visual.sprites.sfloor import SFloor
-from src.visual.vsprite_manager import SpriteManager
+from src.visual.sprites.vsprite_manager import SpriteManager
 from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
