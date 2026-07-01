@@ -11,12 +11,12 @@ class Maze:
     WIDTH: ClassVar[int] = 15
     HEIGHT: ClassVar[int] = 15
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
-    def setup(self):
+    def setup(self) -> None:
         self.walls: set[Vec2] = set()
         self.floors: set[Vec2] = set()
         self.forty_two: set[Vec2] = set()
@@ -67,7 +67,6 @@ class Maze:
     # ########################################################################
     # ################################################## BUILD BACKGROUND ####
     def build_background(self) -> None:
-
         try:
             self.background.clear()
             top = Maze.to_world_coords(max(self.walls, key=lambda w: w.y))
@@ -148,7 +147,7 @@ class Maze:
     # ########################################################################
     # ################################################### TO WORLD COORDS ####
     @classmethod
-    def to_world_coords(cls, maze_pos: Vec2, scale: float = 2.0) -> Vec2:
+    def to_world_coords(cls, maze_pos: Vec2) -> Vec2:
         """Convert maze grid coordinates to world coordinates."""
 
         shift_x = (VData.WIDTH - (cls.WIDTH * VData.SPRITE_SIZE * 2)) // 2

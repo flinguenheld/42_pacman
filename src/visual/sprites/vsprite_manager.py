@@ -1,5 +1,3 @@
-import time
-import random
 from src.visual import Style
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
@@ -13,11 +11,13 @@ from src.visual.sprites.sbackground import SBackground
 # ░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░▀░▀░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░
 class SpriteManager:
     def __init__(self) -> None:
+        self.style: Style = Style.SUMMER
         self.atlas = VAtlas()
+        self.atlas.load(self.style)
+
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
         self.backgrounds: SBackground = SBackground(self.atlas)
-        self.style: Style = Style.SUMMER
 
     # ########################################################################
     # ######################################################## NEXT STYLE ####
@@ -32,11 +32,15 @@ class SpriteManager:
 
     # ########################################################################
     # ############################################################ RELOAD ####
-    def reload(self, maze: Maze) -> None:
-        random.seed(time.time())
-        self.atlas.load(self.style)
+    def reload(self, maze: Maze, reload_atlas: bool = False) -> None:
+        if reload_atlas:
+            self.atlas.load(self.style)
+
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)
+
+    def reload_background(self, maze: Maze) -> None:
+        """Separated from reload since its sprite set has to be redo before."""
         self.backgrounds.reload(maze.background)
 
     # ########################################################################

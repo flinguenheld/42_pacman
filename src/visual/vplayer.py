@@ -4,7 +4,6 @@ from src.visual import VData
 from arcade.hitbox import HitBox
 from arcade import Sprite, Vec2, key
 from src.visual.sprites.swall import SWall
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 class Player(Sprite):

@@ -30,14 +30,7 @@ class SWall(Sprites):
             return False
 
         def add_extra_angles() -> None:
-
-            # TODO: ADD SCALE ###############################################
-            # TODO: ADD SCALE ###############################################
-            add = partial(
-                self.add_sprite,
-                center=point,
-                scale=2,
-            )
+            add = partial(self.add_sprite, center=point)
 
             if is_wall_on_bot and is_wall_on_left and is_floor_on_bot_left:
                 add(texture_name=f"{self.base_name}extra_corner_bot_left")
@@ -85,16 +78,10 @@ class SWall(Sprites):
             if texture_name == "with_floor_on":
                 texture_name = "open_full"
 
-            force_first_choice = will_have_extra_angle()
-
-            # TODO: ADD SCALE ###############################################
-            # TODO: ADD SCALE ###############################################
             self.add_sprite(
-                # f"{self.base_name}{texture_name}",
                 f"{self.base_name}{texture_name.removeprefix('_')}",
-                point,
-                2,
-                force_first_choice,
+                center=point,
+                force_first_texture=will_have_extra_angle(),
             )
 
             # --

@@ -4,8 +4,8 @@ from typing import Any
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
+from src.maze.maze_wrapper import Maze
 from src.visual.vatlas import VAtlas, VTile
-from src.utils.maze_grid_to_world_coords import maze_grid_to_world_coords
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░█▀▀░░
@@ -24,13 +24,12 @@ class Sprites:
         self,
         texture_name: str,
         center: Vec2,
-        scale: int,
-        force_first: bool = False,
-        no_blahblah: bool = False,
+        force_first_texture: bool = False,
+        to_world_coordinates: bool = True,
     ) -> None:
         # ############################### PICK TEXTURE ####
         def pick_texture(who: str) -> VTile:
-            if force_first:
+            if force_first_texture:
                 return self.atlas.textures[who][0]
 
             tile = [t for t in self.atlas.textures[who]]
@@ -41,16 +40,15 @@ class Sprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        if not no_blahblah:
-            center = maze_grid_to_world_coords(center)
+        if to_world_coordinates:
+            center = Maze.to_world_coords(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
             sprite_animation: Sprite = arcade.TextureAnimationSprite(
                 animation=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
-                # scale=scale,
-                scale=1,
+                scale=self._get_scale(tile.width),
             )
             sprite_animation.angle = angle
             self.sprites.append(sprite_animation)
@@ -60,17 +58,13 @@ class Sprites:
                     path_or_texture=tile.texture,
                     center_x=center.x,
                     center_y=center.y,
-                    # scale=scale,
-                    scale=1,
+                    scale=self._get_scale(tile.width),
                     angle=angle,
                 )
             )
 
     # ########################################################################
     # ############################################################# SCALE ####
-    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
-    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
-    # TODO: FIND A WAY TO ADPAT SPRITE SCALE !!!!!!!!!!!!!!!!!!!!!!!
     def _get_scale(self, size: int) -> float:
         return VData.SPRITE_SIZE / size
 

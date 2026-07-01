@@ -45,4 +45,6 @@ class VMain(arcade.Window):
     def on_resize(self, width: int, height: int) -> None:
         VData.WIDTH = width
         VData.HEIGHT = height
-        self.vgame.rebuild_background()
+
+        if isinstance(self.current_view, VGame):
+            self.vgame.reload_current_maze_sprites()
