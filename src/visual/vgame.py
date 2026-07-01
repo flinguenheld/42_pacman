@@ -1,4 +1,6 @@
 from __future__ import annotations
+import time
+import random
 
 import arcade
 from arcade import SpriteList, Vec2
@@ -18,12 +20,6 @@ class VGame(arcade.View):
     def __init__(self) -> None:
         super().__init__()
 
-        self.x = 100
-        self.y = 100
-
-        self.vel_x = 0
-        self.vel_y = 0
-
         self.sprite_manager = SpriteManager()
         self.camera = arcade.Camera2D(
             viewport=arcade.types.Viewport(
@@ -38,7 +34,7 @@ class VGame(arcade.View):
 
         self.pacgum_list: SpriteList[PacGum] | None = None
         self.setup()
-        self.camera.use()
+        # self.camera.use()
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -46,10 +42,14 @@ class VGame(arcade.View):
         """Set up the game here. Call this function to restart the game."""
 
         # Create a maze
-        self.new_maze(42, Vec2(15, 15))
+        self.new_maze(
+            random.randint(10, 30),
+            random.randint(5, 30),
+            random.randint(1, 200),
+        )
         self.sprite_manager.reload(self.maze_gen)
         self.player = Player(
-            maze_grid_to_world_coords(self.maze_gen.entry, scale=2.0),
+            Maze.to_world_coords(Vec2(2, 2), scale=2.0),
             self.sprite_manager.walls,
         )
 
@@ -57,12 +57,12 @@ class VGame(arcade.View):
         self.player_sprite_list.append(self.player)
 
         self.pacgum_list = arcade.SpriteList()
-        for floor in self.maze_gen.floors:
-            if floor == self.maze_gen.entry or floor == self.maze_gen.exit:
-                continue
-            self.pacgum_list.append(
-                PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT)
-            )
+        # for floor in self.maze_gen.floors:
+        #     if floor == self.maze_gen.entry or floor == self.maze_gen.exit:
+        #         continue
+        #     self.pacgum_list.append(
+        #         PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT)
+        #     )
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -71,11 +71,18 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
-    def new_maze(self, seed: int, size: Vec2) -> None:
-        self.maze_gen = Maze(seed, size)
-        self.maze_gen.generate_new_maze()
+    def new_maze(self, width: int, height: int, seed: int) -> None:
+        self.maze_gen = Maze()
+        self.maze_gen.generate_new_maze(width, height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
+        self.maze_gen.build_background()
+
+    # ########################################################################
+    # ################################################ REBUILD BACKGROUND ####
+    def rebuild_background(self):
+        self.maze_gen.build_background()
+        self.sprite_manager.reload(self.maze_gen)
 
     # ########################################################################
     # ##################################################### DRAW / UPDATE ####
@@ -87,6 +94,10 @@ class VGame(arcade.View):
             "PacGum sprite list is not initialized"
         )
         self.clear()
+
+        # Activate our camera before drawing
+        # self.camera.use()
+
         self.sprite_manager.draw()
         self.player_sprite_list.draw()
         self.player_sprite_list.draw_hit_boxes(
@@ -101,6 +112,8 @@ class VGame(arcade.View):
         assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
 
+        # self.camera.position = Maze.center_point()
+
         # TEST #############################################
         # TEST #############################################
         # TEST #############################################
@@ -114,6 +127,9 @@ class VGame(arcade.View):
             self.window.switch_view(VNames.VIEW_MENU)
         elif symbol == arcade.key.P:
             self.window.switch_view(VNames.VIEW_PAUSE)
+
+        elif symbol == arcade.key.N:
+            self.setup()
 
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()

@@ -13,7 +13,7 @@ from mazegenerator import MazeGenerator
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░░
 class VMain(arcade.Window):
     def __init__(self) -> None:
-        super().__init__(VData.WIDTH, VData.HEIGHT, "Pac-man")
+        super().__init__(VData.WIDTH, VData.HEIGHT, "Pac-man", resizable=True)
         self.maze_generator = MazeGenerator()
         self.maze_generator.generate()
         print(self.maze_generator.maze)
@@ -39,3 +39,10 @@ class VMain(arcade.Window):
                 self.show_view(self.vgame)
             case VNames.VIEW_PAUSE:
                 self.show_view(VPause())
+
+    # ########################################################################
+    # ######################################################### ON RESIZE ####
+    def on_resize(self, width: int, height: int) -> None:
+        VData.WIDTH = width
+        VData.HEIGHT = height
+        self.vgame.rebuild_background()

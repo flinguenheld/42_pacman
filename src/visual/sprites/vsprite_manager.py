@@ -1,4 +1,3 @@
-from src.visual.sprites.sbackground import SBackground
 import time
 import random
 from src.visual import Style
@@ -6,6 +5,7 @@ from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
+from src.visual.sprites.sbackground import SBackground
 
 
 # ░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░░░█▄█░█▀█░█▀█░█▀█░█▀▀░█▀▀░█▀▄░░
@@ -35,10 +35,9 @@ class SpriteManager:
     def reload(self, maze: Maze) -> None:
         random.seed(time.time())
         self.atlas.load(self.style)
-        # self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
-        self.walls.reload(maze.walls, maze.floors)
+        self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)
-        self.backgrounds.reload(maze.background())
+        self.backgrounds.reload(maze.background)
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -51,5 +50,5 @@ class SpriteManager:
     # ############################################################## DRAW ####
     def draw(self) -> None:
         self.backgrounds.sprites.draw(pixelated=True)
-        # self.walls.sprites.draw(pixelated=True)
-        # self.floors.sprites.draw(pixelated=True)
+        self.walls.sprites.draw(pixelated=True)
+        self.floors.sprites.draw(pixelated=True)

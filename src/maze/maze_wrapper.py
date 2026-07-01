@@ -1,42 +1,50 @@
-from src.visual import VData
-from itertools import count
-from typing import ClassVar
 from arcade import Vec2
+from typing import ClassVar
+from src.visual import VData
 from mazegenerator import MazeGenerator
-from dataclasses import dataclass, field
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░
-@dataclass
 class Maze:
     WIDTH: ClassVar[int] = 15
-    HEIGHT: ClassVar[int] = 10
+    HEIGHT: ClassVar[int] = 15
 
-    seed: int = 42
-    entry: Vec2 = Vec2(1, 1)
-    exit: Vec2 = Vec2(14, 14)
-    walls: set[Vec2] = field(init=False, default_factory=set)
-    floors: set[Vec2] = field(init=False, default_factory=set)
-    forty_two: set[Vec2] = field(init=False, default_factory=set)
-    raw_maze: list[list[int]] = field(init=False, default_factory=list)
+    def __init__(self):
+        self.setup()
+
+    # ########################################################################
+    # ############################################################# SETUP ####
+    def setup(self):
+        self.walls: set[Vec2] = set()
+        self.floors: set[Vec2] = set()
+        self.forty_two: set[Vec2] = set()
+        self.background: set[Vec2] = set()
+        self.raw_maze: list[list[int]] = list()
 
     # ########################################################################
     # ################################################# GENERATE NEW MAZE ####
-    def generate_new_maze(self) -> None:
-        maze_gen = MazeGenerator(
-            size=(Maze.WIDTH, Maze.HEIGHT),
-            entry_cell=(int(self.entry.x), int(self.entry.y)),
-            exit_cell=(int(self.exit.x), int(self.exit.y)),
-            perfect=False,
-            seed=self.seed,
-        )
-        self.entry = Vec2(maze_gen.maze_entry[0], maze_gen.maze_entry[1])
-        self.exit = Vec2(maze_gen.maze_exit[0], maze_gen.maze_exit[1])
-        self.raw_maze = maze_gen.maze
+    def generate_new_maze(
+        self,
+        width: int = 15,
+        height: int = 15,
+        seed: int = 42,
+    ) -> None:
 
-    # TODO: SET REAL COORDINATES HERE ??????? with the size ????????
+        try:
+            maze_gen = MazeGenerator(
+                size=(width, height),
+                perfect=False,
+                seed=seed,
+            )
+            self.setup()
+            self.raw_maze = maze_gen.maze
+        except RecursionError:
+            exit(15)
+        else:
+            Maze.WIDTH = width
+            Maze.HEIGHT = height
 
     # ########################################################################
     # ###################################################### BUILD FLOORS ####
@@ -58,23 +66,25 @@ class Maze:
 
     # ########################################################################
     # ################################################## BUILD BACKGROUND ####
-    def background(self):
+    def build_background(self) -> None:
 
-        blah = set()
+        try:
+            self.background.clear()
+            top = Maze.to_world_coords(max(self.walls, key=lambda w: w.y))
+            right = Maze.to_world_coords(max(self.walls, key=lambda w: w.x))
+            bot = Maze.to_world_coords(min(self.walls, key=lambda w: w.y))
+            left = Maze.to_world_coords(min(self.walls, key=lambda w: w.x))
 
-        for x in range(VData.SPRITE_SIZE // 2, VData.WIDTH, VData.SPRITE_SIZE):
-            for y in range(
-                VData.SPRITE_SIZE // 2, VData.HEIGHT, VData.SPRITE_SIZE
-            ):
-                pt = Vec2(x, y)
-                # if pt not in self.walls:
-                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                # TODO NOT GOOD, PUT SPRITES WHERE IT'S USELESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                blah.add(Vec2(x, y))
+        except ValueError:
+            top = right = bot = left = Vec2(0, 0)
 
-        return blah
+        sprite_size = VData.SPRITE_SIZE
+        for x in range(0, VData.WIDTH + sprite_size, sprite_size):
+            for y in range(0, VData.HEIGHT + sprite_size, sprite_size):
+                if x > left.x and x < right.x and y > bot.y and y < top.y:
+                    continue
+
+                self.background.add(Vec2(x, y))
 
     # ########################################################################
     # ######################################################## BUILD MAZE ####
@@ -134,3 +144,17 @@ class Maze:
                     self.walls.add(Vec2(x + 1, y))
                     self.walls.add(Vec2(x + 1, y - 1))
                     self.walls.add(Vec2(x + 1, y + 1))
+
+    # ########################################################################
+    # ################################################### TO WORLD COORDS ####
+    @classmethod
+    def to_world_coords(cls, maze_pos: Vec2, scale: float = 2.0) -> Vec2:
+        """Convert maze grid coordinates to world coordinates."""
+
+        shift_x = (VData.WIDTH - (cls.WIDTH * VData.SPRITE_SIZE * 2)) // 2
+        shift_y = (VData.HEIGHT - (cls.HEIGHT * VData.SPRITE_SIZE * 2)) // 2
+
+        return Vec2(
+            maze_pos.x * VData.SPRITE_SIZE + shift_x,
+            maze_pos.y * VData.SPRITE_SIZE + shift_y,
+        )
