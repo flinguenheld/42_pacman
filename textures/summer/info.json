@@ -232,6 +232,12 @@
       "name": "floor_full",
       "nb": 10,
       "probability": 5
+    },
+    {
+      "width": 128,
+      "height": 128,
+      "name": "background",
+      "nb": 1
     }
   ]
 }

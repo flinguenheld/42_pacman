@@ -26,6 +26,7 @@ class VData:
     TEXTURES = "textures"
     # TODO: I PUT 32 BUT IT COULD BE IN THE CONFIGURATION FILE
     SPRITE_SIZE = 32
+    SPRITE_SIZE_BACKGROUND = SPRITE_SIZE * 4
     # SPRITE_SIZE = 48
 
 
@@ -34,3 +35,4 @@ class Style(Enum):
     PIRATE = "pirate"
     PIRATE_GREEN = "pirate_green"
     SUMMER = "summer"
+    EDGE = "test"

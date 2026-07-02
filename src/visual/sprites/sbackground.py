@@ -9,14 +9,14 @@ class SBackground(Sprites):
         # TODO: CHANGE NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # TODO: CHANGE NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # TODO: CHANGE NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        super().__init__(atlas, "wall_")
+        super().__init__(atlas, "background")
 
     def reload(self, backgrounds: set[Vec2]) -> None:
 
         self.clear()
         for point in backgrounds:
             self.add_sprite(
-                f"{self.base_name}open_full",
+                f"{self.base_name}",
                 center=point,
-                to_world_coordinates=False,
+                background=True,
             )

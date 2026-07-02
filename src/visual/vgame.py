@@ -122,6 +122,7 @@ class VGame(arcade.View):
     def up_sprite_size(self, new_size: int) -> None:
         if new_size >= 10:
             VData.SPRITE_SIZE = new_size
+            VData.SPRITE_SIZE_BACKGROUND = new_size * 4
             self.reload_current_maze_sprites()
 
     # ########################################################################

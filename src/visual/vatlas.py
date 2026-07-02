@@ -1,8 +1,8 @@
 import arcade
 from typing import Any
-from dataclasses import dataclass, field
 from json import load as json_load
 from src.visual import Style, VData
+from dataclasses import dataclass, field
 from arcade import TextureAnimation, Texture
 
 
@@ -94,10 +94,10 @@ class VAtlas:
 
         # #################################################
         # ####################################################
-        for y, data_line in enumerate(self.info["lines"]):
+        y = 0
+        for data_line in self.info["lines"]:
             width = self._get_data(data_line, "width", self.default_width)
             height = self._get_data(data_line, "height", self.default_height)
-            y *= height
 
             if data_line["name"] not in self.textures:
                 self.textures[data_line["name"]] = list()
@@ -106,6 +106,8 @@ class VAtlas:
                 add_animation(y, data_line)
             else:
                 add_regular(y, data_line)
+
+            y += height
 
     # ########################################################################
     # ######################################################## GET OPTION ####

@@ -65,27 +65,6 @@ class Maze:
                     self.floors.add(point)
 
     # ########################################################################
-    # ################################################## BUILD BACKGROUND ####
-    def build_background(self) -> None:
-        try:
-            self.background.clear()
-            top = Maze.to_world_coords(max(self.walls, key=lambda w: w.y))
-            right = Maze.to_world_coords(max(self.walls, key=lambda w: w.x))
-            bot = Maze.to_world_coords(min(self.walls, key=lambda w: w.y))
-            left = Maze.to_world_coords(min(self.walls, key=lambda w: w.x))
-
-        except ValueError:
-            top = right = bot = left = Vec2(0, 0)
-
-        sprite_size = VData.SPRITE_SIZE
-        for x in range(0, VData.WIDTH + sprite_size, sprite_size):
-            for y in range(0, VData.HEIGHT + sprite_size, sprite_size):
-                if x > left.x and x < right.x and y > bot.y and y < top.y:
-                    continue
-
-                self.background.add(Vec2(x, y))
-
-    # ########################################################################
     # ######################################################## BUILD MAZE ####
     def build_walls(self) -> None:
         """
@@ -143,6 +122,29 @@ class Maze:
                     self.walls.add(Vec2(x + 1, y))
                     self.walls.add(Vec2(x + 1, y - 1))
                     self.walls.add(Vec2(x + 1, y + 1))
+
+    # ########################################################################
+    # ################################################## BUILD BACKGROUND ####
+    def build_background(self) -> None:
+        self.background.clear()
+        maze_top = Maze.to_world_coords(max(self.walls, key=lambda w: w.y)).y
+        maze_right = Maze.to_world_coords(max(self.walls, key=lambda w: w.x)).x
+        maze_bot = Maze.to_world_coords(min(self.walls, key=lambda w: w.y)).y
+        maze_left = Maze.to_world_coords(min(self.walls, key=lambda w: w.x)).x
+
+        size_background = VData.SPRITE_SIZE_BACKGROUND
+
+        top = int(maze_top) + VData.SPRITE_SIZE // 2
+        right = int(maze_right) + VData.SPRITE_SIZE // 2
+        bot = int(maze_bot) - VData.SPRITE_SIZE // 2
+        left = int(maze_left) - VData.SPRITE_SIZE // 2
+
+        horizontal = (VData.WIDTH - Maze.WIDTH) // 2
+        vertical = (VData.HEIGHT - Maze.HEIGHT) // 2
+
+        for x in range(left - horizontal, right + horizontal, size_background):
+            for y in range(bot - vertical, top + vertical, size_background):
+                self.background.add(Vec2(x, y))
 
     # ########################################################################
     # ################################################### TO WORLD COORDS ####

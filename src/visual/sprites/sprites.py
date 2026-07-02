@@ -25,7 +25,7 @@ class Sprites:
         texture_name: str,
         center: Vec2,
         force_first_texture: bool = False,
-        to_world_coordinates: bool = True,
+        background: bool = False,
     ) -> None:
         # ############################### PICK TEXTURE ####
         def pick_texture(who: str) -> VTile:
@@ -40,7 +40,7 @@ class Sprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        if to_world_coordinates:
+        if not background:
             center = Maze.to_world_coords(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
@@ -48,7 +48,7 @@ class Sprites:
                 animation=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
-                scale=self._get_scale(tile.width),
+                scale=self._get_scale(tile.width, background),
             )
             sprite_animation.angle = angle
             self.sprites.append(sprite_animation)
@@ -58,14 +58,16 @@ class Sprites:
                     path_or_texture=tile.texture,
                     center_x=center.x,
                     center_y=center.y,
-                    scale=self._get_scale(tile.width),
+                    scale=self._get_scale(tile.width, background),
                     angle=angle,
                 )
             )
 
     # ########################################################################
     # ############################################################# SCALE ####
-    def _get_scale(self, size: int) -> float:
+    def _get_scale(self, size: int, background: bool = False) -> float:
+        if background:
+            return VData.SPRITE_SIZE_BACKGROUND / size
         return VData.SPRITE_SIZE / size
 
     # ########################################################################

@@ -24,6 +24,9 @@ class SpriteManager:
     def next_style(self) -> None:
         match self.style:
             case Style.SUMMER:
+                self.style = Style.EDGE
+
+            case Style.EDGE:
                 self.style = Style.SUMMER
             # case Style.PIRATE:
             #     self.style = Style.PIRATE_GREEN
