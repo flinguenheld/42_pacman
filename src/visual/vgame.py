@@ -41,7 +41,7 @@ class VGame(arcade.View):
         )
 
         self.player = Player(
-            Maze.to_world_coords(Vec2(2, 2)),
+            self.sprite_manager.floors.sprites[0].position,
             self.sprite_manager.walls,
         )
 

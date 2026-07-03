@@ -1,4 +1,5 @@
 import arcade
+from arcade.types import Point2
 
 from src.visual import VData
 from arcade.hitbox import HitBox
@@ -7,13 +8,12 @@ from src.visual.sprites.swall import SWall
 
 
 class Player(Sprite):
-    def __init__(self, start_pos: Vec2, walls: SWall) -> None:
-        center = start_pos - (VData.SPRITE_SIZE / 2)
+    def __init__(self, start_pos: Point2, walls: SWall) -> None:
         super().__init__(
             VData.TEXTURES + "/hen.png",
             scale=0.3,
-            center_x=center.x,
-            center_y=center.y,
+            center_x=start_pos[0],
+            center_y=start_pos[1],
         )
         self.speed: int = 10
         self.walls: SWall = walls
