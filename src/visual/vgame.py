@@ -19,20 +19,14 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
-        self.camera = arcade.Camera2D(
-            viewport=arcade.types.Viewport(
-                left=0,
-                bottom=0,
-                width=VData.WIDTH,
-                height=VData.HEIGHT,
-            )
-        )
+        self.camera = arcade.Camera2D()
+        self.resize_camera()
+
         self.player: Player | None = None
         self.player_sprite_list: SpriteList[Player] | None = None
 
         self.pacgum_list: SpriteList[PacGum] | None = None
         self.setup()
-        # self.camera.use()
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -96,7 +90,7 @@ class VGame(arcade.View):
         )
 
         # Activate our camera before drawing
-        # self.camera.use()
+        self.camera.use()
 
         self.sprite_manager.draw()
         self.player_sprite_list.draw()
@@ -116,13 +110,19 @@ class VGame(arcade.View):
             12,
         )
 
+    def resize_camera(self) -> None:
+        self.camera.viewport = arcade.types.Viewport(
+            left=0,
+            bottom=0,
+            width=VData.WIDTH,
+            height=VData.HEIGHT,
+        )
+
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
-
-        # self.camera.position = Maze.center_point()
 
         self.sprite_manager.update(delta_time)
 
@@ -147,11 +147,12 @@ class VGame(arcade.View):
             self.setup()
 
         elif symbol == arcade.key.PLUS:
-            self.up_sprite_size(VData.SPRITE_SIZE + 2)
+            self.camera.zoom += 0.1
         elif symbol == arcade.key.MINUS:
-            self.up_sprite_size(VData.SPRITE_SIZE - 2)
+            self.camera.zoom -= 0.1
         elif symbol == arcade.key.EQUAL:
-            self.up_sprite_size(32)
+            self.camera.zoom = 1.0
+
 
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()

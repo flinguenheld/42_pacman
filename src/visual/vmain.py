@@ -53,4 +53,5 @@ class VMain(arcade.Window):
         VData.HEIGHT = height
 
         if isinstance(self.current_view, VGame):
+            self.vgame.resize_camera()
             self.vgame.reload_current_maze_sprites()
