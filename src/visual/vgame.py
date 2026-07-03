@@ -49,12 +49,11 @@ class VGame(arcade.View):
         self.player_sprite_list.append(self.player)
 
         self.pacgum_list = arcade.SpriteList()
-        # for floor in self.maze_gen.floors:
-        #     if floor == self.maze_gen.entry or floor == self.maze_gen.exit:
-        #         continue
-        #     self.pacgum_list.append(
-        #         PacGum(floor * VData.SPRITE_SIZE + VData.SPRITE_SHIFT)
-        #     )
+        for floor_sprite in self.sprite_manager.floors.sprites:
+            pos = Vec2(floor_sprite.center_x, floor_sprite.center_y)
+            self.pacgum_list.append(
+                PacGum(pos)
+            )
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -97,10 +96,10 @@ class VGame(arcade.View):
         self.player_sprite_list.draw_hit_boxes(
             color=arcade.color.RED, line_thickness=2
         )
-        # self.pacgum_list.draw()
-        # self.pacgum_list.draw_hit_boxes(
-        #     color=arcade.color.GREEN, line_thickness=2
-        # )
+        self.pacgum_list.draw()
+        self.pacgum_list.draw_hit_boxes(
+            color=arcade.color.GREEN, line_thickness=2
+        )
         current_fps = arcade.get_fps()
         arcade.draw_text(
             f"FPS: {current_fps:.2f}",
