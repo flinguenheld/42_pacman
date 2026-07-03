@@ -19,8 +19,7 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
-        self.camera = arcade.Camera2D()
-        self.resize_camera()
+        self.camera = arcade.Camera2D(self.window.rect)
 
         self.player: Player | None = None
         self.player_sprite_list: SpriteList[Player] | None = None
@@ -31,17 +30,8 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        self.reload_current_maze_sprites()
-
-    def resize_camera(self) -> None:
-        self.camera.viewport = arcade.types.Viewport(
-            left=0,
-            bottom=0,
-            width=VData.WIDTH,
-            height=VData.HEIGHT,
-        )
-
-        # self.camera = Maze.EDGES["center"]
+        self.camera = arcade.Camera2D(self.window.rect)
+        self.camera.position = self.sprite_manager.walls.info.center
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -91,6 +81,7 @@ class VGame(arcade.View):
         self.maze_gen.build_background()
         self.sprite_manager.reload(self.maze_gen)
         self.sprite_manager.reload_background(self.maze_gen)
+        self.camera.position = self.sprite_manager.walls.info.center
 
     # ########################################################################
     # ############################################################## DRAW ####

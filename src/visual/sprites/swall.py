@@ -86,3 +86,4 @@ class SWall(SSprites):
 
             # --
             add_extra_angles()
+            self._up_info()
