@@ -13,7 +13,13 @@ from mazegenerator import MazeGenerator
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░░
 class VMain(arcade.Window):
     def __init__(self) -> None:
-        super().__init__(VData.WIDTH, VData.HEIGHT, "Pac-man", resizable=True)
+        super().__init__(
+            VData.WIDTH,
+            VData.HEIGHT,
+            "Pac-man",
+            resizable=True,
+            antialiasing=False,
+        )
         self.maze_generator = MazeGenerator()
         self.maze_generator.generate()
         print(self.maze_generator.maze)

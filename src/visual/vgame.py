@@ -15,6 +15,7 @@ from src.visual.sprites.vsprite_manager import SpriteManager
 class VGame(arcade.View):
     def __init__(self) -> None:
         super().__init__()
+        arcade.enable_timings()
 
         self.sprite_manager = SpriteManager()
 
@@ -106,6 +107,14 @@ class VGame(arcade.View):
         # self.pacgum_list.draw_hit_boxes(
         #     color=arcade.color.GREEN, line_thickness=2
         # )
+        current_fps = arcade.get_fps()
+        arcade.draw_text(
+            f"FPS: {current_fps:.2f}",
+            10,
+            VData.HEIGHT - 20,
+            arcade.color.WHITE,
+            12,
+        )
 
     # ########################################################################
     # ############################################################ UPDATE ####
