@@ -1,12 +1,12 @@
 from arcade import Vec2
 from src.visual.vatlas import VAtlas
-from src.visual.sprites.sprites import Sprites
+from src.visual.sprites.ssprites import SSprites
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█░░░█▀█░█▀█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█░░░█░█░█░█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░
-class SFloor(Sprites):
+class SFloor(SSprites):
     def __init__(self, atlas: VAtlas) -> None:
         super().__init__(atlas, "floor_")
 

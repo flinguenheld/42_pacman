@@ -1,13 +1,13 @@
 from arcade import Vec2
 from functools import partial
 from src.visual.vatlas import VAtlas
-from src.visual.sprites.sprites import Sprites
+from src.visual.sprites.ssprites import SSprites
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░█░█▀█░█░░░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▄█░█▀█░█░░░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
-class SWall(Sprites):
+class SWall(SSprites):
     def __init__(self, atlas: VAtlas) -> None:
         super().__init__(atlas, "wall_")
 
