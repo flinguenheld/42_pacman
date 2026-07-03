@@ -116,10 +116,18 @@
       "probability": 1
     },
     {
+      "name": "background",
+      "nb": 1,
       "width": 128,
       "height": 128,
+      "probability": 100
+    },
+    {
       "name": "background",
-      "nb": 1
+      "nb": 1,
+      "width": 128,
+      "height": 128,
+      "probability": 70
     }
   ]
 }

@@ -13,7 +13,7 @@ from src.visual.vatlas import VAtlas, VTile
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░░
 class Sprites:
     def __init__(self, atlas: VAtlas, base_name: str) -> None:
-        self.sprites: SpriteList[Sprite] = SpriteList()
+        self.sprites: SpriteList[Sprite] = SpriteList(use_spatial_hash=True)
         self.base_name: str = base_name
         self.info: dict[str, Any] = {}
         self.atlas = atlas

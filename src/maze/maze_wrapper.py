@@ -1,15 +1,31 @@
+from __future__ import annotations
+
 from arcade import Vec2
 from typing import ClassVar
 from src.visual import VData
 from mazegenerator import MazeGenerator
+
+# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
+# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
+# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
+# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
+# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class Maze:
+    # TODO: CHANGE CASE ???
+    # TODO: CHANGE CASE ???
     WIDTH: ClassVar[int] = 15
     HEIGHT: ClassVar[int] = 15
+    EDGES: ClassVar[dict[str, int]] = {
+        "top": 0,
+        "right": 0,
+        "bot": 0,
+        "left": 0,
+    }
 
     def __init__(self) -> None:
         self.setup()
@@ -22,6 +38,7 @@ class Maze:
         self.forty_two: set[Vec2] = set()
         self.background: set[Vec2] = set()
         self.raw_maze: list[list[int]] = list()
+        self.edges: dict[str, int] = {}
 
     # ########################################################################
     # ################################################# GENERATE NEW MAZE ####
@@ -41,7 +58,8 @@ class Maze:
             self.setup()
             self.raw_maze = maze_gen.maze
         except RecursionError:
-            exit(15)
+            # TODO: add something ????
+            exit(42)
         else:
             Maze.WIDTH = width
             Maze.HEIGHT = height
@@ -50,6 +68,7 @@ class Maze:
     # ###################################################### BUILD FLOORS ####
     def build_floors(self) -> None:
         self.floors.clear()
+        self.forty_two.clear()
         for y in range(len(self.raw_maze) * 2):
             for x in range(len(self.raw_maze[0]) * 2):
                 reversed_y = len(self.raw_maze) * 2 - y
@@ -93,6 +112,22 @@ class Maze:
              6  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
                 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
         """
+
+        def up_edges():
+
+            to_world = Maze.to_world_coords
+
+            maze_top = to_world(max(self.walls, key=lambda w: w.y)).y
+            maze_right = to_world(max(self.walls, key=lambda w: w.x)).x
+            maze_bot = to_world(min(self.walls, key=lambda w: w.y)).y
+            maze_left = to_world(min(self.walls, key=lambda w: w.x)).x
+
+            Maze.EDGES["top"] = int(maze_top) + VData.SPRITE_SIZE // 2
+            Maze.EDGES["right"] = int(maze_right) + VData.SPRITE_SIZE // 2
+            Maze.EDGES["bot"] = int(maze_bot) - VData.SPRITE_SIZE // 2
+            Maze.EDGES["left"] = int(maze_left) - VData.SPRITE_SIZE // 2
+
+        # --
         self.walls.clear()
 
         # Loop in the maze draw where it's open
@@ -123,27 +158,25 @@ class Maze:
                     self.walls.add(Vec2(x + 1, y - 1))
                     self.walls.add(Vec2(x + 1, y + 1))
 
+        # --
+        up_edges()
+
     # ########################################################################
     # ################################################## BUILD BACKGROUND ####
     def build_background(self) -> None:
         self.background.clear()
-        maze_top = Maze.to_world_coords(max(self.walls, key=lambda w: w.y)).y
-        maze_right = Maze.to_world_coords(max(self.walls, key=lambda w: w.x)).x
-        maze_bot = Maze.to_world_coords(min(self.walls, key=lambda w: w.y)).y
-        maze_left = Maze.to_world_coords(min(self.walls, key=lambda w: w.x)).x
-
-        size_background = VData.SPRITE_SIZE_BACKGROUND
-
-        top = int(maze_top) + VData.SPRITE_SIZE // 2
-        right = int(maze_right) + VData.SPRITE_SIZE // 2
-        bot = int(maze_bot) - VData.SPRITE_SIZE // 2
-        left = int(maze_left) - VData.SPRITE_SIZE // 2
 
         horizontal = (VData.WIDTH - Maze.WIDTH) // 2
         vertical = (VData.HEIGHT - Maze.HEIGHT) // 2
 
-        for x in range(left - horizontal, right + horizontal, size_background):
-            for y in range(bot - vertical, top + vertical, size_background):
+        from_x = Maze.EDGES["left"] - horizontal
+        to_x = Maze.EDGES["right"] + horizontal
+
+        from_y = Maze.EDGES["bot"] - vertical
+        to_y = Maze.EDGES["top"] + vertical
+
+        for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
+            for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):
                 self.background.add(Vec2(x, y))
 
     # ########################################################################

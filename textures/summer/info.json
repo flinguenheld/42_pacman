@@ -237,7 +237,20 @@
       "width": 128,
       "height": 128,
       "name": "background",
-      "nb": 1
+      "nb": 1,
+      "probability": 95
+    },
+    {
+      "width": 128,
+      "height": 128,
+      "name": "background",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        4000,
+        300
+      ],
+      "probability": 5
     }
   ]
 }

@@ -44,7 +44,7 @@ class SpriteManager:
 
     def reload_background(self, maze: Maze) -> None:
         """Separated from reload since its sprite set has to be redo before."""
-        self.backgrounds.reload(maze.background)
+        self.backgrounds.reload(maze.background, maze.walls)
 
     # ########################################################################
     # ############################################################ UPDATE ####
