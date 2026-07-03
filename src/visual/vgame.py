@@ -29,6 +29,21 @@ class VGame(arcade.View):
         self.setup()
 
     # ########################################################################
+    # ############################################################ RESIZE ####
+    def on_resize(self, width: int, height: int) -> None:
+        self.reload_current_maze_sprites()
+
+    def resize_camera(self) -> None:
+        self.camera.viewport = arcade.types.Viewport(
+            left=0,
+            bottom=0,
+            width=VData.WIDTH,
+            height=VData.HEIGHT,
+        )
+
+        # self.camera = Maze.EDGES["center"]
+
+    # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
@@ -110,14 +125,6 @@ class VGame(arcade.View):
             12,
         )
 
-    def resize_camera(self) -> None:
-        self.camera.viewport = arcade.types.Viewport(
-            left=0,
-            bottom=0,
-            width=VData.WIDTH,
-            height=VData.HEIGHT,
-        )
-
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
@@ -152,7 +159,6 @@ class VGame(arcade.View):
             self.camera.zoom -= 0.1
         elif symbol == arcade.key.EQUAL:
             self.camera.zoom = 1.0
-
 
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()

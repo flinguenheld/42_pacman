@@ -52,6 +52,6 @@ class VMain(arcade.Window):
         VData.WIDTH = width
         VData.HEIGHT = height
 
-        if isinstance(self.current_view, VGame):
-            self.vgame.resize_camera()
-            self.vgame.reload_current_maze_sprites()
+        # if isinstance(self.current_view, VGame):
+        #     self.vgame.resize_camera()
+        #     self.vgame.reload_current_maze_sprites()

@@ -20,11 +20,12 @@ class Maze:
     # TODO: CHANGE CASE ???
     WIDTH: ClassVar[int] = 15
     HEIGHT: ClassVar[int] = 15
-    EDGES: ClassVar[dict[str, int]] = {
-        "top": 0,
-        "right": 0,
-        "bot": 0,
-        "left": 0,
+    EDGES: ClassVar[dict[str, int | Vec2]] = {
+        "top_left": Vec2(0, 0),
+        "top_right": Vec2(0, 0),
+        "bot_right": Vec2(0, 0),
+        "bot_left": Vec2(0, 0),
+        "center": Vec2(0, 0),
     }
 
     def __init__(self) -> None:
@@ -122,10 +123,19 @@ class Maze:
             maze_bot = to_world(min(self.walls, key=lambda w: w.y)).y
             maze_left = to_world(min(self.walls, key=lambda w: w.x)).x
 
-            Maze.EDGES["top"] = int(maze_top) + VData.SPRITE_SIZE // 2
-            Maze.EDGES["right"] = int(maze_right) + VData.SPRITE_SIZE // 2
-            Maze.EDGES["bot"] = int(maze_bot) - VData.SPRITE_SIZE // 2
-            Maze.EDGES["left"] = int(maze_left) - VData.SPRITE_SIZE // 2
+            maze_top += VData.SPRITE_SIZE // 2
+            maze_right += VData.SPRITE_SIZE // 2
+            maze_bot -= VData.SPRITE_SIZE // 2
+            maze_left -= VData.SPRITE_SIZE // 2
+
+            Maze.EDGES["top_left"] = Vec2(maze_left, maze_top)
+            Maze.EDGES["top_right"] = Vec2(maze_right, maze_top)
+            Maze.EDGES["bot_left"] = Vec2(maze_left, maze_bot)
+            Maze.EDGES["bot_right"] = Vec2(maze_right, maze_bot)
+            Maze.EDGES["center"] = Vec2(
+                maze_left + ((maze_right - maze_left) / 2),
+                maze_bot + ((maze_top - maze_bot) / 2),
+            )
 
         # --
         self.walls.clear()
@@ -166,18 +176,18 @@ class Maze:
     def build_background(self) -> None:
         self.background.clear()
 
-        horizontal = (VData.WIDTH - Maze.WIDTH) // 2
-        vertical = (VData.HEIGHT - Maze.HEIGHT) // 2
+        # horizontal = (VData.WIDTH - Maze.WIDTH) // 2
+        # vertical = (VData.HEIGHT - Maze.HEIGHT) // 2
 
-        from_x = Maze.EDGES["left"] - horizontal
-        to_x = Maze.EDGES["right"] + horizontal
+        # from_x = Maze.EDGES["left"] - horizontal
+        # to_x = Maze.EDGES["right"] + horizontal
 
-        from_y = Maze.EDGES["bot"] - vertical
-        to_y = Maze.EDGES["top"] + vertical
+        # from_y = Maze.EDGES["bot"] - vertical
+        # to_y = Maze.EDGES["top"] + vertical
 
-        for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
-            for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):
-                self.background.add(Vec2(x, y))
+        # for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
+        #     for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):
+        #         self.background.add(Vec2(x, y))
 
     # ########################################################################
     # ################################################### TO WORLD COORDS ####
@@ -185,10 +195,10 @@ class Maze:
     def to_world_coords(cls, maze_pos: Vec2) -> Vec2:
         """Convert maze grid coordinates to world coordinates."""
 
-        shift_x = (VData.WIDTH - (cls.WIDTH * VData.SPRITE_SIZE * 2)) // 2
-        shift_y = (VData.HEIGHT - (cls.HEIGHT * VData.SPRITE_SIZE * 2)) // 2
+        # shift_x = (VData.WIDTH - (cls.WIDTH * VData.SPRITE_SIZE * 2)) // 2
+        # shift_y = (VData.HEIGHT - (cls.HEIGHT * VData.SPRITE_SIZE * 2)) // 2
 
         return Vec2(
-            maze_pos.x * VData.SPRITE_SIZE + shift_x,
-            maze_pos.y * VData.SPRITE_SIZE + shift_y,
+            maze_pos.x * VData.SPRITE_SIZE,
+            maze_pos.y * VData.SPRITE_SIZE,
         )
