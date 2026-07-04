@@ -17,6 +17,9 @@ class VData:
     HEIGHT: int = 1300
     WIDTH: int = 1300
 
+    CAMERA_MARGIN: int = 100
+
+    # TODO: REMOVE THAT UGLY
     CENTER_X: int = WIDTH // 2
     CENTER_Y: int = HEIGHT // 2
 

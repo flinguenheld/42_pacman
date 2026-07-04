@@ -19,6 +19,7 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
+        # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
         self.player: Player | None = None
@@ -31,7 +32,7 @@ class VGame(arcade.View):
     # ############################################################ RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
         self.camera = arcade.Camera2D(self.window.rect)
-        self.camera.position = self.sprite_manager.walls.info.center
+        self.camera_center()
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -81,12 +82,26 @@ class VGame(arcade.View):
         self.maze_gen.build_background()
         self.sprite_manager.reload(self.maze_gen)
         self.sprite_manager.reload_background(self.maze_gen)
-        self.camera.position = self.sprite_manager.walls.info.center
+        self.camera_center()
+
+    # ########################################################################
+    # ############################################################ CAMERA ####
+    def camera_center(self):
+        self.camera.position = self.sprite_manager.walls.center_position
+        self.camera_adapt_zoom()
+
+    def camera_adapt_zoom(self):
+        margin = VData.CAMERA_MARGIN
+        scale_hori = (self.width - margin) / self.sprite_manager.walls.width
+        scale_vert = (self.height - margin) / self.sprite_manager.walls.height
+
+        self.camera.zoom = min(scale_hori, scale_vert)
 
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
         self.clear()
+        self.camera.use()
 
         assert self.player_sprite_list is not None, (
             "Player sprite list is not initialized"
@@ -94,9 +109,6 @@ class VGame(arcade.View):
         assert self.pacgum_list is not None, (
             "PacGum sprite list is not initialized"
         )
-
-        # Activate our camera before drawing
-        self.camera.use()
 
         self.sprite_manager.draw()
         self.player_sprite_list.draw()

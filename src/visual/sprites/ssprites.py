@@ -1,21 +1,10 @@
 import arcade
 import random
-from typing import Any
-from dataclasses import dataclass
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
 from src.maze.maze_wrapper import Maze
 from src.visual.vatlas import VAtlas, VTile
-
-
-@dataclass
-class SInfo:
-    top_left: Vec2 = Vec2(0, 0)
-    top_right: Vec2 = Vec2(0, 0)
-    bot_right: Vec2 = Vec2(0, 0)
-    bot_left: Vec2 = Vec2(0, 0)
-    center: Vec2 = Vec2(0, 0)
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░█▀▀░░
@@ -26,7 +15,8 @@ class SSprites:
         self.sprites: SpriteList[Sprite] = SpriteList(use_spatial_hash=True)
         self.base_name: str = base_name
         self.atlas = atlas
-        self.info: SInfo = SInfo()
+
+        self._clear_edges()
 
     # ########################################################################
     # ######################################################## ADD SPRITE ####
@@ -35,6 +25,10 @@ class SSprites:
         texture_name: str,
         center: Vec2,
         force_first_texture: bool = False,
+        # TODO: REMOVE BACKGROUND #####################################################
+        # TODO: REMOVE BACKGROUND #####################################################
+        # TODO: REMOVE BACKGROUND #####################################################
+        # TODO: REMOVE BACKGROUND #####################################################
         background: bool = False,
     ) -> None:
         # ############################### PICK TEXTURE ####
@@ -50,8 +44,8 @@ class SSprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        if not background:
-            center = Maze.to_world_coords(center)
+        center = Maze.to_world_coords(center)
+        self._up_edges(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
             sprite_animation: Sprite = arcade.TextureAnimationSprite(
@@ -84,50 +78,45 @@ class SSprites:
     # ############################################################# CLEAR ####
     def clear(self) -> None:
         self.sprites.clear()
+        self._clear_edges()
 
     # ########################################################################
-    # ########################################################## UP INFOS ####
-    def _up_info(self):
+    # ############################################################# EDGES ####
+    def _clear_edges(self):
+        self._top = 0.0
+        self._bot = 0.0
+        self._left = 0.0
+        self._right = 0.0
 
-        # TODO: LOOKS VERY SLOW
-        # TODO: LOOKS VERY SLOW
-        # TODO: LOOKS VERY SLOW
-        # TODO: LOOKS VERY SLOW
-        # TODO: LOOKS VERY SLOW
-        # TODO: LOOKS VERY SLOW
-        top = max(self.sprites, key=lambda s: s.center_y).center_y
-        bot = min(self.sprites, key=lambda s: s.center_y).center_y
+    def _up_edges(self, point: Vec2):
+        """
+        Save the edges.
+        Used while adding new sprites to avoid calculations.
+        """
+        if point.y < self._bot:
+            self._bot = point.y
+        if point.y > self._top:
+            self._top = point.y
 
-        top_left = min(
-            (s for s in self.sprites if s.center_y == top),
-            key=lambda s: s.center_x,
-        )
-        self.info.top_left = Vec2(top_left.center_x, top_left.center_y)
+        if point.x < self._left:
+            self._left = point.x
+        if point.x > self._right:
+            self._right = point.x
 
-        top_right = max(
-            (s for s in self.sprites if s.center_y == top),
-            key=lambda s: s.center_x,
-        )
-        self.info.top_right = Vec2(top_right.center_x, top_right.center_y)
+    # ########################################################################
+    # ######################################################## PROPERTIES ####
+    @property
+    def center_position(self):
+        center = Vec2(self._left + self.width / 2, self._bot + self.height / 2)
+        return center
 
-        bot_left = min(
-            (s for s in self.sprites if s.center_y == bot),
-            key=lambda s: s.center_x,
-        )
-        self.info.bot_left = Vec2(bot_left.center_x, bot_left.center_y)
+    @property
+    def width(self):
+        return self._right - self._left
 
-        bot_right = max(
-            (s for s in self.sprites if s.center_y == bot),
-            key=lambda s: s.center_x,
-        )
-        self.info.bot_right = Vec2(bot_right.center_x, bot_right.center_y)
-
-        self.info.center = Vec2(
-            self.info.bot_left.x
-            + (self.info.bot_right.x - self.info.bot_left.x) / 2,
-            self.info.bot_left.y
-            + (self.info.bot_left.y - self.info.top_left.y) / 2,
-        )
+    @property
+    def height(self):
+        return self._top - self._bot
 
     # ########################################################################
     # ################################################## UPDATE ANIMATION ####
