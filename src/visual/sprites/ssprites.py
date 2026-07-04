@@ -44,7 +44,7 @@ class SSprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        center = Maze.to_world_coords(center)
+        # center = Maze.to_world_coords(center)
         self._up_edges(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):

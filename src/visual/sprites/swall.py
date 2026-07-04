@@ -1,3 +1,4 @@
+from src.visual import VData
 from arcade import Vec2
 from functools import partial
 from src.visual.vatlas import VAtlas
@@ -47,20 +48,22 @@ class SWall(SSprites):
         # ##########################################
         # ################################################
         for point in walls:
-            is_floor_on_top = Vec2(point.x, point.y + 1) in floors
-            is_floor_on_right = Vec2(point.x + 1, point.y) in floors
-            is_floor_on_bot = Vec2(point.x, point.y - 1) in floors
-            is_floor_on_left = Vec2(point.x - 1, point.y) in floors
+            SS = VData.SPRITE_SIZE
 
-            is_floor_on_top_left = Vec2(point.x - 1, point.y + 1) in floors
-            is_floor_on_top_right = Vec2(point.x + 1, point.y + 1) in floors
-            is_floor_on_bot_left = Vec2(point.x - 1, point.y - 1) in floors
-            is_floor_on_bot_right = Vec2(point.x + 1, point.y - 1) in floors
+            is_floor_on_top = Vec2(point.x, point.y + SS) in floors
+            is_floor_on_right = Vec2(point.x + SS, point.y) in floors
+            is_floor_on_bot = Vec2(point.x, point.y - SS) in floors
+            is_floor_on_left = Vec2(point.x - SS, point.y) in floors
 
-            is_wall_on_top = Vec2(point.x, point.y + 1) in walls
-            is_wall_on_right = Vec2(point.x + 1, point.y) in walls
-            is_wall_on_bot = Vec2(point.x, point.y - 1) in walls
-            is_wall_on_left = Vec2(point.x - 1, point.y) in walls
+            is_floor_on_top_left = Vec2(point.x - SS, point.y + SS) in floors
+            is_floor_on_top_right = Vec2(point.x + SS, point.y + SS) in floors
+            is_floor_on_bot_left = Vec2(point.x - SS, point.y - SS) in floors
+            is_floor_on_bot_right = Vec2(point.x + SS, point.y - SS) in floors
+
+            is_wall_on_top = Vec2(point.x, point.y + SS) in walls
+            is_wall_on_right = Vec2(point.x + SS, point.y) in walls
+            is_wall_on_bot = Vec2(point.x, point.y - SS) in walls
+            is_wall_on_left = Vec2(point.x - SS, point.y) in walls
 
             # --
             # point_world = maze_grid_to_world_coords(point)

@@ -20,22 +20,22 @@ class SBackground(SSprites):
                 "left": int(center.x) - VData.SPRITE_SIZE_BACKGROUND // 2,
             }
 
-        def is_x_inside(x: int) -> bool:
-            return x > Maze.EDGES["left"] and x < Maze.EDGES["right"]
+        # def is_x_inside(x: int) -> bool:
+        #     return x > Maze.EDGES["left"] and x < Maze.EDGES["right"]
 
-        def is_y_inside(y: int) -> bool:
-            return y > Maze.EDGES["bot"] and y < Maze.EDGES["top"]
+        # def is_y_inside(y: int) -> bool:
+        #     return y > Maze.EDGES["bot"] and y < Maze.EDGES["top"]
 
         # --
         for point in backgrounds:
             force = False
             edges = get_tile_edges(point)
 
-            if is_y_inside(edges["top"]) or is_y_inside(edges["bot"]):
-                if is_x_inside(edges["left"]):
-                    force = True
-                if is_x_inside(edges["right"]):
-                    force = True
+            # if is_y_inside(edges["top"]) or is_y_inside(edges["bot"]):
+            #     if is_x_inside(edges["left"]):
+            #         force = True
+            #     if is_x_inside(edges["right"]):
+            #         force = True
 
             self.add_sprite(
                 f"{self.base_name}",
