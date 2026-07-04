@@ -47,7 +47,7 @@ class VGame(arcade.View):
         )
 
         self.player = Player(
-            Vec2(2, 2),
+            Vec2(VData.SPRITE_SIZE * 1.5, VData.SPRITE_SIZE * 1.5),
             self.sprite_manager.walls,
         )
 
@@ -74,14 +74,13 @@ class VGame(arcade.View):
         self.maze_gen.generate_new_maze(width, height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
+        self.maze_gen.build_background()
         self.reload_current_maze_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
-        self.maze_gen.build_background()
         self.sprite_manager.reload(self.maze_gen)
-        self.sprite_manager.reload_background(self.maze_gen)
         self.camera_center()
 
     # ########################################################################
@@ -166,7 +165,6 @@ class VGame(arcade.View):
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()
             self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-            self.sprite_manager.reload_background(self.maze_gen)
 
         assert self.player is not None, "Player is not initialized"
         self.player.on_key_press(symbol, modifiers)

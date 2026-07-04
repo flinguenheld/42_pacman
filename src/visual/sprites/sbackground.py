@@ -1,6 +1,6 @@
-from src.visual import VData
 from src.maze.maze_wrapper import Maze
 from arcade import Vec2
+from src.visual import VData
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.ssprites import SSprites
 
@@ -9,7 +9,7 @@ class SBackground(SSprites):
     def __init__(self, atlas: VAtlas) -> None:
         super().__init__(atlas, "background")
 
-    def reload(self, backgrounds: set[Vec2], walls: set[Vec2]) -> None:
+    def reload(self, backgrounds: set[Vec2], maze: Maze) -> None:
         self.clear()
 
         def get_tile_edges(center: Vec2) -> dict[str, int]:
@@ -41,5 +41,5 @@ class SBackground(SSprites):
                 f"{self.base_name}",
                 center=point,
                 force_first_texture=force,
-                background=True,
+                sprite_size=VData.SPRITE_SIZE_BACKGROUND,
             )

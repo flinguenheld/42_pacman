@@ -25,11 +25,7 @@ class SSprites:
         texture_name: str,
         center: Vec2,
         force_first_texture: bool = False,
-        # TODO: REMOVE BACKGROUND #####################################################
-        # TODO: REMOVE BACKGROUND #####################################################
-        # TODO: REMOVE BACKGROUND #####################################################
-        # TODO: REMOVE BACKGROUND #####################################################
-        background: bool = False,
+        sprite_size: int = VData.SPRITE_SIZE,
     ) -> None:
         # ############################### PICK TEXTURE ####
         def pick_texture(who: str) -> VTile:
@@ -52,7 +48,7 @@ class SSprites:
                 animation=tile.texture,
                 center_x=center.x,
                 center_y=center.y,
-                scale=self._get_scale(tile.width, background),
+                scale=self._get_scale(tile.width, sprite_size),
             )
             sprite_animation.angle = angle
             self.sprites.append(sprite_animation)
@@ -62,17 +58,15 @@ class SSprites:
                     path_or_texture=tile.texture,
                     center_x=center.x,
                     center_y=center.y,
-                    scale=self._get_scale(tile.width, background),
+                    scale=self._get_scale(tile.width, sprite_size),
                     angle=angle,
                 )
             )
 
     # ########################################################################
     # ############################################################# SCALE ####
-    def _get_scale(self, size: int, background: bool = False) -> float:
-        if background:
-            return VData.SPRITE_SIZE_BACKGROUND / size
-        return VData.SPRITE_SIZE / size
+    def _get_scale(self, size: int, sprite_size: int) -> float:
+        return sprite_size / size
 
     # ########################################################################
     # ############################################################# CLEAR ####
