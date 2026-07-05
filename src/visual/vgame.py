@@ -29,12 +29,6 @@ class VGame(arcade.View):
         self.setup()
 
     # ########################################################################
-    # ############################################################ RESIZE ####
-    def on_resize(self, width: int, height: int) -> None:
-        self.camera = arcade.Camera2D(self.window.rect)
-        self.camera_center()
-
-    # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
@@ -65,7 +59,14 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
+        arcade.set_background_color(self.sprite_manager.background_color)
         self.reload_current_maze_sprites()
+
+    # ########################################################################
+    # ######################################################### ON RESIZE ####
+    def on_resize(self, width: int, height: int) -> None:
+        self.camera = arcade.Camera2D(self.window.rect)
+        self.camera_center()
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -95,7 +96,6 @@ class VGame(arcade.View):
         scale_vert = (self.height - margin) / self.maze_gen.height
 
         self.camera.zoom = min(scale_hori, scale_vert)
-        print("zoom adapted")
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -166,6 +166,7 @@ class VGame(arcade.View):
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()
             self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
+            arcade.set_background_color(self.sprite_manager.background_color)
 
         assert self.player is not None, "Player is not initialized"
         self.player.on_key_press(symbol, modifiers)

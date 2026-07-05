@@ -31,8 +31,5 @@ class VData:
 
 
 class Style(Enum):
-    TINY_BATTLE = "tiny_battle"
-    PIRATE = "pirate"
-    PIRATE_GREEN = "pirate_green"
     SUMMER = "summer"
-    EDGE = "test"
+    EDGE = "edge"

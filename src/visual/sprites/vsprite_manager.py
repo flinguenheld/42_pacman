@@ -1,3 +1,4 @@
+from arcade.types import Color
 from src.visual import Style
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
@@ -28,10 +29,6 @@ class SpriteManager:
 
             case Style.EDGE:
                 self.style = Style.SUMMER
-            # case Style.PIRATE:
-            #     self.style = Style.PIRATE_GREEN
-            # case Style.PIRATE_GREEN:
-            #     self.style = Style.PIRATE
 
     # ########################################################################
     # ############################################################ RELOAD ####
@@ -56,3 +53,9 @@ class SpriteManager:
         self.backgrounds.sprites.draw(pixelated=True)
         self.walls.sprites.draw(pixelated=True)
         self.floors.sprites.draw(pixelated=True)
+
+    # ########################################################################
+    # ################################################## BACKGROUND COLOR ####
+    @property
+    def background_color(self) -> Color:
+        return Color(**self.atlas.background_color)

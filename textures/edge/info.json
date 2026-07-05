@@ -1,7 +1,12 @@
 {
-  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "url": "https://fr.pinterest.com/pin/733946070550276240/",
   "default_width": 32,
   "default_height": 32,
+  "background_color": {
+    "r": 158,
+    "g": 179,
+    "b": 65
+  },
   "lines": [
     {
       "name": "wall_with_floor_on_top",

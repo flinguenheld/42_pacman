@@ -25,7 +25,7 @@ class VAtlas:
     INFO_FILENAME = "info.json"
 
     def __init__(self) -> None:
-        self.style = Style.PIRATE
+        self.style = Style.SUMMER
         self.info: dict[str, Any] = dict()
         self.textures: dict[str, list[VTile]] = dict()
 
@@ -131,3 +131,9 @@ class VAtlas:
                 return info
         except OSError:
             raise FileNotFoundError(f"info.json not found in {path}")
+
+    # ########################################################################
+    # ################################################## BACKGROUND COLOR ####
+    @property
+    def background_color(self) -> dict[str, int] | Any:
+        return self.info["background_color"]
