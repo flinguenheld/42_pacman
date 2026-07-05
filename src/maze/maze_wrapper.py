@@ -1,15 +1,8 @@
 from __future__ import annotations
 
 from arcade import Vec2
-from typing import ClassVar
 from src.visual import VData
 from mazegenerator import MazeGenerator
-
-# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
-# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
-# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
-# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
-# TODO: KEEP "THE REAL" coordinates or use only real ones ???????
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
@@ -33,17 +26,14 @@ class Maze:
     # ################################################# GENERATE NEW MAZE ####
     def generate_new_maze(
         self,
-        # TODO: RENAME RAW WIDTH
-        # TODO: RENAME RAW WIDTH
-        # TODO: RENAME RAW WIDTH
-        width: int = 15,
-        height: int = 15,
+        raw_width: int = 15,
+        raw_height: int = 15,
         seed: int = 42,
     ) -> None:
 
         try:
             maze_gen = MazeGenerator(
-                size=(width, height),
+                size=(raw_width, raw_height),
                 perfect=False,
                 seed=seed,
             )
@@ -103,12 +93,13 @@ class Maze:
                 ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
         """
 
-        def add_wall_and_up_edges(x: int, y: int):
+        def add_wall_and_up_edges(x: int, y: int) -> None:
             self._up_edges(x, y)
             self.walls.add(Vec2(x, y))
 
         # --
         self.walls.clear()
+        self._clear_edges()
 
         sprite_size = VData.SPRITE_SIZE
         for raw_y, row in enumerate(reversed(self.raw_maze)):
@@ -143,25 +134,11 @@ class Maze:
     def build_background(self) -> None:
         self.background.clear()
 
-        # TODO: Find a way to cover the screen
-        if self.width > self.height:
-            from_x = int(self._left - VData.CAMERA_MARGIN)
-            to_x = int(self._right + VData.CAMERA_MARGIN)
-
-            from_y = int(self._bot - (VData.HEIGHT))
-            to_y = int(self._top + (VData.HEIGHT))
-
-        else:
-            from_y = int(self._bot - VData.CAMERA_MARGIN)
-            to_y = int(self._top + VData.CAMERA_MARGIN)
-
-            from_x = int(self._left - (VData.WIDTH))
-            to_x = int(self._right + (VData.WIDTH))
-
-        print(f"left: {self._left}")
-        print(f"width: {self.width}")
-        print(f"screen width: {VData.WIDTH}")
-        print(f"{from_x}/{from_y}  ->  {to_x}/{to_y}")
+        # Simple and oversized
+        from_x = self.left - VData.WIDTH // 2
+        to_x = self.right + VData.WIDTH // 2
+        from_y = self.bot - VData.HEIGHT // 2
+        to_y = self.top + VData.HEIGHT // 2
 
         for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
             for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):
@@ -169,39 +146,41 @@ class Maze:
 
     # ########################################################################
     # ############################################################# EDGES ####
-    def _clear_edges(self):
-        self._top = 0.0
-        self._bot = 0.0
-        self._left = 0.0
-        self._right = 0.0
+    def _clear_edges(self) -> None:
+        """
+        Edges are the center of tiles which are on max of top/bot/left/right.
+        """
+        self.top = 0
+        self.bot = 0
+        self.left = 0
+        self.right = 0
 
-    # def _up_edges(self, point: Vec2):
-    def _up_edges(self, x: int, y: int):
+    def _up_edges(self, x: int, y: int) -> None:
         """
         Save the edges.
-        Used while adding new sprites to avoid calculations.
+        Used while building walls to avoid calculations.
         """
-        if y < self._bot:
-            self._bot = y
-        if y > self._top:
-            self._top = y
+        if y < self.bot:
+            self.bot = y
+        if y > self.top:
+            self.top = y
 
-        if x < self._left:
-            self._left = x
-        if x > self._right:
-            self._right = x
+        if x < self.left:
+            self.left = x
+        if x > self.right:
+            self.right = x
 
     # ########################################################################
     # ######################################################## PROPERTIES ####
     @property
-    def center_position(self):
-        center = Vec2(self._left + self.width / 2, self._bot + self.height / 2)
+    def center_position(self) -> Vec2:
+        center = Vec2(self.left + self.width / 2, self.bot + self.height / 2)
         return center
 
     @property
-    def width(self):
-        return self._right - self._left
+    def width(self) -> int:
+        return self.right - self.left
 
     @property
-    def height(self):
-        return self._top - self._bot
+    def height(self) -> int:
+        return self.top - self.bot

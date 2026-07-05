@@ -1,4 +1,3 @@
-from __future__ import annotations
 from src.visual.vpause import VPause
 
 import arcade
@@ -20,6 +19,7 @@ class VMain(arcade.Window):
             resizable=True,
             antialiasing=False,
         )
+
         self.maze_generator = MazeGenerator()
         self.maze_generator.generate()
         print(self.maze_generator.maze)
@@ -51,7 +51,3 @@ class VMain(arcade.Window):
     def on_resize(self, width: int, height: int) -> None:
         VData.WIDTH = width
         VData.HEIGHT = height
-
-        # if isinstance(self.current_view, VGame):
-        #     self.vgame.resize_camera()
-        #     self.vgame.reload_current_maze_sprites()

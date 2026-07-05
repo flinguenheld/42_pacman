@@ -3,7 +3,6 @@ import random
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
-from src.maze.maze_wrapper import Maze
 from src.visual.vatlas import VAtlas, VTile
 
 
@@ -15,8 +14,6 @@ class SSprites:
         self.sprites: SpriteList[Sprite] = SpriteList(use_spatial_hash=True)
         self.base_name: str = base_name
         self.atlas = atlas
-
-        self._clear_edges()
 
     # ########################################################################
     # ######################################################## ADD SPRITE ####
@@ -40,8 +37,6 @@ class SSprites:
         # ####################################
         tile = pick_texture(texture_name)
         angle = random.choice(tile.allowed_angles)
-        # center = Maze.to_world_coords(center)
-        self._up_edges(center)
 
         if isinstance(tile.texture, arcade.TextureAnimation):
             sprite_animation: Sprite = arcade.TextureAnimationSprite(
@@ -72,45 +67,6 @@ class SSprites:
     # ############################################################# CLEAR ####
     def clear(self) -> None:
         self.sprites.clear()
-        self._clear_edges()
-
-    # ########################################################################
-    # ############################################################# EDGES ####
-    def _clear_edges(self):
-        self._top = 0.0
-        self._bot = 0.0
-        self._left = 0.0
-        self._right = 0.0
-
-    def _up_edges(self, point: Vec2):
-        """
-        Save the edges.
-        Used while adding new sprites to avoid calculations.
-        """
-        if point.y < self._bot:
-            self._bot = point.y
-        if point.y > self._top:
-            self._top = point.y
-
-        if point.x < self._left:
-            self._left = point.x
-        if point.x > self._right:
-            self._right = point.x
-
-    # ########################################################################
-    # ######################################################## PROPERTIES ####
-    @property
-    def center_position(self):
-        center = Vec2(self._left + self.width / 2, self._bot + self.height / 2)
-        return center
-
-    @property
-    def width(self):
-        return self._right - self._left
-
-    @property
-    def height(self):
-        return self._top - self._bot
 
     # ########################################################################
     # ################################################## UPDATE ANIMATION ####

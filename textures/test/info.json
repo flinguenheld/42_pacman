@@ -78,17 +78,17 @@
     {
       "name": "wall_open_full",
       "nb": 3,
-      "probability": 100
+      "probability": 90
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 1
+      "probability": 10
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 1
+      "probability": 10
     },
     {
       "name": "floor_full",
@@ -119,15 +119,19 @@
       "name": "background",
       "nb": 1,
       "width": 128,
-      "height": 128,
-      "probability": 100
+      "height": 128
     },
     {
       "name": "background",
-      "nb": 1,
+      "nb": 4,
       "width": 128,
-      "height": 128,
-      "probability": 70
+      "height": 128
+    },
+    {
+      "name": "background",
+      "nb": 4,
+      "width": 128,
+      "height": 128
     }
   ]
 }

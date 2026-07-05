@@ -69,9 +69,9 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
-    def new_maze(self, width: int, height: int, seed: int) -> None:
+    def new_maze(self, raw_width: int, raw_height: int, seed: int) -> None:
         self.maze_gen = Maze()
-        self.maze_gen.generate_new_maze(width, height, seed)
+        self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
         self.maze_gen.build_background()
@@ -85,16 +85,17 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ############################################################ CAMERA ####
-    def camera_center(self):
-        self.camera.position = self.sprite_manager.walls.center_position
+    def camera_center(self) -> None:
+        self.camera.position = self.maze_gen.center_position
         self.camera_adapt_zoom()
 
-    def camera_adapt_zoom(self):
+    def camera_adapt_zoom(self) -> None:
         margin = VData.CAMERA_MARGIN
-        scale_hori = (self.width - margin) / self.sprite_manager.walls.width
-        scale_vert = (self.height - margin) / self.sprite_manager.walls.height
+        scale_hori = (self.width - margin) / self.maze_gen.width
+        scale_vert = (self.height - margin) / self.maze_gen.height
 
         self.camera.zoom = min(scale_hori, scale_vert)
+        print("zoom adapted")
 
     # ########################################################################
     # ############################################################## DRAW ####
