@@ -122,9 +122,10 @@ class VGame(arcade.View):
         arcade.draw_text(
             f"FPS: {current_fps:.2f}",
             10,
-            VData.HEIGHT - 20,
+            0,
             arcade.color.WHITE,
-            12,
+            22,
+            bold=True
         )
 
     # ########################################################################
