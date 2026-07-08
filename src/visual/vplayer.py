@@ -35,8 +35,22 @@ class Player(Sprite):
             position=self.position,
             scale=Vec2(hitbox_scale, hitbox_scale),
         )
+        self.pressed_keys: set[int] = set()
+        self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
 
     def update(self, delta_time: float = 1 / 60) -> None:
+        # Update player movement based on pressed keys
+        self.change_x = 0
+        self.change_y = 0
+        if key.LEFT in self.pressed_keys:
+            self.change_x = -1 * self.speed
+        if key.RIGHT in self.pressed_keys:
+            self.change_x = 1 * self.speed
+        if key.UP in self.pressed_keys:
+            self.change_y = 1 * self.speed
+        if key.DOWN in self.pressed_keys:
+            self.change_y = -1 * self.speed
+
         # Resolve movement per-axis to avoid corner
         # tunneling and multi-wall phasing.
         self.center_x += self.change_x
@@ -62,25 +76,13 @@ class Player(Sprite):
                 self.bottom = max(self.bottom, wall.top)
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        # Handle player movement based on key presses
-        match symbol:
-            case key.LEFT:
-                self.change_x = -1 * self.speed
-            case key.RIGHT:
-                self.change_x = 1 * self.speed
-            case key.UP:
-                self.change_y = 1 * self.speed
-            case key.DOWN:
-                self.change_y = -1 * self.speed
-            case _:
-                pass
+        # Handle key press events to control player movement
+        if symbol not in self.valid_keys:
+            return
+        self.pressed_keys.add(symbol)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        # Stop player movement when keys are released
-        match symbol:
-            case key.LEFT | key.RIGHT:
-                self.change_x = 0
-            case key.UP | key.DOWN:
-                self.change_y = 0
-            case _:
-                pass
+        # Handle key release events to stop player movement
+        if symbol not in self.valid_keys:
+            return
+        self.pressed_keys.discard(symbol)
