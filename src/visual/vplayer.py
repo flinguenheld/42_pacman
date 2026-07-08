@@ -5,10 +5,13 @@ from src.visual import VData
 from arcade.hitbox import HitBox
 from arcade import Sprite, Vec2, key
 from src.visual.sprites.swall import SWall
+from src.visual.vgamestate import GameState
 
 
 class Player(Sprite):
-    def __init__(self, start_pos: Point2, walls: SWall) -> None:
+    def __init__(
+        self, start_pos: Point2, walls: SWall, gamestate: GameState
+    ) -> None:
         super().__init__(
             VData.TEXTURES + "/hen.png",
             scale=0.3,
@@ -17,6 +20,7 @@ class Player(Sprite):
         )
         self.speed: int = 10
         self.walls: SWall = walls
+        self.gamestate: GameState = gamestate
 
         hitbox_scale: float = 0.50
         half_w: float = self.width / 2

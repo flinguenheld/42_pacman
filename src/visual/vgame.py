@@ -3,6 +3,7 @@ import arcade
 from arcade import SpriteList, Vec2
 
 from src.visual import VNames, VData
+from src.visual.vgamestate import GameState
 from src.visual.vpacgum import PacGum
 from src.visual.vplayer import Player
 from src.maze.maze_wrapper import Maze
@@ -16,6 +17,8 @@ class VGame(arcade.View):
     def __init__(self) -> None:
         super().__init__()
         arcade.enable_timings()
+
+        self.gamestate = GameState()
 
         self.sprite_manager = SpriteManager()
 
@@ -43,6 +46,7 @@ class VGame(arcade.View):
         self.player = Player(
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
+            self.gamestate
         )
 
         self.player_sprite_list = arcade.SpriteList()
