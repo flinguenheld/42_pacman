@@ -1,23 +1,28 @@
 {
-  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "url": "https://fr.pinterest.com/pin/733946070550276240/",
   "default_width": 32,
   "default_height": 32,
+  "background_color": {
+    "r": 158,
+    "g": 179,
+    "b": 65
+  },
   "lines": [
     {
       "name": "wall_with_floor_on_top",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_right",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_bottom",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_left",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_top_right",
@@ -37,27 +42,27 @@
     },
     {
       "name": "wall_with_floor_on_top_bottom",
-      "nb": 1
+      "nb": 6
     },
     {
       "name": "wall_with_floor_on_right_left",
-      "nb": 2
+      "nb": 6
     },
     {
       "name": "wall_with_floor_on_top_right_left",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_top_right_bottom",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_right_bottom_left",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_with_floor_on_top_bottom_left",
-      "nb": 1
+      "nb": 4
     },
     {
       "name": "wall_extra_corner_bot_right",
@@ -78,56 +83,67 @@
     {
       "name": "wall_open_full",
       "nb": 3,
-      "probability": 100
+      "probability": 90,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 1
+      "probability": 10
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 1
+      "probability": 10
     },
     {
       "name": "floor_full",
-      "nb": 3,
+      "nb": 6,
       "probability": 100
     },
     {
       "name": "floor_full",
+      "nb": 10,
+      "probability": 1
+    },
+    {
+      "name": "floor_full",
+      "nb": 10,
+      "probability": 1
+    },
+    {
+      "name": "floor_full",
+      "nb": 5,
+      "probability": 1
+    },
+    {
+      "name": "background",
       "nb": 1,
-      "probability": 1
+      "width": 128,
+      "height": 128,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
     },
     {
-      "name": "floor_full",
-      "nb": 3,
-      "probability": 1
-    },
-    {
-      "name": "floor_full",
-      "nb": 3,
-      "probability": 1
-    },
-    {
-      "name": "floor_full",
+      "name": "background",
       "nb": 4,
-      "probability": 1
+      "width": 128,
+      "height": 128
     },
     {
       "name": "background",
-      "nb": 1,
+      "nb": 4,
       "width": 128,
-      "height": 128,
-      "probability": 100
-    },
-    {
-      "name": "background",
-      "nb": 1,
-      "width": 128,
-      "height": 128,
-      "probability": 70
+      "height": 128
     }
   ]
 }

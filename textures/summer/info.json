@@ -1,7 +1,12 @@
 {
-  "url": "https://kenney.nl/assets/monochrome-pirates",
+  "url": "https://schwarnhild.itch.io/summer-plains-tileset-and-asset-pack-32x32-pixels?__cf_chl_f_tk=S7q0uw1IUs6YXHBUGT8GcO3qsiZ4od6omSc9fdIAhro-1783263789-1.0.1.1-zMhmyWyah58bWsBOoeu.0KWN5y5zQDN9s.nYoPVP.S0",
   "default_width": 32,
   "default_height": 32,
+  "background_color": {
+    "r": 18,
+    "g": 209,
+    "b": 200
+  },
   "lines": [
     {
       "name": "wall_with_floor_on_top",

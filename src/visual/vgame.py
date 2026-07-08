@@ -19,8 +19,8 @@ class VGame(arcade.View):
 
         self.sprite_manager = SpriteManager()
 
-        self.camera = arcade.Camera2D()
-        self.resize_camera()
+        # QUESTION Usefull since it will be replaced in on_resize ??
+        self.camera = arcade.Camera2D(self.window.rect)
 
         self.player: Player | None = None
         self.player_sprite_list: SpriteList[Player] | None = None
@@ -41,7 +41,7 @@ class VGame(arcade.View):
         )
 
         self.player = Player(
-            self.sprite_manager.floors.sprites[0].position,
+            Vec2(VData.SPRITE_SIZE * 1.5, VData.SPRITE_SIZE * 1.5),
             self.sprite_manager.walls,
         )
 
@@ -58,28 +58,49 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
+        arcade.set_background_color(self.sprite_manager.background_color)
         self.reload_current_maze_sprites()
 
     # ########################################################################
+    # ######################################################### ON RESIZE ####
+    def on_resize(self, width: int, height: int) -> None:
+        self.camera = arcade.Camera2D(self.window.rect)
+        self.camera_center()
+
+    # ########################################################################
     # ########################################################## NEW MAZE ####
-    def new_maze(self, width: int, height: int, seed: int) -> None:
+    def new_maze(self, raw_width: int, raw_height: int, seed: int) -> None:
         self.maze_gen = Maze()
-        self.maze_gen.generate_new_maze(width, height, seed)
+        self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
+        self.maze_gen.build_background()
         self.reload_current_maze_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
-        self.maze_gen.build_background()
         self.sprite_manager.reload(self.maze_gen)
-        self.sprite_manager.reload_background(self.maze_gen)
+        self.camera_center()
+
+    # ########################################################################
+    # ############################################################ CAMERA ####
+    def camera_center(self) -> None:
+        self.camera.position = self.maze_gen.center_position
+        self.camera_adapt_zoom()
+
+    def camera_adapt_zoom(self) -> None:
+        margin = VData.CAMERA_MARGIN
+        scale_hori = (self.width - margin) / self.maze_gen.width
+        scale_vert = (self.height - margin) / self.maze_gen.height
+
+        self.camera.zoom = min(scale_hori, scale_vert)
 
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
         self.clear()
+        self.camera.use()
 
         assert self.player_sprite_list is not None, (
             "Player sprite list is not initialized"
@@ -87,9 +108,6 @@ class VGame(arcade.View):
         assert self.pacgum_list is not None, (
             "PacGum sprite list is not initialized"
         )
-
-        # Activate our camera before drawing
-        self.camera.use()
 
         self.sprite_manager.draw()
         self.player_sprite_list.draw()
@@ -107,14 +125,6 @@ class VGame(arcade.View):
             VData.HEIGHT - 20,
             arcade.color.WHITE,
             12,
-        )
-
-    def resize_camera(self) -> None:
-        self.camera.viewport = arcade.types.Viewport(
-            left=0,
-            bottom=0,
-            width=VData.WIDTH,
-            height=VData.HEIGHT,
         )
 
     # ########################################################################
@@ -152,11 +162,10 @@ class VGame(arcade.View):
         elif symbol == arcade.key.EQUAL:
             self.camera.zoom = 1.0
 
-
         elif symbol == arcade.key.S:
             self.sprite_manager.next_style()
             self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-            self.sprite_manager.reload_background(self.maze_gen)
+            arcade.set_background_color(self.sprite_manager.background_color)
 
         assert self.player is not None, "Player is not initialized"
         self.player.on_key_press(symbol, modifiers)
