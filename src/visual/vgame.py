@@ -41,7 +41,7 @@ class VGame(arcade.View):
         )
 
         self.player = Player(
-            Vec2(VData.SPRITE_SIZE * 1.5, VData.SPRITE_SIZE * 1.5),
+            Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
         )
 
