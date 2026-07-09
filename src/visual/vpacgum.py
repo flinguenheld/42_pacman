@@ -3,12 +3,12 @@ import arcade
 
 
 class PacGum(SpriteCircle):
-    def __init__(self, start_pos: Vec2) -> None:
+    def __init__(self, position: Vec2) -> None:
         radius = 5
-        center = start_pos
+        center = position
         super().__init__(
             radius=radius,
             color=arcade.color.WHITE,
-            center_x=center.x,
-            center_y=center.y,
+            center_x=center[0],
+            center_y=center[1],
         )
