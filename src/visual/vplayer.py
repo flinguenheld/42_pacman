@@ -1,16 +1,22 @@
+from src.visual.vatlas import VAtlas
 import arcade
 
-from src.visual import VData
-from arcade.hitbox import HitBox
 from arcade import Sprite, Vec2, key
-from src.visual.entities.ventity import VEntity
+from src.visual.entities.ventity import VEntityMovement
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import GameState
 
 
-class VPlayerEntity(VEntity):
-    def __init__(self, position: Vec2, walls: SWall, gamestate: GameState):
-        super().__init__(position)
+class VPlayerEntity(VEntityMovement):
+    def __init__(
+        self,
+        atlas: VAtlas,
+        sprite_name: str,
+        position: Vec2,
+        walls: SWall,
+        gamestate: GameState,
+    ):
+        super().__init__(atlas, sprite_name, position)
         self.walls: SWall = walls
         self.gamestate: GameState = gamestate
 
@@ -20,8 +26,8 @@ class VPlayerEntity(VEntity):
         self.pressed_keys: set[int] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
 
-        self.sprite = VPlayerSprite()
-        self.set_sprite(self.sprite)
+        # self.sprite = VSpriteEntity()
+        # self.set_sprite("player")
 
     def update(self, delta_time: float = 1 / 60) -> None:
         self.update_velocity()
@@ -78,27 +84,3 @@ class VPlayerEntity(VEntity):
         if symbol not in self.valid_keys:
             return
         self.pressed_keys.discard(symbol)
-
-
-class VPlayerSprite(Sprite):
-    def __init__(self) -> None:
-        super().__init__(VData.TEXTURES + "/hen.png", scale=0.3)
-
-        self.hitbox_scale: float = 0.50
-        self.hit_box = self.generate_hit_box()
-
-    def generate_hit_box(self) -> HitBox:
-        scale = self.hitbox_scale
-
-        half_w: float = self.width / 2
-        half_h: float = self.height / 2
-        return HitBox(
-            points=[
-                (-half_w, -half_h),
-                (half_w, -half_h),
-                (half_w, half_h),
-                (-half_w, half_h),
-            ],
-            position=self.position,
-            scale=Vec2(scale, scale),
-        )
