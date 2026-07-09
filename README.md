@@ -13,7 +13,7 @@ Ghosts! More ghosts!
 - [ ] Readme
   - [ ] Check the project management part
   - [ ] Description
-  - [ ] Instructions 
+  - [ ] Instructions
   - [ ] Resources
   - [ ] Configuration
   - [ ] Highscore
@@ -142,6 +142,13 @@ Ghosts! More ghosts!
         - [ ] Restart Level ?
         - [ ] Game over ?
     - [ ] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
+
+  - [] Entity system
+    - [] VEntity ABC, common API for entities
+    - [] VPlayerEntity
+    - [] VGhostEntity
+    - [] VPacgumEntity
+    - [] VSuperPacgumEntity
 
 ### Description
 
