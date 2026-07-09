@@ -1,11 +1,11 @@
 import random
 import arcade
-from arcade import SpriteList, Vec2
+from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VNames, VData
 from src.visual.vgamestate import GameState
 from src.visual.vpacgum import PacGum
-from src.visual.vplayer import Player
+from src.visual.vplayer import VPlayerEntity
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.vsprite_manager import SpriteManager
 
@@ -25,8 +25,8 @@ class VGame(arcade.View):
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
-        self.player: Player | None = None
-        self.player_sprite_list: SpriteList[Player] | None = None
+        self.player: VPlayerEntity | None = None
+        self.player_sprite_list: SpriteList[Sprite] | None = None
 
         self.pacgum_list: SpriteList[PacGum] | None = None
         self.setup()
@@ -43,21 +43,22 @@ class VGame(arcade.View):
             random.randint(1, 200),
         )
 
-        self.player = Player(
+        self.player = VPlayerEntity(
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
-            self.gamestate
+            self.gamestate,
+        )
+        assert self.player.sprite is not None, (
+            "Player sprite is not initialized"
         )
 
         self.player_sprite_list = arcade.SpriteList()
-        self.player_sprite_list.append(self.player)
+        self.player_sprite_list.append(self.player.sprite)
 
         self.pacgum_list = arcade.SpriteList()
         for floor_sprite in self.sprite_manager.floors.sprites:
-            pos = Vec2(floor_sprite.center_x, floor_sprite.center_y)
-            self.pacgum_list.append(
-                PacGum(pos)
-            )
+            pos = Vec2(*floor_sprite.position)
+            self.pacgum_list.append(PacGum(pos))
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -118,18 +119,13 @@ class VGame(arcade.View):
         self.player_sprite_list.draw_hit_boxes(
             color=arcade.color.RED, line_thickness=2
         )
-        self.pacgum_list.draw()
-        self.pacgum_list.draw_hit_boxes(
-            color=arcade.color.GREEN, line_thickness=2
-        )
+        # self.pacgum_list.draw()
+        # self.pacgum_list.draw_hit_boxes(
+        #     color=arcade.color.GREEN, line_thickness=2
+        # )
         current_fps = arcade.get_fps()
         arcade.draw_text(
-            f"FPS: {current_fps:.2f}",
-            10,
-            0,
-            arcade.color.WHITE,
-            22,
-            bold=True
+            f"FPS: {current_fps:.2f}", 10, 0, arcade.color.WHITE, 22, bold=True
         )
 
     # ########################################################################
