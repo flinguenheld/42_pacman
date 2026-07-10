@@ -1,74 +1,50 @@
-from abc import ABC
+import arcade
+from arcade import Vec2
 
-from arcade import Sprite, Vec2
+from src.visual.vatlas import VAtlas
+from src.visual.entities.ventity_sprite import VSpriteEntity
 
 
-class VEntity(ABC):
-    def __init__(self, position: Vec2):
-        self.sprite: Sprite | None = None
-        self._position: Vec2 = position
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░
+class VEntity:
+    def __init__(self, atlas: VAtlas, sprite_name: str, position: Vec2):
+        self._atlas: VAtlas = atlas
+        self._sprite_name = sprite_name
 
-        self._change_x: float = 0
-        self._change_y: float = 0
+        self.init_sprite(position)
+        self.position = position
 
-        self.setup()
-
-    def setup(self) -> None:
-        pass
-
+    # ########################################################################
+    # ########################################################## POSITION ####
     @property
     def position(self) -> Vec2:
-        return self._position
+        return Vec2(self.sprite.center_x, self.sprite.center_y)
 
     @position.setter
-    def position(self, value: Vec2) -> None:
-        if self.sprite:
-            self.sprite.position = value
-        self._position = value
+    def position(self, where: Vec2) -> None:
+        self.sprite.center_x = where.x
+        self.sprite.center_y = where.y
 
-    @property
-    def change_x(self) -> float:
-        return self._change_x
-
-    @change_x.setter
-    def change_x(self, value: float) -> None:
-        if self.sprite:
-            self.sprite.change_x = value
-        self._change_x = value
-
-    @property
-    def change_y(self) -> float:
-        return self._change_y
-
-    @change_y.setter
-    def change_y(self, value: float) -> None:
-        if self.sprite:
-            self.sprite.change_y = value
-        self._change_y = value
-
-    def update(self, delta_time: float = 1 / 60) -> None:
-        pass
-
+    # ########################################################################
+    # ################################################## UPDATE ANIMATION ####
     def update_animation(self, delta_time: float = 1 / 60) -> None:
-        if self.sprite:
-            self.sprite.update_animation(delta_time)
+        self.sprite.update_animation(delta_time)
 
-    def set_sprite(self, sprite: Sprite | None) -> None:
-        if sprite is None:
-            self.sprite = None
-            return
-        else:
-            sprite.position = self.position
-            self.sprite = sprite
+    # ########################################################################
+    # ####################################################### INIT SPRITE ####
+    def init_sprite(self, position: Vec2) -> None:
+        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        tile = self._atlas.textures[f"{self._sprite_name}_wait"][0]
 
-    def on_up_movement(self) -> None:
-        pass
+        if not isinstance(tile.texture, arcade.TextureAnimation):
+            raise ValueError("The given texture has to be animated.")
 
-    def on_down_movement(self) -> None:
-        pass
-
-    def on_left_movement(self) -> None:
-        pass
-
-    def on_right_movement(self) -> None:
-        pass
+        self.sprite = VSpriteEntity(
+            animation=tile.texture,
+            center=position,
+        )

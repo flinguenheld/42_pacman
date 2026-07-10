@@ -12,7 +12,7 @@ from src.visual.sprites.sbackground import SBackground
 # ░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░▀░▀░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░
 class SpriteManager:
     def __init__(self) -> None:
-        self.style: Style = Style.SUMMER
+        self.style: Style = Style.EDGE
         self.atlas = VAtlas()
         self.atlas.load(self.style)
 

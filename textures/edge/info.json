@@ -1,5 +1,6 @@
 {
   "url": "https://fr.pinterest.com/pin/733946070550276240/",
+  "url2": "https://pipoya.itch.io/pipoya-free-rpg-character-sprites-32x32",
   "default_width": 32,
   "default_height": 32,
   "background_color": {
@@ -144,6 +145,46 @@
       "nb": 4,
       "width": 128,
       "height": 128
+    },
+    {
+      "name": "player_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        300
+      ]
+    },
+    {
+      "name": "player_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        300
+      ]
+    },
+    {
+      "name": "player_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        300
+      ]
+    },
+    {
+      "name": "player_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        300
+      ]
+    },
+    {
+      "name": "player_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        300
+      ]
     }
   ]
 }

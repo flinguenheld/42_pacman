@@ -44,6 +44,8 @@ class VGame(arcade.View):
         )
 
         self.player = VPlayerEntity(
+            self.sprite_manager.atlas,
+            "player",
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
             self.gamestate,
@@ -134,6 +136,7 @@ class VGame(arcade.View):
         assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
 
+        self.player.update_animation(delta_time)
         self.sprite_manager.update(delta_time)
 
     # ########################################################################

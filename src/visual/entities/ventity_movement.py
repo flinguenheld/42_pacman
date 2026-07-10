@@ -1,0 +1,91 @@
+import arcade
+from arcade import Vec2
+
+from src.visual.vatlas import VAtlas
+from src.visual.entities.ventity import VEntity
+
+
+# ░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀░░
+# ░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█░█░█░█░▀▄▀░█▀▀░█░█░█▀▀░█░█░░█░░░
+# ░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░░
+class VEntityMovement(VEntity):
+    """
+    Add movement options to VEntity
+    The Atlas has to contains 5 animated textures:
+       - {sprite_name}_wait
+       - {sprite_name}_top
+       - {sprite_name}_right
+       - {sprite_name}_bot
+       - {sprite_name}_left
+    """
+
+    def __init__(self, atlas: VAtlas, sprite_name: str, pos: Vec2) -> None:
+        super().__init__(atlas, sprite_name, pos)
+        self._change_x = 0.0
+        self._change_y = 0.0
+
+        # Texture helpers --
+        self._current_direction = "wait"
+        self._requested_direction = "wait"
+
+    # ########################################################################
+    # #################################################### UPDATE TEXTURE ####
+    def update_texture(self) -> None:
+        """
+        Change the animation according to the request.
+        Avoid useless changes.
+        Has to be called after 'change_x' and 'change_y' updates.
+        """
+
+        if self._current_direction != self._requested_direction:
+            print(f"up the animation to {self._requested_direction}")
+
+            new_tile = self._atlas.textures[
+                f"{self._sprite_name}_{self._requested_direction}"
+            ][0]
+
+            if not isinstance(new_tile.texture, arcade.TextureAnimation):
+                raise ValueError("The given texture has to be animated.")
+
+            self.sprite.animation = new_tile.texture
+            self._current_direction = self._requested_direction
+
+    # ########################################################################
+    # ########################################################## CHANGE X ####
+    @property
+    def change_x(self) -> float:
+        return self._change_x
+
+    @change_x.setter
+    def change_x(self, value: float) -> None:
+
+        if value != self.change_x:
+            match value:
+                case 0:
+                    self._requested_direction = "wait"
+                case v if v > 0:
+                    self._requested_direction = "right"
+                case v if v < 0:
+                    self._requested_direction = "left"
+
+            self._change_x = value
+
+    # ########################################################################
+    # ########################################################## CHANGE Y ####
+    @property
+    def change_y(self) -> float:
+        return self._change_y
+
+    @change_y.setter
+    def change_y(self, value: float) -> None:
+
+        if value != self.change_y:
+            match value:
+                case 0:
+                    self._requested_direction = "wait"
+                case v if v > 0:
+                    self._requested_direction = "top"
+                case v if v < 0:
+                    self._requested_direction = "bot"
+
+            self._change_y = value
