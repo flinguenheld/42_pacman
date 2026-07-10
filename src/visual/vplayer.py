@@ -1,10 +1,10 @@
-from src.visual.vatlas import VAtlas
 import arcade
-
 from arcade import Sprite, Vec2, key
-from src.visual.entities.ventity import VEntityMovement
+
+from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import GameState
+from src.visual.entities.ventity_movement import VEntityMovement
 
 
 class VPlayerEntity(VEntityMovement):
@@ -15,10 +15,11 @@ class VPlayerEntity(VEntityMovement):
         position: Vec2,
         walls: SWall,
         gamestate: GameState,
-    ):
+    ) -> None:
         super().__init__(atlas, sprite_name, position)
         self.walls: SWall = walls
         self.gamestate: GameState = gamestate
+        self.setup()
 
     def setup(self) -> None:
         self.speed = 10
@@ -31,12 +32,14 @@ class VPlayerEntity(VEntityMovement):
 
     def update(self, delta_time: float = 1 / 60) -> None:
         self.update_velocity()
+        self.update_texture()
         self.resolve_collisions()
 
     def update_velocity(self) -> None:
         # Update player movement based on pressed keys
         self.change_x = 0
         self.change_y = 0
+
         if key.LEFT in self.pressed_keys:
             self.change_x = -1 * self.speed
         if key.RIGHT in self.pressed_keys:
@@ -47,8 +50,6 @@ class VPlayerEntity(VEntityMovement):
             self.change_y = -1 * self.speed
 
     def resolve_collisions(self) -> None:
-        if not self.sprite:
-            return
         # Resolve movement per-axis to avoid corner tunneling
         # and multi-wall phasing.
         self.sprite.center_x += self.change_x
@@ -75,6 +76,7 @@ class VPlayerEntity(VEntityMovement):
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         # Handle key press events to control player movement
+
         if symbol not in self.valid_keys:
             return
         self.pressed_keys.add(symbol)
