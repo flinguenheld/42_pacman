@@ -1,8 +1,9 @@
+from src.visual import VData
 import arcade
 from arcade import Vec2
 
 from src.visual.vatlas import VAtlas
-from src.visual.entities.ventity_sprite import VSpriteEntity
+from src.visual.entities.ventity_sprite import VEntitySprite
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░
@@ -35,16 +36,13 @@ class VEntity:
     # ########################################################################
     # ####################################################### INIT SPRITE ####
     def init_sprite(self, position: Vec2) -> None:
-        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # TODO: ADD A SCALE METHOD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         tile = self._atlas.textures[f"{self._sprite_name}_wait"][0]
 
         if not isinstance(tile.texture, arcade.TextureAnimation):
             raise ValueError("The given texture has to be animated.")
 
-        self.sprite = VSpriteEntity(
+        self.sprite = VEntitySprite(
             animation=tile.texture,
             center=position,
+            scale=tile.width / VData.SPRITE_SIZE,
         )

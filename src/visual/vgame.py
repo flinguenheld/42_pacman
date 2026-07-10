@@ -3,10 +3,10 @@ import arcade
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VNames, VData
-from src.visual.vgamestate import GameState
 from src.visual.vpacgum import PacGum
-from src.visual.vplayer import VPlayerEntity
 from src.maze.maze_wrapper import Maze
+from src.visual.vgamestate import GameState
+from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.sprites.vsprite_manager import SpriteManager
 
 
@@ -25,7 +25,7 @@ class VGame(arcade.View):
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
-        self.player: VPlayerEntity | None = None
+        self.player: VEntityPlayer | None = None
         self.player_sprite_list: SpriteList[Sprite] | None = None
 
         self.pacgum_list: SpriteList[PacGum] | None = None
@@ -43,7 +43,7 @@ class VGame(arcade.View):
             random.randint(1, 200),
         )
 
-        self.player = VPlayerEntity(
+        self.player = VEntityPlayer(
             self.sprite_manager.atlas,
             "player",
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),

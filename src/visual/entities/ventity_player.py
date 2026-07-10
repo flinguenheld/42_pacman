@@ -7,7 +7,10 @@ from src.visual.vgamestate import GameState
 from src.visual.entities.ventity_movement import VEntityMovement
 
 
-class VPlayerEntity(VEntityMovement):
+# ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░
+# ░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░░░█▀█░░█░░█▀▀░█▀▄░░
+# ░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀░░░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░░
+class VEntityPlayer(VEntityMovement):
     def __init__(
         self,
         atlas: VAtlas,
@@ -21,22 +24,27 @@ class VPlayerEntity(VEntityMovement):
         self.gamestate: GameState = gamestate
         self.setup()
 
+    # ########################################################################
+    # ############################################################# SETUP ####
     def setup(self) -> None:
+        # TODO: Deal with magic number - in the config ? or VData ?
         self.speed = 10
 
         self.pressed_keys: set[int] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
 
-        # self.sprite = VSpriteEntity()
-        # self.set_sprite("player")
-
+    # ########################################################################
+    # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
         self.update_velocity()
         self.update_texture()
         self.resolve_collisions()
 
+    # ########################################################################
+    # ########################################################## VELOCITY ####
     def update_velocity(self) -> None:
-        # Update player movement based on pressed keys
+        """Update player movement based on pressed keys"""
+
         self.change_x = 0
         self.change_y = 0
 
@@ -49,6 +57,8 @@ class VPlayerEntity(VEntityMovement):
         if key.DOWN in self.pressed_keys:
             self.change_y = -1 * self.speed
 
+    # ########################################################################
+    # ######################################################## COLLISIONS ####
     def resolve_collisions(self) -> None:
         # Resolve movement per-axis to avoid corner tunneling
         # and multi-wall phasing.
@@ -74,15 +84,12 @@ class VPlayerEntity(VEntityMovement):
             for wall in collided_y:
                 self.sprite.bottom = max(self.sprite.bottom, wall.top)
 
+    # ########################################################################
+    # ############################################################ ON KEY ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        # Handle key press events to control player movement
-
-        if symbol not in self.valid_keys:
-            return
-        self.pressed_keys.add(symbol)
+        if symbol in self.valid_keys:
+            self.pressed_keys.add(symbol)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        # Handle key release events to stop player movement
-        if symbol not in self.valid_keys:
-            return
-        self.pressed_keys.discard(symbol)
+        if symbol in self.valid_keys:
+            self.pressed_keys.discard(symbol)
