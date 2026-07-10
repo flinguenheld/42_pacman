@@ -189,10 +189,11 @@
     },
     {
       "name": "pacgum_wait",
-      "nb": 6,
+      "nb": 15,
       "animated": true,
       "duration": [
-        300
+        5000,
+        50
       ]
     }
   ]

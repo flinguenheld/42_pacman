@@ -11,7 +11,7 @@ from src.visual.entities.ventity import VEntity
 class VEntityMovement(VEntity):
     """
     Add movement options to VEntity
-    The Atlas has to contains 5 animated textures:
+    The Atlas has to contain 5 animated textures:
        - {sprite_name}_wait
        - {sprite_name}_top
        - {sprite_name}_right

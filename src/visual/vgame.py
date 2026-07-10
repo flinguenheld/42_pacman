@@ -1,15 +1,14 @@
-from src.visual.entities.ventity_sprite import VEntitySprite
 import random
 import arcade
-from arcade import Sprite, SpriteList, Vec2
+from arcade import SpriteList, Vec2
 
 from src.visual import VNames, VData
-from src.visual.vpacgum import PacGum
 from src.maze.maze_wrapper import Maze
 from src.visual.vgamestate import GameState
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
+from src.visual.entities.ventity_sprite import VEntitySprite
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -21,19 +20,11 @@ class VGame(arcade.View):
         arcade.enable_timings()
 
         self.gamestate = GameState()
-
         self.sprite_manager = SpriteManager()
 
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
-        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
-        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
-        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
-        self.player: VEntityPlayer | None = None
-        self.player_sprite_list: SpriteList[Sprite] | None = None
-
-        self.pacgum_list: list[VEntitySprite] | None = None
         self.setup()
 
     # ########################################################################
@@ -41,30 +32,33 @@ class VGame(arcade.View):
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
 
-        # Create a maze
+        # Maze --
         self.new_maze(
             random.randint(10, 30),
             random.randint(5, 30),
             random.randint(1, 200),
         )
 
-        self.player = VEntityPlayer(
+        # Player --
+        self.player_list: SpriteList[VEntitySprite] = arcade.SpriteList()
+        self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
             "player",
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
             self.gamestate,
         )
+        self.player_list.append(self.player)
 
-        assert self.player is not None, "Player sprite is not initialized"
-
-        self.player_sprite_list = arcade.SpriteList()
-        self.player_sprite_list.append(self.player)
-
-        # self.pacgum_list = arcade.SpriteList()
+        # Pacgums --
+        self.pacgum_list: SpriteList[VEntitySprite] = arcade.SpriteList()
         for floor_sprite in self.sprite_manager.floors.sprites:
-            pos = Vec2(*floor_sprite.position)
-            # self.pacgum_list.append(PacGum(pos))
+            if floor_sprite.position != self.player.position:
+                if random.choices([True, False], weights=[70, 30])[0]:
+                    pos = Vec2(*floor_sprite.position)
+                    self.pacgum_list.append(
+                        VEntityPacGum(self.sprite_manager.atlas, pos)
+                    )
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -113,22 +107,19 @@ class VGame(arcade.View):
         self.clear()
         self.camera.use()
 
-        assert self.player_sprite_list is not None, (
-            "Player sprite list is not initialized"
-        )
-        # assert self.pacgum_list is not None, (
-        #     "PacGum sprite list is not initialized"
-        # )
-
         self.sprite_manager.draw()
-        self.player_sprite_list.draw()
-        self.player_sprite_list.draw_hit_boxes(
-            color=arcade.color.RED, line_thickness=2
+
+        self.pacgum_list.draw()
+        self.pacgum_list.draw_hit_boxes(
+            color=arcade.color.GREEN, line_thickness=1
         )
-        # self.pacgum_list.draw()
-        # self.pacgum_list.draw_hit_boxes(
-        #     color=arcade.color.GREEN, line_thickness=2
-        # )
+
+        self.player_list.draw()
+        self.player_list.draw_hit_boxes(
+            color=arcade.color.RED, line_thickness=1
+        )
+
+        # --
         current_fps = arcade.get_fps()
         arcade.draw_text(
             f"FPS: {current_fps:.2f}", 10, 0, arcade.color.WHITE, 22, bold=True
@@ -137,11 +128,11 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        assert self.player is not None, "Player is not initialized"
         self.player.update(delta_time)
-
-        self.player.update_animation(delta_time)
         self.sprite_manager.update(delta_time)
+
+        self.player_list.update_animation(delta_time)
+        self.pacgum_list.update_animation(delta_time)
 
     # ########################################################################
     # #################################################### UP SPRITE SIZE ####
@@ -175,9 +166,7 @@ class VGame(arcade.View):
             self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
             arcade.set_background_color(self.sprite_manager.background_color)
 
-        assert self.player is not None, "Player is not initialized"
         self.player.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        assert self.player is not None, "Player is not initialized"
         self.player.on_key_release(symbol, modifiers)
