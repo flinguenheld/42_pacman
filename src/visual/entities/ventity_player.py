@@ -62,27 +62,27 @@ class VEntityPlayer(VEntityMovement):
     def resolve_collisions(self) -> None:
         # Resolve movement per-axis to avoid corner tunneling
         # and multi-wall phasing.
-        self.sprite.center_x += self.change_x
+        self.center_x += self.change_x
         collided_x: list[Sprite] = arcade.check_for_collision_with_list(
-            self.sprite, self.walls.sprites
+            self, self.walls.sprites
         )
         if self.change_x > 0:
             for wall in collided_x:
-                self.sprite.right = min(self.sprite.right, wall.left)
+                self.right = min(self.right, wall.left)
         elif self.change_x < 0:
             for wall in collided_x:
-                self.sprite.left = max(self.sprite.left, wall.right)
+                self.left = max(self.left, wall.right)
 
-        self.sprite.center_y += self.change_y
+        self.center_y += self.change_y
         collided_y: list[Sprite] = arcade.check_for_collision_with_list(
-            self.sprite, self.walls.sprites
+            self, self.walls.sprites
         )
         if self.change_y > 0:
             for wall in collided_y:
-                self.sprite.top = min(self.sprite.top, wall.bottom)
+                self.top = min(self.top, wall.bottom)
         elif self.change_y < 0:
             for wall in collided_y:
-                self.sprite.bottom = max(self.sprite.bottom, wall.top)
+                self.bottom = max(self.bottom, wall.top)
 
     # ########################################################################
     # ############################################################ ON KEY ####

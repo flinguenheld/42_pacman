@@ -186,6 +186,14 @@
         5000,
         80
       ]
+    },
+    {
+      "name": "pacgum_wait",
+      "nb": 6,
+      "animated": true,
+      "duration": [
+        300
+      ]
     }
   ]
 }

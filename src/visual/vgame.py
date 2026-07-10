@@ -1,3 +1,4 @@
+from src.visual.entities.ventity_sprite import VEntitySprite
 import random
 import arcade
 from arcade import Sprite, SpriteList, Vec2
@@ -6,8 +7,9 @@ from src.visual import VNames, VData
 from src.visual.vpacgum import PacGum
 from src.maze.maze_wrapper import Maze
 from src.visual.vgamestate import GameState
-from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.sprites.vsprite_manager import SpriteManager
+from src.visual.entities.ventity_player import VEntityPlayer
+from src.visual.entities.ventity_pacgum import VEntityPacGum
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -25,10 +27,13 @@ class VGame(arcade.View):
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
+        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
+        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
+        # TODO: USEFULL TO SET EVERYTHING TO NONE ?
         self.player: VEntityPlayer | None = None
         self.player_sprite_list: SpriteList[Sprite] | None = None
 
-        self.pacgum_list: SpriteList[PacGum] | None = None
+        self.pacgum_list: list[VEntitySprite] | None = None
         self.setup()
 
     # ########################################################################
@@ -50,17 +55,16 @@ class VGame(arcade.View):
             self.sprite_manager.walls,
             self.gamestate,
         )
-        assert self.player.sprite is not None, (
-            "Player sprite is not initialized"
-        )
+
+        assert self.player is not None, "Player sprite is not initialized"
 
         self.player_sprite_list = arcade.SpriteList()
-        self.player_sprite_list.append(self.player.sprite)
+        self.player_sprite_list.append(self.player)
 
-        self.pacgum_list = arcade.SpriteList()
+        # self.pacgum_list = arcade.SpriteList()
         for floor_sprite in self.sprite_manager.floors.sprites:
             pos = Vec2(*floor_sprite.position)
-            self.pacgum_list.append(PacGum(pos))
+            # self.pacgum_list.append(PacGum(pos))
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -112,9 +116,9 @@ class VGame(arcade.View):
         assert self.player_sprite_list is not None, (
             "Player sprite list is not initialized"
         )
-        assert self.pacgum_list is not None, (
-            "PacGum sprite list is not initialized"
-        )
+        # assert self.pacgum_list is not None, (
+        #     "PacGum sprite list is not initialized"
+        # )
 
         self.sprite_manager.draw()
         self.player_sprite_list.draw()

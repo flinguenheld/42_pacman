@@ -94,21 +94,24 @@ Ghosts! More ghosts!
 
 - [ ] Game
   - [ ] Player
+    - [ ] Create texture
     - [ ] Player spawns in the middle
     - [ ] Move with arrow keys or WASD
       - [ ] If necessary, handle AZERTY preset (ZQSD) as an option
     - [ ] Ghost touch player = player loses one life
       - [ ] Player respawns in the middle
       - [ ] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
-    - [ ] Pacgum
-      - [ ] Create texture
-      - [ ] Spawn in most corridors (3 out of 4 cases?)
-      - [ ] Manage counter
-    - [ ] Super-Pacgum
-      - [ ] Create texture
-      - [ ] 1 per corner
-      - [ ] Makes ghosts edible for a short time
-      - [ ] Eating an edible ghost increases the score by Z points
+
+  - [ ] Pacgum
+    - [ ] Create texture
+    - [ ] Spawn in most corridors (3 out of 4 cases?)
+    - [ ] Manage counter
+
+  - [ ] Super-Pacgum
+    - [ ] Create texture
+    - [ ] 1 per corner
+    - [ ] Makes ghosts edible for a short time
+    - [ ] Eating an edible ghost increases the score by Z points
 
   - [ ] Ghost
     - [ ] Create algo to move them

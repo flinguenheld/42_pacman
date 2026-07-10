@@ -47,7 +47,7 @@ class VEntityMovement(VEntity):
             if not isinstance(new_tile.texture, arcade.TextureAnimation):
                 raise ValueError("The given texture has to be animated.")
 
-            self.sprite.animation = new_tile.texture
+            self.animation = new_tile.texture
             self._current_direction = self._requested_direction
 
     # ########################################################################
