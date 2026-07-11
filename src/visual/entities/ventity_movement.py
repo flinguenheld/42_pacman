@@ -57,18 +57,18 @@ class VEntityMovement(VEntity):
         return self._change_x
 
     @change_x.setter
-    def change_x(self, value: float) -> None:
+    def change_x(self, new_value: float) -> None:
 
-        if value != self.change_x:
-            match value:
+        if new_value != self.change_x:
+            match new_value:
                 case 0:
                     self._requested_direction = "wait"
                 case v if v > 0:
                     self._requested_direction = "right"
-                case v if v < 0:
+                case _:
                     self._requested_direction = "left"
 
-            self._change_x = value
+            self._change_x = new_value
 
     # ########################################################################
     # ########################################################## CHANGE Y ####
@@ -77,15 +77,15 @@ class VEntityMovement(VEntity):
         return self._change_y
 
     @change_y.setter
-    def change_y(self, value: float) -> None:
+    def change_y(self, new_value: float) -> None:
 
-        if value != self.change_y:
-            match value:
+        if new_value != self.change_y:
+            match new_value:
                 case 0:
                     self._requested_direction = "wait"
                 case v if v > 0:
                     self._requested_direction = "top"
-                case v if v < 0:
+                case _:
                     self._requested_direction = "bot"
 
-            self._change_y = value
+            self._change_y = new_value
