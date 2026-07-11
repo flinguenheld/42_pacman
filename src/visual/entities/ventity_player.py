@@ -38,7 +38,7 @@ class VEntityPlayer(VEntityMovement):
     def update(self, delta_time: float = 1 / 60) -> None:
         self.update_velocity()
         self.update_texture()
-        self.resolve_collisions()
+        self.resolve_wall_collisions()
 
     # ########################################################################
     # ########################################################## VELOCITY ####
@@ -59,7 +59,7 @@ class VEntityPlayer(VEntityMovement):
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
-    def resolve_collisions(self) -> None:
+    def resolve_wall_collisions(self) -> None:
         # Resolve movement per-axis to avoid corner tunneling
         # and multi-wall phasing.
         self.center_x += self.change_x
