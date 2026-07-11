@@ -19,8 +19,10 @@ class VEntityMovement(VEntity):
        - {sprite_name}_left
     """
 
-    def __init__(self, atlas: VAtlas, sprite_name: str, pos: Vec2) -> None:
-        super().__init__(atlas, sprite_name, pos)
+    def __init__(
+        self, atlas: VAtlas, sprite_name: str, position: Vec2
+    ) -> None:
+        super().__init__(atlas, sprite_name, position)
         self._change_x = 0.0
         self._change_y = 0.0
 

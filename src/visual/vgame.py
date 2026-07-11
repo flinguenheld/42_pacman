@@ -55,9 +55,11 @@ class VGame(arcade.View):
         for floor_sprite in self.sprite_manager.floors.sprites:
             if floor_sprite.position != self.player.position:
                 if random.choices([True, False], weights=[70, 30])[0]:
-                    pos = Vec2(*floor_sprite.position)
+                    position = Vec2(*floor_sprite.position)
                     self.pacgum_list.append(
-                        VEntityPacGum(self.sprite_manager.atlas, pos)
+                        VEntityPacGum(
+                            self.sprite_manager.atlas, position, self.player
+                        )
                     )
 
     # ########################################################################

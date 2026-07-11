@@ -29,6 +29,7 @@ class VEntitySprite(TextureAnimationSprite):
 
         half_w: float = self.width / 2
         half_h: float = self.height / 2
+
         return HitBox(
             points=[
                 (-half_w, -half_h),
