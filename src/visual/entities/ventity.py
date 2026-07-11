@@ -14,12 +14,12 @@ class VEntity(VEntitySprite):
         self._atlas: VAtlas = atlas
         self._sprite_name = sprite_name
 
-        self.init_sprite(position)
+        self._init_sprite(position)
         self.position = position
 
     # ########################################################################
     # ####################################################### INIT SPRITE ####
-    def init_sprite(self, position: Vec2) -> None:
+    def _init_sprite(self, position: Vec2) -> None:
 
         tile = self._atlas.pick_tile(
             f"{self._sprite_name}_wait",
