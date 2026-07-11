@@ -110,9 +110,9 @@ class VGame(arcade.View):
         self.sprite_manager.draw()
 
         self.pacgum_list.draw()
-        self.pacgum_list.draw_hit_boxes(
-            color=arcade.color.GREEN, line_thickness=1
-        )
+        # self.pacgum_list.draw_hit_boxes(
+        #     color=arcade.color.WHITE, line_thickness=1
+        # )
 
         self.player_list.draw()
         self.player_list.draw_hit_boxes(

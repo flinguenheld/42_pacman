@@ -1,3 +1,4 @@
+import random
 import arcade
 from typing import Any
 from json import load as json_load
@@ -137,3 +138,19 @@ class VAtlas:
     @property
     def background_color(self) -> dict[str, int] | Any:
         return self.info["background_color"]
+
+    # ########################################################################
+    # ######################################################### PICK TILE ####
+    def pick_tile(self, name: str, randomly: bool = True) -> VTile:
+        """
+        Get one of the tile with the given name.
+        Respect the given probabilites in the info.json file.
+        """
+
+        if not randomly:
+            return self.textures[name][0]
+
+        tile = [t for t in self.textures[name]]
+        weights = [w.probability / 100 for w in self.textures[name]]
+
+        return random.choices(tile, weights, k=1)[0]

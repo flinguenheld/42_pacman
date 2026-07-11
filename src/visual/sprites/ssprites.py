@@ -3,7 +3,7 @@ import random
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual import VData
-from src.visual.vatlas import VAtlas, VTile
+from src.visual.vatlas import VAtlas
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░█▀▀░░
@@ -24,18 +24,7 @@ class SSprites:
         force_first_texture: bool = False,
         sprite_size: int = VData.SPRITE_SIZE,
     ) -> None:
-        # ############################### PICK TEXTURE ####
-        def pick_texture(who: str) -> VTile:
-            if force_first_texture:
-                return self.atlas.textures[who][0]
-
-            tile = [t for t in self.atlas.textures[who]]
-            weights = [w.probability / 100 for w in self.atlas.textures[who]]
-
-            return random.choices(tile, weights, k=1)[0]
-
-        # ####################################
-        tile = pick_texture(texture_name)
+        tile = self.atlas.pick_tile(texture_name, not force_first_texture)
         angle = random.choice(tile.allowed_angles)
 
         if isinstance(tile.texture, arcade.TextureAnimation):

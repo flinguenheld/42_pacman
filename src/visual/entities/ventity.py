@@ -20,7 +20,11 @@ class VEntity(VEntitySprite):
     # ########################################################################
     # ####################################################### INIT SPRITE ####
     def init_sprite(self, position: Vec2) -> None:
-        tile = self._atlas.textures[f"{self._sprite_name}_wait"][0]
+
+        tile = self._atlas.pick_tile(
+            f"{self._sprite_name}_wait",
+            randomly=True,
+        )
 
         if not isinstance(tile.texture, arcade.TextureAnimation):
             raise ValueError("The given texture has to be animated.")
