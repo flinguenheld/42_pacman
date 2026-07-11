@@ -12,7 +12,12 @@ run:
 	${UV} run python ${NAME} test_config.json
 
 clean:
-	rm -rf __pycache__ .mypy_cache .venv
+	rm -rf	.mypy_cache .venv \
+			__pycache__ src/__pycache__ \
+			src/config/__pycache__ src/maze/__pycache__ \
+			src/utils/__pycache__ src/visual/__pycache__ \
+			src/visual/entities/__pycache__ \
+			src/visual/sprites/__pycache__ \
 
 lint:
 	${UV} run flake8 . --extend-exclude '.venv/'
