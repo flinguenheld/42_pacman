@@ -3,6 +3,16 @@
   "url2": "https://pipoya.itch.io/pipoya-free-rpg-character-sprites-32x32",
   "default_width": 32,
   "default_height": 32,
+  "default_hitbox": {
+    "automatic": false,
+    "deactivated": false,
+    "size": 20,
+    "bevel": 0,
+    "full_top": false,
+    "full_right": false,
+    "full_bot": false,
+    "full_left": false
+  },
   "background_color": {
     "r": 158,
     "g": 179,
@@ -11,75 +21,139 @@
   "lines": [
     {
       "name": "wall_with_floor_on_top",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_left": true,
+        "full_right": true
+      }
     },
     {
       "name": "wall_with_floor_on_right",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_top": true,
+        "full_bot": true
+      }
     },
     {
       "name": "wall_with_floor_on_bottom",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_left": true,
+        "full_right": true
+      }
     },
     {
       "name": "wall_with_floor_on_left",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_top": true,
+        "full_bot": true
+      }
     },
     {
       "name": "wall_with_floor_on_top_right",
-      "nb": 2
+      "nb": 2,
+      "hitbox": {
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_right_bottom",
-      "nb": 2
+      "nb": 2,
+      "hitbox": {
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_top_left",
-      "nb": 2
+      "nb": 2,
+      "hitbox": {
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_bottom_left",
-      "nb": 2
+      "nb": 2,
+      "hitbox": {
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_top_bottom",
-      "nb": 6
+      "nb": 6,
+      "hitbox": {
+        "full_left": true,
+        "full_right": true
+      }
     },
     {
       "name": "wall_with_floor_on_right_left",
-      "nb": 6
+      "nb": 6,
+      "hitbox": {
+        "full_top": true,
+        "full_bot": true
+      }
     },
     {
       "name": "wall_with_floor_on_top_right_left",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_bot": true,
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_top_right_bottom",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_left": true,
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_right_bottom_left",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_top": true,
+        "bevel": 5
+      }
     },
     {
       "name": "wall_with_floor_on_top_bottom_left",
-      "nb": 4
+      "nb": 4,
+      "hitbox": {
+        "full_right": true,
+        "bevel": 5
+      }
     },
     {
       "name": "wall_extra_corner_bot_right",
-      "nb": 1
+      "nb": 1,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_extra_corner_top_right",
-      "nb": 1
+      "nb": 1,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_extra_corner_bot_left",
-      "nb": 1
+      "nb": 1,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_extra_corner_top_left",
-      "nb": 1
+      "nb": 1,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_open_full",
@@ -90,17 +164,26 @@
         90,
         180,
         270
-      ]
+      ],
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 10
+      "probability": 10,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "wall_open_full",
       "nb": 7,
-      "probability": 10
+      "probability": 10,
+      "hitbox": {
+        "deactivated": true
+      }
     },
     {
       "name": "floor_full",
@@ -152,7 +235,11 @@
       "animated": true,
       "duration": [
         200
-      ]
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     },
     {
       "name": "player_right",
@@ -160,7 +247,11 @@
       "animated": true,
       "duration": [
         200
-      ]
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     },
     {
       "name": "player_bot",
@@ -168,7 +259,11 @@
       "animated": true,
       "duration": [
         200
-      ]
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     },
     {
       "name": "player_left",
@@ -176,7 +271,11 @@
       "animated": true,
       "duration": [
         200
-      ]
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     },
     {
       "name": "player_wait",
@@ -185,7 +284,11 @@
       "duration": [
         5000,
         80
-      ]
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     },
     {
       "name": "pacgum_wait",
@@ -194,7 +297,10 @@
       "duration": [
         5000,
         150
-      ]
+      ],
+      "hitbox": {
+        "automatic": true
+      }
     },
     {
       "name": "pacgum_wait",
@@ -203,7 +309,10 @@
       "duration": [
         7000,
         100
-      ]
+      ],
+      "hitbox": {
+        "automatic": true
+      }
     },
     {
       "name": "pacgum_wait",
@@ -211,8 +320,11 @@
       "animated": true,
       "duration": [
         6000,
-        25
-      ]
+        27
+      ],
+      "hitbox": {
+        "automatic": true
+      }
     }
   ]
 }

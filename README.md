@@ -103,8 +103,8 @@ Ghosts! More ghosts!
       - [ ] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
 
   - [ ] Pacgum
-    - [ ] Create texture
-    - [ ] Spawn in most corridors (3 out of 4 cases?)
+    - [X] Create texture
+    - [X] Spawn in most corridors (3 out of 4 cases?)
     - [ ] Manage counter
 
   - [ ] Super-Pacgum

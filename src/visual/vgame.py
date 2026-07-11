@@ -5,10 +5,10 @@ from arcade import SpriteList, Vec2
 from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
 from src.visual.vgamestate import GameState
+from src.visual.entities.ventity import VEntity
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
-from src.visual.entities.ventity_sprite import VEntitySprite
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -34,13 +34,13 @@ class VGame(arcade.View):
 
         # Maze --
         self.new_maze(
-            random.randint(10, 30),
-            random.randint(5, 30),
+            random.randint(10, 20),
+            random.randint(5, 20),
             random.randint(1, 200),
         )
 
         # Player --
-        self.player_list: SpriteList[VEntitySprite] = arcade.SpriteList()
+        self.player_list: SpriteList[VEntity] = arcade.SpriteList()
         self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
             "player",
@@ -51,7 +51,7 @@ class VGame(arcade.View):
         self.player_list.append(self.player)
 
         # Pacgums --
-        self.pacgum_list: SpriteList[VEntitySprite] = arcade.SpriteList()
+        self.pacgum_list: SpriteList[VEntity] = arcade.SpriteList()
         for floor_sprite in self.sprite_manager.floors.sprites:
             if floor_sprite.position != self.player.position:
                 if random.choices([True, False], weights=[70, 30])[0]:
@@ -109,10 +109,14 @@ class VGame(arcade.View):
 
         self.sprite_manager.draw()
 
+        self.sprite_manager.walls.sprites.draw_hit_boxes(
+            color=arcade.color.RED, line_thickness=2
+        )
+
         self.pacgum_list.draw()
-        # self.pacgum_list.draw_hit_boxes(
-        #     color=arcade.color.WHITE, line_thickness=1
-        # )
+        self.pacgum_list.draw_hit_boxes(
+            color=arcade.color.WHITE, line_thickness=1
+        )
 
         self.player_list.draw()
         self.player_list.draw_hit_boxes(

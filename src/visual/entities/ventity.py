@@ -1,15 +1,14 @@
 import arcade
-from arcade import Vec2
+from arcade import Vec2, TextureAnimationSprite
 
 from src.visual import VData
 from src.visual.vatlas import VAtlas
-from src.visual.entities.ventity_sprite import VEntitySprite
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░
-class VEntity(VEntitySprite):
+class VEntity(TextureAnimationSprite):
     def __init__(self, atlas: VAtlas, sprite_name: str, position: Vec2):
         self._atlas: VAtlas = atlas
         self._sprite_name = sprite_name

@@ -1,6 +1,6 @@
 import random
 import arcade
-from typing import Any
+from typing import Any, Sequence
 from json import load as json_load
 from src.visual import Style, VData
 from dataclasses import dataclass, field
@@ -44,6 +44,7 @@ class VAtlas:
         self.info = self._open_info_file(self.path)
         self.default_width = self.info["default_width"]
         self.default_height = self.info["default_height"]
+        self.default_hitbox = self.info["default_hitbox"]
 
     # ########################################################################
     # ##################################################### LOAD TEXTURES ####
@@ -53,15 +54,32 @@ class VAtlas:
         self.textures.clear()
         sheet = arcade.load_spritesheet(f"{self.path}/sheet.png")
 
+        # ############################# CREATE TEXTURE #######
+        def create_texture(x: int, y: int) -> Texture:
+            """
+            Extract the image at the given coordinates to create a texture.
+            Apply the hitbox calculated for the line.
+            """
+
+            image = sheet.get_image(arcade.LBWH(x, y, width, height))
+            if hitbox is None:
+                return Texture(image)
+
+            return Texture(
+                image,
+                hit_box_algorithm=None,
+                hit_box_points=hitbox,
+            )
+
         # #################################### REGULAR #######
         def add_regular(y: int, data_line: dict[str, Any]) -> None:
 
             for x in range(data_line["nb"]):
                 x *= width
-                texture = sheet.get_texture(arcade.LBWH(x, y, width, height))
+
                 self.textures[data_line["name"]].append(
                     VTile(
-                        texture,
+                        create_texture(x, y),
                         width,
                         height,
                         self._get_data(data_line, "probability", 100),
@@ -79,8 +97,12 @@ class VAtlas:
                     duration = data["duration"][x]
 
                 x *= width
-                texture = sheet.get_texture(arcade.LBWH(x, y, width, height))
-                keyframes.append(arcade.TextureKeyframe(texture, duration))
+                keyframes.append(
+                    arcade.TextureKeyframe(
+                        create_texture(x, y),
+                        duration,
+                    )
+                )
 
             animation = arcade.TextureAnimation(keyframes=keyframes)
             self.textures[data_line["name"]].append(
@@ -99,7 +121,9 @@ class VAtlas:
         for data_line in self.info["lines"]:
             width = self._get_data(data_line, "width", self.default_width)
             height = self._get_data(data_line, "height", self.default_height)
+            hitbox = self._generate_hitbox(data_line, height, width)
 
+            # Allows the atlas to have several textures with the same name
             if data_line["name"] not in self.textures:
                 self.textures[data_line["name"]] = list()
 
@@ -109,6 +133,58 @@ class VAtlas:
                 add_regular(y, data_line)
 
             y += height
+
+    # ########################################################################
+    # ################################################### GENERATE HITBOX ####
+    def _generate_hitbox(
+        self,
+        data_line: dict[str, Any],
+        height: int,
+        width: int,
+    ) -> Sequence | None:
+        """
+        Fill the hitbox line field with the defaults.
+        Create the hitbox according to values.
+        Return None if the hitbox has to be calculated by arcade.
+        """
+
+        # Fill with no given values --
+        hitbox = self._get_data(data_line, "hitbox", self.default_hitbox)
+        for key, val in self.default_hitbox.items():
+            if key not in hitbox:
+                hitbox[key] = val
+
+        if hitbox["automatic"]:
+            return None
+
+        if hitbox["deactivated"]:
+            return ((0, 0), (0, 0))
+
+        # --
+        size = hitbox["size"]
+        top: float = height / 2 if hitbox["full_top"] else size / 2
+        right: float = width / 2 if hitbox["full_right"] else size / 2
+        bot: float = -height / 2 if hitbox["full_bot"] else -size / 2
+        left: float = -width / 2 if hitbox["full_left"] else -size / 2
+
+        if hitbox["bevel"] <= 0:
+            return (
+                (left, bot),
+                (left, top),
+                (right, top),
+                (right, bot),
+            )
+        else:
+            return (
+                (left + hitbox["bevel"], bot),
+                (left, bot + hitbox["bevel"]),
+                (left, top - hitbox["bevel"]),
+                (left + hitbox["bevel"], top),
+                (right - hitbox["bevel"], top),
+                (right, top - hitbox["bevel"]),
+                (right, bot + hitbox["bevel"]),
+                (right - hitbox["bevel"], bot),
+            )
 
     # ########################################################################
     # ######################################################## GET OPTION ####
