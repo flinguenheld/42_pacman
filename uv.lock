@@ -26,7 +26,7 @@ dependencies = [
 requires-dist = [
     { name = "arcade", specifier = ">=3.3.3" },
     { name = "flake8", specifier = ">=7.3.0" },
-    { name = "mazegenerator", path = "mazegenerator-00001-py3-none-any.whl" },
+    { name = "mazegenerator", path = "mazegenerator-2.1.0-py3-none-any.whl" },
     { name = "mypy", specifier = ">=2.1.0" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pyglet", specifier = ">=2.1.15" },
@@ -216,10 +216,10 @@ wheels = [
 
 [[package]]
 name = "mazegenerator"
-version = "2.0.2"
-source = { path = "mazegenerator-00001-py3-none-any.whl" }
+version = "2.1.0"
+source = { path = "mazegenerator-2.1.0-py3-none-any.whl" }
 wheels = [
-    { filename = "mazegenerator-1-py3-none-any.whl", hash = "sha256:88b5b212ae1a90faa8aa6f8518abe6968a30be071cddbdd02f8c52c6936c209e" },
+    { filename = "mazegenerator-2.1.0-py3-none-any.whl", hash = "sha256:98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa" },
 ]
 
 [[package]]
