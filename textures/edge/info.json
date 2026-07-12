@@ -4,6 +4,7 @@
   "default_width": 32,
   "default_height": 32,
   "default_hitbox": {
+    "comment": "Default values to override --",
     "automatic": false,
     "deactivated": false,
     "size": 20,

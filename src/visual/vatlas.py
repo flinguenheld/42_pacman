@@ -55,31 +55,25 @@ class VAtlas:
         sheet = arcade.load_spritesheet(f"{self.path}/sheet.png")
 
         # ############################# CREATE TEXTURE #######
-        def create_texture(x: int, y: int) -> Texture:
+        def create_texture_with_hitbox(x: int, y: int) -> Texture:
             """
             Extract the image at the given coordinates to create a texture.
             Apply the hitbox calculated for the line.
+            If hitbox is None, arcade automatically uses the simple algorithm.
             """
 
             image = sheet.get_image(arcade.LBWH(x, y, width, height))
-            if hitbox is None:
-                return Texture(image)
-
-            return Texture(
-                image,
-                hit_box_algorithm=None,
-                hit_box_points=hitbox,
-            )
+            return Texture(image=image, hit_box_points=hitbox)
 
         # #################################### REGULAR #######
-        def add_regular(y: int, data_line: dict[str, Any]) -> None:
+        def add_regular_texture(y: int, data_line: dict[str, Any]) -> None:
 
             for x in range(data_line["nb"]):
                 x *= width
 
                 self.textures[data_line["name"]].append(
                     VTile(
-                        create_texture(x, y),
+                        create_texture_with_hitbox(x, y),
                         width,
                         height,
                         self._get_data(data_line, "probability", 100),
@@ -88,7 +82,7 @@ class VAtlas:
                 )
 
         # ################################### ANIMATED #######
-        def add_animation(y: int, data: dict[str, Any]) -> None:
+        def add_animated_texture(y: int, data: dict[str, Any]) -> None:
             keyframes = []
 
             duration = -1
@@ -99,7 +93,7 @@ class VAtlas:
                 x *= width
                 keyframes.append(
                     arcade.TextureKeyframe(
-                        create_texture(x, y),
+                        create_texture_with_hitbox(x, y),
                         duration,
                     )
                 )
@@ -121,6 +115,8 @@ class VAtlas:
         for data_line in self.info["lines"]:
             width = self._get_data(data_line, "width", self.default_width)
             height = self._get_data(data_line, "height", self.default_height)
+
+            # Only One hitbox for the line even if it's an animation
             hitbox = self._generate_hitbox(data_line, height, width)
 
             # Allows the atlas to have several textures with the same name
@@ -128,9 +124,9 @@ class VAtlas:
                 self.textures[data_line["name"]] = list()
 
             if self._get_data(data_line, "animated", False):
-                add_animation(y, data_line)
+                add_animated_texture(y, data_line)
             else:
-                add_regular(y, data_line)
+                add_regular_texture(y, data_line)
 
             y += height
 
@@ -154,7 +150,7 @@ class VAtlas:
             if key not in hitbox:
                 hitbox[key] = val
 
-        if hitbox["automatic"]:
+        if hitbox["automatic"]:  # None will result in an automatic hitbox
             return None
 
         if hitbox["deactivated"]:
@@ -167,7 +163,7 @@ class VAtlas:
         bot: float = -height / 2 if hitbox["full_bot"] else -size / 2
         left: float = -width / 2 if hitbox["full_left"] else -size / 2
 
-        if hitbox["bevel"] <= 0:
+        if hitbox["bevel"] <= 0 or hitbox["bevel"] * 2 > size:
             return (
                 (left, bot),
                 (left, top),

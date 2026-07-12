@@ -1,4 +1,5 @@
 from arcade.types import Color
+
 from src.visual import Style
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze

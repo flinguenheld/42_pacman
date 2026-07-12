@@ -22,6 +22,8 @@ class VGame(arcade.View):
         self.gamestate = GameState()
         self.sprite_manager = SpriteManager()
 
+        self.display_hitboxes = False
+
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
 
@@ -108,26 +110,29 @@ class VGame(arcade.View):
         self.camera.use()
 
         self.sprite_manager.draw()
-
-        self.sprite_manager.walls.sprites.draw_hit_boxes(
-            color=arcade.color.RED, line_thickness=2
-        )
-
         self.pacgum_list.draw()
-        self.pacgum_list.draw_hit_boxes(
-            color=arcade.color.WHITE, line_thickness=1
-        )
-
         self.player_list.draw()
-        self.player_list.draw_hit_boxes(
-            color=arcade.color.RED, line_thickness=1
-        )
+        self._draw_hitboxes()
 
         # --
         current_fps = arcade.get_fps()
         arcade.draw_text(
             f"FPS: {current_fps:.2f}", 10, 0, arcade.color.WHITE, 22, bold=True
         )
+
+    # ########################################################################
+    # ##################################################### DRAW HITBOXES ####
+    def _draw_hitboxes(self) -> None:
+        if self.display_hitboxes:
+            self.sprite_manager.walls.sprites.draw_hit_boxes(
+                color=arcade.color.RED, line_thickness=2
+            )
+            self.pacgum_list.draw_hit_boxes(
+                color=arcade.color.WHITE, line_thickness=1
+            )
+            self.player_list.draw_hit_boxes(
+                color=arcade.color.GRANNY_SMITH_APPLE, line_thickness=2
+            )
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -157,6 +162,9 @@ class VGame(arcade.View):
 
         elif symbol == arcade.key.N:
             self.setup()
+
+        elif symbol == arcade.key.H:
+            self.display_hitboxes = not self.display_hitboxes
 
         elif symbol == arcade.key.PLUS:
             self.camera.zoom += 0.1
