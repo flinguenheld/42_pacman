@@ -174,8 +174,7 @@ class VGame(arcade.View):
             )
         )
         for pacgum in collided:
-            score_to_add = pacgum.get_score()
-            self.gamestate.score += score_to_add
+            self.gamestate.score += pacgum.get_points()
             pacgum.kill()
 
     # ########################################################################

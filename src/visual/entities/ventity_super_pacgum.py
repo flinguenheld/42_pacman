@@ -17,5 +17,5 @@ class VEntitySuperPacGum(VEntityPacGum):
         super().__init__(atlas, position, sprite_name="super_pacgum")
 
     @staticmethod
-    def get_score() -> int:
+    def get_points() -> int:
         return VData.points_per_super_pacgum
