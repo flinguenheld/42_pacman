@@ -1,4 +1,3 @@
-from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 import random
 import arcade
 from arcade import SpriteList, Vec2
@@ -6,9 +5,11 @@ from arcade import SpriteList, Vec2
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
+from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
+from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -19,9 +20,8 @@ class VGame(arcade.View):
         super().__init__()
         arcade.enable_timings()
 
-        self.sprite_manager = SpriteManager()
-
         self.display_hitboxes = False
+        self.sprite_manager = SpriteManager()
 
         # QUESTION Usefull since it will be replaced in on_resize ??
         self.camera = arcade.Camera2D(self.window.rect)
@@ -44,6 +44,7 @@ class VGame(arcade.View):
         )
 
         # Init sprite lists first --
+        self.enemy_list: SpriteList[VEntityEnemy] = arcade.SpriteList()
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
         self.pacgum_list: SpriteList[VEntityPacGum | VEntitySuperPacGum] = (
             arcade.SpriteList()
@@ -57,9 +58,19 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
+        # Enemies --
+        for id, floor_corner in enumerate(self.maze_gen.floor_corners):
+            self.enemy_list.append(
+                VEntityEnemy(
+                    id,
+                    self.sprite_manager.atlas,
+                    floor_corner,
+                    self.sprite_manager.floors,
+                    self.player,
+                )
+            )
+
         # Super pacgums --
-        # TODO GET THE ANGLES TO PUT THEM
-        # TODO IT WILL BE SAME FOR GHOSTS
         for floor_corner in self.maze_gen.floor_corners:
             self.pacgum_list.append(
                 VEntitySuperPacGum(self.sprite_manager.atlas, floor_corner)
@@ -125,8 +136,9 @@ class VGame(arcade.View):
         self.camera.use()
 
         self.sprite_manager.draw()
-        self.pacgum_list.draw()
-        self.player_list.draw()
+        self.pacgum_list.draw(pixelated=True)
+        self.player_list.draw(pixelated=True)
+        self.enemy_list.draw(pixelated=True)
         self._draw_hitboxes()
 
         # --
@@ -152,17 +164,24 @@ class VGame(arcade.View):
             self.player_list.draw_hit_boxes(
                 color=arcade.color.GRANNY_SMITH_APPLE, line_thickness=2
             )
+            self.enemy_list.draw_hit_boxes(
+                color=arcade.color.AFRICAN_VIOLET, line_thickness=2
+            )
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        self.player.update(delta_time)
+        self.enemy_list.update(delta_time)
+        self.player_list.update(delta_time)
         self.sprite_manager.update(delta_time)
         self.resolve_player_pacgum_collisions()
 
+        self.enemy_list.update_animation(delta_time)
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
 
+    # ########################################################################
+    # ######################################################### COLLISION ####
     def resolve_player_pacgum_collisions(self) -> None:
         collided: list[VEntityPacGum | VEntitySuperPacGum] = (
             arcade.check_for_collision_with_list(self.player, self.pacgum_list)
