@@ -1,7 +1,7 @@
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 import random
 import arcade
-from arcade import SpriteList, Vec2
+from arcade import SpriteList, Text, Vec2
 
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
@@ -123,22 +123,21 @@ class VGame(arcade.View):
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
         self.clear()
-        self.camera.use()
 
-        self.sprite_manager.draw()
-        self.pacgum_list.draw()
-        self.player_list.draw()
-        self._draw_hitboxes()
+        # Separate what is drawn in the camera and
+        # what is drawn on the screen itself (HUD, debug info, etc.)
 
-        # --
-        current_fps = arcade.get_fps()
-        arcade.draw_text(
-            f"FPS: {current_fps:.2f}", 10, 0, arcade.color.WHITE, 22, bold=True
-        )
-        score = self.gamestate.score
-        arcade.draw_text(
-            f"Score: {score}", 10, 30, arcade.color.WHITE, 22, bold=True
-        )
+        # Activate the camera, but only inside this 'with' statement.
+        with self.camera.activate():
+            self.sprite_manager.draw()
+            self.pacgum_list.draw()
+            self.player_list.draw()
+            self._draw_hitboxes()
+
+        # Camera stops being active
+        # We can now draw things like the HUD, etc...
+        self._draw_hud()
+        self._draw_debug_hud()
 
     # ########################################################################
     # ##################################################### DRAW HITBOXES ####
@@ -155,6 +154,39 @@ class VGame(arcade.View):
             )
 
     # ########################################################################
+    # ########################################################## DRAW HUD ####
+    def _draw_hud(self) -> None:
+        # TODO: Add lives
+        # TODO: Maybe add a HUD banner on the top of the screen?
+        # E.g. a rectangle that covers the whole width of the screen,
+        # with a different color from the background
+        current_score = self.gamestate.score
+        score_text = Text(
+            f"Score: {current_score}",
+            x=10,
+            y=VData.height - 30,
+            color=arcade.color.WHITE,
+            font_size=22,
+            bold=True,
+        )
+        score_text.draw()
+
+    # ########################################################################
+    # #################################################### DRAW DEBUG HUD ####
+    def _draw_debug_hud(self) -> None:
+        # TODO: Add more debug info?
+        current_fps = arcade.get_fps()
+        fps_text = Text(
+            f"FPS: {current_fps:.2f}",
+            x=10,
+            y=0,
+            color=arcade.color.WHITE,
+            font_size=22,
+            bold=True,
+        )
+        fps_text.draw()
+
+    # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         self.player.update(delta_time)
@@ -164,11 +196,11 @@ class VGame(arcade.View):
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
 
+    # ########################################################################
+    # ###########################################PLAYER PACGUM COLLISIONS ####
     def resolve_player_pacgum_collisions(self) -> None:
         collided: list[VEntityPacGum | VEntitySuperPacGum] = (
-            arcade.check_for_collision_with_list(
-                self.player, self.pacgum_list
-            )
+            arcade.check_for_collision_with_list(self.player, self.pacgum_list)
         )
         for pacgum in collided:
             self.gamestate.score += pacgum.get_points()
