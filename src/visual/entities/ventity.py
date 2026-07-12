@@ -19,7 +19,6 @@ class VEntity(TextureAnimationSprite):
     # ########################################################################
     # ####################################################### INIT SPRITE ####
     def _init_sprite(self, position: Vec2) -> None:
-
         tile = self._atlas.pick_tile(
             f"{self._sprite_name}_wait",
             randomly=True,
