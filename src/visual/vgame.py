@@ -162,14 +162,6 @@ class VGame(arcade.View):
         self.super_pacgum_list.update_animation(delta_time)
 
     # ########################################################################
-    # #################################################### UP SPRITE SIZE ####
-    def up_sprite_size(self, new_size: int) -> None:
-        if new_size >= 10:
-            VData.SPRITE_SIZE = new_size
-            VData.SPRITE_SIZE_BACKGROUND = new_size * 4
-            self.reload_current_maze_sprites()
-
-    # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
 
