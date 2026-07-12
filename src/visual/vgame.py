@@ -1,7 +1,7 @@
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 import random
 import arcade
-from arcade import SpriteList, Text, Vec2
+from arcade import SpriteList, Vec2
 
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
@@ -9,6 +9,7 @@ from src.visual.vgamestate import VGameState
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
+from src.visual.vhud import VHud
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
@@ -36,9 +37,8 @@ class VGame(arcade.View):
         # Game state --
         self.gamestate = VGameState()
 
-        # Init Text objects --
-        self._init_hud_text()
-        self._init_debug_hud_text()
+        # HUD --
+        self.hud = VHud(self.gamestate)
 
         # Maze --
         self.new_maze(
@@ -140,8 +140,7 @@ class VGame(arcade.View):
 
         # Camera stops being active
         # We can now draw things like the HUD, etc...
-        self._draw_hud()
-        self._draw_debug_hud()
+        self.hud.draw()
 
     # ########################################################################
     # ##################################################### DRAW HITBOXES ####
@@ -156,48 +155,6 @@ class VGame(arcade.View):
             self.player_list.draw_hit_boxes(
                 color=arcade.color.GRANNY_SMITH_APPLE, line_thickness=2
             )
-
-    # ########################################################################
-    # ################################################# INIT TEXT OBJECTS ####
-    def _init_hud_text(self) -> None:
-        self.score_text = Text(
-            f"Score: {self.gamestate.score}",
-            x=10,
-            y=VData.height - 30,
-            color=arcade.color.WHITE,
-            font_size=22,
-            bold=True,
-        )
-
-    def _init_debug_hud_text(self) -> None:
-        self.fps_text = Text(
-            f"FPS: {arcade.get_fps():.2f}",
-            x=10,
-            y=0,
-            color=arcade.color.WHITE,
-            font_size=22,
-            bold=True,
-        )
-
-    # ########################################################################
-    # ########################################################## DRAW HUD ####
-    def _draw_hud(self) -> None:
-        # TODO: Move HUD to a separate class?
-        # TODO: Add lives
-        # TODO: Maybe add a HUD banner on the top of the screen?
-        # E.g. a rectangle that covers the whole width of the screen,
-        # with a different color from the background
-        current_score = self.gamestate.score
-        self.score_text.text = f"Score: {current_score}"
-        self.score_text.draw()
-
-    # ########################################################################
-    # #################################################### DRAW DEBUG HUD ####
-    def _draw_debug_hud(self) -> None:
-        # TODO: Add more debug info?
-        current_fps = arcade.get_fps()
-        self.fps_text.text = f"FPS: {current_fps:.2f}"
-        self.fps_text.draw()
 
     # ########################################################################
     # ############################################################ UPDATE ####
