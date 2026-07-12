@@ -56,7 +56,6 @@ class VGame(arcade.View):
         # Player --
         self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
-            "player",
             self.maze_gen.floor_center,
             self.sprite_manager.walls,
         )

@@ -329,11 +329,23 @@
     },
     {
       "name": "super_pacgum_wait",
-      "nb": 5,
+      "nb": 13,
       "animated": true,
       "duration": [
         5000,
-        100
+        25
+      ],
+      "hitbox": {
+        "automatic": true
+      }
+    },
+    {
+      "name": "super_pacgum_wait",
+      "nb": 8,
+      "animated": true,
+      "duration": [
+        5000,
+        150
       ],
       "hitbox": {
         "automatic": true
