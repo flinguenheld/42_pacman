@@ -3,7 +3,6 @@ from arcade import Sprite, Vec2, key
 
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
-from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_movement import VEntityMoving
 
 
@@ -17,12 +16,9 @@ class VEntityPlayer(VEntityMoving):
         sprite_name: str,
         position: Vec2,
         walls: SWall,
-        gamestate: VGameState,
-        gamestate: GameState,
     ) -> None:
         super().__init__(atlas, sprite_name, position)
         self.walls: SWall = walls
-        self.gamestate: GameState = gamestate
         self.setup()
 
     # ########################################################################

@@ -40,7 +40,7 @@ class VEntityMoving(VEntity):
         """
 
         if self._current_direction != self._requested_direction:
-            print(f"up the animation to {self._requested_direction}")
+            # print(f"up the animation to {self._requested_direction}")
 
             new_tile = self._atlas.textures[
                 f"{self._sprite_name}_{self._requested_direction}"

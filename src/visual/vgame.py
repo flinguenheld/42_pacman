@@ -54,7 +54,6 @@ class VGame(arcade.View):
             "player",
             Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
             self.sprite_manager.walls,
-            self.gamestate,
         )
         self.player_list.append(self.player)
 
@@ -157,11 +156,23 @@ class VGame(arcade.View):
     def on_update(self, delta_time: int | float) -> None:
         self.player.update(delta_time)
         self.sprite_manager.update(delta_time)
+        self.resolve_player_pacgum_collisions()
 
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
         # TODO: KEEP OR MERGE WITH PACGUMS ??
         self.super_pacgum_list.update_animation(delta_time)
+
+    def resolve_player_pacgum_collisions(self) -> None:
+        collided: list[VEntityPacGum | VEntitySuperPacGum] = (
+            arcade.check_for_collision_with_lists(
+                self.player, [self.pacgum_list, self.super_pacgum_list]
+            )
+        )
+        for pacgum in collided:
+            score_to_add = pacgum.get_score()
+            self.gamestate.score += score_to_add
+            pacgum.kill()
 
     # ########################################################################
     # ############################################################## KEYS ####
