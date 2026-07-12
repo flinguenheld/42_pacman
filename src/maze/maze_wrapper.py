@@ -160,13 +160,16 @@ class Maze:
         Save the edges.
         Used while building walls to avoid calculations.
         """
-        if y < self.bot:
-            self.bot = y
+        # QUESTION: Since we use the real coordinates, left and bot are 0
+        # QUESTION: So keep them ???
+
+        # if y < self.bot:
+        #     self.bot = y
         if y > self.top:
             self.top = y
 
-        if x < self.left:
-            self.left = x
+        # if x < self.left:
+        #     self.left = x
         if x > self.right:
             self.right = x
 
@@ -184,3 +187,38 @@ class Maze:
     @property
     def height(self) -> int:
         return self.top - self.bot
+
+    # ########################################################################
+    # ##################################################### FLOOR CORNERS ####
+    @property
+    def floor_corners(self) -> list[Vec2]:
+        """Return floor corners:  left/bot, left/top, right/top, right/bot."""
+
+        bot = VData.SPRITE_SIZE
+        top = self.top - VData.SPRITE_SIZE
+        left = VData.SPRITE_SIZE
+        right = self.width - VData.SPRITE_SIZE
+
+        return [
+            Vec2(left, bot),
+            Vec2(left, top),
+            Vec2(right, top),
+            Vec2(right, bot),
+        ]
+
+    # ########################################################################
+    # ###################################################### FLOOR CENTER ####
+    @property
+    def floor_center(self) -> Vec2:
+        """Center of the floor which is the closest to the maze center."""
+
+        y = self.center_position.y
+        middle_row = [f for f in self.floors if f.y == y]
+        middle_row.sort(key=lambda pt: pt.x)
+
+        maze_center = self.center_position.x - VData.SPRITE_SIZE
+        for pt in middle_row:
+            if pt.x >= maze_center:
+                return pt
+
+        return Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE)
