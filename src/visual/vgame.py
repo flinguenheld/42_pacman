@@ -114,6 +114,7 @@ class VGame(arcade.View):
     # ############################################################ CAMERA ####
     def camera_center(self) -> None:
         # TODO: Investigate issue with camera centering on smaller maze sizes
+        # and bigger sized windows.
 
         hud_bg_height = self.hud.hud_bg_sprite.height
 
