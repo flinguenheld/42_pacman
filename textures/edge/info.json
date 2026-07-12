@@ -326,6 +326,18 @@
       "hitbox": {
         "automatic": true
       }
+    },
+    {
+      "name": "super_pacgum_wait",
+      "nb": 5,
+      "animated": true,
+      "duration": [
+        5000,
+        100
+      ],
+      "hitbox": {
+        "automatic": true
+      }
     }
   ]
 }

@@ -77,8 +77,8 @@ Ghosts! More ghosts!
   - [ ] Git repository must contain the full source and the packaging script/spec at the root
 
 - [ ] Integrate maze generation
-  - [ ] Use as-is
-  - [ ] PERFECT = False
+  - [X] Use as-is
+  - [X] PERFECT = False
   - [ ] Handle errors gracefully
 
 - [ ] Highscore system

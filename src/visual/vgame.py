@@ -1,3 +1,4 @@
+from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 import random
 import arcade
 from arcade import SpriteList, Vec2
@@ -52,10 +53,23 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
+        # Super pacgums --
+        self.super_pacgum_list: SpriteList[VEntity] = arcade.SpriteList()
+        # TODO GET THE ANGLES TO PUT THEM
+        # TODO IT WILL BE SAME FOR GHOSTS
+        position = Vec2(*self.sprite_manager.floors.sprites[0].position)
+        self.super_pacgum_list.append(
+            VEntitySuperPacGum(self.sprite_manager.atlas, position)
+        )
+
         # Pacgums --
         self.pacgum_list: SpriteList[VEntity] = arcade.SpriteList()
+
+        forbbiden = set([spg.position for spg in self.super_pacgum_list])
+        forbbiden.add(self.player.position)
+
         for floor_sprite in self.sprite_manager.floors.sprites:
-            if floor_sprite.position != self.player.position:
+            if floor_sprite.position not in forbbiden:
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
                     self.pacgum_list.append(
@@ -111,6 +125,8 @@ class VGame(arcade.View):
 
         self.sprite_manager.draw()
         self.pacgum_list.draw()
+        # TODO: KEEP OR MERGE WITH PACGUMS ??
+        self.super_pacgum_list.draw()
         self.player_list.draw()
         self._draw_hitboxes()
 
@@ -142,6 +158,8 @@ class VGame(arcade.View):
 
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
+        # TODO: KEEP OR MERGE WITH PACGUMS ??
+        self.super_pacgum_list.update_animation(delta_time)
 
     # ########################################################################
     # #################################################### UP SPRITE SIZE ####
