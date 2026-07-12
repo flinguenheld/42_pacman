@@ -93,6 +93,7 @@ class VGame(arcade.View):
     def on_resize(self, width: int, height: int) -> None:
         self.camera = arcade.Camera2D(self.window.rect)
         self.camera_center()
+        self.hud.on_resize(width, height)
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -113,13 +114,22 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ CAMERA ####
     def camera_center(self) -> None:
+        # TODO: Investigate issue with camera centering on smaller maze sizes
+
+        hud_bg_height = self.hud.hud_bg_sprite.height
+
         self.camera.position = self.maze_gen.center_position
+        self.camera.position += Vec2(0, hud_bg_height / 2)
         self.camera_adapt_zoom()
 
     def camera_adapt_zoom(self) -> None:
         margin = VData.CAMERA_MARGIN
+        hud_bg_height = self.hud.hud_bg_sprite.height
+
         scale_hori = (self.width - margin) / self.maze_gen.width
-        scale_vert = (self.height - margin) / self.maze_gen.height
+        scale_vert = (
+            self.height - margin - (hud_bg_height / 2)
+        ) / self.maze_gen.height
 
         self.camera.zoom = min(scale_hori, scale_vert)
 

@@ -31,7 +31,7 @@ class VHud:
         """
         self.hud_bg_sprite = SpriteSolidColor(
             width=VData.width,
-            height=55,
+            height=70,
             color=arcade.color.BLACK,
         )
         self.hud_bg_sprite.center_x = VData.width / 2
@@ -66,6 +66,16 @@ class VHud:
             font_size=22,
             bold=True,
         )
+
+    def on_resize(self, width: int, height: int) -> None:
+        """
+        Adjusts the HUD elements when the window is resized.
+        """
+        self.hud_bg_sprite.width = width
+        self.hud_bg_sprite.center_x = width / 2
+        self.hud_bg_sprite.center_y = height - (self.hud_bg_sprite.height / 2)
+
+        self.score_text.y = height - 30
 
     def draw(self) -> None:
         """
