@@ -52,7 +52,7 @@ class VGame(arcade.View):
         self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
             "player",
-            Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
+            self.maze_gen.floor_center,
             self.sprite_manager.walls,
         )
         self.player_list.append(self.player)
@@ -60,10 +60,10 @@ class VGame(arcade.View):
         # Super pacgums --
         # TODO GET THE ANGLES TO PUT THEM
         # TODO IT WILL BE SAME FOR GHOSTS
-        position = Vec2(*self.sprite_manager.floors.sprites[0].position)
-        self.super_pacgum_list.append(
-            VEntitySuperPacGum(self.sprite_manager.atlas, position)
-        )
+        for floor_corner in self.maze_gen.floor_corners:
+            self.super_pacgum_list.append(
+                VEntitySuperPacGum(self.sprite_manager.atlas, floor_corner)
+            )
 
         # Pacgums --
         forbbiden = set([spg.position for spg in self.super_pacgum_list])
