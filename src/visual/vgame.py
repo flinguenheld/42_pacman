@@ -19,7 +19,6 @@ class VGame(arcade.View):
         super().__init__()
         arcade.enable_timings()
 
-        self.gamestate = VGameState()
         self.sprite_manager = SpriteManager()
 
         self.display_hitboxes = False
@@ -34,6 +33,9 @@ class VGame(arcade.View):
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
 
+        # Game state --
+        self.gamestate = VGameState()
+
         # Maze --
         self.new_maze(
             random.randint(10, 20),
@@ -43,8 +45,7 @@ class VGame(arcade.View):
 
         # Init sprite lists first --
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
-        self.pacgum_list: SpriteList[VEntityPacGum] = arcade.SpriteList()
-        self.super_pacgum_list: SpriteList[VEntitySuperPacGum] = (
+        self.pacgum_list: SpriteList[VEntityPacGum | VEntitySuperPacGum] = (
             arcade.SpriteList()
         )
 
@@ -61,13 +62,13 @@ class VGame(arcade.View):
         # TODO GET THE ANGLES TO PUT THEM
         # TODO IT WILL BE SAME FOR GHOSTS
         for floor_corner in self.maze_gen.floor_corners:
-            self.super_pacgum_list.append(
+            self.pacgum_list.append(
                 VEntitySuperPacGum(self.sprite_manager.atlas, floor_corner)
             )
 
         # Pacgums --
-        forbbiden = set([spg.position for spg in self.super_pacgum_list])
-        forbbiden.add(self.player.position)
+        forbbiden = set(self.maze_gen.floor_corners)
+        forbbiden.add(Vec2(*self.player.position))
 
         for floor_sprite in self.sprite_manager.floors.sprites:
             if floor_sprite.position not in forbbiden:
@@ -126,8 +127,6 @@ class VGame(arcade.View):
 
         self.sprite_manager.draw()
         self.pacgum_list.draw()
-        # TODO: KEEP OR MERGE WITH PACGUMS ??
-        self.super_pacgum_list.draw()
         self.player_list.draw()
         self._draw_hitboxes()
 
@@ -164,13 +163,11 @@ class VGame(arcade.View):
 
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
-        # TODO: KEEP OR MERGE WITH PACGUMS ??
-        self.super_pacgum_list.update_animation(delta_time)
 
     def resolve_player_pacgum_collisions(self) -> None:
         collided: list[VEntityPacGum | VEntitySuperPacGum] = (
-            arcade.check_for_collision_with_lists(
-                self.player, [self.pacgum_list, self.super_pacgum_list]
+            arcade.check_for_collision_with_list(
+                self.player, self.pacgum_list
             )
         )
         for pacgum in collided:
