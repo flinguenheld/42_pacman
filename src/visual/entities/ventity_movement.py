@@ -8,7 +8,7 @@ from src.visual.entities.ventity import VEntity
 # ░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀░░
 # ░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█░█░█░█░▀▄▀░█▀▀░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀░▀░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░░
-class VEntityMovement(VEntity):
+class VEntityMoving(VEntity):
     """
     Add movement options to VEntity
     The Atlas has to contain 5 animated textures:

@@ -4,13 +4,13 @@ from arcade import Sprite, Vec2, key
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import GameState
-from src.visual.entities.ventity_movement import VEntityMovement
+from src.visual.entities.ventity_movement import VEntityMoving
 
 
 # ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░░░█▀█░░█░░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀░░░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░░
-class VEntityPlayer(VEntityMovement):
+class VEntityPlayer(VEntityMoving):
     def __init__(
         self,
         atlas: VAtlas,
