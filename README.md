@@ -94,8 +94,8 @@ Ghosts! More ghosts!
 
 - [ ] Game
   - [ ] Player
-    - [ ] Create texture
-    - [ ] Player spawns in the middle
+    - [X] Create texture
+    - [X] Player spawns in the middle
     - [ ] Move with arrow keys or WASD
       - [ ] If necessary, handle AZERTY preset (ZQSD) as an option
     - [ ] Ghost touch player = player loses one life
@@ -108,8 +108,8 @@ Ghosts! More ghosts!
     - [ ] Manage counter
 
   - [ ] Super-Pacgum
-    - [ ] Create texture
-    - [ ] 1 per corner
+    - [X] Create texture
+    - [X] 1 per corner
     - [ ] Makes ghosts edible for a short time
     - [ ] Eating an edible ghost increases the score by Z points
 
