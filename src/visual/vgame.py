@@ -115,7 +115,6 @@ class VGame(arcade.View):
     def camera_center(self) -> None:
         # TODO: Investigate issue with camera centering on smaller maze sizes
         # and bigger sized windows.
-
         hud_bg_height = self.hud.hud_bg_sprite.height
 
         self.camera.position = self.maze_gen.center_position
@@ -124,12 +123,9 @@ class VGame(arcade.View):
 
     def camera_adapt_zoom(self) -> None:
         margin = VData.CAMERA_MARGIN
-        hud_bg_height = self.hud.hud_bg_sprite.height
 
         scale_hori = (self.width - margin) / self.maze_gen.width
-        scale_vert = (
-            self.height - margin - (hud_bg_height / 2)
-        ) / self.maze_gen.height
+        scale_vert = (self.height - margin) / self.maze_gen.height
 
         self.camera.zoom = min(scale_hori, scale_vert)
 
