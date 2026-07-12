@@ -3,7 +3,7 @@ from arcade import Sprite, Vec2, key
 
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
-from src.visual.entities.ventity_movement import VEntityMoving
+from src.visual.entities.ventity_moving import VEntityMoving
 
 
 # ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░

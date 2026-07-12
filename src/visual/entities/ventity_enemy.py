@@ -3,7 +3,7 @@ from arcade import Vec2
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.sfloor import SFloor
 from src.visual.entities.ventity_player import VEntityPlayer
-from src.visual.entities.ventity_movement import VEntityMoving
+from src.visual.entities.ventity_moving import VEntityMoving
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
