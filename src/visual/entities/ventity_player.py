@@ -13,11 +13,10 @@ class VEntityPlayer(VEntityMoving):
     def __init__(
         self,
         atlas: VAtlas,
-        sprite_name: str,
         position: Vec2,
         walls: SWall,
     ) -> None:
-        super().__init__(atlas, sprite_name, position)
+        super().__init__(atlas, "player", position)
         self.walls: SWall = walls
         self.setup()
 

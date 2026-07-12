@@ -52,7 +52,6 @@ class VGame(arcade.View):
         # Player --
         self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
-            "player",
             self.maze_gen.floor_center,
             self.sprite_manager.walls,
         )
@@ -166,9 +165,7 @@ class VGame(arcade.View):
 
     def resolve_player_pacgum_collisions(self) -> None:
         collided: list[VEntityPacGum | VEntitySuperPacGum] = (
-            arcade.check_for_collision_with_list(
-                self.player, self.pacgum_list
-            )
+            arcade.check_for_collision_with_list(self.player, self.pacgum_list)
         )
         for pacgum in collided:
             self.gamestate.score += pacgum.get_points()
