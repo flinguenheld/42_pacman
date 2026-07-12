@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class GameState:
+class VGameState:
     score: int = 0
     lives: int = 3

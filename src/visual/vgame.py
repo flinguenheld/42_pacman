@@ -5,8 +5,7 @@ from arcade import SpriteList, Vec2
 
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
-from src.visual.vgamestate import GameState
-from src.visual.entities.ventity import VEntity
+from src.visual.vgamestate import VGameState
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -20,7 +19,7 @@ class VGame(arcade.View):
         super().__init__()
         arcade.enable_timings()
 
-        self.gamestate = GameState()
+        self.gamestate = VGameState()
         self.sprite_manager = SpriteManager()
 
         self.display_hitboxes = False
