@@ -70,6 +70,7 @@ class VGame(arcade.View):
                     self.sprite_manager.atlas,
                     floor_corner,
                     self.sprite_manager.floors,
+                    self.sprite_manager.walls,
                     self.player,
                 )
             )
