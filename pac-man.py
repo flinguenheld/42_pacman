@@ -1,3 +1,4 @@
+from src.visual.vdata import VData
 from src.visual.vmenu import VMenu
 from src.visual.vmain import VMain
 import sys
@@ -17,7 +18,9 @@ def main() -> None:
             exit()
 
         else:
-            get_config(sys.argv[1])
+            config = get_config(sys.argv[1])
+            VData.apply_config(config)
+
             window = VMain()
             window.show_view(VMenu())
             window.run()

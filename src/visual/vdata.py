@@ -1,4 +1,7 @@
 from enum import Enum
+from typing import Self
+
+from src.config.config import Config
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░░█▀█░█▀█░█▄█░█▀▀░█▀▀░░
@@ -36,6 +39,16 @@ class VData:
     SPRITE_SIZE_BACKGROUND = SPRITE_SIZE * 4
     TEXTURES = "textures"
     CAMERA_MARGIN: int = 100
+
+    points_per_ghost: int = 10
+    points_per_pacgum: int = 50
+    points_per_super_pacgum: int = 200
+
+    @classmethod
+    def apply_config(cls: type[Self], config: Config) -> None:
+        cls.points_per_ghost = config.points_per_ghost
+        cls.points_per_pacgum = config.points_per_pacgum
+        cls.points_per_super_pacgum = config.points_per_super_pacgum
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░▀█▀░█░█░█░░░█▀▀░█▀▀░░

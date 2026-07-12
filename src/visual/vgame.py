@@ -49,7 +49,6 @@ class VGame(arcade.View):
         )
 
         # Player --
-        self.player_list: SpriteList[VEntity] = arcade.SpriteList()
         self.player: VEntityPlayer = VEntityPlayer(
             self.sprite_manager.atlas,
             "player",
