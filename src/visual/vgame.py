@@ -36,6 +36,10 @@ class VGame(arcade.View):
         # Game state --
         self.gamestate = VGameState()
 
+        # Init Text objects --
+        self._init_hud_text()
+        self._init_debug_hud_text()
+
         # Maze --
         self.new_maze(
             random.randint(10, 20),
@@ -154,37 +158,46 @@ class VGame(arcade.View):
             )
 
     # ########################################################################
-    # ########################################################## DRAW HUD ####
-    def _draw_hud(self) -> None:
-        # TODO: Add lives
-        # TODO: Maybe add a HUD banner on the top of the screen?
-        # E.g. a rectangle that covers the whole width of the screen,
-        # with a different color from the background
-        current_score = self.gamestate.score
-        score_text = Text(
-            f"Score: {current_score}",
+    # ################################################# INIT TEXT OBJECTS ####
+    def _init_hud_text(self) -> None:
+        self.score_text = Text(
+            f"Score: {self.gamestate.score}",
             x=10,
             y=VData.height - 30,
             color=arcade.color.WHITE,
             font_size=22,
             bold=True,
         )
-        score_text.draw()
 
-    # ########################################################################
-    # #################################################### DRAW DEBUG HUD ####
-    def _draw_debug_hud(self) -> None:
-        # TODO: Add more debug info?
-        current_fps = arcade.get_fps()
-        fps_text = Text(
-            f"FPS: {current_fps:.2f}",
+    def _init_debug_hud_text(self) -> None:
+        self.fps_text = Text(
+            f"FPS: {arcade.get_fps():.2f}",
             x=10,
             y=0,
             color=arcade.color.WHITE,
             font_size=22,
             bold=True,
         )
-        fps_text.draw()
+
+    # ########################################################################
+    # ########################################################## DRAW HUD ####
+    def _draw_hud(self) -> None:
+        # TODO: Move HUD to a separate class?
+        # TODO: Add lives
+        # TODO: Maybe add a HUD banner on the top of the screen?
+        # E.g. a rectangle that covers the whole width of the screen,
+        # with a different color from the background
+        current_score = self.gamestate.score
+        self.score_text.text = f"Score: {current_score}"
+        self.score_text.draw()
+
+    # ########################################################################
+    # #################################################### DRAW DEBUG HUD ####
+    def _draw_debug_hud(self) -> None:
+        # TODO: Add more debug info?
+        current_fps = arcade.get_fps()
+        self.fps_text.text = f"FPS: {current_fps:.2f}"
+        self.fps_text.draw()
 
     # ########################################################################
     # ############################################################ UPDATE ####
