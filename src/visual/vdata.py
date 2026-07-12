@@ -19,11 +19,13 @@ class VData:
     Used for either constants, or simply data that is rarely changed,
     or that is not tied to level changes or restarts
 
-    Because of its special usage, it is practical and justified to use as a global variable
+    Because of its special usage, it is practical
+    and justified to use as a global variable
 
     Data tied to a level/the current game would be in the VGameState class
     (e.g the current player score)
     """
+
     height: int = 1300
     width: int = 1300
 
