@@ -42,6 +42,13 @@ class VGame(arcade.View):
             random.randint(1, 200),
         )
 
+        # Init sprite lists first --
+        self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
+        self.pacgum_list: SpriteList[VEntityPacGum] = arcade.SpriteList()
+        self.super_pacgum_list: SpriteList[VEntitySuperPacGum] = (
+            arcade.SpriteList()
+        )
+
         # Player --
         self.player_list: SpriteList[VEntity] = arcade.SpriteList()
         self.player: VEntityPlayer = VEntityPlayer(
@@ -54,7 +61,6 @@ class VGame(arcade.View):
         self.player_list.append(self.player)
 
         # Super pacgums --
-        self.super_pacgum_list: SpriteList[VEntity] = arcade.SpriteList()
         # TODO GET THE ANGLES TO PUT THEM
         # TODO IT WILL BE SAME FOR GHOSTS
         position = Vec2(*self.sprite_manager.floors.sprites[0].position)
@@ -63,8 +69,6 @@ class VGame(arcade.View):
         )
 
         # Pacgums --
-        self.pacgum_list: SpriteList[VEntity] = arcade.SpriteList()
-
         forbbiden = set([spg.position for spg in self.super_pacgum_list])
         forbbiden.add(self.player.position)
 
