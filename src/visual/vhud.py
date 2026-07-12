@@ -71,6 +71,9 @@ class VHud:
         """
         Adjusts the HUD elements when the window is resized.
         """
+        self.resize_bg(width, height)
+
+    def resize_bg(self, width: int, height: int) -> None:
         self.hud_bg_sprite.width = width
         self.hud_bg_sprite.center_x = width / 2
         self.hud_bg_sprite.center_y = height - (self.hud_bg_sprite.height / 2)
