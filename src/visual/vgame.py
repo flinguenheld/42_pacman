@@ -136,6 +136,10 @@ class VGame(arcade.View):
         arcade.draw_text(
             f"FPS: {current_fps:.2f}", 10, 0, arcade.color.WHITE, 22, bold=True
         )
+        score = self.gamestate.score
+        arcade.draw_text(
+            f"Score: {score}", 10, 30, arcade.color.WHITE, 22, bold=True
+        )
 
     # ########################################################################
     # ##################################################### DRAW HITBOXES ####

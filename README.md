@@ -147,8 +147,8 @@ Ghosts! More ghosts!
     - [ ] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
 
   - [] Entity system
-    - [] VEntity ABC, common API for entities
-    - [] VPlayerEntity
+    - [X] VEntity ABC, common API for entities
+    - [X] VPlayerEntity
     - [] VGhostEntity
     - [] VPacgumEntity
     - [] VSuperPacgumEntity
