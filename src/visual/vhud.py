@@ -45,7 +45,7 @@ class VHud:
         Initializes the text object for displaying the score.
         """
         self.score_text = Text(
-            f"Score: {self.gamestate.score}",
+            "",
             x=10,
             y=VData.height - 30,
             color=arcade.color.WHITE,
@@ -59,7 +59,7 @@ class VHud:
         such as FPS.
         """
         self.fps_text = Text(
-            f"FPS: {arcade.get_fps():.2f}",
+            "",
             x=10,
             y=0,
             color=arcade.color.WHITE,
