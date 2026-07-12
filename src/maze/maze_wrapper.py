@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from arcade import Vec2
-from src.visual import VData
+from src.visual.vdata import VData
 from mazegenerator import MazeGenerator
 
 
@@ -135,10 +135,10 @@ class Maze:
         self.background.clear()
 
         # Simple and oversized
-        from_x = self.left - VData.WIDTH // 2
-        to_x = self.right + VData.WIDTH // 2
-        from_y = self.bot - VData.HEIGHT // 2
-        to_y = self.top + VData.HEIGHT // 2
+        from_x = self.left - VData.width // 2
+        to_x = self.right + VData.width // 2
+        from_y = self.bot - VData.height // 2
+        to_y = self.top + VData.height // 2
 
         for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
             for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):

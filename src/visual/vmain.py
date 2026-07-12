@@ -1,10 +1,9 @@
-from src.visual.vpause import VPause
-
 import arcade
 from src.visual.vgame import VGame
 from src.visual.vmenu import VMenu
-from src.visual import VNames, VData
+from src.visual.vpause import VPause
 from mazegenerator import MazeGenerator
+from src.visual.vdata import VNames, VData
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░█▀█░▀█▀░█▀█░░
@@ -13,8 +12,8 @@ from mazegenerator import MazeGenerator
 class VMain(arcade.Window):
     def __init__(self) -> None:
         super().__init__(
-            VData.WIDTH,
-            VData.HEIGHT,
+            VData.width,
+            VData.height,
             "Pac-man",
             resizable=True,
             antialiasing=False,
@@ -49,5 +48,5 @@ class VMain(arcade.Window):
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        VData.WIDTH = width
-        VData.HEIGHT = height
+        VData.width = width
+        VData.height = height

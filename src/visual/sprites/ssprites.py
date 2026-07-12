@@ -2,7 +2,7 @@ import arcade
 import random
 from arcade import Sprite, SpriteList, Vec2
 
-from src.visual import VData
+from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
 

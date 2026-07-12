@@ -1,6 +1,6 @@
 from arcade.types import Color
 
-from src.visual import Style
+from src.visual.vdata import VStyles
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
@@ -13,7 +13,7 @@ from src.visual.sprites.sbackground import SBackground
 # ░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░▀░▀░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░
 class SpriteManager:
     def __init__(self) -> None:
-        self.style: Style = Style.EDGE
+        self.style: VStyles = VStyles.EDGE
         self.atlas = VAtlas()
         self.atlas.load(self.style)
 
@@ -25,11 +25,11 @@ class SpriteManager:
     # ######################################################## NEXT STYLE ####
     def next_style(self) -> None:
         match self.style:
-            case Style.SUMMER:
-                self.style = Style.EDGE
+            case VStyles.SUMMER:
+                self.style = VStyles.EDGE
 
-            case Style.EDGE:
-                self.style = Style.SUMMER
+            case VStyles.EDGE:
+                self.style = VStyles.SUMMER
 
     # ########################################################################
     # ############################################################ RELOAD ####

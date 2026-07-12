@@ -2,8 +2,8 @@ import random
 import arcade
 from arcade import SpriteList, Vec2
 
-from src.visual import VNames, VData
 from src.maze.maze_wrapper import Maze
+from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import GameState
 from src.visual.entities.ventity import VEntity
 from src.visual.sprites.vsprite_manager import SpriteManager

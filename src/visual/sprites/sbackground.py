@@ -1,5 +1,5 @@
 from arcade import Vec2
-from src.visual import VData
+from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.ssprites import SSprites

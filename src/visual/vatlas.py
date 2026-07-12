@@ -2,8 +2,8 @@ import random
 import arcade
 from typing import Any, Sequence
 from json import load as json_load
-from src.visual import Style, VData
 from dataclasses import dataclass, field
+from src.visual.vdata import VStyles, VData
 from arcade import TextureAnimation, Texture
 
 
@@ -26,13 +26,13 @@ class VAtlas:
     INFO_FILENAME = "info.json"
 
     def __init__(self) -> None:
-        self.style = Style.SUMMER
+        self.style = VStyles.SUMMER
         self.info: dict[str, Any] = dict()
         self.textures: dict[str, list[VTile]] = dict()
 
     # ########################################################################
     # ############################################################## LOAD ####
-    def load(self, new_style: Style) -> None:
+    def load(self, new_style: VStyles) -> None:
         self.style = new_style
         self._load_info()
         self._load_textures()

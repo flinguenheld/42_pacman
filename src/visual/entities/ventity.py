@@ -1,7 +1,7 @@
 import arcade
 from arcade import Vec2, TextureAnimationSprite
 
-from src.visual import VData
+from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
 

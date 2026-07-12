@@ -1,8 +1,8 @@
-from arcade.gui import UIEvent
 import arcade
 import arcade.gui
+from arcade.gui import UIEvent
 
-from src.visual import VNames
+from src.visual.vdata import VNames
 
 # GUI tutorial ##
 # https://api.arcade.academy/en/latest/tutorials/menu/index.html

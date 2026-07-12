@@ -1,6 +1,6 @@
 import arcade
 import arcade.key
-from src.visual import VData, VNames
+from src.visual.vdata import VNames
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█▀█░█░█░█▀▀░█▀▀░░
@@ -15,21 +15,24 @@ class VPause(arcade.View):
         self.current_index: int = -1
         self.time_elapsed: float = 0.0
 
-        pos = VData.CENTER_X - (len(self.text) * VData.FONT_SIZE_TITLE) // 2
-        for letter in self.text:
-            self.letters.append(
-                arcade.Text(
-                    letter,
-                    x=pos,
-                    y=VData.CENTER_Y,
-                    color=arcade.color.BLACK,
-                    font_size=VData.FONT_SIZE_TITLE,
-                    anchor_x="center",
-                    anchor_y="center",
-                    font_name="Kenney Blocks",
-                )
-            )
-            pos += VData.FONT_SIZE_TITLE
+        # TODO: REDO THAT WITH CAMERA
+        # TODO: REDO THAT WITH CAMERA
+        # TODO: REDO THAT WITH CAMERA
+        # pos = VData.CENTER_X - (len(self.text) * VData.FONT_SIZE_TITLE) // 2
+        # for letter in self.text:
+        #     self.letters.append(
+        #         arcade.Text(
+        #             letter,
+        #             x=pos,
+        #             y=VData.CENTER_Y,
+        #             color=arcade.color.BLACK,
+        #             font_size=VData.FONT_SIZE_TITLE,
+        #             anchor_x="center",
+        #             anchor_y="center",
+        #             font_name="Kenney Blocks",
+        #         )
+        #     )
+        #     pos += VData.FONT_SIZE_TITLE
 
     # ########################################################################
     # ###################################################### ON SHOW VIEW ####
