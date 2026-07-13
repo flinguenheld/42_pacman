@@ -197,7 +197,7 @@ class VGame(arcade.View):
             arcade.check_for_collision_with_list(self.player, self.pacgum_list)
         )
         for pacgum in collided:
-            self.gamestate.score += pacgum.get_points()
+            self.gamestate.increment_score(pacgum.get_points())
             pacgum.kill()
 
     # ########################################################################
