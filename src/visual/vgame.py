@@ -209,6 +209,9 @@ class VGame(arcade.View):
         # The WASD, ZQSD and arrow keys are reserved for player movement.
 
         match symbol:
+            case arcade.key.ESCAPE:
+                arcade.exit()
+
             case arcade.key.M:
                 self.window.switch_view(VNames.VIEW_MENU)
             case arcade.key.P:
