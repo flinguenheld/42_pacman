@@ -4,7 +4,13 @@ from typing import Any, Sequence
 from json import load as json_load
 from dataclasses import dataclass, field
 from src.visual.vdata import VStyles, VData
-from arcade import TextureAnimation, Texture
+from arcade import (
+    TextureAnimationSprite,
+    TextureAnimation,
+    Texture,
+    Sprite,
+    Vec2,
+)
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░▀█▀░█░░░█▀▀░░
@@ -226,3 +232,34 @@ class VAtlas:
         weights = [w.probability / 100 for w in self.textures[name]]
 
         return random.choices(tile, weights, k=1)[0]
+
+    # ########################################################################
+    # #################################################### TILE TO SPRITE ####
+    def tile_to_sprite(
+        self,
+        tile: VTile,
+        center: Vec2,
+        angle: int = 0,
+        sprite_size: int = VData.SPRITE_SIZE,
+    ) -> Sprite | TextureAnimationSprite:
+        """
+        Create a Sprite from the given VTile.
+        """
+
+        if isinstance(tile.texture, arcade.TextureAnimation):
+            sprite_animated = arcade.TextureAnimationSprite(
+                animation=tile.texture,
+                center_x=center.x,
+                center_y=center.y,
+                scale=sprite_size / tile.width,
+            )
+            sprite_animated.angle = angle
+            return sprite_animated
+        else:
+            return arcade.Sprite(
+                path_or_texture=tile.texture,
+                center_x=center.x,
+                center_y=center.y,
+                scale=sprite_size / tile.width,
+                angle=angle,
+            )

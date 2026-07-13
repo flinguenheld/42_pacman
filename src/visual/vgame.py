@@ -1,6 +1,6 @@
 import random
 import arcade
-from arcade import SpriteList, Vec2
+from arcade import SpriteList, Vec2, Rect, LBWH
 
 from src.visual.vhud import VHud
 from src.maze.maze_wrapper import Maze
@@ -24,9 +24,7 @@ class VGame(arcade.View):
         self.display_hitboxes = False
         self.sprite_manager = SpriteManager()
 
-        # QUESTION Usefull since it will be replaced in on_resize ??
-        self.camera = arcade.Camera2D(self.window.rect)
-
+        self.setup_done = False
         self.setup()
 
     # ########################################################################
@@ -37,14 +35,18 @@ class VGame(arcade.View):
         # Game state --
         self.gamestate = VGameState()
 
-        # HUD --
-        self.hud = VHud(self.gamestate)
-
         # Maze --
         self.new_maze(
             random.randint(10, 20),
             random.randint(5, 20),
             random.randint(1, 200),
+        )
+
+        # HUD --
+        self.hud = VHud(
+            self.maze_gen,
+            self.sprite_manager.atlas,
+            self.gamestate,
         )
 
         # Init sprite lists first --
@@ -93,6 +95,8 @@ class VGame(arcade.View):
                         VEntityPacGum(self.sprite_manager.atlas, position)
                     )
 
+        self.setup_done = True
+
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
@@ -102,9 +106,11 @@ class VGame(arcade.View):
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        self.camera = arcade.Camera2D(self.window.rect)
-        self.camera_center()
-        self.hud.on_resize(width, height)
+        # self.camera = arcade.Camera2D(self.window.rect)
+        if self.setup_done:
+            self.camera_init()
+            self.camera_zoom()
+            # self.hud.on_resize(width, height)
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -120,46 +126,24 @@ class VGame(arcade.View):
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
         self.sprite_manager.reload(self.maze_gen)
-        self.camera_center()
-
-    # ########################################################################
-    # ############################################################ CAMERA ####
-    def camera_center(self) -> None:
-        # TODO: Investigate issue with camera centering on smaller maze sizes
-        # and bigger sized windows.
-        hud_bg_height = self.hud.hud_bg_sprite.height
-
-        self.camera.position = self.maze_gen.center_position
-        self.camera.position += Vec2(0, hud_bg_height / 2)
-        self.camera_adapt_zoom()
-
-    def camera_adapt_zoom(self) -> None:
-        margin = VData.CAMERA_MARGIN
-
-        scale_hori = (self.width - margin) / self.maze_gen.width
-        scale_vert = (self.height - margin) / self.maze_gen.height
-
-        self.camera.zoom = min(scale_hori, scale_vert)
+        self.camera_init()
+        self.camera_zoom()
 
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
         self.clear()
 
-        # Separate what is drawn in the camera and
-        # what is drawn on the screen itself (HUD, debug info, etc.)
+        if self.setup_done:
+            with self.camera.activate():
+                self.sprite_manager.draw()
+                self.pacgum_list.draw(pixelated=True)
+                self.player_list.draw(pixelated=True)
+                self.enemy_list.draw(pixelated=True)
+                self._draw_hitboxes()
 
-        # Activate the camera, but only inside this 'with' statement.
-        with self.camera.activate():
-            self.sprite_manager.draw()
-            self.pacgum_list.draw(pixelated=True)
-            self.player_list.draw(pixelated=True)
-            self.enemy_list.draw(pixelated=True)
-            self._draw_hitboxes()
-
-        # Camera stops being active
-        # We can now draw things like the HUD, etc...
-        self.hud.draw()
+            with self.camera_hud.activate():
+                self.hud.draw()
 
     # ########################################################################
     # ##################################################### DRAW HITBOXES ####
@@ -211,6 +195,8 @@ class VGame(arcade.View):
 
         elif symbol == arcade.key.N:
             self.setup()
+            self.camera_init()
+            self.camera_zoom()
 
         elif symbol == arcade.key.H:
             self.display_hitboxes = not self.display_hitboxes
@@ -231,3 +217,44 @@ class VGame(arcade.View):
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         self.player.on_key_release(symbol, modifiers)
+
+    # ########################################################################
+    # ########################################################### CAMERAS ####
+    def camera_init(self):
+        if self.setup_done:
+            hud_height = self.height / 8
+
+            main_rect = LBWH(
+                left=0,
+                bottom=0,
+                width=self.width,
+                height=self.height - hud_height,
+            )
+            hud_rect = LBWH(
+                left=0,
+                bottom=self.height - hud_height,
+                width=self.width,
+                height=hud_height,
+            )
+
+            self.camera = arcade.Camera2D(main_rect)
+            self.camera.position = self.maze_gen.center_position
+
+            self.camera_hud = arcade.Camera2D(hud_rect)
+            self.camera_hud.position = self.hud.center_position
+
+    def camera_zoom(self) -> None:
+        if self.setup_done:
+            scale_hori = (
+                self.camera.viewport.width - VData.CAMERA_MARGIN
+            ) / self.maze_gen.width
+            scale_vert = (
+                self.camera.viewport.height - VData.CAMERA_MARGIN
+            ) / self.maze_gen.height
+
+            zoom = min(scale_hori, scale_vert)
+            if zoom > VData.CAMERA_MAX_ZOOM:
+                zoom = VData.CAMERA_MAX_ZOOM
+
+            self.camera.zoom = zoom
+            self.camera_hud.zoom = zoom

@@ -39,6 +39,7 @@ class VData:
     SPRITE_SIZE_BACKGROUND = SPRITE_SIZE * 4
     TEXTURES = "textures"
     CAMERA_MARGIN: int = 100
+    CAMERA_MAX_ZOOM: float = 2.8
 
     points_per_ghost: int = 10
     points_per_pacgum: int = 50

@@ -231,6 +231,16 @@
       "height": 128
     },
     {
+      "name": "floor_hud",
+      "nb": 6,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
       "name": "player_top",
       "nb": 4,
       "animated": true,
