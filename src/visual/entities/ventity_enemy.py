@@ -5,6 +5,7 @@ from src.visual.vatlas import VAtlas
 from src.visual.sprites.sfloor import SFloor
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_moving import VEntityMoving
+from src.visual.vgamestate import VGameState
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -19,19 +20,25 @@ class VEntityEnemy(VEntityMoving):
         floors: SFloor,
         walls: SWall,
         player: VEntityPlayer,
+        gamestate: VGameState,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
         self.floors: SFloor = floors
         self.walls: SWall = walls
         self.player: VEntityPlayer = player
+        self.gamestate: VGameState = gamestate
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        # TODO: Deal with magic number - in the config ? or VData ?
-        self.speed = 10
+        pass
         # self.change_y = -10
+
+    # ########################################################################
+    # ############################################################# SPEED ####
+    def get_speed(self) -> int:
+        return self.gamestate.enemy_speed
 
     # ########################################################################
     # ############################################################ UPDATE ####
