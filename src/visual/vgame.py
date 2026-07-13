@@ -203,29 +203,33 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        # Player movement is handled in the player class.
+        # The WASD, ZQSD and arrow keys are reserved for player movement.
 
-        if symbol == arcade.key.M:
-            self.window.switch_view(VNames.VIEW_MENU)
-        elif symbol == arcade.key.P:
-            self.window.switch_view(VNames.VIEW_PAUSE)
+        match symbol:
+            case arcade.key.M:
+                self.window.switch_view(VNames.VIEW_MENU)
+            case arcade.key.P:
+                self.window.switch_view(VNames.VIEW_PAUSE)
 
-        elif symbol == arcade.key.N:
-            self.setup()
+            case arcade.key.N:
+                self.setup()
 
-        elif symbol == arcade.key.H:
-            self.display_hitboxes = not self.display_hitboxes
+            case arcade.key.H:
+                self.display_hitboxes = not self.display_hitboxes
 
-        elif symbol == arcade.key.PLUS:
-            self.camera.zoom += 0.1
-        elif symbol == arcade.key.MINUS:
-            self.camera.zoom -= 0.1
-        elif symbol == arcade.key.EQUAL:
-            self.camera.zoom = 1.0
+            case arcade.key.PLUS:
+                self.camera.zoom += 0.1
+            case arcade.key.MINUS:
+                self.camera.zoom -= 0.1
+            case arcade.key.EQUAL:
+                self.camera.zoom = 1.0
 
-        elif symbol == arcade.key.S:
-            self.sprite_manager.next_style()
-            self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-            arcade.set_background_color(self.sprite_manager.background_color)
+        # TODO: reimplement style switching feature and change key
+        # elif symbol == arcade.key.S:
+        #     self.sprite_manager.next_style()
+        #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
+        #     arcade.set_background_color(self.sprite_manager.background_color)
 
         self.player.on_key_press(symbol, modifiers)
 
