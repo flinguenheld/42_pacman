@@ -1,5 +1,5 @@
 import arcade
-import arcade.key
+from arcade import Text
 from src.visual.vdata import VNames
 
 
@@ -11,7 +11,7 @@ class VPause(arcade.View):
         super().__init__()
 
         self.text = "PAUSE"
-        self.letters = []
+        self.letters: list[Text] = []
         self.current_index: int = -1
         self.time_elapsed: float = 0.0
 
@@ -21,7 +21,7 @@ class VPause(arcade.View):
         # pos = VData.CENTER_X - (len(self.text) * VData.FONT_SIZE_TITLE) // 2
         # for letter in self.text:
         #     self.letters.append(
-        #         arcade.Text(
+        #         Text(
         #             letter,
         #             x=pos,
         #             y=VData.CENTER_Y,

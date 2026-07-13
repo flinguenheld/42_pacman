@@ -1,6 +1,6 @@
 import random
 import arcade
-from arcade import SpriteList, Vec2, Rect, LBWH
+from arcade import SpriteList, Vec2, LBWH
 
 from src.visual.vhud import VHud
 from src.maze.maze_wrapper import Maze
@@ -61,6 +61,7 @@ class VGame(arcade.View):
             self.sprite_manager.atlas,
             self.maze_gen.floor_center,
             self.sprite_manager.walls,
+            self.gamestate,
         )
         self.player_list.append(self.player)
 
@@ -74,6 +75,7 @@ class VGame(arcade.View):
                     self.sprite_manager.floors,
                     self.sprite_manager.walls,
                     self.player,
+                    self.gamestate,
                 )
             )
 
@@ -106,11 +108,9 @@ class VGame(arcade.View):
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        # self.camera = arcade.Camera2D(self.window.rect)
         if self.setup_done:
             self.camera_init()
             self.camera_zoom()
-            # self.hud.on_resize(width, height)
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -181,37 +181,44 @@ class VGame(arcade.View):
             arcade.check_for_collision_with_list(self.player, self.pacgum_list)
         )
         for pacgum in collided:
-            self.gamestate.score += pacgum.get_points()
+            self.gamestate.increment_score(pacgum.get_points())
             pacgum.kill()
 
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        # Player movement is handled in the player class.
+        # The WASD, ZQSD and arrow keys are reserved for player movement.
 
-        if symbol == arcade.key.M:
-            self.window.switch_view(VNames.VIEW_MENU)
-        elif symbol == arcade.key.P:
-            self.window.switch_view(VNames.VIEW_PAUSE)
+        match symbol:
+            case arcade.key.ESCAPE:
+                arcade.exit()
 
-        elif symbol == arcade.key.N:
-            self.setup()
-            self.camera_init()
-            self.camera_zoom()
+            case arcade.key.M:
+                self.window.switch_view(VNames.VIEW_MENU)
+            case arcade.key.P:
+                self.window.switch_view(VNames.VIEW_PAUSE)
 
-        elif symbol == arcade.key.H:
-            self.display_hitboxes = not self.display_hitboxes
+            case arcade.key.N:
+                self.setup()
+                self.camera_init()
+                self.camera_zoom()
 
-        elif symbol == arcade.key.PLUS:
-            self.camera.zoom += 0.1
-        elif symbol == arcade.key.MINUS:
-            self.camera.zoom -= 0.1
-        elif symbol == arcade.key.EQUAL:
-            self.camera.zoom = 1.0
+            case arcade.key.H:
+                self.display_hitboxes = not self.display_hitboxes
 
-        elif symbol == arcade.key.S:
-            self.sprite_manager.next_style()
-            self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-            arcade.set_background_color(self.sprite_manager.background_color)
+            case arcade.key.PLUS:
+                self.camera.zoom += 0.1
+            case arcade.key.MINUS:
+                self.camera.zoom -= 0.1
+            case arcade.key.EQUAL:
+                self.camera.zoom = 1.0
+
+        # TODO: reimplement style switching feature and change key
+        # elif symbol == arcade.key.S:
+        #     self.sprite_manager.next_style()
+        #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
+        #     arcade.set_background_color(self.sprite_manager.background_color)
 
         self.player.on_key_press(symbol, modifiers)
 

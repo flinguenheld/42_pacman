@@ -1,9 +1,43 @@
+from enum import Enum, auto
+
 import arcade
 from arcade import Sprite, Vec2, key
 
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.entities.ventity_moving import VEntityMoving
+from src.visual.vgamestate import VGameState
+
+
+class VPlayerActions(Enum):
+    """
+    An enumeration of possible player actions,
+    currently limited to movement directions.
+    Acts as an abstraction layer between key inputs and game logic,
+    allowing for multiple key bindings for the same action
+    """
+
+    MOVE_UP = auto()
+    MOVE_LEFT = auto()
+    MOVE_DOWN = auto()
+    MOVE_RIGHT = auto()
+
+    @staticmethod
+    def return_action_from_key(symbol: int) -> "VPlayerActions | None":
+        """
+        Takes a key as input and returns the corresponding player action.
+        If the key does not correspond to any action, returns None.
+        """
+        valid_keys: dict["VPlayerActions", list[int]] = {
+            VPlayerActions.MOVE_UP: [key.UP, key.W, key.Z],
+            VPlayerActions.MOVE_LEFT: [key.LEFT, key.A, key.Q],
+            VPlayerActions.MOVE_DOWN: [key.DOWN, key.S],
+            VPlayerActions.MOVE_RIGHT: [key.RIGHT, key.D],
+        }
+        for action, keys in valid_keys.items():
+            if symbol in keys:
+                return action
+        return None
 
 
 # ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░
@@ -15,19 +49,23 @@ class VEntityPlayer(VEntityMoving):
         atlas: VAtlas,
         position: Vec2,
         walls: SWall,
+        gamestate: VGameState,
     ) -> None:
         super().__init__(atlas, "player", position)
         self.walls: SWall = walls
+        self.gamestate: VGameState = gamestate
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        # TODO: Deal with magic number - in the config ? or VData ?
-        self.speed = 10
-
-        self.pressed_keys: set[int] = set()
+        self.current_actions: set[VPlayerActions] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
+
+    # ########################################################################
+    # ############################################################# SPEED ####
+    def get_speed(self) -> int:
+        return self.gamestate.player_speed
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -41,17 +79,19 @@ class VEntityPlayer(VEntityMoving):
     def update_velocity(self) -> None:
         """Update player movement based on pressed keys"""
 
+        speed = self.get_speed()
+
         self.change_x = 0
         self.change_y = 0
 
-        if key.LEFT in self.pressed_keys:
-            self.change_x = -1 * self.speed
-        if key.RIGHT in self.pressed_keys:
-            self.change_x = 1 * self.speed
-        if key.UP in self.pressed_keys:
-            self.change_y = 1 * self.speed
-        if key.DOWN in self.pressed_keys:
-            self.change_y = -1 * self.speed
+        if VPlayerActions.MOVE_LEFT in self.current_actions:
+            self.change_x = -1 * speed
+        if VPlayerActions.MOVE_RIGHT in self.current_actions:
+            self.change_x = 1 * speed
+        if VPlayerActions.MOVE_UP in self.current_actions:
+            self.change_y = 1 * speed
+        if VPlayerActions.MOVE_DOWN in self.current_actions:
+            self.change_y = -1 * speed
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
@@ -83,9 +123,11 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################ ON KEY ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        if symbol in self.valid_keys:
-            self.pressed_keys.add(symbol)
+        action = VPlayerActions.return_action_from_key(symbol)
+        if action is not None:
+            self.current_actions.add(action)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        if symbol in self.valid_keys:
-            self.pressed_keys.discard(symbol)
+        action = VPlayerActions.return_action_from_key(symbol)
+        if action is not None:
+            self.current_actions.discard(action)

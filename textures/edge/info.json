@@ -310,7 +310,7 @@
         150
       ],
       "hitbox": {
-        "automatic": true
+        "size": 16
       }
     },
     {
@@ -322,7 +322,7 @@
         100
       ],
       "hitbox": {
-        "automatic": true
+        "size": 16
       }
     },
     {
@@ -334,7 +334,7 @@
         27
       ],
       "hitbox": {
-        "automatic": true
+        "size": 16
       }
     },
     {
@@ -346,7 +346,7 @@
         25
       ],
       "hitbox": {
-        "automatic": true
+        "size": 16
       }
     },
     {
@@ -358,7 +358,7 @@
         150
       ],
       "hitbox": {
-        "automatic": true
+        "size": 16
       }
     },
     {
