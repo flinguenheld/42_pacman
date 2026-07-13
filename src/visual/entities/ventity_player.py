@@ -6,6 +6,7 @@ from arcade import Sprite, Vec2, key
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.entities.ventity_moving import VEntityMoving
+from src.visual.vgamestate import VGameState
 
 
 class VPlayerActions(Enum):
@@ -48,19 +49,23 @@ class VEntityPlayer(VEntityMoving):
         atlas: VAtlas,
         position: Vec2,
         walls: SWall,
+        gamestate: VGameState,
     ) -> None:
         super().__init__(atlas, "player", position)
         self.walls: SWall = walls
+        self.gamestate: VGameState = gamestate
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        # TODO: Deal with magic number - in the config ? or VData ?
-        self.speed = 10
-
         self.current_actions: set[VPlayerActions] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
+
+    # ########################################################################
+    # ############################################################# SPEED ####
+    def get_speed(self) -> int:
+        return self.gamestate.player_speed
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -74,17 +79,19 @@ class VEntityPlayer(VEntityMoving):
     def update_velocity(self) -> None:
         """Update player movement based on pressed keys"""
 
+        speed = self.get_speed()
+
         self.change_x = 0
         self.change_y = 0
 
         if VPlayerActions.MOVE_LEFT in self.current_actions:
-            self.change_x = -1 * self.speed
+            self.change_x = -1 * speed
         if VPlayerActions.MOVE_RIGHT in self.current_actions:
-            self.change_x = 1 * self.speed
+            self.change_x = 1 * speed
         if VPlayerActions.MOVE_UP in self.current_actions:
-            self.change_y = 1 * self.speed
+            self.change_y = 1 * speed
         if VPlayerActions.MOVE_DOWN in self.current_actions:
-            self.change_y = -1 * self.speed
+            self.change_y = -1 * speed
 
     # ########################################################################
     # ######################################################## COLLISIONS ####

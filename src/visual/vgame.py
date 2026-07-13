@@ -59,6 +59,7 @@ class VGame(arcade.View):
             self.sprite_manager.atlas,
             self.maze_gen.floor_center,
             self.sprite_manager.walls,
+            self.gamestate,
         )
         self.player_list.append(self.player)
 
