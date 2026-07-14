@@ -22,6 +22,7 @@ class VGame(arcade.View):
         arcade.enable_timings()
 
         self.display_hitboxes = False
+        self.display_enemy_paths = False
         self.sprite_manager = SpriteManager()
 
         # QUESTION Usefull since it will be replaced in on_resize ??
@@ -74,6 +75,7 @@ class VGame(arcade.View):
                     self.sprite_manager.walls,
                     self.player,
                     self.gamestate,
+                    self.maze_gen,
                 )
             )
 
@@ -158,6 +160,7 @@ class VGame(arcade.View):
             self.player_list.draw(pixelated=True)
             self.enemy_list.draw(pixelated=True)
             self._draw_hitboxes()
+            self._draw_enemy_paths()
 
         # Camera stops being active
         # We can now draw things like the HUD, etc...
@@ -179,6 +182,17 @@ class VGame(arcade.View):
             self.enemy_list.draw_hit_boxes(
                 color=arcade.color.AFRICAN_VIOLET, line_thickness=2
             )
+
+    def _draw_enemy_paths(self) -> None:
+        if self.display_enemy_paths:
+            for enemy in self.enemy_list:
+                if not enemy.path:
+                    continue
+                arcade.draw_line_strip(
+                    [enemy.position] + enemy.path,
+                    arcade.color.RED,
+                    10,
+                )
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -222,6 +236,7 @@ class VGame(arcade.View):
 
             case arcade.key.H:
                 self.display_hitboxes = not self.display_hitboxes
+                self.display_enemy_paths = not self.display_enemy_paths
 
             case arcade.key.PLUS:
                 self.camera.zoom += 0.1
