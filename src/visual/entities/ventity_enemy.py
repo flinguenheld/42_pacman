@@ -1,24 +1,14 @@
-from enum import Enum, auto
-
 from arcade import AStarBarrierList, Sprite, Vec2
 import arcade
 
+from src.visual.vdata import VData
+from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
-from src.visual.vatlas import VAtlas
+from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_moving import VEntityMoving
-from src.visual.vdata import VData
-from src.visual.vgamestate import VGameState
-
-
-class EnemyDirection(Enum):
-    NONE = 0
-    UP = auto()
-    LEFT = auto()
-    DOWN = auto()
-    RIGHT = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -55,7 +45,7 @@ class VEntityEnemy(VEntityMoving):
         self.update_closest_floor()
         self.setup_barrier_list()
         self.compute_path()
-        self.get_next_position()
+        self.update_next_position()
 
     # ########################################################################
     # ############################################################# SPEED ####
@@ -92,8 +82,8 @@ class VEntityEnemy(VEntityMoving):
         )
         self.path = path[1:] if path else None
 
-    def get_next_position(self) -> None:
-        if not self.path:
+    def update_next_position(self) -> None:
+        if not self.path or len(self.path) < 2:
             self.compute_path()
         if not self.path:
             self.next_position = None
@@ -112,11 +102,11 @@ class VEntityEnemy(VEntityMoving):
 
             if len(self.path) > 0:
                 self.next_position = Vec2(*self.path[0])
-                sprites = arcade.get_sprites_at_point(
+                sprites_at_next_pos = arcade.get_sprites_at_point(
                     self.next_position, self.floors.sprites
                 )
-                if sprites:
-                    self.next_sprite = sprites[0]
+                if sprites_at_next_pos:
+                    self.next_sprite = sprites_at_next_pos[0]
 
     def update_closest_floor(self) -> Sprite | None:
         self.closest_floor = self.get_closest_sprite(self.floors.sprites)
@@ -127,51 +117,25 @@ class VEntityEnemy(VEntityMoving):
     def update(self, delta_time: float = 1 / 60) -> None:
         if not self.update_closest_floor():
             return
-        self.get_next_position()
+        self.update_next_position()
 
-        direction = EnemyDirection.NONE
-        if self.next_position:
-            next_position = self.next_position
-            next_position_delta = next_position - self.position
-            if abs(next_position_delta.x) > abs(next_position_delta.y):
-                if next_position_delta.x > 0:
-                    direction = EnemyDirection.RIGHT
-                else:
-                    direction = EnemyDirection.LEFT
-            else:
-                if next_position_delta.y > 0:
-                    direction = EnemyDirection.UP
-                else:
-                    direction = EnemyDirection.DOWN
-        else:
-            direction = EnemyDirection.NONE
+        self.update_velocity(delta_time)
 
-        closest_floor = self.closest_floor
-        if not closest_floor:
+        self.apply_velocity()
+        self.update_texture()
+
+    def update_velocity(self, delta_time: float) -> None:
+        if not self.next_position:
+            self.change_x = 0
+            self.change_y = 0
             return
 
         speed = self.get_speed()
+        next_position_delta = self.next_position - self.position
+        next_position_normalized = next_position_delta.normalize()
+        self.change_x = next_position_normalized.x * speed * delta_time
+        self.change_y = next_position_normalized.y * speed * delta_time
 
-        self.change_x = 0
-        self.change_y = 0
-
-        match direction:
-            case EnemyDirection.UP:
-                self.center_x = closest_floor.center_x
-                self.change_y = speed * delta_time
-            case EnemyDirection.LEFT:
-                self.change_x = -speed * delta_time
-                self.center_y = closest_floor.center_y
-            case EnemyDirection.DOWN:
-                self.center_x = closest_floor.center_x
-                self.change_y = -speed * delta_time
-            case EnemyDirection.RIGHT:
-                self.change_x = speed * delta_time
-                self.center_y = closest_floor.center_y
-            case EnemyDirection.NONE:
-                pass
-
+    def apply_velocity(self) -> None:
         self.center_x += self.change_x
         self.center_y += self.change_y
-
-        self.update_texture()
