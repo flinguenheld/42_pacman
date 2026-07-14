@@ -230,6 +230,9 @@ class VGame(arcade.View):
             case arcade.key.EQUAL:
                 self.camera.zoom = 1.0
 
+            case _:
+                pass
+
         # TODO: reimplement style switching feature and change key
         # elif symbol == arcade.key.S:
         #     self.sprite_manager.next_style()
