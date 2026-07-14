@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 from arcade import AStarBarrierList, Vec2
 import arcade
 
@@ -9,6 +11,14 @@ from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.vdata import VData
 from src.visual.vgamestate import VGameState
+
+
+class EnemyDirection(Enum):
+    NONE = 0
+    UP = auto()
+    LEFT = auto()
+    DOWN = auto()
+    RIGHT = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -35,17 +45,17 @@ class VEntityEnemy(VEntityMoving):
 
         self.barrier_list: AStarBarrierList
         self.next_position: Vec2 | None
+        self.next_sprite: arcade.Sprite | None
         self.path: list[tuple[float, float]] | None
 
-        arcade.schedule(lambda delta_time: self.calculate_next_position(), 0.5)
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
         self.setup_barrier_list()
-        self.calculate_next_position()
-        # self.change_y = -10
+        self.compute_path()
+        self.get_next_position()
 
     # ########################################################################
     # ############################################################# SPEED ####
@@ -63,52 +73,105 @@ class VEntityEnemy(VEntityMoving):
             self.maze_gen.top,
         )
 
-    def calculate_next_position(self) -> None:
-        closest_player_floor = arcade.get_closest_sprite(
-            self.player, self.floors.sprites
+    def compute_path(self) -> None:
+        closest_player_floor = self.player.get_closest_sprite(
+            self.floors.sprites
         )
         if not closest_player_floor:
-            self.next_position = None
+            self.path = None
             return
-        (closest_player_floor, _) = closest_player_floor
-        closest_enemy_floor = arcade.get_closest_sprite(
-            self, self.floors.sprites
-        )
+        closest_enemy_floor = self.get_closest_sprite(self.floors.sprites)
         if not closest_enemy_floor:
-            self.next_position = None
+            self.path = None
             return
-        (closest_enemy_floor, _) = closest_enemy_floor
         path = arcade.astar_calculate_path(
             closest_enemy_floor.position,
             closest_player_floor.position,
             self.barrier_list,
             diagonal_movement=False,
         )
-        self.path = path
+        self.path = path[1:] if path else None
+
+    def get_next_position(self) -> None:
+        self.next_position = None
+        self.next_sprite = None
+
+        if not self.path:
+            return
+        path = self.path.copy()
+        closest_floor = self.get_closest_sprite(self.floors.sprites)
+        if not closest_floor:
+            return
         if path:
-            if len(path) > 1:
-                self.next_position = Vec2(*path[1])
-            else:
-                self.next_position = None
-        else:
-            self.next_position = None
+            self.next_position = Vec2(*path[0])
+            self.next_sprite = self.get_closest_sprite(self.floors.sprites)
+            for next_position in path:
+                sprites_at_next_position = arcade.get_sprites_at_point(
+                    next_position, self.floors.sprites
+                )
+                next_sprite = (
+                    sprites_at_next_position[0]
+                    if sprites_at_next_position
+                    else None
+                )
+                if (
+                    next_sprite
+                    and next_sprite.position == closest_floor.position
+                ):
+                    self.path.pop(0)
+                    continue
+                self.next_position = Vec2(*next_position)
+                self.next_sprite = next_sprite
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        # self.update_velocity()
-        # self.calculate_next_position()
+        if not self.next_position:
+            self.compute_path()
+            self.get_next_position()
+        closest_sprite = self.get_closest_sprite(self.floors.sprites)
+        if closest_sprite:
+            if (
+                self.next_sprite
+                and closest_sprite.position == self.next_sprite.position
+            ):
+                self.get_next_position()
 
+        direction = EnemyDirection.NONE
         if self.next_position:
             next_position = self.next_position
             next_position_delta = next_position - self.position
-            self.position = (
-                (next_position_delta.normalize() * 16)
-                * self.get_speed()
-                * delta_time
-            ) + self.position
+            if abs(next_position_delta.x) > abs(next_position_delta.y):
+                if next_position_delta.x > 0:
+                    direction = EnemyDirection.RIGHT
+                else:
+                    direction = EnemyDirection.LEFT
+            else:
+                if next_position_delta.y > 0:
+                    direction = EnemyDirection.UP
+                else:
+                    direction = EnemyDirection.DOWN
         else:
-            self.change_x = 0
-            self.change_y = 0
+            direction = EnemyDirection.NONE
+
+        speed = self.get_speed()
+
+        self.change_x = 0
+        self.change_y = 0
+
+        match direction:
+            case EnemyDirection.UP:
+                self.change_y = speed * delta_time
+            case EnemyDirection.LEFT:
+                self.change_x = -speed * delta_time
+            case EnemyDirection.DOWN:
+                self.change_y = -speed * delta_time
+            case EnemyDirection.RIGHT:
+                self.change_x = speed * delta_time
+            case EnemyDirection.NONE:
+                pass
+
+        self.center_x += self.change_x
+        self.center_y += self.change_y
 
         self.update_texture()

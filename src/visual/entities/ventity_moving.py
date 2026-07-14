@@ -1,5 +1,5 @@
 import arcade
-from arcade import Vec2
+from arcade import Sprite, SpriteList, Vec2
 
 from src.visual.vatlas import VAtlas
 from src.visual.entities.ventity import VEntity
@@ -52,6 +52,15 @@ class VEntityMoving(VEntity):
             self.animation = new_tile.texture
             self._current_direction = self._requested_direction
 
+    def get_closest_sprite(
+        self, sprite_list: SpriteList[Sprite]
+    ) -> Sprite | None:
+        closest_sprite = arcade.get_closest_sprite(self, sprite_list)
+        if closest_sprite:
+            (closest_sprite, _) = closest_sprite
+            return closest_sprite
+        return None
+
     # ########################################################################
     # ########################################################## CHANGE X ####
     @property
@@ -80,7 +89,6 @@ class VEntityMoving(VEntity):
 
     @change_y.setter
     def change_y(self, new_value: float) -> None:
-
         if new_value != self.change_y:
             match new_value:
                 case 0:

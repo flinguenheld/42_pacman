@@ -70,13 +70,13 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        self.update_velocity()
+        self.update_velocity(delta_time)
         self.update_texture()
         self.resolve_wall_collisions()
 
     # ########################################################################
     # ########################################################## VELOCITY ####
-    def update_velocity(self) -> None:
+    def update_velocity(self, delta_time: float = 1 / 60) -> None:
         """Update player movement based on pressed keys"""
 
         speed = self.get_speed()
@@ -84,14 +84,14 @@ class VEntityPlayer(VEntityMoving):
         self.change_x = 0
         self.change_y = 0
 
-        if VPlayerActions.MOVE_LEFT in self.current_actions:
-            self.change_x = -1 * speed
-        if VPlayerActions.MOVE_RIGHT in self.current_actions:
-            self.change_x = 1 * speed
         if VPlayerActions.MOVE_UP in self.current_actions:
-            self.change_y = 1 * speed
+            self.change_y = speed * delta_time
+        if VPlayerActions.MOVE_LEFT in self.current_actions:
+            self.change_x = -speed * delta_time
         if VPlayerActions.MOVE_DOWN in self.current_actions:
-            self.change_y = -1 * speed
+            self.change_y = -speed * delta_time
+        if VPlayerActions.MOVE_RIGHT in self.current_actions:
+            self.change_x = speed * delta_time
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
