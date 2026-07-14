@@ -1,3 +1,4 @@
+import time
 import arcade
 from arcade.types import Color
 from arcade import Text, Vec2, SpriteList
@@ -147,7 +148,7 @@ class VHud:
 
         self.fields["score"].text = self.gamestate.score
         self.fields["lives"].text = f"{self.gamestate.lives:>2}"
-        self.fields["timer"].text = "42:42"
+        self.fields["timer"].text = self.get_time_left()
 
         for text in self.fields.values():
             text.draw()
@@ -157,6 +158,19 @@ class VHud:
             self.fields_debug["fps"].text = f"FPS: {arcade.get_fps():.2f}"
             for text in self.fields_debug.values():
                 text.draw()
+
+    # ########################################################################
+    # ##################################################### GET TIME LEFT ####
+    def get_time_left(self) -> str:
+        time_spend = time.time() - self.gamestate.time_start
+        time_left = VData.time_max - time_spend
+
+        minutes = int(time_left) // 60
+        seconds = int(time_left) % 60
+
+        if minutes < 0:
+            return "OVER"
+        return f"{minutes:02}:{seconds:02}"
 
     # ########################################################################
     # ############################################################ UPDATE ####

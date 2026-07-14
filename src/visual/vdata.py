@@ -47,11 +47,15 @@ class VData:
     points_per_pacgum: int = 50
     points_per_super_pacgum: int = 200
 
+    time_max: int = 90
+
     @classmethod
     def apply_config(cls: type[Self], config: Config) -> None:
         cls.points_per_ghost = config.points_per_ghost
         cls.points_per_pacgum = config.points_per_pacgum
         cls.points_per_super_pacgum = config.points_per_super_pacgum
+
+        cls.time_max = config.level_max_time
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░▀█▀░█░█░█░░░█▀▀░█▀▀░░
