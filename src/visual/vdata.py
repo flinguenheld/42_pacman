@@ -32,6 +32,8 @@ class VData:
     height: int = 1300
     width: int = 1300
 
+    debug_on: bool = False
+
     FONT_SIZE: int = 15
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 

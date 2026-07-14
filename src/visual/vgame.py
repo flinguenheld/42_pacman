@@ -208,6 +208,7 @@ class VGame(arcade.View):
 
             case arcade.key.H:
                 self.display_hitboxes = not self.display_hitboxes
+                VData.debug_on = not VData.debug_on
 
             case arcade.key.PLUS:
                 self.camera.zoom += 0.1
