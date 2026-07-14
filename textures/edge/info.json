@@ -248,6 +248,24 @@
       ]
     },
     {
+      "name": "heart_hud",
+      "nb": 16,
+      "animated": true,
+      "duration": [
+        10000,
+        50
+      ]
+    },
+    {
+      "name": "score_hud",
+      "nb": 16,
+      "animated": true,
+      "duration": [
+        7700,
+        50
+      ]
+    },
+    {
       "name": "player_top",
       "nb": 4,
       "animated": true,

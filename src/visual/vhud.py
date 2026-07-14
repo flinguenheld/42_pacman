@@ -1,6 +1,6 @@
 import arcade
-from arcade import Text, Vec2, SpriteList
 from arcade.types import Color
+from arcade import Text, Vec2, SpriteList
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
@@ -83,14 +83,14 @@ class VHud:
 
         self.add_text(
             "score",
-            "pacgum_wait",
+            "score_hud",
             VHud.OFFSET + VData.SPRITE_SIZE,
             self.atlas.get_color("hud_font"),
         )
 
         self.add_text(
             "lives",
-            "player_wait",
+            "heart_hud",
             VHud.OFFSET + self.maze.width - VData.SPRITE_SIZE * 3.5,
             self.atlas.get_color("hud_font"),
         )
