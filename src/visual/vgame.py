@@ -174,6 +174,8 @@ class VGame(arcade.View):
         self.player_list.update_animation(delta_time)
         self.pacgum_list.update_animation(delta_time)
 
+        self.hud.update(delta_time)
+
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
     def resolve_player_pacgum_collisions(self) -> None:
@@ -227,7 +229,7 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ########################################################### CAMERAS ####
-    def camera_init(self):
+    def camera_init(self) -> None:
         if self.setup_done:
             hud_height = self.height / 8
 
