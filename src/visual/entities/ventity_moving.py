@@ -61,6 +61,9 @@ class VEntityMoving(VEntity):
             return closest_sprite
         return None
 
+    def apply_delta_time(self, speed: float, delta_time: float) -> float:
+        return speed * 500.0 * delta_time
+
     # ########################################################################
     # ########################################################## CHANGE X ####
     @property

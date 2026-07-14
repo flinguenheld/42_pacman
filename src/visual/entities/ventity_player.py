@@ -79,7 +79,7 @@ class VEntityPlayer(VEntityMoving):
     def update_velocity(self, delta_time: float) -> None:
         """Update player movement based on pressed keys"""
 
-        speed = self.get_speed()
+        speed = self.apply_delta_time(self.get_speed(), delta_time)
 
         self.change_x = 0
         self.change_y = 0

@@ -44,7 +44,6 @@ class VEntityEnemy(VEntityMoving):
     def setup(self) -> None:
         self.update_closest_floor()
         self.setup_barrier_list()
-        self.compute_path()
         self.update_next_position()
 
     # ########################################################################
@@ -130,9 +129,11 @@ class VEntityEnemy(VEntityMoving):
             self.change_y = 0
             return
 
-        speed = self.get_speed()
+        speed = self.apply_delta_time(self.get_speed(), delta_time)
+
         next_position_delta = self.next_position - self.position
         next_position_normalized = next_position_delta.normalize()
+
         self.change_x = next_position_normalized.x * speed * delta_time
         self.change_y = next_position_normalized.y * speed * delta_time
 
