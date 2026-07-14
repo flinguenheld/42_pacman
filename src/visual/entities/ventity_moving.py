@@ -55,9 +55,9 @@ class VEntityMoving(VEntity):
     def get_closest_sprite(
         self, sprite_list: SpriteList[Sprite]
     ) -> Sprite | None:
-        closest_sprite = arcade.get_closest_sprite(self, sprite_list)
-        if closest_sprite:
-            (closest_sprite, _) = closest_sprite
+        closest_sprite_result = arcade.get_closest_sprite(self, sprite_list)
+        if closest_sprite_result:
+            (closest_sprite, _) = closest_sprite_result
             return closest_sprite
         return None
 

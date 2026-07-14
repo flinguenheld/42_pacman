@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-from arcade import AStarBarrierList, Vec2
+from arcade import AStarBarrierList, Sprite, Vec2
 import arcade
 
 from src.maze.maze_wrapper import Maze
@@ -46,12 +46,13 @@ class VEntityEnemy(VEntityMoving):
         self.next_position: Vec2 | None = None
         self.next_sprite: arcade.Sprite | None = None
         self.path: list[tuple[float, float]] | None = None
-
+        self.closest_floor: Sprite | None = None
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
+        self.update_closest_floor()
         self.setup_barrier_list()
         self.compute_path()
         self.get_next_position()
@@ -79,12 +80,12 @@ class VEntityEnemy(VEntityMoving):
         if not closest_player_floor:
             self.path = None
             return
-        closest_enemy_floor = self.get_closest_sprite(self.floors.sprites)
-        if not closest_enemy_floor:
+        closest_floor = self.closest_floor
+        if not closest_floor:
             self.path = None
             return
         path = arcade.astar_calculate_path(
-            closest_enemy_floor.position,
+            closest_floor.position,
             closest_player_floor.position,
             self.barrier_list,
             diagonal_movement=False,
@@ -98,7 +99,7 @@ class VEntityEnemy(VEntityMoving):
             self.next_position = None
             self.next_sprite = None
             return
-        closest_floor = self.get_closest_sprite(self.floors.sprites)
+        closest_floor = self.closest_floor
         if not closest_floor or not self.path:
             self.next_position = None
             self.next_sprite = None
@@ -117,9 +118,15 @@ class VEntityEnemy(VEntityMoving):
                 if sprites:
                     self.next_sprite = sprites[0]
 
+    def update_closest_floor(self) -> Sprite | None:
+        self.closest_floor = self.get_closest_sprite(self.floors.sprites)
+        return self.closest_floor
+
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
+        if not self.update_closest_floor():
+            return
         self.get_next_position()
 
         direction = EnemyDirection.NONE
@@ -139,6 +146,10 @@ class VEntityEnemy(VEntityMoving):
         else:
             direction = EnemyDirection.NONE
 
+        closest_floor = self.closest_floor
+        if not closest_floor:
+            return
+
         speed = self.get_speed()
 
         self.change_x = 0
@@ -146,13 +157,17 @@ class VEntityEnemy(VEntityMoving):
 
         match direction:
             case EnemyDirection.UP:
+                self.center_x = closest_floor.center_x
                 self.change_y = speed * delta_time
             case EnemyDirection.LEFT:
                 self.change_x = -speed * delta_time
+                self.center_y = closest_floor.center_y
             case EnemyDirection.DOWN:
+                self.center_x = closest_floor.center_x
                 self.change_y = -speed * delta_time
             case EnemyDirection.RIGHT:
                 self.change_x = speed * delta_time
+                self.center_y = closest_floor.center_y
             case EnemyDirection.NONE:
                 pass
 
