@@ -6,8 +6,8 @@ class VGameState:
     _score: int = 0
     _lives: int = 3
 
-    _player_speed: int = 10
-    _enemy_speed: int = 5
+    _player_speed: int = 220
+    _enemy_speed: int = 180
 
     @property
     def score(self) -> int:
