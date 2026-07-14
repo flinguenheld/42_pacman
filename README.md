@@ -45,10 +45,10 @@ Ghosts! More ghosts!
 
   - [ ] Options menu ? (Not required)
 
-  - [ ] Game view
-    - [ ] Current score
-    - [ ] Remaining lives
-    - [ ] Remaining time
+  - [X] Game view (HUD)
+    - [X] Current score
+    - [X] Remaining lives
+    - [X] Remaining time
     - [ ] Correction checks
       - [ ] You can move in the maze
       - [ ] You can't cross walls
@@ -67,7 +67,6 @@ Ghosts! More ghosts!
     - [ ] Display final score
     - [ ] Congratulation
     - [ ] Highscore: enter player name
-
 
 - [ ] Deployment
   - [ ] Deployment to a public gaming platform (Itch.io)
@@ -96,8 +95,8 @@ Ghosts! More ghosts!
   - [ ] Player
     - [X] Create texture
     - [X] Player spawns in the middle
-    - [ ] Move with arrow keys or WASD
-      - [ ] If necessary, handle AZERTY preset (ZQSD) as an option
+    - [X] Move with arrow keys or WASD
+      - [X] If necessary, handle AZERTY preset (ZQSD) as an option
     - [ ] Ghost touch player = player loses one life
       - [ ] Player respawns in the middle
       - [ ] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
@@ -139,7 +138,7 @@ Ghosts! More ghosts!
     - [ ] Random seed for other levels
     - [ ] At least 10 levels
     - [ ] Time limit per level
-      - [ ] Display time left
+      - [X] Display time left
       - [ ] Time ends
         - [ ] Kill Pacman ?
         - [ ] Restart Level ?
