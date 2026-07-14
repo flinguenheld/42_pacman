@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 
 
@@ -8,6 +9,8 @@ class VGameState:
 
     _player_speed: int = 220
     _enemy_speed: int = 180
+
+    time_start: float = time.time()
 
     @property
     def score(self) -> int:

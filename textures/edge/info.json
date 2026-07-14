@@ -254,11 +254,11 @@
     },
     {
       "name": "heart_hud",
-      "nb": 16,
+      "nb": 15,
       "animated": true,
       "duration": [
-        10000,
-        50
+        5550,
+        25
       ]
     },
     {
@@ -336,8 +336,8 @@
       "nb": 9,
       "animated": true,
       "duration": [
-        5000,
-        150
+        5555,
+        100
       ],
       "hitbox": {
         "size": 16
@@ -348,8 +348,8 @@
       "nb": 14,
       "animated": true,
       "duration": [
-        7000,
-        100
+        8888,
+        75
       ],
       "hitbox": {
         "size": 16
@@ -357,11 +357,11 @@
     },
     {
       "name": "pacgum_wait",
-      "nb": 12,
+      "nb": 14,
       "animated": true,
       "duration": [
-        6000,
-        27
+        11111,
+        75
       ],
       "hitbox": {
         "size": 16
