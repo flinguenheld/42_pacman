@@ -8,10 +8,6 @@ from src.visual.vgamestate import VGameState
 
 
 class VHud:
-    """
-    Class representing the HUD (Heads-Up Display) in the game.
-    """
-
     OFFSET: int = 10000
 
     def __init__(
@@ -28,13 +24,6 @@ class VHud:
 
         self.background = arcade.SpriteList()
         self._build()
-
-    @property
-    def center_position(self):
-        return Vec2(
-            VHud.OFFSET + (self.maze.width / 2),
-            VHud.OFFSET + VData.SPRITE_SIZE * 1.5,
-        )
 
     # ########################################################################
     # ############################################################# BUILD ####
@@ -76,59 +65,35 @@ class VHud:
         add_sprite(x, f"{extra}bot_left")
 
     def setup(self) -> None:
-        """
-        Sets up the HUD elements, such as score and FPS display.
-        """
-        self.bg_sprite_list: SpriteList[Sprite] = SpriteList()
-
-        self._init_hud_bg()
+        self.font_size = VData.SPRITE_SIZE * 0.6
         self._init_hud_text()
 
         self._init_debug_hud_text()
 
-    def _init_hud_bg(self) -> None:
-        """
-        Initializes the background sprite for the HUD.
-        """
-        self.hud_bg_sprite = SpriteSolidColor(
-            width=VData.width,
-            height=70,
-            color=arcade.color.BLACK,
-        )
-        self.hud_bg_sprite.center_x = VData.width / 2
-        self.hud_bg_sprite.center_y = VData.height - (
-            self.hud_bg_sprite.height / 2
-        )
-        self.bg_sprite_list.append(self.hud_bg_sprite)
-
     def _init_hud_text(self) -> None:
-        font_size = VData.SPRITE_SIZE * 0.6
 
         self.score_text = Text(
             "",
             x=VHud.OFFSET + VData.SPRITE_SIZE,
-            y=VHud.OFFSET + VData.SPRITE_SIZE - font_size,
-            color=arcade.color.BLACK,
-            font_size=font_size,
+            y=VHud.OFFSET + VData.SPRITE_SIZE / 1.5,
+            color=self.atlas.get_color("hud_font"),
+            font_size=self.font_size,
             bold=True,
         )
 
     def _init_debug_hud_text(self) -> None:
-
-        font_size = VData.SPRITE_SIZE * 0.6
 
         self.fps_text = Text(
             "",
             x=10,
             y=0,
             color=arcade.color.WHITE,
-            font_size=font_size,
+            font_size=self.font_size,
             bold=True,
         )
 
-    def on_resize(self, width: int, height: int) -> None:
-        pass
-
+    # ########################################################################
+    # ############################################################## DRAW ####
     def draw(self) -> None:
         self.background.draw()
         self._draw_hud()
@@ -141,3 +106,12 @@ class VHud:
         current_fps = arcade.get_fps()
         self.fps_text.text = f"FPS: {current_fps:.2f}"
         self.fps_text.draw()
+
+    # ########################################################################
+    # ######################################################## PROPERTIES ####
+    @property
+    def center_position(self):
+        return Vec2(
+            VHud.OFFSET + (self.maze.width / 2),
+            VHud.OFFSET + VData.SPRITE_SIZE * 1.5,
+        )

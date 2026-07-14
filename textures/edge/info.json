@@ -14,10 +14,17 @@
     "full_bot": false,
     "full_left": false
   },
-  "background_color": {
-    "r": 158,
-    "g": 179,
-    "b": 65
+  "colors": {
+    "background": {
+      "r": 158,
+      "g": 179,
+      "b": 65
+    },
+    "hud_font": {
+      "r": 158,
+      "g": 179,
+      "b": 65
+    }
   },
   "lines": [
     {

@@ -1,3 +1,4 @@
+from arcade.types import Color
 import random
 import arcade
 from typing import Any, Sequence
@@ -212,10 +213,13 @@ class VAtlas:
             raise FileNotFoundError(f"info.json not found in {path}")
 
     # ########################################################################
-    # ################################################## BACKGROUND COLOR ####
-    @property
-    def background_color(self) -> dict[str, int] | Any:
-        return self.info["background_color"]
+    # ############################################################ COLORS ####
+    def get_color(self, name: str) -> Color:
+
+        if name not in self.info["colors"]:
+            assert KeyError(f"Color '{name}' does not exist in the info.json.")
+
+        return Color(**self.info["colors"][name])
 
     # ########################################################################
     # ######################################################### PICK TILE ####

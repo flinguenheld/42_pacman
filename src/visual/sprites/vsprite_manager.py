@@ -67,4 +67,4 @@ class SpriteManager:
     # ################################################## BACKGROUND COLOR ####
     @property
     def background_color(self) -> Color:
-        return Color(**self.atlas.background_color)
+        return self.atlas.get_color("background")
