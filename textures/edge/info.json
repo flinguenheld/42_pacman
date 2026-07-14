@@ -14,10 +14,22 @@
     "full_bot": false,
     "full_left": false
   },
-  "background_color": {
-    "r": 158,
-    "g": 179,
-    "b": 65
+  "colors": {
+    "background": {
+      "r": 158,
+      "g": 179,
+      "b": 65
+    },
+    "hud_font": {
+      "r": 119,
+      "g": 67,
+      "b": 59
+    },
+    "hud_font_debug": {
+      "r": 188,
+      "g": 33,
+      "b": 23
+    }
   },
   "lines": [
     {
@@ -229,6 +241,34 @@
       "nb": 4,
       "width": 128,
       "height": 128
+    },
+    {
+      "name": "floor_hud",
+      "nb": 6,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "heart_hud",
+      "nb": 16,
+      "animated": true,
+      "duration": [
+        10000,
+        50
+      ]
+    },
+    {
+      "name": "score_hud",
+      "nb": 16,
+      "animated": true,
+      "duration": [
+        7700,
+        50
+      ]
     },
     {
       "name": "player_top",

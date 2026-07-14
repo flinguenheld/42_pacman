@@ -1,4 +1,3 @@
-import arcade
 import random
 from arcade import Sprite, SpriteList, Vec2
 
@@ -27,30 +26,14 @@ class SSprites:
         tile = self.atlas.pick_tile(texture_name, not force_first_texture)
         angle = random.choice(tile.allowed_angles)
 
-        if isinstance(tile.texture, arcade.TextureAnimation):
-            sprite_animation: Sprite = arcade.TextureAnimationSprite(
-                animation=tile.texture,
-                center_x=center.x,
-                center_y=center.y,
-                scale=self._get_scale(tile.width, sprite_size),
+        self.sprites.append(
+            self.atlas.tile_to_sprite(
+                tile=tile,
+                center=center,
+                angle=angle,
+                sprite_size=sprite_size,
             )
-            sprite_animation.angle = angle
-            self.sprites.append(sprite_animation)
-        else:
-            self.sprites.append(
-                arcade.Sprite(
-                    path_or_texture=tile.texture,
-                    center_x=center.x,
-                    center_y=center.y,
-                    scale=self._get_scale(tile.width, sprite_size),
-                    angle=angle,
-                )
-            )
-
-    # ########################################################################
-    # ############################################################# SCALE ####
-    def _get_scale(self, size: int, sprite_size: int) -> float:
-        return sprite_size / size
+        )
 
     # ########################################################################
     # ############################################################# CLEAR ####

@@ -11,9 +11,15 @@ from src.visual.sprites.sbackground import SBackground
 # ░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀▄░▀█▀░▀█▀░█▀▀░░░█▄█░█▀█░█▀█░█▀█░█▀▀░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█▀▄░░█░░░█░░█▀▀░░░█░█░█▀█░█░█░█▀█░█░█░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░▀░▀░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░
+
+
+# QUESTION: RENAME IT ? Since some sprites are also manage in VEntity...
+# QUESTION: RENAME IT ? Since some sprites are also manage in VEntity...
 class SpriteManager:
     def __init__(self) -> None:
         self.style: VStyles = VStyles.EDGE
+        # TODO: MOVE THE ATLAS IN VGAME
+        # TODO: MOVE THE ATLAS IN VGAME
         self.atlas = VAtlas()
         self.atlas.load(self.style)
 
@@ -23,6 +29,8 @@ class SpriteManager:
 
     # ########################################################################
     # ######################################################## NEXT STYLE ####
+    # TODO: MOVE NEXT STYLE IN VGAME
+    # TODO: MOVE NEXT STYLE IN VGAME
     def next_style(self) -> None:
         match self.style:
             case VStyles.SUMMER:
@@ -59,4 +67,4 @@ class SpriteManager:
     # ################################################## BACKGROUND COLOR ####
     @property
     def background_color(self) -> Color:
-        return Color(**self.atlas.background_color)
+        return self.atlas.get_color("background")

@@ -1,10 +1,17 @@
+from arcade.types import Color
 import random
 import arcade
 from typing import Any, Sequence
 from json import load as json_load
 from dataclasses import dataclass, field
 from src.visual.vdata import VStyles, VData
-from arcade import TextureAnimation, Texture
+from arcade import (
+    TextureAnimationSprite,
+    TextureAnimation,
+    Texture,
+    Sprite,
+    Vec2,
+)
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░▀█▀░█░░░█▀▀░░
@@ -206,10 +213,13 @@ class VAtlas:
             raise FileNotFoundError(f"info.json not found in {path}")
 
     # ########################################################################
-    # ################################################## BACKGROUND COLOR ####
-    @property
-    def background_color(self) -> dict[str, int] | Any:
-        return self.info["background_color"]
+    # ############################################################ COLORS ####
+    def get_color(self, name: str) -> Color:
+
+        if name not in self.info["colors"]:
+            assert KeyError(f"Color '{name}' does not exist in the info.json.")
+
+        return Color(**self.info["colors"][name])
 
     # ########################################################################
     # ######################################################### PICK TILE ####
@@ -226,3 +236,34 @@ class VAtlas:
         weights = [w.probability / 100 for w in self.textures[name]]
 
         return random.choices(tile, weights, k=1)[0]
+
+    # ########################################################################
+    # #################################################### TILE TO SPRITE ####
+    def tile_to_sprite(
+        self,
+        tile: VTile,
+        center: Vec2,
+        angle: int = 0,
+        sprite_size: int = VData.SPRITE_SIZE,
+    ) -> Sprite | TextureAnimationSprite:
+        """
+        Create a Sprite from the given VTile.
+        """
+
+        if isinstance(tile.texture, arcade.TextureAnimation):
+            sprite_animated = arcade.TextureAnimationSprite(
+                animation=tile.texture,
+                center_x=center.x,
+                center_y=center.y,
+                scale=sprite_size / tile.width,
+            )
+            sprite_animated.angle = angle
+            return sprite_animated
+        else:
+            return arcade.Sprite(
+                path_or_texture=tile.texture,
+                center_x=center.x,
+                center_y=center.y,
+                scale=sprite_size / tile.width,
+                angle=angle,
+            )
