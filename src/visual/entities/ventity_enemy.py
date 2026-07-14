@@ -43,10 +43,9 @@ class VEntityEnemy(VEntityMoving):
         self.gamestate: VGameState = gamestate
         self.maze_gen: Maze = maze_gen
 
-        self.barrier_list: AStarBarrierList
-        self.next_position: Vec2 | None
-        self.next_sprite: arcade.Sprite | None
-        self.path: list[tuple[float, float]] | None
+        self.next_position: Vec2 | None = None
+        self.next_sprite: arcade.Sprite | None = None
+        self.path: list[tuple[float, float]] | None = None
 
         self.setup()
 
@@ -93,49 +92,35 @@ class VEntityEnemy(VEntityMoving):
         self.path = path[1:] if path else None
 
     def get_next_position(self) -> None:
-        self.next_position = None
-        self.next_sprite = None
-
         if not self.path:
+            self.compute_path()
+        if not self.path:
+            self.next_position = None
+            self.next_sprite = None
             return
-        path = self.path.copy()
         closest_floor = self.get_closest_sprite(self.floors.sprites)
-        if not closest_floor:
+        if not closest_floor or not self.path:
+            self.next_position = None
+            self.next_sprite = None
             return
-        if path:
-            self.next_position = Vec2(*path[0])
-            self.next_sprite = self.get_closest_sprite(self.floors.sprites)
-            for next_position in path:
-                sprites_at_next_position = arcade.get_sprites_at_point(
-                    next_position, self.floors.sprites
+        if (
+            not self.next_position
+            or closest_floor.position == self.next_position
+        ):
+            self.path.pop(0)
+
+            if len(self.path) > 0:
+                self.next_position = Vec2(*self.path[0])
+                sprites = arcade.get_sprites_at_point(
+                    self.next_position, self.floors.sprites
                 )
-                next_sprite = (
-                    sprites_at_next_position[0]
-                    if sprites_at_next_position
-                    else None
-                )
-                if (
-                    next_sprite
-                    and next_sprite.position == closest_floor.position
-                ):
-                    self.path.pop(0)
-                    continue
-                self.next_position = Vec2(*next_position)
-                self.next_sprite = next_sprite
+                if sprites:
+                    self.next_sprite = sprites[0]
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        if not self.next_position:
-            self.compute_path()
-            self.get_next_position()
-        closest_sprite = self.get_closest_sprite(self.floors.sprites)
-        if closest_sprite:
-            if (
-                self.next_sprite
-                and closest_sprite.position == self.next_sprite.position
-            ):
-                self.get_next_position()
+        self.get_next_position()
 
         direction = EnemyDirection.NONE
         if self.next_position:
