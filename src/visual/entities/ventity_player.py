@@ -9,34 +9,31 @@ from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.vgamestate import VGameState
 
 
-class VPlayerActions(Enum):
+class VPlayerDirections(Enum):
     """
-    An enumeration of possible player actions,
-    currently limited to movement directions.
-    Acts as an abstraction layer between key inputs and game logic,
-    allowing for multiple key bindings for the same action
+    Enum representing the possible movement directions for the player.
     """
 
-    MOVE_UP = auto()
-    MOVE_LEFT = auto()
-    MOVE_DOWN = auto()
-    MOVE_RIGHT = auto()
+    UP = auto()
+    LEFT = auto()
+    DOWN = auto()
+    RIGHT = auto()
 
     @staticmethod
-    def return_action_from_key(symbol: int) -> "VPlayerActions | None":
+    def return_action_from_key(symbol: int) -> "VPlayerDirections | None":
         """
-        Takes a key as input and returns the corresponding player action.
-        If the key does not correspond to any action, returns None.
+        Takes a key as input and returns the corresponding player direction.
+        If the key does not correspond to any direction, returns None.
         """
-        valid_keys: dict["VPlayerActions", list[int]] = {
-            VPlayerActions.MOVE_UP: [key.UP, key.W, key.Z],
-            VPlayerActions.MOVE_LEFT: [key.LEFT, key.A, key.Q],
-            VPlayerActions.MOVE_DOWN: [key.DOWN, key.S],
-            VPlayerActions.MOVE_RIGHT: [key.RIGHT, key.D],
+        valid_keys: dict["VPlayerDirections", list[int]] = {
+            VPlayerDirections.UP: [key.UP, key.W, key.Z],
+            VPlayerDirections.LEFT: [key.LEFT, key.A, key.Q],
+            VPlayerDirections.DOWN: [key.DOWN, key.S],
+            VPlayerDirections.RIGHT: [key.RIGHT, key.D],
         }
-        for action, keys in valid_keys.items():
+        for direction, keys in valid_keys.items():
             if symbol in keys:
-                return action
+                return direction
         return None
 
 
@@ -59,7 +56,7 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.current_actions: set[VPlayerActions] = set()
+        self.current_actions: set[VPlayerDirections] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
 
     # ########################################################################
@@ -84,13 +81,13 @@ class VEntityPlayer(VEntityMoving):
         self.change_x = 0
         self.change_y = 0
 
-        if VPlayerActions.MOVE_UP in self.current_actions:
+        if VPlayerDirections.UP in self.current_actions:
             self.change_y = speed * delta_time
-        if VPlayerActions.MOVE_LEFT in self.current_actions:
+        if VPlayerDirections.LEFT in self.current_actions:
             self.change_x = -speed * delta_time
-        if VPlayerActions.MOVE_DOWN in self.current_actions:
+        if VPlayerDirections.DOWN in self.current_actions:
             self.change_y = -speed * delta_time
-        if VPlayerActions.MOVE_RIGHT in self.current_actions:
+        if VPlayerDirections.RIGHT in self.current_actions:
             self.change_x = speed * delta_time
 
     # ########################################################################
@@ -123,11 +120,11 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################ ON KEY ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        action = VPlayerActions.return_action_from_key(symbol)
-        if action is not None:
-            self.current_actions.add(action)
+        direction = VPlayerDirections.return_action_from_key(symbol)
+        if direction is not None:
+            self.current_actions.add(direction)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        action = VPlayerActions.return_action_from_key(symbol)
-        if action is not None:
-            self.current_actions.discard(action)
+        direction = VPlayerDirections.return_action_from_key(symbol)
+        if direction is not None:
+            self.current_actions.discard(direction)
