@@ -33,9 +33,11 @@ class VEntityEnemy(VEntityMoving):
         self.gamestate: VGameState = gamestate
         self.maze_gen: Maze = maze_gen
 
-        self.next_position: Vec2 | None = None
-        self.next_sprite: arcade.Sprite | None = None
         self.path: list[tuple[float, float]] | None = None
+        self.next_position: Vec2 | None = None
+        self.next_sprite: Sprite | None = None
+        self.final_position: Vec2 | None = None
+        self.final_sprite: Sprite | None = None
         self.closest_floor: Sprite | None = None
         self.setup()
 
@@ -79,10 +81,31 @@ class VEntityEnemy(VEntityMoving):
             self.barrier_list,
             diagonal_movement=False,
         )
-        self.path = path[1:] if path else None
+        if not path:
+            self.path = None
+            self.final_position = None
+            self.final_sprite = None
+            return
+        self.path = path[1:]
+        self.final_position = Vec2(*path[-1])
+        sprites_at_final_pos = arcade.get_sprites_at_point(
+            self.final_position, self.floors.sprites
+        )
+        if sprites_at_final_pos:
+            self.final_sprite = sprites_at_final_pos[0]
+
+    def should_recompute_path(self) -> bool:
+        if not self.path or len(self.path) < 2 or not self.final_sprite:
+            return True
+        final_sprite_distance_to_player = arcade.get_distance_between_sprites(
+            self.final_sprite, self.player
+        )
+        if final_sprite_distance_to_player > (2.5 * VData.SPRITE_SIZE):
+            return True
+        return False
 
     def update_next_position(self) -> None:
-        if not self.path or len(self.path) < 2:
+        if self.should_recompute_path():
             self.compute_path()
         if not self.path:
             self.next_position = None
