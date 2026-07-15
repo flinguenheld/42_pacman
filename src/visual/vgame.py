@@ -23,6 +23,7 @@ class VGame(arcade.View):
 
         self.display_hitboxes = False
         self.display_enemy_paths = False
+        self.process_updates = True
         self.sprite_manager = SpriteManager()
 
         self.setup_done = False
@@ -179,6 +180,9 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
+        if not self.process_updates:
+            return
+
         self.enemy_list.update(delta_time)
         self.player_list.update(delta_time)
         self.sprite_manager.update(delta_time)
@@ -219,6 +223,11 @@ class VGame(arcade.View):
                 self.setup()
                 self.camera_init()
                 self.camera_zoom()
+
+            # TODO: Potentially replace the current pause view with this
+            # for pausing the game?
+            case arcade.key.SPACE:
+                self.process_updates = not self.process_updates
 
             case arcade.key.H:
                 self.display_hitboxes = not self.display_hitboxes
