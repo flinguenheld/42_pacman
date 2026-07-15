@@ -38,7 +38,12 @@ class VEntityMoving(VEntity):
         Avoid useless changes.
         Has to be called after 'change_x' and 'change_y' updates.
         """
-
+        # TODO: Maybe replace this whole system of setting
+        # a requested direction and then updating the texture
+        # with a more direct approach?
+        # Like removing the change_x and change_y properties
+        # and just compute the direction based on these values in this method.
+        # This is just an idea
         if self._current_direction != self._requested_direction:
             # print(f"up the animation to {self._requested_direction}")
 
