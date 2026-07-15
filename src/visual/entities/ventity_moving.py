@@ -61,9 +61,6 @@ class VEntityMoving(VEntity):
             return closest_sprite
         return None
 
-    def distance_to_entity(self, entity: VEntity) -> float:
-        return arcade.get_distance_between_sprites(self, entity)
-
     def apply_delta_time(self, speed: float, delta_time: float) -> float:
         return speed * 500.0 * delta_time
 

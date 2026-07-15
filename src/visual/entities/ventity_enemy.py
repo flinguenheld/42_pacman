@@ -51,9 +51,6 @@ class VEntityEnemy(VEntityMoving):
     def get_speed(self) -> int:
         return self.gamestate.enemy_speed
 
-    def distance_to_player(self) -> float:
-        return self.distance_to_entity(self.player)
-
     def setup_barrier_list(self) -> None:
         self.barrier_list = AStarBarrierList(
             self,
