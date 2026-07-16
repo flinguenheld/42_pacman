@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from arcade import AStarBarrierList, Sprite, SpriteList, Vec2
+from arcade import Sprite, SpriteList, Vec2
 import arcade
 from arcade.types import Point2
 
@@ -17,69 +17,54 @@ from src.visual.entities.ventity_moving import VEntityMoving
 PATHFINDING_GRID_SIZE = VData.SPRITE_SIZE
 
 
-class BlockedGridCells:
-    def __init__(self, sprites: SpriteList[Sprite], grid_size: int):
-        self.sprites = sprites
+class DFSPathfinding:
+    def __init__(
+        self,
+        blocked_sprites: SpriteList[Sprite],
+        grid_size: int,
+        neighbor_filter_func: Callable[
+            [list[Point2]], list[Point2]
+        ] = lambda neighbors: neighbors,
+    ):
         self.grid_size = grid_size
-        self.blocked_cells = self.get_blocked_cells()
+        self.neighbor_filter_function = neighbor_filter_func
+        self.blocked_cells = self.get_blocked_cells_from_sprites(
+            blocked_sprites
+        )
 
-    def get_blocked_cells(self) -> set[tuple[int, int]]:
-        blocked_cells = set()
-        for sprite in self.sprites:
+    def get_blocked_cells_from_sprites(
+        self, sprites: SpriteList[Sprite]
+    ) -> set[Point2]:
+        blocked_cells: set[Point2] = set()
+        for sprite in sprites:
             cell_x = int(sprite.center_x // self.grid_size)
             cell_y = int(sprite.center_y // self.grid_size)
             blocked_cells.add((cell_x, cell_y))
         return blocked_cells
 
-
-def convert_cell_to_world_position(cell: Point2, grid_size: int) -> Vec2:
-    return Vec2(cell[0] * grid_size, cell[1] * grid_size)
-
-
-def convert_cells_to_world_positions(
-    cells: list[Point2], grid_size: int
-) -> list[Vec2]:
-    return [convert_cell_to_world_position(cell, grid_size) for cell in cells]
-
-
-class DFSPathfinding:
-    def __init__(
-        self,
-        blocked_cells: BlockedGridCells,
-        start_pos: Point2,
-        end_pos: Point2,
-        grid_size: int,
-        neighbor_filter_func: Callable[
-            [list[tuple[int, int]]], list[tuple[int, int]]
-        ] = lambda neighbors: neighbors,
-    ):
-        self.blocked_cells = blocked_cells.blocked_cells
-        self.start_pos = Vec2(*start_pos)
-        self.end_pos = Vec2(*end_pos)
-        self.grid_size = grid_size
-        self.neighbor_filter_function = neighbor_filter_func
-
-    def calculate_path(self) -> list[Vec2] | None:
+    def calculate_path(
+        self, start_pos: Point2, end_pos: Point2
+    ) -> list[Vec2] | None:
         start_cell = (
-            int(self.start_pos.x // self.grid_size),
-            int(self.start_pos.y // self.grid_size),
+            int(start_pos[0] // self.grid_size),
+            int(start_pos[1] // self.grid_size),
         )
         end_cell = (
-            int(self.end_pos.x // self.grid_size),
-            int(self.end_pos.y // self.grid_size),
+            int(end_pos[0] // self.grid_size),
+            int(end_pos[1] // self.grid_size),
         )
 
         visited = set()
         path: list[Point2] = []
 
-        def traverse_cells(current_cell: tuple[int, int]) -> bool:
+        def traverse_cells(current_cell: Point2) -> bool:
             if current_cell == end_cell:
                 path.append(current_cell)
                 return True
 
             visited.add(current_cell)
 
-            neighbors: list[tuple[int, int]] = [
+            neighbors: list[Point2] = [
                 (current_cell[0] + 1, current_cell[1]),
                 (current_cell[0] - 1, current_cell[1]),
                 (current_cell[0], current_cell[1] + 1),
@@ -100,18 +85,26 @@ class DFSPathfinding:
 
         if traverse_cells(start_cell):
             path.reverse()
-            return convert_cells_to_world_positions(path, self.grid_size)
+            return self.convert_cells_to_world_positions(path)
         else:
             return None
+
+    def convert_cell_to_world_position(self, cell: Point2) -> Vec2:
+        return Vec2(cell[0] * self.grid_size, cell[1] * self.grid_size)
+
+    def convert_cells_to_world_positions(
+        self, cells: list[Point2]
+    ) -> list[Vec2]:
+        return [self.convert_cell_to_world_position(cell) for cell in cells]
 
 
 def player_distance_filter(
     player: VEntityPlayer,
-) -> Callable[[list[tuple[int, int]]], list[tuple[int, int]]]:
+) -> Callable[[list[Point2]], list[Point2]]:
 
     def filter_neighbors(
-        neighbors: list[tuple[int, int]],
-    ) -> list[tuple[int, int]]:
+        neighbors: list[Point2],
+    ) -> list[Point2]:
         player_vec_2 = Vec2(
             int(player.center_x // PATHFINDING_GRID_SIZE),
             int(player.center_y // PATHFINDING_GRID_SIZE),
@@ -159,25 +152,19 @@ class VEntityEnemy(VEntityMoving):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
+        self.pathfinder = DFSPathfinding(
+            self.walls.sprites,
+            PATHFINDING_GRID_SIZE,
+            neighbor_filter_func=player_distance_filter(self.player),
+        )
+
         self.update_closest_floor()
-        self.setup_barrier_list()
         self.update_next_position()
 
     # ########################################################################
     # ############################################################# SPEED ####
     def get_speed(self) -> int:
         return self.gamestate.enemy_speed
-
-    def setup_barrier_list(self) -> None:
-        self.barrier_list = AStarBarrierList(
-            self,
-            self.walls.sprites,
-            PATHFINDING_GRID_SIZE,
-            self.maze_gen.left,
-            self.maze_gen.right,
-            self.maze_gen.bot,
-            self.maze_gen.top,
-        )
 
     def compute_path(self) -> None:
         closest_player_floor = self.player.get_closest_sprite(
@@ -190,19 +177,9 @@ class VEntityEnemy(VEntityMoving):
         if not closest_floor:
             self.path = None
             return
-        # path = arcade.astar_calculate_path(
-        #     closest_floor.position,
-        #     closest_player_floor.position,
-        #     self.barrier_list,
-        #     diagonal_movement=False,
-        # )
-        path = DFSPathfinding(
-            BlockedGridCells(self.walls.sprites, PATHFINDING_GRID_SIZE),
-            closest_floor.position,
-            closest_player_floor.position,
-            PATHFINDING_GRID_SIZE,
-            neighbor_filter_func=player_distance_filter(self.player),
-        ).calculate_path()
+        path = self.pathfinder.calculate_path(
+            closest_floor.position, closest_player_floor.position
+        )
         if not path:
             self.path = None
             self.final_position = None
