@@ -118,8 +118,7 @@ def player_distance_filter(
         )
 
         neighbors.sort(
-            key=lambda cell: Vec2(cell[0], cell[1]).distance(player_vec_2),
-            reverse=True,
+            key=lambda cell: Vec2(cell[0], cell[1]).distance(player_vec_2)
         )
 
         return neighbors
