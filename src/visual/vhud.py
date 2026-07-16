@@ -1,3 +1,4 @@
+from src.visual.gui.gui_background import GBackground
 import time
 import arcade
 from arcade.types import Color
@@ -26,50 +27,14 @@ class VHud:
         self.atlas = atlas
         self.gamestate = gamestate
 
-        self.background: SpriteList = arcade.SpriteList()
+        self.background = GBackground(
+            atlas, VHud.OFFSET, VHud.OFFSET, maze.width, VData.SPRITE_SIZE * 3
+        )
         self.icons: SpriteList = arcade.SpriteList()
         self.fields_debug: dict[str, Text] = dict()
         self.fields: dict[str, Text] = dict()
 
-        self.build_background()
         self.build_fields()
-
-    # ########################################################################
-    # ############################################################# BUILD ####
-    def build_background(self) -> None:
-        def add_sprite(x: int, what: str) -> int:
-            tile = self.atlas.pick_tile(what)
-            sprite = self.atlas.tile_to_sprite(tile, Vec2(x, y))
-            self.background.append(sprite)
-            return x + VData.SPRITE_SIZE
-
-        def fill_line(x: int, what: str) -> int:
-            while x < VHud.OFFSET + self.maze.width:
-                add_sprite(x, what)
-                x += VData.SPRITE_SIZE
-            return x
-
-        # --
-        base_wall = "wall_with_floor_on_"
-        extra = "wall_extra_corner_"
-
-        y = VHud.OFFSET
-        x = VHud.OFFSET
-        x = add_sprite(x, f"{extra}top_right")
-        x = fill_line(x, f"{base_wall}top")
-        add_sprite(x, f"{extra}top_left")
-
-        y += VData.SPRITE_SIZE
-        x = VHud.OFFSET
-        x = add_sprite(x, f"{base_wall}right")
-        x = fill_line(x, "floor_hud")
-        add_sprite(x, f"{base_wall}left")
-
-        y += VData.SPRITE_SIZE
-        x = VHud.OFFSET
-        x = add_sprite(x, f"{extra}bot_right")
-        x = fill_line(x, f"{base_wall}bottom")
-        add_sprite(x, f"{extra}bot_left")
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -143,7 +108,7 @@ class VHud:
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
-        self.background.draw(pixelated=True)
+        self.background.draw()
         self.icons.draw(pixelated=True)
 
         self.fields["score"].text = self.gamestate.score
@@ -175,14 +140,11 @@ class VHud:
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
-        self.background.update_animation(delta_time)
+        self.background.update(delta_time)
         self.icons.update_animation(delta_time)
 
     # ########################################################################
     # ######################################################## PROPERTIES ####
     @property
     def center_position(self) -> Vec2:
-        return Vec2(
-            VHud.OFFSET + (self.maze.width / 2),
-            VHud.OFFSET + VData.SPRITE_SIZE * 1.5,
-        )
+        return self.background.center_position
