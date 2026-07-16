@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import Protocol
 
 from arcade import Sprite, SpriteList, Vec2
 import arcade
@@ -17,16 +18,21 @@ from src.visual.entities.ventity_moving import VEntityMoving
 PATHFINDING_GRID_SIZE = VData.SPRITE_SIZE
 
 
+class PathfindingAlgorithm(Protocol):
+    def calculate_path(
+        self, start_pos: Point2, end_pos: Point2
+    ) -> list[Vec2] | None: ...
+
+
 class DFSPathfinding:
     def __init__(
         self,
         blocked_sprites: SpriteList[Sprite],
-        grid_size: int,
         neighbor_filter_func: Callable[
             [list[Point2]], list[Point2]
         ] = lambda neighbors: neighbors,
     ):
-        self.grid_size = grid_size
+        self.grid_size = PATHFINDING_GRID_SIZE
         self.neighbor_filter_function = neighbor_filter_func
         self.blocked_cells = self.get_blocked_cells_from_sprites(
             blocked_sprites
@@ -133,6 +139,7 @@ class VEntityEnemy(VEntityMoving):
         player: VEntityPlayer,
         gamestate: VGameState,
         maze_gen: Maze,
+        pathfinder: PathfindingAlgorithm,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
         self.floors: SFloor = floors
@@ -140,6 +147,7 @@ class VEntityEnemy(VEntityMoving):
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
         self.maze_gen: Maze = maze_gen
+        self.pathfinder: PathfindingAlgorithm = pathfinder
 
         self.path: list[Vec2] | None = None
         self.next_position: Vec2 | None = None
@@ -152,12 +160,6 @@ class VEntityEnemy(VEntityMoving):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.pathfinder = DFSPathfinding(
-            self.walls.sprites,
-            PATHFINDING_GRID_SIZE,
-            neighbor_filter_func=player_distance_filter(self.player),
-        )
-
         self.update_closest_floor()
         self.update_next_position()
 
