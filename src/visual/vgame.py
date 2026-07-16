@@ -172,7 +172,7 @@ class VGame(arcade.View):
                 if not enemy.path:
                     continue
                 arcade.draw_line_strip(
-                    [enemy.position] + enemy.path,
+                    [Vec2(*enemy.position)] + enemy.path,
                     arcade.color.RED,
                     10,
                 )
