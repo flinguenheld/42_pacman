@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from arcade import Vec2
+from arcade import Vec2, LBWH, Rect
 from src.visual.vdata import VData
 from mazegenerator import MazeGenerator
 
@@ -130,21 +130,6 @@ class Maze:
                     add_wall_and_up_edges(x + sprite_size, y + sprite_size)
 
     # ########################################################################
-    # ################################################## BUILD BACKGROUND ####
-    def build_background(self) -> None:
-        self.background.clear()
-
-        # Simple and oversized
-        from_x = self.left - VData.width // 2
-        to_x = self.right + VData.width // 2
-        from_y = self.bot - VData.height // 2
-        to_y = self.top + VData.height // 2
-
-        for x in range(from_x, to_x, VData.SPRITE_SIZE_BACKGROUND):
-            for y in range(from_y, to_y, VData.SPRITE_SIZE_BACKGROUND):
-                self.background.add(Vec2(x, y))
-
-    # ########################################################################
     # ############################################################# EDGES ####
     def _clear_edges(self) -> None:
         """
@@ -187,6 +172,10 @@ class Maze:
     @property
     def height(self) -> int:
         return self.top - self.bot
+
+    @property
+    def rect(self) -> Rect:
+        return LBWH(self.left, self.bot, self.width, self.height)
 
     # ########################################################################
     # ##################################################### FLOOR CORNERS ####

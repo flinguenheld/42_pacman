@@ -6,7 +6,6 @@ from src.visual.vhud import VHud
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
-from src.visual.gui.gwindow import GWindow
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.sprites.vsprite_manager import SpriteManager
@@ -18,22 +17,25 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
-# class VGame(arcade.View):
-class VGame(GWindow):
+class VGame(arcade.View):
     def __init__(self, atlas: VAtlas) -> None:
-        super().__init__(atlas)
+        super().__init__()
         arcade.enable_timings()
 
-        self.display_hitboxes = False
-        self.sprite_manager = SpriteManager(atlas)
-
+        self.atlas = atlas
         self.setup_done = False
-        self.setup()
+        self.display_hitboxes = False
+        arcade.set_background_color(self.atlas.get_color("background"))
+
+        self.camera = arcade.Camera2D()
+        self.camera_hud = arcade.Camera2D()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        """Set up the game here. Call this function to restart the game."""
+        """Restart the game."""
+
+        self.setup_done = False
 
         # Game state --
         self.gamestate = VGameState()
@@ -44,6 +46,10 @@ class VGame(GWindow):
             random.randint(5, 20),
             random.randint(1, 200),
         )
+
+        # Maze sprites --
+        self.sprite_manager = SpriteManager(self.atlas, self.maze_gen)
+        self.sprite_manager.reload(self.maze_gen)
 
         # HUD --
         self.hud = VHud(
@@ -105,17 +111,14 @@ class VGame(GWindow):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
-        # arcade.set_background_color(self.sprite_manager.background_color)
-        self.reload_current_maze_sprites()
+        self.setup()
+        self.cameras_update()
 
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        super().on_resize(width, height)
-
         if self.setup_done:
-            self.camera_init()
-            self.camera_zoom()
+            self.cameras_update()
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -124,23 +127,20 @@ class VGame(GWindow):
         self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
-        self.maze_gen.build_background()
         self.reload_current_maze_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
-        self.sprite_manager.reload(self.maze_gen)
-        self.camera_init()
-        self.camera_zoom()
+        if self.setup_done:
+            self.sprite_manager.reload(self.maze_gen)
+            self.cameras_update()
 
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
-        # self.clear()
-        super().on_draw()
-
         if self.setup_done:
+            self.clear()
             with self.camera.activate():
                 self.sprite_manager.draw()
                 self.pacgum_list.draw(pixelated=True)
@@ -173,16 +173,17 @@ class VGame(GWindow):
     def on_update(self, delta_time: int | float) -> None:
         super().on_update(delta_time)
 
-        self.enemy_list.update(delta_time)
-        self.player_list.update(delta_time)
-        self.sprite_manager.update(delta_time)
-        self.resolve_player_pacgum_collisions()
+        if self.setup_done:
+            self.enemy_list.update(delta_time)
+            self.player_list.update(delta_time)
+            self.sprite_manager.update(delta_time)
+            self.resolve_player_pacgum_collisions()
 
-        self.enemy_list.update_animation(delta_time)
-        self.player_list.update_animation(delta_time)
-        self.pacgum_list.update_animation(delta_time)
+            self.enemy_list.update_animation(delta_time)
+            self.player_list.update_animation(delta_time)
+            self.pacgum_list.update_animation(delta_time)
 
-        self.hud.update(delta_time)
+            self.hud.update(delta_time)
 
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
@@ -200,79 +201,85 @@ class VGame(GWindow):
         # Player movement is handled in the player class.
         # The WASD, ZQSD and arrow keys are reserved for player movement.
 
-        match symbol:
-            case arcade.key.ESCAPE:
-                arcade.exit()
+        if self.setup_done:
+            match symbol:
+                case arcade.key.ESCAPE:
+                    arcade.exit()
 
-            case arcade.key.M:
-                self.window.switch_view(VNames.VIEW_MENU)
-            case arcade.key.P:
-                self.window.switch_view(VNames.VIEW_PAUSE)
+                case arcade.key.M:
+                    self.window.switch_view(VNames.VIEW_MENU)
+                case arcade.key.P:
+                    self.window.switch_view(VNames.VIEW_PAUSE)
 
-            case arcade.key.N:
-                self.setup()
-                self.camera_init()
-                self.camera_zoom()
+                case arcade.key.N:
+                    self.setup()
+                    self.cameras_update()
 
-            case arcade.key.H:
-                self.display_hitboxes = not self.display_hitboxes
-                VData.debug_on = not VData.debug_on
+                case arcade.key.H:
+                    self.display_hitboxes = not self.display_hitboxes
+                    VData.debug_on = not VData.debug_on
 
-            case arcade.key.PLUS:
-                self.camera.zoom += 0.1
-            case arcade.key.MINUS:
-                self.camera.zoom -= 0.1
-            case arcade.key.EQUAL:
-                self.camera.zoom = 1.0
+                case arcade.key.PLUS:
+                    self.camera.zoom += 0.1
+                case arcade.key.MINUS:
+                    self.camera.zoom -= 0.1
+                case arcade.key.EQUAL:
+                    self.camera.zoom = 1.0
 
-        # TODO: reimplement style switching feature and change key
-        # elif symbol == arcade.key.S:
-        #     self.sprite_manager.next_style()
-        #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-        #     arcade.set_background_color(self.sprite_manager.background_color)
+            # TODO: reimplement style switching feature and change key
+            # elif symbol == arcade.key.S:
+            #     self.sprite_manager.next_style()
+            #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
+            #     arcade.set_background_color(self.sprite_manager.background_color)
 
-        self.player.on_key_press(symbol, modifiers)
+            self.player.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        self.player.on_key_release(symbol, modifiers)
+        if self.setup_done:
+            self.player.on_key_release(symbol, modifiers)
 
     # ########################################################################
     # ########################################################### CAMERAS ####
-    def camera_init(self) -> None:
-        if self.setup_done:
-            hud_height = self.height / 8
+    def cameras_update(self):
+        def cameras_setup() -> None:
+            if self.setup_done:
+                hud_height = self.height / 8
 
-            main_rect = LBWH(
-                left=0,
-                bottom=0,
-                width=self.width,
-                height=self.height - hud_height,
-            )
-            hud_rect = LBWH(
-                left=0,
-                bottom=self.height - hud_height,
-                width=self.width,
-                height=hud_height,
-            )
+                main_rect = LBWH(
+                    left=0,
+                    bottom=0,
+                    width=self.width,
+                    height=self.height - hud_height,
+                )
+                hud_rect = LBWH(
+                    left=0,
+                    bottom=self.height - hud_height,
+                    width=self.width,
+                    height=hud_height,
+                )
 
-            self.camera = arcade.Camera2D(main_rect)
-            self.camera.position = self.maze_gen.center_position
+                self.camera = arcade.Camera2D(main_rect)
+                self.camera.position = self.maze_gen.center_position
 
-            self.camera_hud = arcade.Camera2D(hud_rect)
-            self.camera_hud.position = self.hud.center_position
+                self.camera_hud = arcade.Camera2D(hud_rect)
+                self.camera_hud.position = self.hud.center_position
 
-    def camera_zoom(self) -> None:
-        if self.setup_done:
-            scale_hori = (
-                self.camera.viewport.width - VData.CAMERA_MARGIN
-            ) / self.maze_gen.width
-            scale_vert = (
-                self.camera.viewport.height - VData.CAMERA_MARGIN
-            ) / self.maze_gen.height
+        def cameras_zoom() -> None:
+            if self.setup_done:
+                scale_hori = (
+                    self.camera.viewport.width - VData.CAMERA_MARGIN
+                ) / self.maze_gen.width
+                scale_vert = (
+                    self.camera.viewport.height - VData.CAMERA_MARGIN
+                ) / self.maze_gen.height
 
-            zoom = min(scale_hori, scale_vert)
-            if zoom > VData.CAMERA_MAX_ZOOM:
-                zoom = VData.CAMERA_MAX_ZOOM
+                zoom = min(scale_hori, scale_vert)
+                if zoom > VData.CAMERA_MAX_ZOOM:
+                    zoom = VData.CAMERA_MAX_ZOOM
 
-            self.camera.zoom = zoom
-            self.camera_hud.zoom = zoom
+                self.camera.zoom = zoom
+                self.camera_hud.zoom = zoom
+
+        # --
+        cameras_setup()
+        cameras_zoom()
