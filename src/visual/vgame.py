@@ -6,10 +6,7 @@ from src.visual.vhud import VHud
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
-from src.visual.entities.ventity_enemy import (
-    AStarSearch,
-    VEntityEnemy,
-)
+from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -82,7 +79,6 @@ class VGame(arcade.View):
                     self.player,
                     self.gamestate,
                     self.maze_gen,
-                    pathfinder=AStarSearch,
                 ),
             )
 
