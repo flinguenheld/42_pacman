@@ -1,4 +1,5 @@
-from collections.abc import Callable
+from dataclasses import dataclass, field
+import heapq
 from typing import Protocol
 
 from arcade import Sprite, SpriteList, Vec2
@@ -19,110 +20,128 @@ PATHFINDING_GRID_SIZE = VData.SPRITE_SIZE
 
 
 class PathfindingAlgorithm(Protocol):
-    def calculate_path(
-        self, start_pos: Point2, end_pos: Point2
-    ) -> list[Vec2] | None: ...
-
-
-class DFSPathfinding:
     def __init__(
-        self,
-        blocked_sprites: SpriteList[Sprite],
-        neighbor_filter_func: Callable[
-            [list[Point2]], list[Point2]
-        ] = lambda neighbors: neighbors,
-    ):
-        self.grid_size = PATHFINDING_GRID_SIZE
-        self.neighbor_filter_function = neighbor_filter_func
-        self.blocked_cells = self.get_blocked_cells_from_sprites(
-            blocked_sprites
+        self, start: Point2, goal: Point2, blocked_sprites: SpriteList[Sprite]
+    ) -> None: ...
+    def calculate_path(self) -> list[Point2]: ...
+
+
+@dataclass(order=True)
+class AStarOpenNode:
+    f_score: float
+    position: Point2 = field(compare=False)
+
+
+class AStarSearch:
+    def __init__(
+        self, start: Point2, goal: Point2, blocked_sprites: SpriteList[Sprite]
+    ) -> None:
+        self.start: Point2 = self.convert_world_position_to_cell(start)
+        self.goal: Point2 = self.convert_world_position_to_cell(goal)
+        self.blocked_cells = self.get_blocked_cells(blocked_sprites)
+
+        self.open_set: list[AStarOpenNode] = list()
+        heapq.heappush(
+            self.open_set,
+            AStarOpenNode(self.heuristic(self.start, self.goal), self.start),
         )
 
-    def get_blocked_cells_from_sprites(
-        self, sprites: SpriteList[Sprite]
+        self.closed_set: set[Point2] = set()
+
+        self.came_from: dict[Point2, Point2] = dict()
+
+        self.g_score: dict[Point2, float] = {self.start: 0}
+
+        self.finished = False
+        self.failed = False
+
+    def get_blocked_cells(
+        self, blocked_sprites: SpriteList[Sprite]
     ) -> set[Point2]:
         blocked_cells: set[Point2] = set()
-        for sprite in sprites:
-            cell_x = int(sprite.center_x // self.grid_size)
-            cell_y = int(sprite.center_y // self.grid_size)
-            blocked_cells.add((cell_x, cell_y))
+        for sprite in blocked_sprites:
+            cell = self.convert_world_position_to_cell(sprite.position)
+            blocked_cells.add(cell)
         return blocked_cells
 
-    def calculate_path(
-        self, start_pos: Point2, end_pos: Point2
-    ) -> list[Vec2] | None:
-        start_cell = (
-            int(start_pos[0] // self.grid_size),
-            int(start_pos[1] // self.grid_size),
+    def calculate_path(self) -> list[Point2]:
+        while True:
+            if not self.open_set:
+                self.finished = True
+                self.failed = True
+                return []
+
+            current = heapq.heappop(self.open_set).position
+
+            if current == self.goal:
+                reconstructed_path = self.reconstruct_path()
+                path = self.convert_cells_to_world_positions(
+                    reconstructed_path
+                )
+                self.finished = True
+                return path
+
+            self.closed_set.add(current)
+
+            for neighbor in self.get_neighbors(current):
+                if neighbor in self.closed_set:
+                    continue
+
+                if neighbor in self.blocked_cells:
+                    continue
+
+                tentative_g = self.g_score[current] + 1
+
+                if tentative_g < self.g_score.get(neighbor, float("inf")):
+                    self.came_from[neighbor] = current
+
+                    self.g_score[neighbor] = tentative_g
+
+                    f = tentative_g + self.heuristic(neighbor, self.goal)
+
+                    heapq.heappush(self.open_set, AStarOpenNode(f, neighbor))
+
+    def heuristic(self, a: Point2, b: Point2) -> float:
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    def get_neighbors(self, cell: Point2) -> list[Point2]:
+        return [
+            (cell[0] + 1, cell[1]),
+            (cell[0] - 1, cell[1]),
+            (cell[0], cell[1] + 1),
+            (cell[0], cell[1] - 1),
+        ]
+
+    def reconstruct_path(self) -> list[Point2]:
+        current = self.goal
+
+        path = [current]
+
+        while current != self.start:
+            current = self.came_from[current]
+
+            path.append(current)
+
+        path.reverse()
+
+        return path
+
+    def convert_cell_to_world_position(self, cell: Point2) -> Point2:
+        return (
+            cell[0] * PATHFINDING_GRID_SIZE,
+            cell[1] * PATHFINDING_GRID_SIZE,
         )
-        end_cell = (
-            int(end_pos[0] // self.grid_size),
-            int(end_pos[1] // self.grid_size),
+
+    def convert_world_position_to_cell(self, position: Point2) -> Point2:
+        return (
+            int(position[0] // PATHFINDING_GRID_SIZE),
+            int(position[1] // PATHFINDING_GRID_SIZE),
         )
-
-        visited = set()
-        path: list[Point2] = []
-
-        def traverse_cells(current_cell: Point2) -> bool:
-            if current_cell == end_cell:
-                path.append(current_cell)
-                return True
-
-            visited.add(current_cell)
-
-            neighbors: list[Point2] = [
-                (current_cell[0] + 1, current_cell[1]),
-                (current_cell[0] - 1, current_cell[1]),
-                (current_cell[0], current_cell[1] + 1),
-                (current_cell[0], current_cell[1] - 1),
-            ]
-
-            neighbors = self.neighbor_filter_function(neighbors)
-            for neighbor in neighbors:
-                if (
-                    neighbor not in visited
-                    and neighbor not in self.blocked_cells
-                ):
-                    if traverse_cells(neighbor):
-                        path.append(current_cell)
-                        return True
-
-            return False
-
-        if traverse_cells(start_cell):
-            path.reverse()
-            return self.convert_cells_to_world_positions(path)
-        else:
-            return None
-
-    def convert_cell_to_world_position(self, cell: Point2) -> Vec2:
-        return Vec2(cell[0] * self.grid_size, cell[1] * self.grid_size)
 
     def convert_cells_to_world_positions(
         self, cells: list[Point2]
-    ) -> list[Vec2]:
-        return [self.convert_cell_to_world_position(cell) for cell in cells]
-
-
-def player_distance_filter(
-    player: VEntityPlayer,
-) -> Callable[[list[Point2]], list[Point2]]:
-
-    def filter_neighbors(
-        neighbors: list[Point2],
     ) -> list[Point2]:
-        player_vec_2 = Vec2(
-            int(player.center_x // PATHFINDING_GRID_SIZE),
-            int(player.center_y // PATHFINDING_GRID_SIZE),
-        )
-
-        neighbors.sort(
-            key=lambda cell: Vec2(cell[0], cell[1]).distance(player_vec_2)
-        )
-
-        return neighbors
-
-    return filter_neighbors
+        return [self.convert_cell_to_world_position(cell) for cell in cells]
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -139,7 +158,7 @@ class VEntityEnemy(VEntityMoving):
         player: VEntityPlayer,
         gamestate: VGameState,
         maze_gen: Maze,
-        pathfinder: PathfindingAlgorithm,
+        pathfinder: type[PathfindingAlgorithm] = AStarSearch,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
         self.floors: SFloor = floors
@@ -147,13 +166,13 @@ class VEntityEnemy(VEntityMoving):
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
         self.maze_gen: Maze = maze_gen
-        self.pathfinder: PathfindingAlgorithm = pathfinder
+        self.pathfinder: type[PathfindingAlgorithm] = pathfinder
 
-        self.path: list[Vec2] | None = None
-        self.next_position: Vec2 | None = None
+        self.path: list[Point2] | None = None
+        self.next_position: Point2 | None = None
         self.next_sprite: Sprite | None = None
-        self.final_position: Vec2 | None = None
-        self.final_sprite: Sprite | None = None
+        self.target_position: Point2 | None = None
+        self.target_sprite: Sprite | None = None
         self.closest_floor: Sprite | None = None
         self.setup()
 
@@ -179,29 +198,35 @@ class VEntityEnemy(VEntityMoving):
         if not closest_floor:
             self.path = None
             return
-        path = self.pathfinder.calculate_path(
-            closest_floor.position, closest_player_floor.position
-        )
+
+        path = self.pathfinder(
+            start=closest_floor.position,
+            goal=closest_player_floor.position,
+            blocked_sprites=self.walls.sprites,
+        ).calculate_path()
+
         if not path:
             self.path = None
-            self.final_position = None
-            self.final_sprite = None
+            self.target_position = None
+            self.target_sprite = None
             return
         self.path = path
-        self.final_position = Vec2(*path[-1])
-        sprites_at_final_pos = arcade.get_sprites_at_point(
-            self.final_position, self.floors.sprites
+        self.target_position = closest_player_floor.position
+        sprites_at_target_pos = arcade.get_sprites_at_point(
+            self.target_position, self.floors.sprites
         )
-        if sprites_at_final_pos:
-            self.final_sprite = sprites_at_final_pos[0]
+        if sprites_at_target_pos:
+            self.target_sprite = sprites_at_target_pos[0]
 
     def should_recompute_path(self) -> bool:
-        if not self.path or len(self.path) < 2 or not self.final_sprite:
+        if not self.path or len(self.path) < 2 or not self.target_sprite:
             return True
-        final_sprite_distance_to_player = arcade.get_distance_between_sprites(
-            self.final_sprite, self.player
+        distance_to_player_from_target_sprite = (
+            arcade.get_distance_between_sprites(
+                self.target_sprite, self.player
+            )
         )
-        if final_sprite_distance_to_player > (2.0 * VData.SPRITE_SIZE):
+        if distance_to_player_from_target_sprite > (2.0 * VData.SPRITE_SIZE):
             return True
         return False
 
@@ -224,7 +249,7 @@ class VEntityEnemy(VEntityMoving):
             self.path.pop(0)
 
             if len(self.path) > 0:
-                self.next_position = Vec2(*self.path[0])
+                self.next_position = self.path[0]
                 sprites_at_next_pos = arcade.get_sprites_at_point(
                     self.next_position, self.floors.sprites
                 )
@@ -255,7 +280,7 @@ class VEntityEnemy(VEntityMoving):
 
         speed = self.apply_delta_time(self.get_speed(), delta_time)
 
-        next_position_delta = self.next_position - self.position
+        next_position_delta = Vec2(*self.next_position) - Vec2(*self.position)
         next_position_normalized = next_position_delta.normalize()
 
         self.change_x = next_position_normalized.x * speed * delta_time

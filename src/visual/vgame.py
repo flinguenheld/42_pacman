@@ -7,9 +7,8 @@ from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
-    DFSPathfinding,
+    AStarSearch,
     VEntityEnemy,
-    player_distance_filter,
 )
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
@@ -83,13 +82,8 @@ class VGame(arcade.View):
                     self.player,
                     self.gamestate,
                     self.maze_gen,
-                    pathfinder=DFSPathfinding(
-                        self.sprite_manager.walls.sprites,
-                        neighbor_filter_func=player_distance_filter(
-                            self.player
-                        ),
-                    ),
-                )
+                    pathfinder=AStarSearch,
+                ),
             )
 
         # Super pacgums --
