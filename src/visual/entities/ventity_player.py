@@ -36,6 +36,20 @@ class VPlayerDirections(Enum):
                 return direction
         return None
 
+    def get_vector(self) -> Vec2:
+        """
+        Returns the vector representation of the direction.
+        """
+        match self:
+            case VPlayerDirections.UP:
+                return Vec2(0, 1)
+            case VPlayerDirections.LEFT:
+                return Vec2(-1, 0)
+            case VPlayerDirections.DOWN:
+                return Vec2(0, -1)
+            case VPlayerDirections.RIGHT:
+                return Vec2(1, 0)
+
 
 # ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░░░█▀█░░█░░█▀▀░█▀▄░░
@@ -56,8 +70,26 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.current_actions: set[VPlayerDirections] = set()
+        self.current_directions: set[VPlayerDirections] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
+
+    def get_direction_vector(self) -> Vec2:
+        """
+        Returns the combined vector of all currently pressed directions.
+        If no direction is pressed, returns a zero vector.
+        """
+        if not self.current_directions:
+            return Vec2(0, 0)
+
+        combined_vector = Vec2(0, 0)
+        for direction in self.current_directions:
+            combined_vector += direction.get_vector()
+
+        # Normalize the vector to ensure consistent speed in diagonal movement
+        if combined_vector.length() > 0:
+            combined_vector = combined_vector.normalize()
+
+        return combined_vector
 
     # ########################################################################
     # ############################################################# SPEED ####
@@ -78,17 +110,9 @@ class VEntityPlayer(VEntityMoving):
 
         speed = self.apply_delta_time(self.get_speed(), delta_time)
 
-        self.change_x = 0
-        self.change_y = 0
-
-        if VPlayerDirections.UP in self.current_actions:
-            self.change_y = speed * delta_time
-        if VPlayerDirections.LEFT in self.current_actions:
-            self.change_x = -speed * delta_time
-        if VPlayerDirections.DOWN in self.current_actions:
-            self.change_y = -speed * delta_time
-        if VPlayerDirections.RIGHT in self.current_actions:
-            self.change_x = speed * delta_time
+        direction_vector = self.get_direction_vector()
+        self.change_x = direction_vector.x * speed * delta_time
+        self.change_y = direction_vector.y * speed * delta_time
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
@@ -122,9 +146,9 @@ class VEntityPlayer(VEntityMoving):
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         direction = VPlayerDirections.return_action_from_key(symbol)
         if direction is not None:
-            self.current_actions.add(direction)
+            self.current_directions.add(direction)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         direction = VPlayerDirections.return_action_from_key(symbol)
         if direction is not None:
-            self.current_actions.discard(direction)
+            self.current_directions.discard(direction)
