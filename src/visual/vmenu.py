@@ -1,3 +1,4 @@
+from src.visual.gui.title.gtitle_pacman import GTitlePacman
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gwindow import GWindow
 import arcade
@@ -20,7 +21,7 @@ class VMenu(GWindow):
     BT_DOUBLE = BT_WIDTH * 2 + BT_MARGIN
 
     def __init__(self, atlas: VAtlas) -> None:
-        super().__init__(atlas)
+        super().__init__(atlas, GTitlePacman(atlas))
 
         bt_play = arcade.gui.UIFlatButton(
             text="Play",
