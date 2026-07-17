@@ -1,6 +1,7 @@
 import random
 import arcade
 from arcade import SpriteList, Vec2, LBWH
+from arcade.types import Color
 
 from src.visual.vhud import VHud
 from src.maze.maze_wrapper import Maze
@@ -167,15 +168,23 @@ class VGame(arcade.View):
             )
 
     def _draw_enemy_paths(self) -> None:
+        colors: tuple[Color, Color, Color, Color] = (
+            arcade.color.RED,
+            arcade.color.GREEN,
+            arcade.color.BLUE,
+            arcade.color.YELLOW,
+        )
+        line_width = 20
         if self.display_enemy_paths:
-            for enemy in self.enemy_list:
+            for color, enemy in zip(colors, self.enemy_list):
                 if not enemy.path:
                     continue
                 arcade.draw_line_strip(
                     [Vec2(*enemy.position)] + enemy.path,
-                    arcade.color.RED,
-                    10,
+                    color,
+                    line_width,
                 )
+                line_width -= 5
 
     # ########################################################################
     # ############################################################ UPDATE ####
