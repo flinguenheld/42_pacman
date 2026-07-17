@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from enum import Enum
 import heapq
 from typing import Protocol
 
@@ -36,21 +37,24 @@ class AStarSearch:
     def __init__(
         self, start: Point2, goal: Point2, blocked_sprites: SpriteList[Sprite]
     ) -> None:
-        self.start: Point2 = self.convert_world_position_to_cell(start)
-        self.goal: Point2 = self.convert_world_position_to_cell(goal)
+        self.start_cell: Point2 = self.convert_world_position_to_cell(start)
+        self.goal_cell: Point2 = self.convert_world_position_to_cell(goal)
         self.blocked_cells = self.get_blocked_cells(blocked_sprites)
 
         self.open_set: list[AStarOpenNode] = list()
         heapq.heappush(
             self.open_set,
-            AStarOpenNode(self.heuristic(self.start, self.goal), self.start),
+            AStarOpenNode(
+                self.heuristic(self.start_cell, self.goal_cell),
+                self.start_cell,
+            ),
         )
 
         self.closed_set: set[Point2] = set()
 
         self.came_from: dict[Point2, Point2] = dict()
 
-        self.g_score: dict[Point2, float] = {self.start: 0}
+        self.g_score: dict[Point2, float] = {self.start_cell: 0}
 
         self.finished = False
         self.failed = False
@@ -73,7 +77,7 @@ class AStarSearch:
 
             current = heapq.heappop(self.open_set).position
 
-            if current == self.goal:
+            if current == self.goal_cell:
                 reconstructed_path = self.reconstruct_path()
                 path = self.convert_cells_to_world_positions(
                     reconstructed_path
@@ -97,7 +101,7 @@ class AStarSearch:
 
                     self.g_score[neighbor] = tentative_g
 
-                    f = tentative_g + self.heuristic(neighbor, self.goal)
+                    f = tentative_g + self.heuristic(neighbor, self.goal_cell)
 
                     heapq.heappush(self.open_set, AStarOpenNode(f, neighbor))
 
@@ -113,11 +117,11 @@ class AStarSearch:
         ]
 
     def reconstruct_path(self) -> list[Point2]:
-        current = self.goal
+        current = self.goal_cell
 
         path = [current]
 
-        while current != self.start:
+        while current != self.start_cell:
             current = self.came_from[current]
 
             path.append(current)
