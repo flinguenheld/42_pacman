@@ -6,9 +6,10 @@ from src.visual.vhud import VHud
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
+from src.visual.sprites.swall import SWall
+from src.visual.sprites.sfloor import SFloor
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import VEntityEnemy
-from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
@@ -48,8 +49,13 @@ class VGame(arcade.View):
         )
 
         # Maze sprites --
-        self.sprite_manager = SpriteManager(self.atlas, self.maze_gen)
-        self.sprite_manager.reload(self.maze_gen)
+        self.walls: SWall = SWall(self.atlas)
+        self.floors: SFloor = SFloor(self.atlas)
+        self.walls.reload(
+            self.maze_gen.walls.union(self.maze_gen.forty_two),
+            self.maze_gen.floors,
+        )
+        self.floors.reload(self.maze_gen.floors)
 
         # HUD --
         self.hud = VHud(
@@ -69,7 +75,7 @@ class VGame(arcade.View):
         self.player: VEntityPlayer = VEntityPlayer(
             self.atlas,
             self.maze_gen.floor_center,
-            self.sprite_manager.walls,
+            self.walls,
             self.gamestate,
         )
         self.player_list.append(self.player)
@@ -81,8 +87,8 @@ class VGame(arcade.View):
                     id,
                     self.atlas,
                     floor_corner,
-                    self.sprite_manager.floors,
-                    self.sprite_manager.walls,
+                    self.floors,
+                    self.walls,
                     self.player,
                     self.gamestate,
                 )
@@ -98,7 +104,7 @@ class VGame(arcade.View):
         forbbiden = set(self.maze_gen.floor_corners)
         forbbiden.add(Vec2(*self.player.position))
 
-        for floor_sprite in self.sprite_manager.floors.sprites:
+        for floor_sprite in self.floors.sprites:
             if floor_sprite.position not in forbbiden:
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
@@ -133,7 +139,11 @@ class VGame(arcade.View):
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
         if self.setup_done:
-            self.sprite_manager.reload(self.maze_gen)
+            self.walls.reload(
+                self.maze_gen.walls.union(self.maze_gen.forty_two),
+                self.maze_gen.floors,
+            )
+            self.floors.reload(self.maze_gen.floors)
             self.cameras_update()
 
     # ########################################################################
@@ -142,7 +152,8 @@ class VGame(arcade.View):
         if self.setup_done:
             self.clear()
             with self.camera.activate():
-                self.sprite_manager.draw()
+                self.walls.draw()
+                self.floors.draw()
                 self.pacgum_list.draw(pixelated=True)
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
@@ -155,7 +166,7 @@ class VGame(arcade.View):
     # ##################################################### DRAW HITBOXES ####
     def _draw_hitboxes(self) -> None:
         if self.display_hitboxes:
-            self.sprite_manager.walls.sprites.draw_hit_boxes(
+            self.walls.sprites.draw_hit_boxes(
                 color=arcade.color.RED, line_thickness=2
             )
             self.pacgum_list.draw_hit_boxes(
@@ -174,9 +185,10 @@ class VGame(arcade.View):
         super().on_update(delta_time)
 
         if self.setup_done:
+            self.walls.update(delta_time)
+            self.floors.update(delta_time)
             self.enemy_list.update(delta_time)
             self.player_list.update(delta_time)
-            self.sprite_manager.update(delta_time)
             self.resolve_player_pacgum_collisions()
 
             self.enemy_list.update_animation(delta_time)
