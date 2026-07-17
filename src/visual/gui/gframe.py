@@ -1,17 +1,13 @@
 import arcade
-from arcade import Vec2, SpriteList
+from arcade import Vec2, SpriteList, LBWH, Rect
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
 
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▄░█▀█░█▀▀░█░█░█▀▀░█▀▄░█▀█░█░█░█▀█░█▀▄░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▄░█▀█░█░░░█▀▄░█░█░█▀▄░█░█░█░█░█░█░█░█░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀░░▀░▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀▀░░░
-class GBackground:
+class GFrame:
     """
     Manage an area of sprites to display a frame.
-    Used to create a window.
     """
 
     def __init__(
@@ -32,6 +28,8 @@ class GBackground:
     # ########################################################################
     # ############################################################# BUILD ####
     def build(self) -> None:
+        self.sprites.clear()
+
         def add_sprite(x: int, what: str) -> int:
             tile = self.atlas.pick_tile(what)
             sprite = self.atlas.tile_to_sprite(tile, Vec2(x, y))
@@ -93,3 +91,7 @@ class GBackground:
     @property
     def center_position(self) -> Vec2:
         return Vec2(self.x + self.width / 2, self.y + self.height / 2)
+
+    @property
+    def rect(self) -> Rect:
+        return LBWH(self.x, self.y, self.width, self.height)

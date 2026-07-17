@@ -16,34 +16,19 @@ from src.visual.sprites.sbackground import SBackground
 # QUESTION: RENAME IT ? Since some sprites are also manage in VEntity...
 # QUESTION: RENAME IT ? Since some sprites are also manage in VEntity...
 class SpriteManager:
-    def __init__(self) -> None:
+    def __init__(self, atlas: VAtlas) -> None:
         self.style: VStyles = VStyles.EDGE
-        # TODO: MOVE THE ATLAS IN VGAME
-        # TODO: MOVE THE ATLAS IN VGAME
-        self.atlas = VAtlas()
-        self.atlas.load(self.style)
 
+        self.atlas = atlas
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
         self.backgrounds: SBackground = SBackground(self.atlas)
 
     # ########################################################################
-    # ######################################################## NEXT STYLE ####
-    # TODO: MOVE NEXT STYLE IN VGAME
-    # TODO: MOVE NEXT STYLE IN VGAME
-    def next_style(self) -> None:
-        match self.style:
-            case VStyles.SUMMER:
-                self.style = VStyles.EDGE
-
-            case VStyles.EDGE:
-                self.style = VStyles.SUMMER
-
-    # ########################################################################
     # ############################################################ RELOAD ####
     def reload(self, maze: Maze, reload_atlas: bool = False) -> None:
         if reload_atlas:
-            self.atlas.load(self.style)
+            self.atlas.load()
 
         self.walls.reload(maze.walls.union(maze.forty_two), maze.floors)
         self.floors.reload(maze.floors)

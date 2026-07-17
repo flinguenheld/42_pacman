@@ -1,3 +1,4 @@
+from src.visual.vatlas import VAtlas
 import arcade
 from src.visual.vgame import VGame
 from src.visual.vmenu import VMenu
@@ -16,7 +17,6 @@ class VMain(arcade.Window):
             VData.height,
             "Pac-man",
             resizable=True,
-            antialiasing=False,
         )
 
         self.maze_generator = MazeGenerator()
@@ -25,14 +25,20 @@ class VMain(arcade.Window):
 
         arcade.resources.load_kenney_fonts()
 
-        self.vmenu = VMenu()
-        self.vgame = VGame()
+        self.atlas = VAtlas()
+        self.atlas.load()
+
+        self.vmenu = VMenu(self.atlas)
+        self.vgame = VGame(self.atlas)
+
+        self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
         """Set up the game here. Call this function to restart the game."""
-        pass
+        # pass
+        self.show_view(self.vmenu)
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####

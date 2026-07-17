@@ -3,8 +3,10 @@ import arcade
 from arcade import SpriteList, Vec2, LBWH
 
 from src.visual.vhud import VHud
+from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
+from src.visual.gui.gwindow import GWindow
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.sprites.vsprite_manager import SpriteManager
@@ -16,13 +18,14 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▄█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
-class VGame(arcade.View):
-    def __init__(self) -> None:
-        super().__init__()
+# class VGame(arcade.View):
+class VGame(GWindow):
+    def __init__(self, atlas: VAtlas) -> None:
+        super().__init__(atlas)
         arcade.enable_timings()
 
         self.display_hitboxes = False
-        self.sprite_manager = SpriteManager()
+        self.sprite_manager = SpriteManager(atlas)
 
         self.setup_done = False
         self.setup()
@@ -45,7 +48,7 @@ class VGame(arcade.View):
         # HUD --
         self.hud = VHud(
             self.maze_gen,
-            self.sprite_manager.atlas,
+            self.atlas,
             self.gamestate,
         )
 
@@ -58,7 +61,7 @@ class VGame(arcade.View):
 
         # Player --
         self.player: VEntityPlayer = VEntityPlayer(
-            self.sprite_manager.atlas,
+            self.atlas,
             self.maze_gen.floor_center,
             self.sprite_manager.walls,
             self.gamestate,
@@ -70,7 +73,7 @@ class VGame(arcade.View):
             self.enemy_list.append(
                 VEntityEnemy(
                     id,
-                    self.sprite_manager.atlas,
+                    self.atlas,
                     floor_corner,
                     self.sprite_manager.floors,
                     self.sprite_manager.walls,
@@ -82,7 +85,7 @@ class VGame(arcade.View):
         # Super pacgums --
         for floor_corner in self.maze_gen.floor_corners:
             self.pacgum_list.append(
-                VEntitySuperPacGum(self.sprite_manager.atlas, floor_corner)
+                VEntitySuperPacGum(self.atlas, floor_corner)
             )
 
         # Pacgums --
@@ -94,7 +97,7 @@ class VGame(arcade.View):
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
                     self.pacgum_list.append(
-                        VEntityPacGum(self.sprite_manager.atlas, position)
+                        VEntityPacGum(self.atlas, position)
                     )
 
         self.setup_done = True
@@ -102,12 +105,14 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
-        arcade.set_background_color(self.sprite_manager.background_color)
+        # arcade.set_background_color(self.sprite_manager.background_color)
         self.reload_current_maze_sprites()
 
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
+        super().on_resize(width, height)
+
         if self.setup_done:
             self.camera_init()
             self.camera_zoom()
@@ -132,7 +137,8 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
-        self.clear()
+        # self.clear()
+        super().on_draw()
 
         if self.setup_done:
             with self.camera.activate():
@@ -165,6 +171,8 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
+        super().on_update(delta_time)
+
         self.enemy_list.update(delta_time)
         self.player_list.update(delta_time)
         self.sprite_manager.update(delta_time)

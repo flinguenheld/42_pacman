@@ -1,3 +1,5 @@
+from src.visual.vatlas import VAtlas
+from src.visual.gui.gwindow import GWindow
 import arcade
 import arcade.gui
 from arcade.gui import UIEvent
@@ -11,14 +13,14 @@ from src.visual.vdata import VNames
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░█▀▀░█▀█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀▀░█░█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░▀▀▀░▀░▀░▀▀▀░░
-class VMenu(arcade.View):
+class VMenu(GWindow):
     BT_WIDTH = 200
     BT_HEIGHT = BT_WIDTH // 3
     BT_MARGIN = 20
     BT_DOUBLE = BT_WIDTH * 2 + BT_MARGIN
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, atlas: VAtlas) -> None:
+        super().__init__(atlas)
 
         bt_play = arcade.gui.UIFlatButton(
             text="Play",
@@ -91,10 +93,15 @@ class VMenu(arcade.View):
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
-        self.clear()
+        super().on_draw()
 
         # arcade.draw_text("View menu", 100, 100, arcade.color.BLUE, 100)
         self.manager.draw()
+
+    # ########################################################################
+    # ############################################################ UPDATE ####
+    def update(self, delta_time: int | float) -> None:
+        super().update(delta_time)
 
     # ########################################################################
     # ############################################################## KEYS ####

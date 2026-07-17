@@ -1,4 +1,3 @@
-from src.visual.gui.gui_background import GBackground
 import time
 import arcade
 from arcade.types import Color
@@ -7,7 +6,9 @@ from arcade import Text, Vec2, SpriteList
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
+from src.visual.gui.gframe import GFrame
 from src.visual.vgamestate import VGameState
+from src.visual.gui.gbackground import GBackground
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░█░█░█░█▀▄░░
@@ -27,7 +28,7 @@ class VHud:
         self.atlas = atlas
         self.gamestate = gamestate
 
-        self.background = GBackground(
+        self.frame = GFrame(
             atlas, VHud.OFFSET, VHud.OFFSET, maze.width, VData.SPRITE_SIZE * 3
         )
         self.icons: SpriteList = arcade.SpriteList()
@@ -35,6 +36,8 @@ class VHud:
         self.fields: dict[str, Text] = dict()
 
         self.build_fields()
+        self.background = GBackground(atlas)
+        self.background.build(self.center_position, self.frame.rect)
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -109,6 +112,7 @@ class VHud:
     # ############################################################## DRAW ####
     def draw(self) -> None:
         self.background.draw()
+        self.frame.draw()
         self.icons.draw(pixelated=True)
 
         self.fields["score"].text = self.gamestate.score
@@ -140,11 +144,12 @@ class VHud:
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
+        self.frame.update(delta_time)
         self.background.update(delta_time)
         self.icons.update_animation(delta_time)
 
     # ########################################################################
-    # ######################################################## PROPERTIES ####
+    # ############################################################ CENTER ####
     @property
     def center_position(self) -> Vec2:
-        return self.background.center_position
+        return self.frame.center_position
