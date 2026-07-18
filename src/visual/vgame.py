@@ -252,7 +252,7 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ########################################################### CAMERAS ####
-    def cameras_update(self):
+    def cameras_update(self) -> None:
         def cameras_setup() -> None:
             if self.setup_done:
                 hud_height = self.height / 8

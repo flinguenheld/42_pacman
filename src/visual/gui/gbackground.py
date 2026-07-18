@@ -50,7 +50,7 @@ class GBackground:
 
     # ########################################################################
     # ######################################################### OVERLAP ? ####
-    def does_not_overlap(self, x: int, y: int, to_avoid: list[Rect]):
+    def does_not_overlap(self, x: int, y: int, to_avoid: list[Rect]) -> bool:
 
         rect = LBWH(
             x - VData.SPRITE_SIZE_BACKGROUND // 2,

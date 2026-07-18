@@ -1,6 +1,6 @@
-from arcade import Vec2
-
+from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
+from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.title.gtitle_pacman import GTitlePacman
 
@@ -13,18 +13,14 @@ class VMenu(GWindow):
         super().__init__(
             atlas,
             title=GTitlePacman(atlas),
-            frame_size=Vec2(800, 600),
+            frame=GFrame(
+                atlas=atlas,
+                width=800,
+                height=800,
+                separators=[400],
+            ),
         )
         pass
-
-        # From bottom to top --
-        # self.widgets["frame_scores"] = GFrame(
-        #     atlas, x=0, y=0, width=900, height=600
-        # )
-        # self.widgets["frame_menu"] = GFrame(
-        #     atlas, x=0, y=700, width=900, height=500
-        # )
-        # self.widgets["title"].set_postion(center_x=500, center_y=1400)
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -43,5 +39,5 @@ class VMenu(GWindow):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        # self.window.switch_view(VNames.VIEW_GAME)
-        pass
+        self.window.switch_view(VNames.VIEW_GAME)
+        # pass

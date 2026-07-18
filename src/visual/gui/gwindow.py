@@ -14,24 +14,22 @@ from src.visual.gui.gbackground import GBackground
 class GWindow(arcade.View):
     """Create and manage a window with one Title and one frame"""
 
-    def __init__(
-        self, atlas: VAtlas, title: GTitle, frame_size: Vec2[int, int]
-    ) -> None:
+    def __init__(self, atlas: VAtlas, title: GTitle, frame: GFrame) -> None:
         super().__init__()
         self.atlas = atlas
 
         # Frame --
-        self.frame = GFrame(
-            atlas=atlas,
-            width=frame_size.x,
-            height=frame_size.y,
-        )
+        self.frame = frame
 
         # Title --
         self.title = title
         self.title.set_postion(
-            frame_size.x // 2,
-            frame_size.y + title.height * 0.7,
+            int(self.frame.center_position.x),
+            int(
+                self.frame.center_position.y
+                + self.frame.height // 2
+                + title.height * 0.7
+            ),
         )
 
         # Background --
