@@ -81,6 +81,11 @@ class VEntityEnemyCommon(VEntityMoving):
         self.path = path
 
     def should_recompute_path(self) -> bool:
+        if (
+            self.next_position
+            and self.next_position == self.closest_floor.position
+        ):
+            return False
         if not self.path or len(self.path) < 2 or not self.target_sprite:
             return True
         distance_to_player_from_target_sprite = (
@@ -196,7 +201,7 @@ class Michael(VEntityEnemyCommon):
     He won't try to kill the player directly, but will try to cut him off by
     predicting his next move.
 
-    His target sprite is two tiles ahead of the player in the direction the
+    His target sprite is X tiles ahead of the player in the direction the
     player is currently moving.
     """
 
@@ -229,7 +234,7 @@ class Michael(VEntityEnemyCommon):
             dir = self.last_player_direction
         else:
             self.last_player_direction = dir
-        target_pos = self.player.position + (dir * 2.0 * VData.SPRITE_SIZE)
+        target_pos = self.player.position + (dir * 3.0 * VData.SPRITE_SIZE)
 
         self.dummy_target_sprite.position = target_pos
         target_sprite_result = arcade.get_closest_sprite(
