@@ -7,7 +7,12 @@ from src.visual.vhud import VHud
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
-from src.visual.entities.ventity_enemy import VEntityEnemy
+from src.visual.entities.ventity_enemy import (
+    EnemyVariant,
+    Johnny,
+    Michael,
+    VEntityEnemyCommon
+)
 from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -53,7 +58,7 @@ class VGame(arcade.View):
         )
 
         # Init sprite lists first --
-        self.enemy_list: SpriteList[VEntityEnemy] = arcade.SpriteList()
+        self.enemy_list: SpriteList[VEntityEnemyCommon] = arcade.SpriteList()
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
         self.pacgum_list: SpriteList[VEntityPacGum | VEntitySuperPacGum] = (
             arcade.SpriteList()
@@ -68,11 +73,21 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
+        ennemies: tuple[
+            EnemyVariant,
+            EnemyVariant,
+            EnemyVariant,
+            EnemyVariant,
+        ] = (
+            Johnny,
+            Michael,
+            Johnny,
+            Michael,
+        )
         # Enemies --
-        for id, floor_corner in enumerate(self.maze_gen.floor_corners):
+        for ennemy, floor_corner in zip(ennemies, self.maze_gen.floor_corners):
             self.enemy_list.append(
-                VEntityEnemy(
-                    id,
+                ennemy(
                     self.sprite_manager.atlas,
                     floor_corner,
                     self.sprite_manager.floors,

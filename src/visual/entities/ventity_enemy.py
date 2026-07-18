@@ -148,3 +148,85 @@ class VEntityEnemyCommon(VEntityMoving):
     def apply_velocity(self) -> None:
         self.center_x += self.change_x
         self.center_y += self.change_y
+
+
+class Johnny(VEntityEnemyCommon):
+    def __init__(
+        self,
+        atlas: VAtlas,
+        position: Vec2,
+        floors: SFloor,
+        walls: SWall,
+        player: VEntityPlayer,
+        gamestate: VGameState,
+        maze_gen: Maze,
+    ) -> None:
+        id = 0
+        super().__init__(
+            id,
+            atlas,
+            position,
+            floors,
+            walls,
+            player,
+            gamestate,
+            maze_gen,
+        )
+
+    def get_target_sprite(self) -> Sprite:
+        target_sprite_result = self.player.get_closest_sprite(
+            self.floors.sprites
+        )
+        return target_sprite_result
+
+
+class Michael(VEntityEnemyCommon):
+    def __init__(
+        self,
+        atlas: VAtlas,
+        position: Vec2,
+        floors: SFloor,
+        walls: SWall,
+        player: VEntityPlayer,
+        gamestate: VGameState,
+        maze_gen: Maze,
+    ) -> None:
+        id = 1
+
+        super().__init__(
+            id,
+            atlas,
+            position,
+            floors,
+            walls,
+            player,
+            gamestate,
+            maze_gen,
+        )
+
+    def get_target_sprite(self) -> Sprite:
+        dir = self.player.get_direction_vector()
+        if dir == Vec2(0, 0):
+            dir = self.last_player_direction
+        else:
+            self.last_player_direction = dir
+        target_pos = self.player.position + (dir * 2.0 * VData.SPRITE_SIZE)
+        print(f"Michael target position: {target_pos}")
+
+        self.dummy_target_sprite.position = target_pos
+        target_sprite_result = arcade.get_closest_sprite(
+            self.dummy_target_sprite, self.floors.sprites
+        )
+
+        _error_msg = (
+            "Could not find a closest sprite for "
+            f"{self.dummy_target_sprite} in {self.floors.sprites}."
+        )
+        assert target_sprite_result is not None, _error_msg
+        print(f"Michael target sprite: {target_sprite_result}")
+        (target_sprite, _) = target_sprite_result
+
+        return target_sprite
+
+
+type EnemyVariant = type[Johnny | Michael]
