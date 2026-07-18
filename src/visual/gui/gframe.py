@@ -5,6 +5,9 @@ from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█▀▄░█▀█░█▄█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀▄░█▀█░█░█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀░▀░▀░▀░▀▀▀░░
 class GFrame:
     """
     Manage an area of sprites to display a frame.
@@ -13,10 +16,10 @@ class GFrame:
     def __init__(
         self,
         atlas: VAtlas,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
+        x: int = 0,
+        y: int = 0,
+        width: int = 1000,
+        height: int = 1000,
     ) -> None:
 
         self.atlas = atlas

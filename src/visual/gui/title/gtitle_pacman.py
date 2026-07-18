@@ -2,6 +2,9 @@ from src.visual.vatlas import VAtlas
 from src.visual.gui.title.gtitle import GTitle
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░▀█▀░▀█▀░▀█▀░█░░░█▀▀░░░█▀█░█▀█░█▀▀░█▄█░█▀█░█▀█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░█░░░█░░░█░░█░░░█▀▀░░░█▀▀░█▀█░█░░░█░█░█▀█░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░░▀░░▀▀▀░░▀░░▀▀▀░▀▀▀░░░▀░░░▀░▀░▀▀▀░▀░▀░▀░▀░▀░▀░░
 class GTitlePacman(GTitle):
     def __init__(self, atlas: VAtlas):
         # fmt: off
@@ -16,4 +19,4 @@ class GTitlePacman(GTitle):
         ]
         # fmt: on
 
-        super().__init__(atlas, title, 1000, 15)
+        super().__init__(atlas, title)

@@ -1,13 +1,7 @@
-from src.visual.vdata import VData
-from src.visual.vatlas import VAtlas
-
 from arcade import SpriteList, Vec2, LBWH, Rect
 
-
-# TODO: If it works well, remove the background in sprite manager
-# TODO: If it works well, remove the background in sprite manager
-# TODO: If it works well, remove the background in sprite manager
-# TODO: If it works well, remove the background in sprite manager
+from src.visual.vdata import VData
+from src.visual.vatlas import VAtlas
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▄░█▀█░█▀▀░█░█░█▀▀░█▀▄░█▀█░█░█░█▀█░█▀▄░░
