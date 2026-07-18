@@ -151,6 +151,13 @@ class VEntityEnemyCommon(VEntityMoving):
 
 
 class Johnny(VEntityEnemyCommon):
+    """
+    Johnny is a simple enemy that follows the player directly.
+    Its goal is straightforward, it is to directly kill the player.
+
+    Its target sprite is always the sprite the player is currently on.
+    """
+
     def __init__(
         self,
         atlas: VAtlas,
@@ -181,6 +188,18 @@ class Johnny(VEntityEnemyCommon):
 
 
 class Michael(VEntityEnemyCommon):
+    """
+    Michael is a more advanced enemy that tries to predict the player's
+    movement.
+    He is more clever (or a coward, depending on how you see it) than Johnny,
+    and will try to anticipate where the player is going.
+    He won't try to kill the player directly, but will try to cut him off by
+    predicting his next move.
+
+    His target sprite is two tiles ahead of the player in the direction the
+    player is currently moving.
+    """
+
     def __init__(
         self,
         atlas: VAtlas,
@@ -211,19 +230,16 @@ class Michael(VEntityEnemyCommon):
         else:
             self.last_player_direction = dir
         target_pos = self.player.position + (dir * 2.0 * VData.SPRITE_SIZE)
-        print(f"Michael target position: {target_pos}")
 
         self.dummy_target_sprite.position = target_pos
         target_sprite_result = arcade.get_closest_sprite(
             self.dummy_target_sprite, self.floors.sprites
         )
-
         _error_msg = (
             "Could not find a closest sprite for "
             f"{self.dummy_target_sprite} in {self.floors.sprites}."
         )
         assert target_sprite_result is not None, _error_msg
-        print(f"Michael target sprite: {target_sprite_result}")
         (target_sprite, _) = target_sprite_result
 
         return target_sprite
