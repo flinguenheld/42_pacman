@@ -10,14 +10,14 @@ from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
-from src.visual.entities.ventity_player import VEntityPlayer
+from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirections
 from src.visual.entities.ventity_moving import VEntityMoving
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░░
-class VEntityEnemy(VEntityMoving):
+class VEntityEnemyCommon(VEntityMoving):
     def __init__(
         self,
         id: int,
@@ -28,7 +28,6 @@ class VEntityEnemy(VEntityMoving):
         player: VEntityPlayer,
         gamestate: VGameState,
         maze_gen: Maze,
-        pathfinder: type[PathfindingAlgorithm] = AStarSearch,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
         self.floors: SFloor = floors
@@ -36,19 +35,21 @@ class VEntityEnemy(VEntityMoving):
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
         self.maze_gen: Maze = maze_gen
-        self.pathfinder: type[PathfindingAlgorithm] = pathfinder
+
+        self.pathfinder: type[PathfindingAlgorithm] = AStarSearch
 
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
         self.next_sprite: Sprite | None = None
-        self.target_position: Point2 | None = None
         self.target_sprite: Sprite | None = None
-        self.closest_floor: Sprite | None = None
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
+        self.dummy_target_sprite = Sprite()
+        self.last_player_direction: Vec2 = VPlayerDirections.UP.get_vector()
+
         self.update_closest_floor()
         self.update_next_position()
 
@@ -57,36 +58,27 @@ class VEntityEnemy(VEntityMoving):
     def get_speed(self) -> int:
         return self.gamestate.enemy_speed
 
-    def compute_path(self) -> None:
-        closest_player_floor = self.player.get_closest_sprite(
-            self.floors.sprites
+    def get_target_sprite(self) -> Sprite:
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
         )
-        if not closest_player_floor:
-            self.path = None
-            return
-        closest_floor = self.closest_floor
-        if not closest_floor:
-            self.path = None
-            return
 
+    def calculate_path(self) -> None:
+        self.target_sprite = self.get_target_sprite()
+
+        start = self.closest_floor.position
+        goal = self.target_sprite.position
         path = self.pathfinder(
-            start=closest_floor.position,
-            goal=closest_player_floor.position,
+            start=start,
+            goal=goal,
             blocked_sprites=self.walls.sprites,
         ).calculate_path()
 
         if not path:
             self.path = None
-            self.target_position = None
             self.target_sprite = None
             return
         self.path = path
-        self.target_position = closest_player_floor.position
-        sprites_at_target_pos = arcade.get_sprites_at_point(
-            self.target_position, self.floors.sprites
-        )
-        if sprites_at_target_pos:
-            self.target_sprite = sprites_at_target_pos[0]
 
     def should_recompute_path(self) -> bool:
         if not self.path or len(self.path) < 2 or not self.target_sprite:
@@ -96,25 +88,20 @@ class VEntityEnemy(VEntityMoving):
                 self.target_sprite, self.player
             )
         )
-        if distance_to_player_from_target_sprite > (2.0 * VData.SPRITE_SIZE):
+        if distance_to_player_from_target_sprite > (1.0 * VData.SPRITE_SIZE):
             return True
         return False
 
     def update_next_position(self) -> None:
         if self.should_recompute_path():
-            self.compute_path()
+            self.calculate_path()
         if not self.path:
-            self.next_position = None
-            self.next_sprite = None
-            return
-        closest_floor = self.closest_floor
-        if not closest_floor or not self.path:
             self.next_position = None
             self.next_sprite = None
             return
         if (
             not self.next_position
-            or closest_floor.position == self.next_position
+            or self.closest_floor.position == self.next_position
         ):
             self.path.pop(0)
 
@@ -127,7 +114,9 @@ class VEntityEnemy(VEntityMoving):
                     self.next_sprite = sprites_at_next_pos[0]
 
     def update_closest_floor(self) -> Sprite | None:
-        self.closest_floor = self.get_closest_sprite(self.floors.sprites)
+        closest_floor = self.get_closest_sprite(self.floors.sprites)
+        assert closest_floor, "Enemy is not on a floor tile."
+        self.closest_floor = closest_floor
         return self.closest_floor
 
     # ########################################################################

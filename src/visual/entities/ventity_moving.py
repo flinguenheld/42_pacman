@@ -57,14 +57,15 @@ class VEntityMoving(VEntity):
             self.animation = new_tile.texture
             self._current_direction = self._requested_direction
 
-    def get_closest_sprite(
-        self, sprite_list: SpriteList[Sprite]
-    ) -> Sprite | None:
+    def get_closest_sprite(self, sprite_list: SpriteList[Sprite]) -> Sprite:
         closest_sprite_result = arcade.get_closest_sprite(self, sprite_list)
-        if closest_sprite_result:
-            (closest_sprite, _) = closest_sprite_result
-            return closest_sprite
-        return None
+        _error_msg = (
+            f"Could not find a closest sprite for {self} in {sprite_list}."
+        )
+        assert closest_sprite_result is not None, _error_msg
+
+        (closest_sprite, _) = closest_sprite_result
+        return closest_sprite
 
     def apply_delta_time(self, speed: float, delta_time: float) -> float:
         return speed * 500.0 * delta_time
