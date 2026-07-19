@@ -255,10 +255,10 @@ class Michael(VEntityEnemyCommon):
 
 class Charlie(VEntityEnemyCommon):
     """
-    Charlie is a creepy enemy that follows the player, but 2 seconds behind.
+    Charlie is a creepy enemy that follows the player, but 3 seconds behind.
     He is faster than other ennemies, but a bit slower than the player,
     and will try to follow the player's movements,
-    but with a delay of 2 seconds.
+    but with a delay of 3 seconds.
     """
 
     def __init__(
@@ -274,7 +274,7 @@ class Charlie(VEntityEnemyCommon):
         id = 2
 
         self.player_movement_buffer: list[Vec2] = []
-        self.max_buffer_size: int = int(2.0 * 60.0)  # 2 seconds at 60 FPS
+        self.max_buffer_size: int = int(3.0 * 60.0)  # 3 seconds at 60 FPS
         super().__init__(
             id,
             atlas,
@@ -288,12 +288,12 @@ class Charlie(VEntityEnemyCommon):
 
     def get_speed(self) -> float:
         # Charlie is slightly slower than the player
-        return self.player.get_speed() * 0.7
+        return self.player.get_speed() * 0.6
 
     def update_player_movement_buffer(self) -> None:
         """
         Updates the player movement buffer with the player's current position.
-        If the buffer has more than 2 seconds worth of positions, it pops the
+        If the buffer has more than 3 seconds worth of positions, it pops the
         oldest position.
         """
         self.player_movement_buffer.append(Vec2(*self.player.position))
@@ -311,7 +311,7 @@ class Charlie(VEntityEnemyCommon):
             target_pos = Vec2(*self.player.position)
         else:
             # Get the oldest position in the buffer, which is
-            # probably 2 seconds behind.
+            # probably 3 seconds behind.
             target_pos = self.player_movement_buffer[0]
 
         self.dummy_target_sprite.position = target_pos

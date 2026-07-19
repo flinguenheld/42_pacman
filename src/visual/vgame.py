@@ -91,8 +91,8 @@ class VGame(arcade.View):
             EnemyVariant,
             EnemyVariant,
         ] = (
-            Johnny,
             Michael,
+            Johnny,
             Charlie,
             Michael,
         )
