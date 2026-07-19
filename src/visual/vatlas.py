@@ -33,16 +33,27 @@ class VAtlas:
     INFO_FILENAME = "info.json"
 
     def __init__(self) -> None:
-        self.style = VStyles.SUMMER
+        self.style = VStyles.EDGE
         self.info: dict[str, Any] = dict()
         self.textures: dict[str, list[VTile]] = dict()
 
     # ########################################################################
     # ############################################################## LOAD ####
-    def load(self, new_style: VStyles) -> None:
-        self.style = new_style
+    def load(self) -> None:
         self._load_info()
         self._load_textures()
+
+    # ########################################################################
+    # ######################################################## NEXT STYLE ####
+    # TODO: MOVE NEXT STYLE IN VGAME OR WHERE ????
+    # TODO: MOVE NEXT STYLE IN VGAME OR WHERE ????
+    def next_style(self) -> None:
+        match self.style:
+            case VStyles.SUMMER:
+                self.style = VStyles.EDGE
+
+            case VStyles.EDGE:
+                self.style = VStyles.SUMMER
 
     # ########################################################################
     # ############################################# LOAD INFORMATION FILE ####
@@ -220,6 +231,16 @@ class VAtlas:
             assert KeyError(f"Color '{name}' does not exist in the info.json.")
 
         return Color(**self.info["colors"][name])
+
+    # ########################################################################
+    # ############################################################## FONT ####
+    @property
+    def font_name(self) -> str:
+        return str(self.info["font"]["name"])
+
+    @property
+    def font_size(self) -> int:
+        return int(self.info["font"]["size"])
 
     # ########################################################################
     # ######################################################### PICK TILE ####

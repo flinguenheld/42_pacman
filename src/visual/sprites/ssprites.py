@@ -41,6 +41,11 @@ class SSprites:
         self.sprites.clear()
 
     # ########################################################################
+    # ############################################################## DRAW ####
+    def draw(self) -> None:
+        self.sprites.draw(pixelated=True)
+
+    # ########################################################################
     # ################################################## UPDATE ANIMATION ####
-    def update_animation(self, delta_time: int | float) -> None:
+    def update(self, delta_time: int | float) -> None:
         self.sprites.update_animation(delta_time)

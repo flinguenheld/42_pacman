@@ -14,6 +14,10 @@
     "full_bot": false,
     "full_left": false
   },
+  "font": {
+    "name": "Kenney Mini",
+    "size": 25
+  },
   "colors": {
     "background": {
       "r": 158,
@@ -29,6 +33,16 @@
       "r": 188,
       "g": 33,
       "b": 23
+    },
+    "menu_font": {
+      "r": 119,
+      "g": 67,
+      "b": 59
+    },
+    "menu_font_active": {
+      "r": 130,
+      "g": 154,
+      "b": 51
     }
   },
   "lines": [

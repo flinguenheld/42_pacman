@@ -8,7 +8,7 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░█░█░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
-    VIEW_MENU = 0
+    VIEW_WELCOME = 0
     VIEW_GAME = 1
     VIEW_PAUSE = 2
 
@@ -34,7 +34,11 @@ class VData:
 
     debug_on: bool = False
 
-    FONT_SIZE: int = 15
+    FONT_SIZE: int = 32
+    # FONT_NAME: str = "Kenney Mini"
+    # FONT_NAME: str = "Kenney Future"
+    # FONT_NAME: str = "Kenney Pixel Square"
+    # TODO: USELESS --
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 
     SPRITE_SIZE = 32

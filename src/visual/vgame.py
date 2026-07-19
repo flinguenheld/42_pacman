@@ -1,19 +1,21 @@
 import random
 import arcade
-from arcade import SpriteList, Vec2, LBWH
 from arcade.types import Color
+from arcade import SpriteList, Vec2, LBWH
 
 from src.visual.vhud import VHud
+from src.visual.vatlas import VAtlas
 from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
+from src.visual.sprites.swall import SWall
+from src.visual.sprites.sfloor import SFloor
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
     EnemyVariant,
     Johnny,
     Michael,
-    VEntityEnemyCommon
+    VEntityEnemyCommon,
 )
-from src.visual.sprites.vsprite_manager import SpriteManager
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
@@ -23,22 +25,27 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
-    def __init__(self) -> None:
+    def __init__(self, atlas: VAtlas) -> None:
         super().__init__()
         arcade.enable_timings()
 
+        self.atlas = atlas
+        self.setup_done = False
+        arcade.set_background_color(self.atlas.get_color("background"))
+
+        self.process_updates = True
         self.display_hitboxes = False
         self.display_enemy_paths = False
-        self.process_updates = True
-        self.sprite_manager = SpriteManager()
 
-        self.setup_done = False
-        self.setup()
+        self.camera = arcade.Camera2D()
+        self.camera_hud = arcade.Camera2D()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        """Set up the game here. Call this function to restart the game."""
+        """Restart the game."""
+
+        self.setup_done = False
 
         # Game state --
         self.gamestate = VGameState()
@@ -50,10 +57,19 @@ class VGame(arcade.View):
             random.randint(1, 200),
         )
 
+        # Maze sprites --
+        self.walls: SWall = SWall(self.atlas)
+        self.floors: SFloor = SFloor(self.atlas)
+        self.walls.reload(
+            self.maze_gen.walls.union(self.maze_gen.forty_two),
+            self.maze_gen.floors,
+        )
+        self.floors.reload(self.maze_gen.floors)
+
         # HUD --
         self.hud = VHud(
             self.maze_gen,
-            self.sprite_manager.atlas,
+            self.atlas,
             self.gamestate,
         )
 
@@ -66,9 +82,9 @@ class VGame(arcade.View):
 
         # Player --
         self.player: VEntityPlayer = VEntityPlayer(
-            self.sprite_manager.atlas,
+            self.atlas,
             self.maze_gen.floor_center,
-            self.sprite_manager.walls,
+            self.walls,
             self.gamestate,
         )
         self.player_list.append(self.player)
@@ -88,10 +104,10 @@ class VGame(arcade.View):
         for ennemy, floor_corner in zip(ennemies, self.maze_gen.floor_corners):
             self.enemy_list.append(
                 ennemy(
-                    self.sprite_manager.atlas,
+                    self.atlas,
                     floor_corner,
-                    self.sprite_manager.floors,
-                    self.sprite_manager.walls,
+                    self.floors,
+                    self.walls,
                     self.player,
                     self.gamestate,
                     self.maze_gen,
@@ -101,19 +117,19 @@ class VGame(arcade.View):
         # Super pacgums --
         for floor_corner in self.maze_gen.floor_corners:
             self.pacgum_list.append(
-                VEntitySuperPacGum(self.sprite_manager.atlas, floor_corner)
+                VEntitySuperPacGum(self.atlas, floor_corner)
             )
 
         # Pacgums --
         forbbiden = set(self.maze_gen.floor_corners)
         forbbiden.add(Vec2(*self.player.position))
 
-        for floor_sprite in self.sprite_manager.floors.sprites:
+        for floor_sprite in self.floors.sprites:
             if floor_sprite.position not in forbbiden:
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
                     self.pacgum_list.append(
-                        VEntityPacGum(self.sprite_manager.atlas, position)
+                        VEntityPacGum(self.atlas, position)
                     )
 
         self.setup_done = True
@@ -121,15 +137,14 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
-        arcade.set_background_color(self.sprite_manager.background_color)
-        self.reload_current_maze_sprites()
+        self.setup()
+        self.cameras_update()
 
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
         if self.setup_done:
-            self.camera_init()
-            self.camera_zoom()
+            self.cameras_update()
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
@@ -138,24 +153,27 @@ class VGame(arcade.View):
         self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
-        self.maze_gen.build_background()
         self.reload_current_maze_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_current_maze_sprites(self) -> None:
-        self.sprite_manager.reload(self.maze_gen)
-        self.camera_init()
-        self.camera_zoom()
+        if self.setup_done:
+            self.walls.reload(
+                self.maze_gen.walls.union(self.maze_gen.forty_two),
+                self.maze_gen.floors,
+            )
+            self.floors.reload(self.maze_gen.floors)
+            self.cameras_update()
 
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
-        self.clear()
-
         if self.setup_done:
+            self.clear()
             with self.camera.activate():
-                self.sprite_manager.draw()
+                self.walls.draw()
+                self.floors.draw()
                 self.pacgum_list.draw(pixelated=True)
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
@@ -169,7 +187,7 @@ class VGame(arcade.View):
     # ##################################################### DRAW HITBOXES ####
     def _draw_hitboxes(self) -> None:
         if self.display_hitboxes:
-            self.sprite_manager.walls.sprites.draw_hit_boxes(
+            self.walls.sprites.draw_hit_boxes(
                 color=arcade.color.RED, line_thickness=2
             )
             self.pacgum_list.draw_hit_boxes(
@@ -204,19 +222,22 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        if not self.process_updates:
-            return
+        # TODO: Usefull ??
+        super().on_update(delta_time)
 
-        self.enemy_list.update(delta_time)
-        self.player_list.update(delta_time)
-        self.sprite_manager.update(delta_time)
-        self.resolve_player_pacgum_collisions()
+        # QUESTION: IS ok ??
+        if self.setup_done and self.process_updates:
+            self.walls.update(delta_time)
+            self.floors.update(delta_time)
+            self.enemy_list.update(delta_time)
+            self.player_list.update(delta_time)
+            self.resolve_player_pacgum_collisions()
 
-        self.enemy_list.update_animation(delta_time)
-        self.player_list.update_animation(delta_time)
-        self.pacgum_list.update_animation(delta_time)
+            self.enemy_list.update_animation(delta_time)
+            self.player_list.update_animation(delta_time)
+            self.pacgum_list.update_animation(delta_time)
 
-        self.hud.update(delta_time)
+            self.hud.update(delta_time)
 
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
@@ -234,88 +255,89 @@ class VGame(arcade.View):
         # Player movement is handled in the player class.
         # The WASD, ZQSD and arrow keys are reserved for player movement.
 
-        match symbol:
-            case arcade.key.ESCAPE:
-                arcade.exit()
+        if self.setup_done:
+            match symbol:
+                case arcade.key.ESCAPE:
+                    arcade.exit()
 
-            case arcade.key.M:
-                self.window.switch_view(VNames.VIEW_MENU)
-            case arcade.key.P:
-                self.window.switch_view(VNames.VIEW_PAUSE)
+                case arcade.key.M:
+                    self.window.switch_view(VNames.VIEW_WELCOME)
+                case arcade.key.P:
+                    self.window.switch_view(VNames.VIEW_PAUSE)
 
-            case arcade.key.N:
-                self.setup()
-                self.camera_init()
-                self.camera_zoom()
+                case arcade.key.N:
+                    self.setup()
+                    self.cameras_update()
 
-            # TODO: Potentially replace the current pause view with this
-            # for pausing the game?
-            case arcade.key.SPACE:
-                self.process_updates = not self.process_updates
+                # TODO: Potentially replace the current pause view with this
+                # for pausing the game?
+                case arcade.key.SPACE:
+                    self.process_updates = not self.process_updates
 
-            case arcade.key.H:
-                self.display_hitboxes = not self.display_hitboxes
-                self.display_enemy_paths = not self.display_enemy_paths
-                VData.debug_on = not VData.debug_on
+                case arcade.key.H:
+                    self.display_hitboxes = not self.display_hitboxes
+                    self.display_enemy_paths = not self.display_enemy_paths
+                    VData.debug_on = not VData.debug_on
+                case arcade.key.H:
+                    self.display_hitboxes = not self.display_hitboxes
+                    VData.debug_on = not VData.debug_on
+                case _:
+                    pass
 
-            case arcade.key.PLUS:
-                self.camera.zoom += 0.1
-            case arcade.key.MINUS:
-                self.camera.zoom -= 0.1
-            case arcade.key.EQUAL:
-                self.camera.zoom = 1.0
+            # TODO: reimplement style switching feature and change key
+            # elif symbol == arcade.key.S:
+            #     self.sprite_manager.next_style()
+            #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
+            #     arcade.set_background_color(self.sprite_manager.background_color)
 
-            case _:
-                pass
-
-        # TODO: reimplement style switching feature and change key
-        # elif symbol == arcade.key.S:
-        #     self.sprite_manager.next_style()
-        #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-        #     arcade.set_background_color(self.sprite_manager.background_color)
-
-        self.player.on_key_press(symbol, modifiers)
+            self.player.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        self.player.on_key_release(symbol, modifiers)
+        if self.setup_done:
+            self.player.on_key_release(symbol, modifiers)
 
     # ########################################################################
     # ########################################################### CAMERAS ####
-    def camera_init(self) -> None:
-        if self.setup_done:
-            hud_height = self.height / 8
+    def cameras_update(self) -> None:
+        def cameras_setup() -> None:
+            if self.setup_done:
+                hud_height = self.height / 8
 
-            main_rect = LBWH(
-                left=0,
-                bottom=0,
-                width=self.width,
-                height=self.height - hud_height,
-            )
-            hud_rect = LBWH(
-                left=0,
-                bottom=self.height - hud_height,
-                width=self.width,
-                height=hud_height,
-            )
+                main_rect = LBWH(
+                    left=0,
+                    bottom=0,
+                    width=self.width,
+                    height=self.height - hud_height,
+                )
+                hud_rect = LBWH(
+                    left=0,
+                    bottom=self.height - hud_height,
+                    width=self.width,
+                    height=hud_height,
+                )
 
-            self.camera = arcade.Camera2D(main_rect)
-            self.camera.position = self.maze_gen.center_position
+                self.camera = arcade.Camera2D(main_rect)
+                self.camera.position = self.maze_gen.center_position
 
-            self.camera_hud = arcade.Camera2D(hud_rect)
-            self.camera_hud.position = self.hud.center_position
+                self.camera_hud = arcade.Camera2D(hud_rect)
+                self.camera_hud.position = self.hud.center_position
 
-    def camera_zoom(self) -> None:
-        if self.setup_done:
-            scale_hori = (
-                self.camera.viewport.width - VData.CAMERA_MARGIN
-            ) / self.maze_gen.width
-            scale_vert = (
-                self.camera.viewport.height - VData.CAMERA_MARGIN
-            ) / self.maze_gen.height
+        def cameras_zoom() -> None:
+            if self.setup_done:
+                scale_hori = (
+                    self.camera.viewport.width - VData.CAMERA_MARGIN
+                ) / self.maze_gen.width
+                scale_vert = (
+                    self.camera.viewport.height - VData.CAMERA_MARGIN
+                ) / self.maze_gen.height
 
-            zoom = min(scale_hori, scale_vert)
-            if zoom > VData.CAMERA_MAX_ZOOM:
-                zoom = VData.CAMERA_MAX_ZOOM
+                zoom = min(scale_hori, scale_vert)
+                if zoom > VData.CAMERA_MAX_ZOOM:
+                    zoom = VData.CAMERA_MAX_ZOOM
 
-            self.camera.zoom = zoom
-            self.camera_hud.zoom = zoom
+                self.camera.zoom = zoom
+                self.camera_hud.zoom = zoom
+
+        # --
+        cameras_setup()
+        cameras_zoom()

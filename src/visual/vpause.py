@@ -80,4 +80,4 @@ class VPause(arcade.View):
             self.window.switch_view(VNames.VIEW_GAME)
 
         elif symbol in [arcade.key.Q, arcade.key.M]:
-            self.window.switch_view(VNames.VIEW_MENU)
+            self.window.switch_view(VNames.VIEW_WELCOME)
