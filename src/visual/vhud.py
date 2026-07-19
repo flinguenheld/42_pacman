@@ -43,32 +43,36 @@ class VHud:
     # ############################################################# SETUP ####
     def build_fields(self) -> None:
         self.font_size = VData.SPRITE_SIZE * 0.6
-        self.y_text_line = VHud.OFFSET + VData.SPRITE_SIZE / 1.5
+        self.y_text_line = VHud.OFFSET + VData.SPRITE_SIZE
 
         self.add_field(
             entry_name="score",
             icon_name="score_hud",
-            x=VHud.OFFSET + VData.SPRITE_SIZE,
+            x=VHud.OFFSET + VData.SPRITE_SIZE * 2.5,
+            anchor_x="left",
             color=self.atlas.get_color("hud_font"),
         )
 
         self.add_field(
             entry_name="lives",
             icon_name="heart_hud",
-            x=VHud.OFFSET + self.maze.width - VData.SPRITE_SIZE * 3.5,
+            x=VHud.OFFSET + self.maze.width - VData.SPRITE_SIZE * 2.5,
+            anchor_x="right",
             color=self.atlas.get_color("hud_font"),
         )
 
         self.add_field(
             entry_name="timer",
             icon_name=None,
-            x=VHud.OFFSET + self.maze.width / 2 - self.font_size * 4,
+            x=VHud.OFFSET + self.maze.width / 2,
+            anchor_x="center",
             color=self.atlas.get_color("hud_font"),
         )
         self.add_field(
             entry_name="fps",
             icon_name=None,
-            x=VHud.OFFSET + self.maze.width / 4 - self.font_size * 4,
+            x=VHud.OFFSET + self.maze.width / 4,
+            anchor_x="center",
             color=self.atlas.get_color("hud_font_debug"),
             debug=True,
         )
@@ -78,35 +82,44 @@ class VHud:
     def add_field(
         self,
         x: float,
+        anchor_x: str,
         color: Color,
         entry_name: str,
         icon_name: str | None,
         debug: bool = False,
     ) -> None:
-
-        # Icon --
-        if icon_name:
-            tile = self.atlas.pick_tile(icon_name)
-            self.icons.append(
-                self.atlas.tile_to_sprite(
-                    tile,
-                    Vec2(
-                        x + VData.SPRITE_SIZE / 2,
-                        self.y_text_line + VData.SPRITE_SIZE / 4,
-                    ),
-                )
-            )
-
         # Field --
         container = self.fields_debug if debug else self.fields
         container[entry_name] = Text(
             text="Hello",
-            x=x + VData.SPRITE_SIZE * 1.2,
-            y=self.y_text_line,
-            font_size=self.font_size,
+            align=anchor_x,
+            anchor_x=anchor_x,
+            anchor_y="center",
+            font_size=self.atlas.font_size,
+            font_name=self.atlas.font_name,
+            x=x,
+            y=self.y_text_line + 2,
             color=color,
-            bold=True,
         )
+
+        # Icon --
+        text_width = container[entry_name].content_width
+        if icon_name:
+            match anchor_x:
+                case "left":
+                    x = x - VData.SPRITE_SIZE / 1.3
+                case "center":
+                    x = x - text_width / 2 - VData.SPRITE_SIZE
+                case _:
+                    x = x + VData.SPRITE_SIZE / 1.3
+
+            tile = self.atlas.pick_tile(icon_name)
+            self.icons.append(
+                self.atlas.tile_to_sprite(
+                    tile,
+                    Vec2(x, self.y_text_line - 2),
+                )
+            )
 
     # ########################################################################
     # ############################################################## DRAW ####

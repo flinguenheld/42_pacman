@@ -34,7 +34,11 @@ class VData:
 
     debug_on: bool = False
 
-    FONT_SIZE: int = 15
+    FONT_SIZE: int = 32
+    # FONT_NAME: str = "Kenney Mini"
+    # FONT_NAME: str = "Kenney Future"
+    # FONT_NAME: str = "Kenney Pixel Square"
+    # TODO: USELESS --
     FONT_SIZE_TITLE: int = FONT_SIZE * 3
 
     SPRITE_SIZE = 32

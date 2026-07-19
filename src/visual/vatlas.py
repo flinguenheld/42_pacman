@@ -233,6 +233,16 @@ class VAtlas:
         return Color(**self.info["colors"][name])
 
     # ########################################################################
+    # ############################################################## FONT ####
+    @property
+    def font_name(self) -> str:
+        return self.info["font"]["name"]
+
+    @property
+    def font_size(self) -> int:
+        return self.info["font"]["size"]
+
+    # ########################################################################
     # ######################################################### PICK TILE ####
     def pick_tile(self, name: str, randomly: bool = True) -> VTile:
         """
