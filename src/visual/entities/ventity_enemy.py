@@ -55,7 +55,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
     # ########################################################################
     # ############################################################# SPEED ####
-    def get_speed(self) -> int:
+    def get_speed(self) -> float:
         return self.gamestate.enemy_speed
 
     def get_target_sprite(self) -> Sprite:

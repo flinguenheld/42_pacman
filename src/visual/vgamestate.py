@@ -7,8 +7,8 @@ class VGameState:
     _score: int = 0
     _lives: int = 3
 
-    _player_speed: int = 40
-    _enemy_speed: int = 15
+    _player_speed: float = 40.0
+    _enemy_speed: float = 15.0
 
     time_start: float = time.time()
 
@@ -31,9 +31,9 @@ class VGameState:
         return self._lives <= 0
 
     @property
-    def player_speed(self) -> int:
+    def player_speed(self) -> float:
         return self._player_speed
 
     @property
-    def enemy_speed(self) -> int:
+    def enemy_speed(self) -> float:
         return self._enemy_speed
