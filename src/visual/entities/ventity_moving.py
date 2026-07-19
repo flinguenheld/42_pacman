@@ -1,8 +1,45 @@
+from enum import Enum
+
 import arcade
 from arcade import Sprite, SpriteList, Vec2
 
 from src.visual.vatlas import VAtlas
 from src.visual.entities.ventity import VEntity
+
+
+class VEntityDirection(Enum):
+    """
+    Enum representing the possible movement directions for an entity.
+    """
+
+    WAIT = "wait"
+    TOP = "top"
+    RIGHT = "right"
+    BOT = "bot"
+    LEFT = "left"
+
+    @staticmethod
+    def get_direction_from_vector(vector: Vec2) -> "VEntityDirection":
+        """
+        Takes a non-normalized vector as input and returns the corresponding
+        entity direction.
+        If the vector does not correspond to any direction,
+        returns VEntityDirection.WAIT.
+        """
+
+        # Threshold to avoid detecting small movements.
+        # Like an enemy slightly adjusting its position in the maze.
+        minimal_threshold = 0.9
+        if vector.y > minimal_threshold:
+            return VEntityDirection.TOP
+        if vector.x > minimal_threshold:
+            return VEntityDirection.RIGHT
+        elif vector.y < -minimal_threshold:
+            return VEntityDirection.BOT
+        elif vector.x < -minimal_threshold:
+            return VEntityDirection.LEFT
+        else:
+            return VEntityDirection.WAIT
 
 
 # ░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀░░
@@ -27,35 +64,35 @@ class VEntityMoving(VEntity):
         self._change_y = 0.0
 
         # Texture helpers --
-        self._current_direction = "wait"
-        self._requested_direction = "wait"
+        self._current_direction = VEntityDirection.WAIT
 
     # ########################################################################
     # #################################################### UPDATE TEXTURE ####
     def update_texture(self) -> None:
         """
-        Change the animation according to the request.
-        Avoid useless changes.
-        Has to be called after 'change_x' and 'change_y' updates.
+        Change the texture of the entity based on its current
+        movement direction.
+        Has to be called at the end of the update method of the entity,
+        after the change_x and change_y values have been updated.
         """
-        # TODO: Maybe replace this whole system of setting
-        # a requested direction and then updating the texture
-        # with a more direct approach?
-        # Like removing the change_x and change_y properties
-        # and just compute the direction based on these values in this method.
-        # This is just an idea
-        if self._current_direction != self._requested_direction:
-            # print(f"up the animation to {self._requested_direction}")
+        # QUESTION: What do you think of that?
+        # I think this is a better approach
+        requested_direction = VEntityDirection.get_direction_from_vector(
+            Vec2(self.change_x, self.change_y)
+        )
+
+        if self._current_direction != requested_direction:
+            # print(f"update the animation to {requested_direction}")
 
             new_tile = self._atlas.textures[
-                f"{self._sprite_name}_{self._requested_direction}"
+                f"{self._sprite_name}_{requested_direction.value}"
             ][0]
 
             if not isinstance(new_tile.texture, arcade.TextureAnimation):
                 raise ValueError("The given texture has to be animated.")
 
             self.animation = new_tile.texture
-            self._current_direction = self._requested_direction
+            self._current_direction = requested_direction
 
     def get_closest_sprite(self, sprite_list: SpriteList[Sprite]) -> Sprite:
         closest_sprite_result = arcade.get_closest_sprite(self, sprite_list)
@@ -70,42 +107,3 @@ class VEntityMoving(VEntity):
     def apply_delta_time(self, speed: float, delta_time: float) -> float:
         multiplier = 500.0
         return speed * multiplier * delta_time
-
-    # ########################################################################
-    # ########################################################## CHANGE X ####
-    @property
-    def change_x(self) -> float:
-        return self._change_x
-
-    @change_x.setter
-    def change_x(self, new_value: float) -> None:
-
-        if new_value != self.change_x:
-            match new_value:
-                case 0:
-                    self._requested_direction = "wait"
-                case v if v > 0:
-                    self._requested_direction = "right"
-                case _:
-                    self._requested_direction = "left"
-
-            self._change_x = new_value
-
-    # ########################################################################
-    # ########################################################## CHANGE Y ####
-    @property
-    def change_y(self) -> float:
-        return self._change_y
-
-    @change_y.setter
-    def change_y(self, new_value: float) -> None:
-        if new_value != self.change_y:
-            match new_value:
-                case 0:
-                    self._requested_direction = "wait"
-                case v if v > 0:
-                    self._requested_direction = "top"
-                case _:
-                    self._requested_direction = "bot"
-
-            self._change_y = new_value
