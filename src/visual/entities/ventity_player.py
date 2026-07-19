@@ -9,7 +9,7 @@ from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.vgamestate import VGameState
 
 
-class VPlayerDirections(Enum):
+class VPlayerDirection(Enum):
     """
     Enum representing the possible movement directions for the player.
     """
@@ -20,16 +20,16 @@ class VPlayerDirections(Enum):
     RIGHT = auto()
 
     @staticmethod
-    def return_action_from_key(symbol: int) -> "VPlayerDirections | None":
+    def return_direction_from_key(symbol: int) -> "VPlayerDirection | None":
         """
         Takes a key as input and returns the corresponding player direction.
         If the key does not correspond to any direction, returns None.
         """
-        valid_keys: dict["VPlayerDirections", list[int]] = {
-            VPlayerDirections.UP: [key.UP, key.W, key.Z],
-            VPlayerDirections.LEFT: [key.LEFT, key.A, key.Q],
-            VPlayerDirections.DOWN: [key.DOWN, key.S],
-            VPlayerDirections.RIGHT: [key.RIGHT, key.D],
+        valid_keys: dict["VPlayerDirection", list[int]] = {
+            VPlayerDirection.UP: [key.UP, key.W, key.Z],
+            VPlayerDirection.LEFT: [key.LEFT, key.A, key.Q],
+            VPlayerDirection.DOWN: [key.DOWN, key.S],
+            VPlayerDirection.RIGHT: [key.RIGHT, key.D],
         }
         for direction, keys in valid_keys.items():
             if symbol in keys:
@@ -41,13 +41,13 @@ class VPlayerDirections(Enum):
         Returns the vector representation of the direction.
         """
         match self:
-            case VPlayerDirections.UP:
+            case VPlayerDirection.UP:
                 return Vec2(0, 1)
-            case VPlayerDirections.LEFT:
+            case VPlayerDirection.LEFT:
                 return Vec2(-1, 0)
-            case VPlayerDirections.DOWN:
+            case VPlayerDirection.DOWN:
                 return Vec2(0, -1)
-            case VPlayerDirections.RIGHT:
+            case VPlayerDirection.RIGHT:
                 return Vec2(1, 0)
 
 
@@ -70,7 +70,7 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.current_directions: set[VPlayerDirections] = set()
+        self.current_directions: set[VPlayerDirection] = set()
         self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
 
     def get_direction_vector(self) -> Vec2:
@@ -144,11 +144,11 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################ ON KEY ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        direction = VPlayerDirections.return_action_from_key(symbol)
+        direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
             self.current_directions.add(direction)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        direction = VPlayerDirections.return_action_from_key(symbol)
+        direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
             self.current_directions.discard(direction)
