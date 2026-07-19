@@ -10,7 +10,7 @@ from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
-from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirections
+from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 from src.visual.entities.ventity_moving import VEntityMoving
 
 
@@ -48,7 +48,7 @@ class VEntityEnemyCommon(VEntityMoving):
     # ############################################################# SETUP ####
     def setup(self) -> None:
         self.dummy_target_sprite = Sprite()
-        self.last_player_direction: Vec2 = VPlayerDirections.UP.get_vector()
+        self.last_player_direction: Vec2 = VPlayerDirection.UP.get_vector()
 
         self.update_closest_floor()
         self.update_next_position()
