@@ -22,7 +22,7 @@ class VWelcome(GWindow):
                 atlas=atlas,
                 width=800,
                 height=800,
-                separators=[400],
+                separators=[480],
             ),
         )
 
@@ -48,7 +48,7 @@ class VWelcome(GWindow):
                     args=[],
                 ),
             },
-            Vec2(400, 650),
+            Vec2(400, 700),
         )
 
     # ########################################################################

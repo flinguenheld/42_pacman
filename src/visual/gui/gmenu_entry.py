@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 
 from typing import Callable, Any
 from dataclasses import dataclass
@@ -52,17 +53,20 @@ class GMenuEntry:
 
         # Icons --
         shift = self.text.content_width / 2 + VData.SPRITE_SIZE
+        tile_name = random.choice(
+            ["player", "enemy_0", "enemy_1", "enemy_2", "enemy_3"],
+        )
 
         self.icons: SpriteList = SpriteList()
-        tile = self.atlas.pick_tile("player_wait")
+        tile = self.atlas.pick_tile(f"{tile_name}_right")
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(center.x - shift, center.y - 5),
+                Vec2(center.x - shift - 5, center.y - 5),
             )
         )
 
-        tile = self.atlas.pick_tile("player_wait")
+        tile = self.atlas.pick_tile(f"{tile_name}_left")
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
