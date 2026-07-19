@@ -50,21 +50,16 @@ class VGame(arcade.View):
         # Game state --
         self.gamestate = VGameState()
 
+        # Maze spritelists --
+        self.walls: SWall = SWall(self.atlas)
+        self.floors: SFloor = SFloor(self.atlas)
+
         # Maze --
         self.new_maze(
             random.randint(10, 20),
             random.randint(5, 20),
             random.randint(1, 200),
         )
-
-        # Maze sprites --
-        self.walls: SWall = SWall(self.atlas)
-        self.floors: SFloor = SFloor(self.atlas)
-        self.walls.reload(
-            self.maze_gen.walls.union(self.maze_gen.forty_two),
-            self.maze_gen.floors,
-        )
-        self.floors.reload(self.maze_gen.floors)
 
         # HUD --
         self.hud = VHud(
@@ -153,18 +148,17 @@ class VGame(arcade.View):
         self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze_gen.build_walls()
         self.maze_gen.build_floors()
-        self.reload_current_maze_sprites()
+        self.reload_maze_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
-    def reload_current_maze_sprites(self) -> None:
-        if self.setup_done:
-            self.walls.reload(
-                self.maze_gen.walls.union(self.maze_gen.forty_two),
-                self.maze_gen.floors,
-            )
-            self.floors.reload(self.maze_gen.floors)
-            self.cameras_update()
+    def reload_maze_sprites(self) -> None:
+        self.walls.reload(
+            self.maze_gen.walls.union(self.maze_gen.forty_two),
+            self.maze_gen.floors,
+        )
+        self.floors.reload(self.maze_gen.floors)
+        self.cameras_update()
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -222,10 +216,6 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        # TODO: Usefull ??
-        super().on_update(delta_time)
-
-        # QUESTION: IS ok ??
         if self.setup_done and self.process_updates:
             self.walls.update(delta_time)
             self.floors.update(delta_time)
