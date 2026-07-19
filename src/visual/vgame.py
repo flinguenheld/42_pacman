@@ -11,6 +11,7 @@ from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
+    Charlie,
     EnemyVariant,
     Johnny,
     Michael,
@@ -92,7 +93,7 @@ class VGame(arcade.View):
         ] = (
             Johnny,
             Michael,
-            Johnny,
+            Charlie,
             Michael,
         )
         # Enemies --

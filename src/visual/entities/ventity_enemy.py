@@ -155,6 +155,9 @@ class VEntityEnemyCommon(VEntityMoving):
         self.center_y += self.change_y
 
 
+type EnemyVariant = type["Johnny | Michael | Charlie"]
+
+
 class Johnny(VEntityEnemyCommon):
     """
     Johnny is a simple enemy that follows the player directly.
@@ -250,4 +253,76 @@ class Michael(VEntityEnemyCommon):
         return target_sprite
 
 
-type EnemyVariant = type[Johnny | Michael]
+class Charlie(VEntityEnemyCommon):
+    """
+    Charlie is a creepy enemy that follows the player, but 2 seconds behind.
+    He is faster than other ennemies, but a bit slower than the player,
+    and will try to follow the player's movements,
+    but with a delay of 2 seconds.
+    """
+
+    def __init__(
+        self,
+        atlas: VAtlas,
+        position: Vec2,
+        floors: SFloor,
+        walls: SWall,
+        player: VEntityPlayer,
+        gamestate: VGameState,
+        maze_gen: Maze,
+    ) -> None:
+        id = 2
+
+        self.player_movement_buffer: list[Vec2] = []
+        self.max_buffer_size: int = int(2.0 * 60.0)  # 2 seconds at 60 FPS
+        super().__init__(
+            id,
+            atlas,
+            position,
+            floors,
+            walls,
+            player,
+            gamestate,
+            maze_gen,
+        )
+
+    def get_speed(self) -> float:
+        # Charlie is slightly slower than the player
+        return self.player.get_speed() * 0.7
+
+    def update_player_movement_buffer(self) -> None:
+        """
+        Updates the player movement buffer with the player's current position.
+        If the buffer has more than 2 seconds worth of positions, it pops the
+        oldest position.
+        """
+        self.player_movement_buffer.append(Vec2(*self.player.position))
+        if len(self.player_movement_buffer) > self.max_buffer_size:
+            self.player_movement_buffer.pop(0)
+
+    def update(self, delta_time: float = 1 / 60) -> None:
+        self.update_player_movement_buffer()
+        return super().update(delta_time)
+
+    def get_target_sprite(self) -> Sprite:
+        if not self.player_movement_buffer:
+            # If the buffer is empty, just return the player's
+            # current position.
+            target_pos = Vec2(*self.player.position)
+        else:
+            # Get the oldest position in the buffer, which is
+            # probably 2 seconds behind.
+            target_pos = self.player_movement_buffer[0]
+
+        self.dummy_target_sprite.position = target_pos
+        target_sprite_result = arcade.get_closest_sprite(
+            self.dummy_target_sprite, self.floors.sprites
+        )
+        _error_msg = (
+            "Could not find a closest sprite for "
+            f"{self.dummy_target_sprite} in {self.floors.sprites}."
+        )
+        assert target_sprite_result is not None, _error_msg
+        (target_sprite, _) = target_sprite_result
+
+        return target_sprite
