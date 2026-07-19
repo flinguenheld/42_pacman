@@ -1,93 +1,47 @@
-from src.visual.vdata import VData
-from arcade import Vec2, Text, SpriteList
+import arcade
+from arcade import Vec2
+
 from src.visual.vatlas import VAtlas
+from src.visual.gui.gmenu_entry import GMenuEntry
 
 
-class GEntry:
-    def __init__(self, atlas: VAtlas, text: str, center: Vec2):
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▄█░█▀▀░█▀█░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░█░█▀▀░█░█░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░░
+class GMenu:
+    """
+    Manage a simple menu which displays texts and manage the keyboard actions.
+    Give a dict of GMenuEntry.ToCall and the position of the text on the top.
+    """
 
+    def __init__(
+        self,
+        atlas: VAtlas,
+        choices: dict[str, GMenuEntry.ToCall],
+        center_top_first: Vec2,
+    ) -> None:
         self.atlas = atlas
-        self.active = False
 
-        # Text --
-        self.text = Text(
-            text=text,
-            x=center.x,
-            y=center.y,
-            font_name=self.atlas.font_name,
-            font_size=self.atlas.font_size,
-            align="center",
-            anchor_x="center",
-            anchor_y="center",
-            color=atlas.get_color("menu_font"),
-        )
-
-        # Icons --
-        shift = self.text.content_width / 2 + VData.SPRITE_SIZE
-
-        self.icons = SpriteList()
-        tile = self.atlas.pick_tile("player_wait")
-        self.icons.append(
-            self.atlas.tile_to_sprite(
-                tile,
-                Vec2(center.x - shift, center.y - 5),
+        self.choices = []
+        for to_print, to_call in choices.items():
+            new_entry = GMenuEntry(
+                self.atlas,
+                to_print,
+                to_call,
+                center=center_top_first,
             )
-        )
 
-        tile = self.atlas.pick_tile("player_wait")
-        self.icons.append(
-            self.atlas.tile_to_sprite(
-                tile,
-                Vec2(center.x + shift, center.y - 5),
+            center_top_first -= Vec2(
+                0, atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.5
             )
-        )
+            self.choices.append(new_entry)
 
-    # ########################################################################
-    # ##################################################### TOGGLE ACTIVE ####
-    def set_active(self, value: bool) -> None:
-        self.active = value
+        self.current = 1
+        self.next_up()
 
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
-        self.text.draw()
-
-        if self.active:
-            self.icons.draw(pixelated=True)
-
-    # ########################################################################
-    # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
-        self.icons.update_animation(delta_time)
-
-
-class GMenu:
-    def __init__(
-        self,
-        atlas: VAtlas,
-        choices: list[str],
-        center_top_first: Vec2,
-    ):
-        self.atlas = atlas
-
-        self.choices = []
-
-        for choice in choices:
-            new_entry = GEntry(self.atlas, choice, center=center_top_first)
-            center_top_first -= Vec2(0, VData.FONT_SIZE * 1.6)
-            self.choices.append(new_entry)
-
-    # ########################################################################
-    # ############################################################## NEXT ####
-    def next_up(self):
-        pass
-
-    def next_down(self):
-        pass
-
-    # ########################################################################
-    # ############################################################## DRAW ####
-    def draw(self):
         for choice in self.choices:
             choice.draw()
 
@@ -96,3 +50,26 @@ class GMenu:
     def update(self, delta_time: int | float) -> None:
         for choice in self.choices:
             choice.update(delta_time)
+
+    # ########################################################################
+    # ####################################################### KEY PRESSED ####
+    def key_press(self, symbol: int) -> None:
+        match symbol:
+            case arcade.key.UP | arcade.key.Z | arcade.key.W | arcade.key.L:
+                self.next_up()
+            case arcade.key.DOWN | arcade.key.S | arcade.key.K:
+                self.next_down()
+            case arcade.key.ENTER | arcade.key.NUM_ENTER:
+                self.choices[self.current].call_action()
+
+    # ########################################################################
+    # ######################################################### UP / DOWN ####
+    def next_up(self) -> None:
+        self.choices[self.current].active = False
+        self.current = (self.current - 1) % len(self.choices)
+        self.choices[self.current].active = True
+
+    def next_down(self) -> None:
+        self.choices[self.current].active = False
+        self.current = (self.current + 1) % len(self.choices)
+        self.choices[self.current].active = True

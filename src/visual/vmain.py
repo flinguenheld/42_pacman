@@ -1,10 +1,11 @@
-from src.visual.vatlas import VAtlas
 import arcade
-from src.visual.vgame import VGame
-from src.visual.vmenu import VMenu
-from src.visual.vpause import VPause
 from mazegenerator import MazeGenerator
+
+from src.visual.vgame import VGame
+from src.visual.vpause import VPause
+from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
+from src.visual.views.vwelcome import VWelcome
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░█▀█░▀█▀░█▀█░░
@@ -28,7 +29,7 @@ class VMain(arcade.Window):
         self.atlas = VAtlas()
         self.atlas.load()
 
-        self.vmenu = VMenu(self.atlas)
+        self.vwelcome = VWelcome(self.atlas)
         self.vgame = VGame(self.atlas)
 
         self.setup()
@@ -36,16 +37,14 @@ class VMain(arcade.Window):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        """Set up the game here. Call this function to restart the game."""
-        # pass
-        self.show_view(self.vmenu)
+        self.show_view(self.vwelcome)
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
     def switch_view(self, to: VNames) -> None:
         match to:
-            case VNames.VIEW_MENU:
-                self.show_view(self.vmenu)
+            case VNames.VIEW_WELCOME:
+                self.show_view(self.vwelcome)
             case VNames.VIEW_GAME:
                 self.show_view(self.vgame)
             case VNames.VIEW_PAUSE:

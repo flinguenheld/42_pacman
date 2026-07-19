@@ -8,7 +8,7 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░█░█░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
-    VIEW_MENU = 0
+    VIEW_WELCOME = 0
     VIEW_GAME = 1
     VIEW_PAUSE = 2
 

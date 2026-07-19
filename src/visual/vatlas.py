@@ -236,11 +236,11 @@ class VAtlas:
     # ############################################################## FONT ####
     @property
     def font_name(self) -> str:
-        return self.info["font"]["name"]
+        return str(self.info["font"]["name"])
 
     @property
     def font_size(self) -> int:
-        return self.info["font"]["size"]
+        return int(self.info["font"]["size"])
 
     # ########################################################################
     # ######################################################### PICK TILE ####

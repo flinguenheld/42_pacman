@@ -219,7 +219,7 @@ class VGame(arcade.View):
                     arcade.exit()
 
                 case arcade.key.M:
-                    self.window.switch_view(VNames.VIEW_MENU)
+                    self.window.switch_view(VNames.VIEW_WELCOME)
                 case arcade.key.P:
                     self.window.switch_view(VNames.VIEW_PAUSE)
 
