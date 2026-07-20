@@ -1,4 +1,4 @@
-from enum import Enum
+from typing import Literal
 
 import arcade
 from arcade import Sprite, SpriteList, Vec2
@@ -7,39 +7,7 @@ from src.visual.vatlas import VAtlas
 from src.visual.entities.ventity import VEntity
 
 
-class VEntityDirection(Enum):
-    """
-    Enum representing the possible movement directions for an entity.
-    """
-
-    WAIT = "wait"
-    TOP = "top"
-    RIGHT = "right"
-    BOT = "bot"
-    LEFT = "left"
-
-    @staticmethod
-    def get_direction_from_vector(vector: Vec2) -> "VEntityDirection":
-        """
-        Takes a non-normalized vector as input and returns the corresponding
-        entity direction.
-        If the vector does not correspond to any direction,
-        returns VEntityDirection.WAIT.
-        """
-
-        # Threshold to avoid detecting small movements.
-        # Like an enemy slightly adjusting its position in the maze.
-        minimal_threshold = 0.9
-        if vector.y > minimal_threshold:
-            return VEntityDirection.TOP
-        if vector.x > minimal_threshold:
-            return VEntityDirection.RIGHT
-        elif vector.y < -minimal_threshold:
-            return VEntityDirection.BOT
-        elif vector.x < -minimal_threshold:
-            return VEntityDirection.LEFT
-        else:
-            return VEntityDirection.WAIT
+type EntityDirection = Literal["wait", "top", "right", "bot", "left"]
 
 
 # ░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▄█░█▀█░█░█░█▀▀░█▄█░█▀▀░█▀█░▀█▀░░
@@ -64,7 +32,29 @@ class VEntityMoving(VEntity):
         self._change_y = 0.0
 
         # Texture helpers --
-        self._current_direction = VEntityDirection.WAIT
+        self._current_direction: EntityDirection = "wait"
+
+    def get_direction_from_vector(self, vector: Vec2) -> EntityDirection:
+        """
+        Takes a non-normalized vector as input and returns the corresponding
+        entity direction ("top", "right", "bot", "left").
+        If the vector does not correspond to any direction,
+        returns "wait".
+        """
+
+        # Threshold to avoid detecting small movements.
+        # Like an enemy slightly adjusting its position in the maze.
+        minimal_threshold = 0.9
+        if vector.y > minimal_threshold:
+            return "top"
+        if vector.x > minimal_threshold:
+            return "right"
+        elif vector.y < -minimal_threshold:
+            return "bot"
+        elif vector.x < -minimal_threshold:
+            return "left"
+        else:
+            return "wait"
 
     # ########################################################################
     # #################################################### UPDATE TEXTURE ####
@@ -77,7 +67,7 @@ class VEntityMoving(VEntity):
         """
         # QUESTION: What do you think of that?
         # I think this is a better approach
-        requested_direction = VEntityDirection.get_direction_from_vector(
+        requested_direction = self.get_direction_from_vector(
             Vec2(self.change_x, self.change_y)
         )
 
@@ -85,7 +75,7 @@ class VEntityMoving(VEntity):
             # print(f"update the animation to {requested_direction}")
 
             new_tile = self._atlas.textures[
-                f"{self._sprite_name}_{requested_direction.value}"
+                f"{self._sprite_name}_{requested_direction}"
             ][0]
 
             if not isinstance(new_tile.texture, arcade.TextureAnimation):
