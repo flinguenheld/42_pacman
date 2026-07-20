@@ -80,7 +80,7 @@ class VEntityEnemyCommon(VEntityMoving):
             return
         self.path = path
 
-    def should_recompute_path(self) -> bool:
+    def should_recalculate_path(self) -> bool:
         if (
             self.next_position
             and self.next_position == self.closest_floor.position
@@ -88,17 +88,24 @@ class VEntityEnemyCommon(VEntityMoving):
             return False
         if not self.path or len(self.path) < 2 or not self.target_sprite:
             return True
+        current_player_direction = self.player.get_direction_vector()
+        if (
+            current_player_direction != Vec2(0, 0)
+            and current_player_direction != self.last_player_direction
+        ):
+            return True
         distance_to_player_from_target_sprite = (
             arcade.get_distance_between_sprites(
                 self.target_sprite, self.player
             )
         )
-        if distance_to_player_from_target_sprite > (1.0 * VData.SPRITE_SIZE):
+        distance_threshold = 2.0 * VData.SPRITE_SIZE
+        if distance_to_player_from_target_sprite > distance_threshold:
             return True
         return False
 
     def update_next_position(self) -> None:
-        if self.should_recompute_path():
+        if self.should_recalculate_path():
             self.calculate_path()
         if not self.path:
             self.next_position = None
@@ -135,6 +142,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
         self.apply_velocity()
         self.update_texture()
+        self.update_last_player_direction()
 
     def update_velocity(self, delta_time: float) -> None:
         if not self.next_position:
@@ -153,6 +161,11 @@ class VEntityEnemyCommon(VEntityMoving):
     def apply_velocity(self) -> None:
         self.center_x += self.change_x
         self.center_y += self.change_y
+
+    def update_last_player_direction(self) -> None:
+        player_direction_vector = self.player.get_direction_vector()
+        if player_direction_vector != Vec2(0, 0):
+            self.last_player_direction = player_direction_vector
 
 
 type EnemyVariant = type["Johnny | Michael | Charlie"]
@@ -232,12 +245,12 @@ class Michael(VEntityEnemyCommon):
         )
 
     def get_target_sprite(self) -> Sprite:
-        dir = self.player.get_direction_vector()
-        if dir == Vec2(0, 0):
-            dir = self.last_player_direction
-        else:
-            self.last_player_direction = dir
-        target_pos = self.player.position + (dir * 3.0 * VData.SPRITE_SIZE)
+        player_direction = self.last_player_direction
+        # 3 tiles ahead of the player
+        distance_threshold = 3.0 * VData.SPRITE_SIZE
+        target_pos = self.player.position + (
+            player_direction * distance_threshold
+        )
 
         self.dummy_target_sprite.position = target_pos
         target_sprite_result = arcade.get_closest_sprite(
