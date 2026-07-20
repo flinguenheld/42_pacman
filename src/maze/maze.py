@@ -6,66 +6,35 @@ from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
 
 
-class MazeRENAME:
-    def __init__(self, raw_maze: list[list[int]]):
-        pass
-
-
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█▀▄░█▀█░█▄█░█▀▀░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀▄░█▀█░█░█░█▀▀░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀░▀░▀░▀░▀▀▀░░
-class GFrame:
-    """
-    Manage an area of sprites to display a frame.
-    """
-
-    def __init__(
-        self,
-        atlas: VAtlas,
-        nb_cols: int = 10,
-        nb_rows: int = 10,
-        bot_left: Vec2 = Vec2(0, 0),
-        separators: list[int] = [],
-    ) -> None:
-
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░
+class Maze:
+    def __init__(self, atlas: VAtlas, raw_maze: list[list[int]]) -> None:
+        self.raw_maze = raw_maze
         self.atlas = atlas
 
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
 
-        # TODO: KILL THAT
-        self.separators = separators
-
-        self.raw_maze: list[list[int]] = []
-        for y in range(nb_rows):
-            row: list[int] = []
-            for x in range(nb_cols):
-                if x == 0 or x == nb_cols - 1:
-                    row.append(0)
-                elif y == 0 or y == nb_rows - 1:
-                    row.append(0)
-                else:
-                    row.append(1)
-
-            self.raw_maze.append(row)
-
-        self._build(bot_left)
-
     # ########################################################################
     # ############################################################# SETUP ####
-    def _build(self, offset: Vec2) -> None:
+    def build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
 
         sprite_size = VData.SPRITE_SIZE
-        for y, row in enumerate(reversed(self.raw_maze)):
+        # QUESTION: WHY REVERSED ????????????????????????????????????
+        # QUESTION: WHY REVERSED ????????????????????????????????????
+        # for y, row in enumerate(reversed(self.raw_maze)):
+        for y, row in enumerate(self.raw_maze):
             for x, value in enumerate(row):
                 point = Vec2(
                     x * sprite_size + offset.x,
                     y * sprite_size + offset.y,
                 )
 
-                if value == 0:
+                if value == 1:
                     wall_points.add(point)
                 else:
                     floor_points.add(point)
@@ -102,3 +71,11 @@ class GFrame:
     @property
     def width(self) -> int:
         return self.walls.width
+
+    @property
+    def floor_center(self) -> Vec2:
+        return self.floors.sprite_center
+
+    @property
+    def floor_corners(self) -> list[Vec2]:
+        return self.floors.sprites_corners

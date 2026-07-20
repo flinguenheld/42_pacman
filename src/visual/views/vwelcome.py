@@ -20,8 +20,8 @@ class VWelcome(GWindow):
             title=GTitlePacman(atlas),
             frame=GFrame(
                 atlas=atlas,
-                width=800,
-                height=800,
+                nb_rows=20,
+                nb_cols=25,
                 separators=[480],
             ),
         )

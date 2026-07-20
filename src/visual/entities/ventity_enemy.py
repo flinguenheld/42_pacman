@@ -1,17 +1,17 @@
-from arcade import Sprite, Vec2
 import arcade
 from arcade.types import Point2
+from arcade import Sprite, Vec2
 
-from src.visual.pathfinding import PathfindingAlgorithm
-from src.visual.pathfinding.astar import AStarSearch
+from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
-from src.maze.maze_wrapper import Maze
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
-from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirections
+from src.visual.pathfinding.astar import AStarSearch
+from src.visual.pathfinding import PathfindingAlgorithm
 from src.visual.entities.ventity_moving import VEntityMoving
+from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirections
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░

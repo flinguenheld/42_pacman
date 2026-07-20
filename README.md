@@ -41,7 +41,7 @@ Ghosts! More ghosts!
     - [ ] Main menu
       - [ ] Display highscore
       - [ ] Instructions
-      - [ ] Exit
+      - [X] Exit
 
   - [ ] Options menu ? (Not required)
 

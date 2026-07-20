@@ -3,12 +3,10 @@ import arcade
 from arcade.types import Color
 from arcade import SpriteList, Vec2, LBWH
 
+from src.maze.maze import Maze
 from src.visual.vhud import VHud
 from src.visual.vatlas import VAtlas
-from src.maze.maze_wrapper import Maze
 from src.visual.vdata import VNames, VData
-from src.visual.sprites.swall import SWall
-from src.visual.sprites.sfloor import SFloor
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
     EnemyVariant,
@@ -16,6 +14,7 @@ from src.visual.entities.ventity_enemy import (
     Michael,
     VEntityEnemyCommon,
 )
+from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
@@ -50,10 +49,6 @@ class VGame(arcade.View):
         # Game state --
         self.gamestate = VGameState()
 
-        # Maze spritelists --
-        self.walls: SWall = SWall(self.atlas)
-        self.floors: SFloor = SFloor(self.atlas)
-
         # Maze --
         self.new_maze(
             random.randint(10, 20),
@@ -63,7 +58,7 @@ class VGame(arcade.View):
 
         # HUD --
         self.hud = VHud(
-            self.maze_gen,
+            self.maze,
             self.atlas,
             self.gamestate,
         )
@@ -78,8 +73,8 @@ class VGame(arcade.View):
         # Player --
         self.player: VEntityPlayer = VEntityPlayer(
             self.atlas,
-            self.maze_gen.floor_center,
-            self.walls,
+            self.maze.floor_center,
+            self.maze.walls,
             self.gamestate,
         )
         self.player_list.append(self.player)
@@ -96,30 +91,30 @@ class VGame(arcade.View):
             Michael,
         )
         # Enemies --
-        for ennemy, floor_corner in zip(ennemies, self.maze_gen.floor_corners):
+        for ennemy, floor_corner in zip(ennemies, self.maze.floor_corners):
             self.enemy_list.append(
                 ennemy(
                     self.atlas,
                     floor_corner,
-                    self.floors,
-                    self.walls,
+                    self.maze.floors,
+                    self.maze.walls,
                     self.player,
                     self.gamestate,
-                    self.maze_gen,
+                    self.maze,
                 ),
             )
 
         # Super pacgums --
-        for floor_corner in self.maze_gen.floor_corners:
+        for floor_corner in self.maze.floor_corners:
             self.pacgum_list.append(
                 VEntitySuperPacGum(self.atlas, floor_corner)
             )
 
         # Pacgums --
-        forbbiden = set(self.maze_gen.floor_corners)
+        forbbiden = set(self.maze.floor_corners)
         forbbiden.add(Vec2(*self.player.position))
 
-        for floor_sprite in self.floors.sprites:
+        for floor_sprite in self.maze.floors.sprites:
             if floor_sprite.position not in forbbiden:
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
@@ -144,21 +139,23 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################## NEW MAZE ####
     def new_maze(self, raw_width: int, raw_height: int, seed: int) -> None:
-        self.maze_gen = Maze()
-        self.maze_gen.generate_new_maze(raw_width, raw_height, seed)
-        self.maze_gen.build_walls()
-        self.maze_gen.build_floors()
-        self.reload_maze_sprites()
+        maze_gen = MazeGeneratorWrapper()
+        maze_gen.generate_new_maze(raw_width, raw_height, seed)
+        self.maze = Maze(self.atlas, maze_gen.raw_maze)
+        self.maze.build_sprites()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_maze_sprites(self) -> None:
-        self.walls.reload(
-            self.maze_gen.walls.union(self.maze_gen.forty_two),
-            self.maze_gen.floors,
-        )
-        self.floors.reload(self.maze_gen.floors)
-        self.cameras_update()
+        # TODO: REWRITE IF NEEDED
+        pass
+
+        # self.walls.reload(
+        #     self.maze_gen.walls.union(self.maze_gen.forty_two),
+        #     self.maze_gen.floors,
+        # )
+        # self.floors.reload(self.maze_gen.floors)
+        # self.cameras_update()
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -166,8 +163,7 @@ class VGame(arcade.View):
         if self.setup_done:
             self.clear()
             with self.camera.activate():
-                self.walls.draw()
-                self.floors.draw()
+                self.maze.draw()
                 self.pacgum_list.draw(pixelated=True)
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
@@ -181,7 +177,7 @@ class VGame(arcade.View):
     # ##################################################### DRAW HITBOXES ####
     def _draw_hitboxes(self) -> None:
         if self.display_hitboxes:
-            self.walls.sprites.draw_hit_boxes(
+            self.maze.walls.sprites.draw_hit_boxes(
                 color=arcade.color.RED, line_thickness=2
             )
             self.pacgum_list.draw_hit_boxes(
@@ -217,8 +213,7 @@ class VGame(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
-            self.walls.update(delta_time)
-            self.floors.update(delta_time)
+            self.maze.update(delta_time)
             self.enemy_list.update(delta_time)
             self.player_list.update(delta_time)
             self.resolve_player_pacgum_collisions()
@@ -307,7 +302,7 @@ class VGame(arcade.View):
                 )
 
                 self.camera = arcade.Camera2D(main_rect)
-                self.camera.position = self.maze_gen.center_position
+                self.camera.position = self.maze.center_position
 
                 self.camera_hud = arcade.Camera2D(hud_rect)
                 self.camera_hud.position = self.hud.center_position
@@ -316,10 +311,10 @@ class VGame(arcade.View):
             if self.setup_done:
                 scale_hori = (
                     self.camera.viewport.width - VData.CAMERA_MARGIN
-                ) / self.maze_gen.width
+                ) / self.maze.width
                 scale_vert = (
                     self.camera.viewport.height - VData.CAMERA_MARGIN
-                ) / self.maze_gen.height
+                ) / self.maze.height
 
                 zoom = min(scale_hori, scale_vert)
                 if zoom > VData.CAMERA_MAX_ZOOM:
