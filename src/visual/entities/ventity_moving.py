@@ -47,7 +47,7 @@ class VEntityMoving(VEntity):
         minimal_threshold = 0.9
         if vector.y > minimal_threshold:
             return "top"
-        if vector.x > minimal_threshold:
+        elif vector.x > minimal_threshold:
             return "right"
         elif vector.y < -minimal_threshold:
             return "bot"
