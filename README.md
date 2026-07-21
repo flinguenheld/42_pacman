@@ -98,9 +98,9 @@ Ghosts! More ghosts!
     - [X] Player spawns in the middle
     - [X] Move with arrow keys or WASD
       - [X] If necessary, handle AZERTY preset (ZQSD) as an option
-    - [ ] Ghost touch player = player loses one life
-      - [ ] Player respawns in the middle
-      - [ ] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
+    - [X] Ghost touch player = player loses one life
+      - [X] Player respawns in the middle
+      - [X] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
 
   - [ ] Pacgum
     - [X] Create texture
@@ -114,13 +114,17 @@ Ghosts! More ghosts!
     - [ ] Eating an edible ghost increases the score by Z points
 
   - [ ] Ghost
-    - [ ] Create algo to move them
-      - [ ] Several algos in their class ?
+    - [X] Create algo to move them
+      - [X] Different variants and behaviors
+        - [X] Johnny: Chase the player
+        - [X] Michael: Block the player
+        - [X] Charlie: Follow the player with a delay
+        - [X] ReverseMichael: Block the player but on the opposite direction
       - [ ] Allow to switch their algo on the fly ?
       - [ ] Hunter on regular
       - [ ] Run away when edible
       - [ ] Variable speed ?
-    - [ ] 1 ghost per corner
+    - [X] 1 ghost per corner
     - [ ] Respawn
       - [ ] In their corner
       - [ ] After 5 or 10 seconds (variable ?)
