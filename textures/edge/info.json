@@ -155,6 +155,19 @@
       }
     },
     {
+      "name": "wall_with_floor_on_top_right_bottom_left",
+      "nb": 1,
+      "hitbox": {
+        "bevel": 5
+      },
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
       "name": "wall_extra_corner_bot_right",
       "nb": 1,
       "hitbox": {
@@ -213,24 +226,35 @@
       }
     },
     {
-      "name": "floor_full",
+      "name": "floor",
       "nb": 6,
       "probability": 100
     },
     {
-      "name": "floor_full",
+      "name": "floor",
       "nb": 10,
       "probability": 1
     },
     {
-      "name": "floor_full",
+      "name": "floor",
       "nb": 10,
       "probability": 1
     },
     {
-      "name": "floor_full",
+      "name": "floor",
       "nb": 5,
       "probability": 1
+    },
+    {
+      "comment": "This special floor is used to create frames --",
+      "name": "frame",
+      "nb": 6,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
     },
     {
       "name": "background",
@@ -255,16 +279,6 @@
       "nb": 4,
       "width": 128,
       "height": 128
-    },
-    {
-      "name": "floor_hud",
-      "nb": 6,
-      "allowed_rotation": [
-        0,
-        90,
-        180,
-        270
-      ]
     },
     {
       "name": "heart_hud",

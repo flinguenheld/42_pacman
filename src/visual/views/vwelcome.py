@@ -22,7 +22,7 @@ class VWelcome(GWindow):
                 atlas=atlas,
                 nb_rows=20,
                 nb_cols=25,
-                separators=[480],
+                separators=[15],
             ),
         )
 

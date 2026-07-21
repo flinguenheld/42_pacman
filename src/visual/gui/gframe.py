@@ -1,14 +1,8 @@
+import random
 from arcade import Vec2, Rect
 
-from src.visual.vdata import VData
+from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
-from src.visual.sprites.swall import SWall
-from src.visual.sprites.sfloor import SFloor
-
-
-class MazeRENAME:
-    def __init__(self, raw_maze: list[list[int]]):
-        pass
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█▀▄░█▀█░█▄█░█▀▀░░
@@ -16,7 +10,7 @@ class MazeRENAME:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀░▀░▀░▀░▀░▀░▀▀▀░░
 class GFrame:
     """
-    Manage an area of sprites to display a frame.
+    Create and manage a maze to display a frame.
     """
 
     def __init__(
@@ -28,77 +22,74 @@ class GFrame:
         separators: list[int] = [],
     ) -> None:
 
-        self.atlas = atlas
+        raw_maze = self.build_raw_maze(nb_rows, nb_cols, separators)
+        raw_maze = self.randomise_raw_maze(raw_maze)
+        self.maze = Maze(atlas, raw_maze, floor_as_frame=True)
+        self.maze.build_sprites(offset=bot_left)
 
-        self.walls: SWall = SWall(self.atlas)
-        self.floors: SFloor = SFloor(self.atlas)
+    # ########################################################################
+    # ########################################################## RAW MAZE ####
+    def build_raw_maze(
+        self,
+        nb_rows: int,
+        nb_cols: int,
+        separators: list[int],
+    ) -> list[list[int]]:
+        """Create a simple raw maze which can be used as frame"""
 
-        # TODO: KILL THAT
-        self.separators = separators
-
-        self.raw_maze: list[list[int]] = []
+        raw_maze: list[list[int]] = []
         for y in range(nb_rows):
             row: list[int] = []
             for x in range(nb_cols):
                 if x == 0 or x == nb_cols - 1:
-                    row.append(0)
-                elif y == 0 or y == nb_rows - 1:
-                    row.append(0)
-                else:
                     row.append(1)
+                elif y == 0 or y == nb_rows - 1:
+                    row.append(1)
+                elif y in separators:
+                    row.append(1)
+                else:
+                    row.append(0)
 
-            self.raw_maze.append(row)
+            raw_maze.append(row)
 
-        self._build(bot_left)
+        return raw_maze
 
     # ########################################################################
-    # ############################################################# SETUP ####
-    def _build(self, offset: Vec2) -> None:
-        wall_points: set[Vec2] = set()
-        floor_points: set[Vec2] = set()
+    # ######################################################### RANDOMISE ####
+    def randomise_raw_maze(self, raw_maze: list[list[int]]):
+        """Add some walls randomly"""
 
-        sprite_size = VData.SPRITE_SIZE
-        for y, row in enumerate(reversed(self.raw_maze)):
-            for x, value in enumerate(row):
-                point = Vec2(
-                    x * sprite_size + offset.x,
-                    y * sprite_size + offset.y,
-                )
+        for r, row in enumerate(raw_maze):
+            for c, col in enumerate(row):
+                if not col and random.randint(0, 100) <= 1:
+                    raw_maze[r][c] = not col
 
-                if value == 0:
-                    wall_points.add(point)
-                else:
-                    floor_points.add(point)
-
-        self.walls.reload(wall_points, floor_points)
-        self.floors.reload(floor_points)
+        return raw_maze
 
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
-        self.walls.draw()
-        self.floors.draw()
+        self.maze.draw()
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
-        self.walls.update(delta_time)
-        self.floors.update(delta_time)
+        self.maze.update(delta_time)
 
     # ########################################################################
     # ######################################################## PROPERTIES ####
     @property
     def center_position(self) -> Vec2:
-        return self.walls.center_position
+        return self.maze.center_position
 
     @property
     def rect(self) -> Rect:
-        return self.walls.rect
+        return self.maze.rect
 
     @property
     def height(self) -> int:
-        return self.walls.height
+        return self.maze.height
 
     @property
     def width(self) -> int:
-        return self.walls.width
+        return self.maze.width

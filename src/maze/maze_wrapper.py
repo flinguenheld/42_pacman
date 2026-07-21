@@ -5,6 +5,15 @@ from mazegenerator import MazeGenerator
 # ░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░░█░█░█▀▀░█░█░░░█▄█░█▀▄░█▀█░█▀▀░█▀▀░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀░▀░░░▀░▀░▀░▀░▀░▀░▀░░░▀░░░▀▀▀░▀░▀░░
 class MazeGeneratorWrapper:
+    """
+    Generator wrapper.
+    Allow you to generate a new maze from the generator.
+    The generated maze is an array of hexadecimal values.
+    Then convert it in an array of int to be used by the Maze class.
+        - 0 -> floor
+        - 1 -> wall
+    """
+
     def __init__(self) -> None:
         self.setup()
 
@@ -37,7 +46,7 @@ class MazeGeneratorWrapper:
             # TODO: add something ????
             exit(42)
 
-    def _hexa_to_raw(self):
+    def _hexa_to_raw(self) -> None:
         """
         Loop in the raw maze to fill maze
         !! Arcade works from bottom left with X, Y !!

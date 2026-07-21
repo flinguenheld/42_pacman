@@ -10,12 +10,27 @@ from src.visual.sprites.sfloor import SFloor
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class Maze:
-    def __init__(self, atlas: VAtlas, raw_maze: list[list[int]]) -> None:
+    """
+    Maze class
+    From a raw maze list[list[int]] where:
+        - 0 -> floor
+        - 1 -> wall
+
+    Build and manage two sprite_lists.
+    Use sprite_lists properties for the maze such as center_position or rect...
+    """
+
+    def __init__(
+        self,
+        atlas: VAtlas,
+        raw_maze: list[list[int]],
+        floor_as_frame: bool = False,
+    ) -> None:
         self.raw_maze = raw_maze
         self.atlas = atlas
 
         self.walls: SWall = SWall(self.atlas)
-        self.floors: SFloor = SFloor(self.atlas)
+        self.floors: SFloor = SFloor(self.atlas, frame_texture=floor_as_frame)
 
     # ########################################################################
     # ############################################################# SETUP ####
