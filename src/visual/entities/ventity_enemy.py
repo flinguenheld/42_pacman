@@ -168,7 +168,7 @@ class VEntityEnemyCommon(VEntityMoving):
             self.last_player_direction = player_direction_vector
 
 
-type EnemyVariant = type["Johnny | Michael | Charlie"]
+type EnemyVariant = type["Johnny | Michael | Charlie | ReverseMichael"]
 
 
 class Johnny(VEntityEnemyCommon):
@@ -205,9 +205,7 @@ class Johnny(VEntityEnemyCommon):
         return super().get_speed() * 0.9
 
     def get_target_sprite(self) -> Sprite:
-        target_sprite = self.player.get_closest_sprite(
-            self.floors.sprites
-        )
+        target_sprite = self.player.get_closest_sprite(self.floors.sprites)
         return target_sprite
 
 
@@ -329,6 +327,65 @@ class Charlie(VEntityEnemyCommon):
             # Get the oldest position in the buffer, which is
             # probably 3 seconds behind.
             target_pos = self.player_movement_buffer[0]
+
+        self.dummy_target_sprite.position = target_pos
+        target_sprite_result = arcade.get_closest_sprite(
+            self.dummy_target_sprite, self.floors.sprites
+        )
+        _error_msg = (
+            "Could not find a closest sprite for "
+            f"{self.dummy_target_sprite} in {self.floors.sprites}."
+        )
+        assert target_sprite_result is not None, _error_msg
+        (target_sprite, _) = target_sprite_result
+
+        return target_sprite
+
+
+class ReverseMichael(VEntityEnemyCommon):
+    """
+    Michael is a more advanced enemy that tries to predict the player's
+    movement.
+    He is more clever (or a coward, depending on how you see it) than Johnny,
+    and will try to anticipate where the player is going.
+    He won't try to kill the player directly, but will try to cut him off by
+    predicting his next move.
+
+    His target sprite is X tiles ahead of the player in the direction the
+    player is currently moving.
+    """
+
+    # TODO: Find a name for this enemy
+    def __init__(
+        self,
+        atlas: VAtlas,
+        position: Vec2,
+        floors: SFloor,
+        walls: SWall,
+        player: VEntityPlayer,
+        gamestate: VGameState,
+        maze_gen: Maze,
+    ) -> None:
+        id = 3
+
+        super().__init__(
+            id,
+            atlas,
+            position,
+            floors,
+            walls,
+            player,
+            gamestate,
+            maze_gen,
+        )
+
+    def get_target_sprite(self) -> Sprite:
+        player_direction = self.last_player_direction
+        # 3 tiles ahead of the player
+        distance_threshold = 3.0 * VData.SPRITE_SIZE
+        target_pos = Vec2(*self.player.position) + (
+            -player_direction * distance_threshold
+        )
 
         self.dummy_target_sprite.position = target_pos
         target_sprite_result = arcade.get_closest_sprite(

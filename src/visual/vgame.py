@@ -15,6 +15,7 @@ from src.visual.entities.ventity_enemy import (
     EnemyVariant,
     Johnny,
     Michael,
+    ReverseMichael,
     VEntityEnemyCommon,
 )
 from src.visual.entities.ventity_player import VEntityPlayer
@@ -94,7 +95,7 @@ class VGame(arcade.View):
             Michael,
             Johnny,
             Charlie,
-            Michael,
+            ReverseMichael,
         )
         # Enemies --
         for ennemy, floor_corner in zip(ennemies, self.maze_gen.floor_corners):

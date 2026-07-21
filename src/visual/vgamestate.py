@@ -8,7 +8,7 @@ class VGameState:
     _lives: int = 3
 
     _player_speed: float = 30.0
-    _enemy_speed: float = 12.0
+    _enemy_speed: float = 15.0
 
     time_start: float = time.time()
 
