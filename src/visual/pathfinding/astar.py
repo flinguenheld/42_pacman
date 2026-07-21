@@ -68,10 +68,10 @@ class AStarSearch:
             self.closed_set.add(current)
 
             for neighbor in self.get_neighbors(current):
-                if neighbor in self.closed_set:
-                    continue
-
-                if neighbor in self.blocked_cells:
+                if (
+                    neighbor in self.closed_set
+                    or neighbor in self.blocked_cells
+                ):
                     continue
 
                 tentative_g = self.g_score[current] + 1

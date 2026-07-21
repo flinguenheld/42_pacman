@@ -99,7 +99,7 @@ class VEntityEnemyCommon(VEntityMoving):
                 self.target_sprite, self.player
             )
         )
-        distance_threshold = 2.0 * VData.SPRITE_SIZE
+        distance_threshold = 3.0 * VData.SPRITE_SIZE
         if distance_to_player_from_target_sprite > distance_threshold:
             return True
         return False
@@ -201,11 +201,14 @@ class Johnny(VEntityEnemyCommon):
             maze_gen,
         )
 
+    def get_speed(self) -> float:
+        return super().get_speed() * 0.9
+
     def get_target_sprite(self) -> Sprite:
-        target_sprite_result = self.player.get_closest_sprite(
+        target_sprite = self.player.get_closest_sprite(
             self.floors.sprites
         )
-        return target_sprite_result
+        return target_sprite
 
 
 class Michael(VEntityEnemyCommon):
@@ -248,7 +251,7 @@ class Michael(VEntityEnemyCommon):
         player_direction = self.last_player_direction
         # 3 tiles ahead of the player
         distance_threshold = 3.0 * VData.SPRITE_SIZE
-        target_pos = self.player.position + (
+        target_pos = Vec2(*self.player.position) + (
             player_direction * distance_threshold
         )
 
@@ -301,7 +304,7 @@ class Charlie(VEntityEnemyCommon):
 
     def get_speed(self) -> float:
         # Charlie is slightly slower than the player
-        return self.player.get_speed() * 0.6
+        return self.player.get_speed() * 0.5
 
     def update_player_movement_buffer(self) -> None:
         """
