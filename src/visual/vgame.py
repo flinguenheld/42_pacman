@@ -98,10 +98,10 @@ class VGame(arcade.View):
             EnemyVariant,
             EnemyVariant,
         ] = (
+            ReverseMichael,
+            Charlie,
             Michael,
             Johnny,
-            Charlie,
-            ReverseMichael,
         )
         # Enemies --
         for ennemy, floor_corner in zip(ennemies, self.maze_gen.floor_corners):
