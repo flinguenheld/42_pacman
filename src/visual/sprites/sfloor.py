@@ -7,11 +7,11 @@ from src.visual.sprites.ssprites import SSprites
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█░░░█░█░█░█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░
 class SFloor(SSprites):
-    def __init__(self, atlas: VAtlas) -> None:
-        super().__init__(atlas, "floor_")
+    def __init__(self, atlas: VAtlas, frame_texture: bool = False) -> None:
+        base_name = "frame" if frame_texture else "floor"
+        super().__init__(atlas, base_name)
 
     def reload(self, floors: set[Vec2]) -> None:
-
         self.clear()
         for point in floors:
-            self.add_sprite(f"{self.base_name}full", center=point)
+            self.add_sprite(self.base_name, center=point)

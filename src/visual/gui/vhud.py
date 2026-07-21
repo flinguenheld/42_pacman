@@ -1,6 +1,6 @@
+from math import ceil
 import time
 import arcade
-from math import ceil
 from arcade.types import Color
 from arcade import Text, Vec2, SpriteList
 

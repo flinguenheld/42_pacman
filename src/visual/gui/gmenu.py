@@ -32,7 +32,7 @@ class GMenu:
             )
 
             center_top_first -= Vec2(
-                0, atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.5
+                0, atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.6
             )
             self.choices.append(new_entry)
 
