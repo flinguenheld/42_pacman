@@ -50,8 +50,7 @@ class MazeGeneratorWrapper:
         """
         Loop in the raw maze to fill maze
         !! Arcade works from bottom left with X, Y !!
-        !! Reverse the logic !!
-        !! Reverse on Y !!
+        !! Here, we still think in row / col !!
 
         hexa ->       0       1       2       3       4
          |
@@ -82,7 +81,7 @@ class MazeGeneratorWrapper:
             for _ in range(len(self.hexa_maze) * 2 + 1)
         ]
 
-        for hexa_y, row in enumerate(reversed(self.hexa_maze)):
+        for hexa_y, row in enumerate(self.hexa_maze):
             for hexa_x, value in enumerate(row):
                 # Get world coordinates --
                 y = hexa_y * 2 + 1
@@ -90,24 +89,24 @@ class MazeGeneratorWrapper:
 
                 # --
                 if value & 0b0001 == 0b0001:  # Top
-                    self.raw_maze[y + 1][x] = 1
-                    self.raw_maze[y + 1][x - 1] = 1
-                    self.raw_maze[y + 1][x + 1] = 1
-
-                if value & 0b0100 == 0b0100:  # Bottom
                     self.raw_maze[y - 1][x] = 1
                     self.raw_maze[y - 1][x - 1] = 1
                     self.raw_maze[y - 1][x + 1] = 1
 
+                if value & 0b0100 == 0b0100:  # Bottom
+                    self.raw_maze[y + 1][x] = 1
+                    self.raw_maze[y + 1][x - 1] = 1
+                    self.raw_maze[y + 1][x + 1] = 1
+
                 if value & 0b1000 == 0b1000:  # Left
                     self.raw_maze[y][x - 1] = 1
-                    self.raw_maze[y - 1][x - 1] = 1
                     self.raw_maze[y + 1][x - 1] = 1
+                    self.raw_maze[y - 1][x - 1] = 1
 
                 if value & 0b0010 == 0b0010:  # Right
                     self.raw_maze[y][x + 1] = 1
-                    self.raw_maze[y - 1][x + 1] = 1
                     self.raw_maze[y + 1][x + 1] = 1
+                    self.raw_maze[y - 1][x + 1] = 1
 
                 if value & 0b1111 == 0b1111:  # 42
                     self.raw_maze[y][x] = 1

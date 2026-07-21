@@ -23,13 +23,11 @@ class GWindow(arcade.View):
 
         # Title --
         self.title = title
-        self.title.set_postion(
-            int(self.frame.center_position.x),
-            int(
-                self.frame.center_position.y
-                + self.frame.height // 2
-                + title.height * 0.7
-            ),
+        self.title.build(
+            Vec2(
+                self.frame.center_position.x,
+                self.frame.center_position.y + self.frame.height // 1.2,
+            )
         )
 
         # Background --
