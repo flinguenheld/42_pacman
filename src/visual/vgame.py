@@ -53,9 +53,6 @@ class VGame(arcade.View):
 
         self.setup_done = False
 
-        # Game state --
-        self.gamestate = VGameState()
-
         # Maze --
         self.new_maze(
             random.randint(10, 20),
