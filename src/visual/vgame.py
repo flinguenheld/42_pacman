@@ -42,8 +42,7 @@ class VGame(arcade.View):
         self.camera_hud = arcade.Camera2D()
 
         # Game state --
-        # Needs to be initialized here as it is reused for every game
-        # and should not be reset every time setup() is called.
+        # Needs to be first initialized here
         self.gamestate = VGameState()
 
     # ########################################################################
@@ -52,6 +51,11 @@ class VGame(arcade.View):
         """Restart the game."""
 
         self.setup_done = False
+
+        # Used if the previous game was over
+        # but the player wants to start a new game
+        if self.gamestate.is_game_over():
+            self.gamestate = VGameState()
 
         # Maze --
         self.new_maze(
