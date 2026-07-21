@@ -56,8 +56,9 @@ Ghosts! More ghosts!
       - [ ] You can die and re-spawn.
 
   - [ ] Pause
-    - [ ] Resume the game
-    - [ ] Return to main (give up)
+    - [X] Resume the game
+    - [ ] Link to instructions
+    - [X] Return to main (give up)
 
   - [ ] Game over
     - [ ] Display final score

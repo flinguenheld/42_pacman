@@ -19,7 +19,7 @@ class GTitle:
 
     # ########################################################################
     # ############################################################# BUILD ####
-    def build(self, bottom_middle: Vec2):
+    def build(self, bottom_middle: Vec2) -> None:
 
         future_width = (len(self.raw_maze[0])) * VData.SPRITE_SIZE
         offset = Vec2(

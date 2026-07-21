@@ -1,5 +1,5 @@
-from typing import Any
 import arcade.gui
+from typing import Any
 from arcade import Vec2
 
 from src.visual.vdata import VData

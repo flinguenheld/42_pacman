@@ -21,6 +21,7 @@ class VPause(GWindow):
                 atlas=atlas,
                 nb_rows=14,
                 nb_cols=24,
+                bevels=True,
             ),
         )
 

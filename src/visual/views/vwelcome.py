@@ -23,6 +23,7 @@ class VWelcome(GWindow):
                 nb_rows=20,
                 nb_cols=30,
                 separators=[8],
+                bevels=True,
             ),
         )
 

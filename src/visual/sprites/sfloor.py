@@ -7,7 +7,7 @@ from src.visual.sprites.ssprites import SSprites
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█░░░█░█░█░█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░
 class SFloor(SSprites):
-    def __init__(self, atlas: VAtlas, frame_texture=False) -> None:
+    def __init__(self, atlas: VAtlas, frame_texture: bool = False) -> None:
         base_name = "frame" if frame_texture else "floor"
         super().__init__(atlas, base_name)
 

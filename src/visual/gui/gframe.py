@@ -1,5 +1,5 @@
-from typing import Tuple
 import random
+from typing import Tuple
 from arcade import Vec2, Rect
 
 from src.maze.maze import Maze
@@ -83,7 +83,7 @@ class GFrame:
 
     # ########################################################################
     # ######################################################### RANDOMISE ####
-    def randomise_raw_maze(self, raw_maze: list[list[int]]):
+    def randomise_raw_maze(self, raw_maze: list[list[int]]) -> list[list[int]]:
         """Add some walls randomly"""
 
         for r, row in enumerate(raw_maze):
