@@ -46,17 +46,18 @@ class VGame(arcade.View):
 
         self.window: VMain = self.window  # type: ignore
 
+        # Game state --
+        # Needs to be initialized here as it is reused for every game
+        # and should not be reset every time setup() is called.
+        self.gamestate = VGameState()
+
     # ########################################################################
     # ############################################################# SETUP ####
-    def setup(self, lives: int | None = None) -> None:
+    def setup(self) -> None:
         """Restart the game."""
 
         self.setup_done = False
 
-        # Game state --
-        self.gamestate = VGameState()
-        if lives is not None:
-            self.gamestate.lives = lives
         # Maze spritelists --
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
@@ -248,7 +249,7 @@ class VGame(arcade.View):
             if self.gamestate.is_game_over():
                 self.window.switch_view(VNames.VIEW_WELCOME)
             else:
-                self.setup(lives=self.gamestate.lives)
+                self.setup()
                 self.cameras_update()
 
     # ########################################################################
