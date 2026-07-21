@@ -21,8 +21,8 @@ class VWelcome(GWindow):
             frame=GFrame(
                 atlas=atlas,
                 nb_rows=20,
-                nb_cols=25,
-                separators=[15],
+                nb_cols=30,
+                separators=[8],
             ),
         )
 
@@ -33,8 +33,8 @@ class VWelcome(GWindow):
     def setup(self) -> None:
 
         self.menu = GMenu(
-            self.atlas,
-            {
+            atlas=self.atlas,
+            choices={
                 "PLAY": GMenuEntry.ToCall(
                     func=self.window.switch_view,
                     args=[VNames.VIEW_GAME],
@@ -48,21 +48,10 @@ class VWelcome(GWindow):
                     args=[],
                 ),
             },
-            Vec2(400, 700),
+            center_top_first=Vec2(self.frame.center_position.x, 550),
         )
 
-    # ########################################################################
-    # ############################################################## DRAW ####
-    def on_draw(self) -> None:
-        super().on_draw()
-        with self.camera.activate():
-            self.menu.draw()
-
-    # ########################################################################
-    # ############################################################ UPDATE ####
-    def on_update(self, delta_time: int | float) -> None:
-        super().on_update(delta_time)
-        self.menu.update(delta_time)
+        self.to_draw_and_update.append(self.menu)
 
     # ########################################################################
     # ############################################################## KEYS ####

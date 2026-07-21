@@ -1,3 +1,4 @@
+from typing import Tuple
 import random
 from arcade import Vec2, Rect
 
@@ -20,9 +21,10 @@ class GFrame:
         nb_rows: int = 10,
         bot_left: Vec2 = Vec2(0, 0),
         separators: list[int] = [],
+        bevels: bool = False,
     ) -> None:
 
-        raw_maze = self.build_raw_maze(nb_rows, nb_cols, separators)
+        raw_maze = self.build_raw_maze(nb_rows, nb_cols, separators, bevels)
         raw_maze = self.randomise_raw_maze(raw_maze)
         self.maze = Maze(atlas, raw_maze, floor_as_frame=True)
         self.maze.build_sprites(offset=bot_left)
@@ -34,25 +36,50 @@ class GFrame:
         nb_rows: int,
         nb_cols: int,
         separators: list[int],
+        bevels: bool,
     ) -> list[list[int]]:
         """Create a simple raw maze which can be used as frame"""
 
         raw_maze: list[list[int]] = []
-        for y in range(nb_rows):
-            row: list[int] = []
-            for x in range(nb_cols):
-                if x == 0 or x == nb_cols - 1:
-                    row.append(1)
-                elif y == 0 or y == nb_rows - 1:
-                    row.append(1)
-                elif y in separators:
-                    row.append(1)
-                else:
-                    row.append(0)
+        bevels_points = self.get_bevels(nb_rows, nb_cols) if bevels else set()
 
-            raw_maze.append(row)
+        for row in range(nb_rows):
+            new_row: list[int] = []
+            for col in range(nb_cols):
+                if col == 0 or col == nb_cols - 1:
+                    new_row.append(1)
+                elif row == 0 or row == nb_rows - 1:
+                    new_row.append(1)
+                elif row in separators:
+                    new_row.append(1)
+                elif (row, col) in bevels_points:
+                    new_row.append(1)
+                else:
+                    new_row.append(0)
+
+            raw_maze.append(new_row)
 
         return raw_maze
+
+    # ########################################################################
+    # ############################################################ BEVELS ####
+    def get_bevels(self, nb_rows: int, nb_cols: int) -> set[Tuple[int, int]]:
+        return set(
+            [
+                (1, 1),
+                (1, 2),
+                (2, 1),
+                (1, nb_cols - 2),
+                (1, nb_cols - 3),
+                (2, nb_cols - 2),
+                (nb_rows - 2, nb_cols - 2),
+                (nb_rows - 2, nb_cols - 3),
+                (nb_rows - 3, nb_cols - 2),
+                (nb_rows - 2, 1),
+                (nb_rows - 2, 2),
+                (nb_rows - 3, 1),
+            ]
+        )
 
     # ########################################################################
     # ######################################################### RANDOMISE ####
@@ -61,7 +88,7 @@ class GFrame:
 
         for r, row in enumerate(raw_maze):
             for c, col in enumerate(row):
-                if not col and random.randint(0, 100) <= 1:
+                if not col and random.randint(0, 150) == 42:
                     raw_maze[r][c] = not col
 
         return raw_maze

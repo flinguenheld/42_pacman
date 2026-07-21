@@ -15,19 +15,19 @@ class GTitle:
 
     def __init__(self, atlas: VAtlas, title_maze: list[list[int]]) -> None:
         self.maze = Maze(atlas, title_maze)
-
-        self.future_width = len(title_maze[0]) * VData.SPRITE_SIZE
-        self.future_height = len(title_maze) * VData.SPRITE_SIZE
+        self.raw_maze = title_maze
 
     # ########################################################################
     # ############################################################# BUILD ####
-    def build(self, center: Vec2):
-        center = Vec2(
-            center.x - self.future_width / 2,
-            center.y - self.future_height / 2,
+    def build(self, bottom_middle: Vec2):
+
+        future_width = (len(self.raw_maze[0])) * VData.SPRITE_SIZE
+        offset = Vec2(
+            bottom_middle.x - future_width / 2 + VData.SPRITE_SIZE / 2,
+            bottom_middle.y,
         )
 
-        self.maze.build_sprites(offset=center)
+        self.maze.build_sprites(offset=offset)
 
     # ########################################################################
     # ############################################################## DRAW ####

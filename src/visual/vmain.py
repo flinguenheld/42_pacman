@@ -2,9 +2,9 @@ import arcade
 from mazegenerator import MazeGenerator
 
 from src.visual.vgame import VGame
-from src.visual.vpause import VPause
 from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
+from src.visual.views.vpause import VPause
 from src.visual.views.vwelcome import VWelcome
 
 
@@ -48,7 +48,7 @@ class VMain(arcade.Window):
             case VNames.VIEW_GAME:
                 self.show_view(self.vgame)
             case VNames.VIEW_PAUSE:
-                self.show_view(VPause())
+                self.show_view(VPause(self.atlas))
 
     # ########################################################################
     # ######################################################### ON RESIZE ####

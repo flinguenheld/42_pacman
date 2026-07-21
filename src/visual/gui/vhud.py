@@ -1,3 +1,4 @@
+from math import ceil
 import time
 import arcade
 from arcade.types import Color
@@ -31,7 +32,7 @@ class VHud:
         self.frame = GFrame(
             atlas,
             bot_left=Vec2(VHud.OFFSET, VHud.OFFSET),
-            nb_cols=self.maze.width // VData.SPRITE_SIZE + 1,
+            nb_cols=ceil(self.maze.width / VData.SPRITE_SIZE),
             nb_rows=3,
         )
         self.icons: SpriteList = arcade.SpriteList()
@@ -59,7 +60,7 @@ class VHud:
         self.add_field(
             entry_name="lives",
             icon_name="heart_hud",
-            x=VHud.OFFSET + self.maze.width - VData.SPRITE_SIZE * 2.5,
+            x=VHud.OFFSET + self.maze.width - VData.SPRITE_SIZE * 3.2,
             anchor_x="right",
             color=self.atlas.get_color("hud_font"),
         )

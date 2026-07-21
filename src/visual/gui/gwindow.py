@@ -1,3 +1,4 @@
+from typing import Any
 import arcade.gui
 from arcade import Vec2
 
@@ -12,7 +13,12 @@ from src.visual.gui.gbackground import GBackground
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░░█░░█░█░█░█░█░█░█▄█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░░
 class GWindow(arcade.View):
-    """Create and manage a window with one Title and one frame"""
+    """
+    Create and manage a window with one Title and one frame.
+
+    Fill the 'to_draw_and_update' list with widgets
+    to automatically display them.
+    """
 
     def __init__(self, atlas: VAtlas, title: GTitle, frame: GFrame) -> None:
         super().__init__()
@@ -26,7 +32,7 @@ class GWindow(arcade.View):
         self.title.build(
             Vec2(
                 self.frame.center_position.x,
-                self.frame.center_position.y + self.frame.height // 1.2,
+                self.frame.rect.top + VData.SPRITE_SIZE * 2,
             )
         )
 
@@ -36,6 +42,12 @@ class GWindow(arcade.View):
             center=self.frame.center_position,
             to_avoid=[self.frame.rect, self.title.rect],
         )
+
+        self.to_draw_and_update: list[Any] = [
+            self.background,
+            self.frame,
+            self.title,
+        ]
 
         self.cameras_init()
 
@@ -64,16 +76,14 @@ class GWindow(arcade.View):
     def on_draw(self) -> None:
         self.clear()
         with self.camera.activate():
-            self.background.draw()
-            self.frame.draw()
-            self.title.draw()
+            for widget in self.to_draw_and_update:
+                widget.draw()
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        self.background.update(delta_time)
-        self.frame.update(delta_time)
-        self.title.update(delta_time)
+        for widget in self.to_draw_and_update:
+            widget.update(delta_time)
 
     # ########################################################################
     # ######################################################### ON RESIZE ####

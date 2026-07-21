@@ -59,12 +59,14 @@ class SSprites:
     # ############################################################# EDGES ####
     def __clear_edges(self) -> None:
         """
-        Edges are the center of tiles which are on max of top/bot/left/right.
+        !! BE CARREFUL !!
+        Edges are the CENTER OF TILES which are on max of top/bot/left/right.
+        They should not be used outside the class.
         """
-        self.top = -sys.maxsize
-        self.bot = sys.maxsize
-        self.left = sys.maxsize
-        self.right = -sys.maxsize
+        self.__top = -sys.maxsize
+        self.__bot = sys.maxsize
+        self.__left = sys.maxsize
+        self.__right = -sys.maxsize
 
     def __up_edges(self, center: Vec2) -> None:
         """
@@ -72,34 +74,39 @@ class SSprites:
         Used while building sprites to avoid calculations.
         """
 
-        if center.y < self.bot:
-            self.bot = int(center.y)
-        if center.y > self.top:
-            self.top = int(center.y)
+        if center.y < self.__bot:
+            self.__bot = int(center.y)
+        if center.y > self.__top:
+            self.__top = int(center.y)
 
-        if center.x < self.left:
-            self.left = int(center.x)
-        if center.x > self.right:
-            self.right = int(center.x)
+        if center.x < self.__left:
+            self.__left = int(center.x)
+        if center.x > self.__right:
+            self.__right = int(center.x)
 
     # ########################################################################
     # ######################################################## PROPERTIES ####
     @property
-    def center_position(self) -> Vec2:
-        center = Vec2(self.left + self.width / 2, self.bot + self.height / 2)
-        return center
-
-    @property
     def width(self) -> int:
-        return self.right - self.left
+        """Width from edge to edge"""
+        return (self.__right - self.__left) + VData.SPRITE_SIZE
 
     @property
     def height(self) -> int:
-        return self.top - self.bot
+        """Height from edge to edge"""
+        return (self.__top - self.__bot) + VData.SPRITE_SIZE
 
     @property
     def rect(self) -> Rect:
-        return LBWH(self.left, self.bot, self.width, self.height)
+        """Rect from edges to edges"""
+        half = VData.SPRITE_SIZE / 2
+        return LBWH(
+            self.__left - half, self.__bot - half, self.width, self.height
+        )
+
+    @property
+    def center_position(self) -> Vec2:
+        return self.rect.center
 
     # ########################################################################
     # ##################################################### FLOOR CORNERS ####
@@ -108,8 +115,8 @@ class SSprites:
     def sprites_corners(self) -> list[Vec2]:
         """Return corners:  left/bot, left/top, right/top, right/bot."""
 
-        in_bot = [s for s in self.sprites if s.center_y == self.bot]
-        in_top = [s for s in self.sprites if s.center_y == self.top]
+        in_bot = [s for s in self.sprites if s.center_y == self.__bot]
+        in_top = [s for s in self.sprites if s.center_y == self.__top]
 
         bot_left = min(in_bot, key=lambda s: s.center_x)
         top_left = min(in_top, key=lambda s: s.center_x)
@@ -130,7 +137,7 @@ class SSprites:
         """Center of the sprite which is the closest to the center."""
 
         # Find y --
-        perfect_y = (self.top - self.bot) / 2
+        perfect_y = (self.__top - self.__bot) / 2
         closer = min(self.sprites, key=lambda s: abs(perfect_y - s.center_y))
         y = closer.center_y
 
