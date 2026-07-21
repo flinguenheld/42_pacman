@@ -23,18 +23,16 @@ class VEntityEnemyCommon(VEntityMoving):
         id: int,
         atlas: VAtlas,
         position: Vec2,
-        floors: SFloor,
-        walls: SWall,
+        maze: Maze,
         player: VEntityPlayer,
         gamestate: VGameState,
-        maze_gen: Maze,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
-        self.floors: SFloor = floors
-        self.walls: SWall = walls
+        self.floors: SFloor = maze.floors
+        self.walls: SWall = maze.walls
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
-        self.maze_gen: Maze = maze_gen
+        self.maze: Maze = maze
 
         self.pathfinder: type[PathfindingAlgorithm] = AStarSearch
 
@@ -183,22 +181,18 @@ class Johnny(VEntityEnemyCommon):
         self,
         atlas: VAtlas,
         position: Vec2,
-        floors: SFloor,
-        walls: SWall,
+        maze: Maze,
         player: VEntityPlayer,
         gamestate: VGameState,
-        maze_gen: Maze,
     ) -> None:
         id = 0
         super().__init__(
             id,
             atlas,
             position,
-            floors,
-            walls,
+            maze,
             player,
             gamestate,
-            maze_gen,
         )
 
     def get_speed(self) -> float:
@@ -226,23 +220,18 @@ class Michael(VEntityEnemyCommon):
         self,
         atlas: VAtlas,
         position: Vec2,
-        floors: SFloor,
-        walls: SWall,
+        maze: Maze,
         player: VEntityPlayer,
         gamestate: VGameState,
-        maze_gen: Maze,
     ) -> None:
         id = 1
-
         super().__init__(
             id,
             atlas,
             position,
-            floors,
-            walls,
+            maze,
             player,
             gamestate,
-            maze_gen,
         )
 
     def get_target_sprite(self) -> Sprite:
@@ -279,25 +268,20 @@ class Charlie(VEntityEnemyCommon):
         self,
         atlas: VAtlas,
         position: Vec2,
-        floors: SFloor,
-        walls: SWall,
+        maze: Maze,
         player: VEntityPlayer,
         gamestate: VGameState,
-        maze_gen: Maze,
     ) -> None:
         id = 2
-
         self.player_movement_buffer: list[Vec2] = []
         self.max_buffer_size: int = int(3.0 * 60.0)  # 3 seconds at 60 FPS
         super().__init__(
             id,
             atlas,
             position,
-            floors,
-            walls,
+            maze,
             player,
             gamestate,
-            maze_gen,
         )
 
     def get_speed(self) -> float:
@@ -360,23 +344,18 @@ class ReverseMichael(VEntityEnemyCommon):
         self,
         atlas: VAtlas,
         position: Vec2,
-        floors: SFloor,
-        walls: SWall,
+        maze: Maze,
         player: VEntityPlayer,
         gamestate: VGameState,
-        maze_gen: Maze,
     ) -> None:
         id = 3
-
         super().__init__(
             id,
             atlas,
             position,
-            floors,
-            walls,
+            maze,
             player,
             gamestate,
-            maze_gen,
         )
 
     def get_target_sprite(self) -> Sprite:

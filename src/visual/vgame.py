@@ -108,11 +108,9 @@ class VGame(arcade.View):
                 ennemy(
                     self.atlas,
                     floor_corner,
-                    self.maze.floors,
-                    self.maze.walls,
+                    self.maze,
                     self.player,
                     self.gamestate,
-                    self.maze,
                 ),
             )
 
