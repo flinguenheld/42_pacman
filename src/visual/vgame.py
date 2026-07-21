@@ -42,6 +42,10 @@ class VGame(arcade.View):
         self.camera = arcade.Camera2D()
         self.camera_hud = arcade.Camera2D()
 
+        from src.visual.vmain import VMain
+
+        self.window: VMain = self.window  # type: ignore
+
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
