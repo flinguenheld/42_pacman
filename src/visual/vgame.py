@@ -48,14 +48,15 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ############################################################# SETUP ####
-    def setup(self) -> None:
+    def setup(self, lives: int | None = None) -> None:
         """Restart the game."""
 
         self.setup_done = False
 
         # Game state --
         self.gamestate = VGameState()
-
+        if lives is not None:
+            self.gamestate.lives = lives
         # Maze spritelists --
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas)
@@ -223,17 +224,32 @@ class VGame(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
+            self.handle_player_death()
+
             self.walls.update(delta_time)
             self.floors.update(delta_time)
             self.enemy_list.update(delta_time)
             self.player_list.update(delta_time)
             self.resolve_player_pacgum_collisions()
+            self.resolve_player_enemy_collisions()
 
             self.enemy_list.update_animation(delta_time)
             self.player_list.update_animation(delta_time)
             self.pacgum_list.update_animation(delta_time)
 
             self.hud.update(delta_time)
+
+    def is_player_dead(self) -> bool:
+        return self.player not in self.player_list
+
+    def handle_player_death(self) -> None:
+        if self.is_player_dead():
+            self.gamestate.decrement_lives()
+            if self.gamestate.is_game_over():
+                self.window.switch_view(VNames.VIEW_WELCOME)
+            else:
+                self.setup(lives=self.gamestate.lives)
+                self.cameras_update()
 
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
@@ -244,6 +260,13 @@ class VGame(arcade.View):
         for pacgum in collided:
             self.gamestate.increment_score(pacgum.get_points())
             pacgum.kill()
+
+    def resolve_player_enemy_collisions(self) -> None:
+        collided: list[VEntityEnemyCommon] = (
+            arcade.check_for_collision_with_list(self.player, self.enemy_list)
+        )
+        for _enemy in collided:
+            self.player.kill()
 
     # ########################################################################
     # ############################################################## KEYS ####
