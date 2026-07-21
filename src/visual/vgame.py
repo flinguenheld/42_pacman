@@ -14,6 +14,7 @@ from src.visual.entities.ventity_enemy import (
     Michael,
     VEntityEnemyCommon,
 )
+from src.visual.gui.gbackground import GBackground
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -30,7 +31,6 @@ class VGame(arcade.View):
 
         self.atlas = atlas
         self.setup_done = False
-        arcade.set_background_color(self.atlas.get_color("background"))
 
         self.process_updates = True
         self.display_hitboxes = False
@@ -55,6 +55,11 @@ class VGame(arcade.View):
             random.randint(5, 20),
             random.randint(1, 200),
         )
+
+        # Background --
+        self.background = GBackground(self.atlas)
+        self.background.build(self.maze.center_position, self.maze.rect)
+        arcade.set_background_color(self.atlas.get_color("background"))
 
         # HUD --
         self.hud = VHud(
@@ -163,6 +168,7 @@ class VGame(arcade.View):
         if self.setup_done:
             self.clear()
             with self.camera.activate():
+                self.background.draw()
                 self.maze.draw()
                 self.pacgum_list.draw(pixelated=True)
                 self.player_list.draw(pixelated=True)
@@ -214,6 +220,7 @@ class VGame(arcade.View):
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
             self.maze.update(delta_time)
+            self.background.update(delta_time)
             self.enemy_list.update(delta_time)
             self.player_list.update(delta_time)
             self.resolve_player_pacgum_collisions()
