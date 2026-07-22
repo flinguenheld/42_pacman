@@ -1,15 +1,9 @@
-from collections.abc import Callable
-
 from arcade import Sprite, SpriteList
 from arcade.types import Point2
 
 from src.visual.vdata import VData
 
 PATHFINDING_GRID_SIZE = VData.SPRITE_SIZE
-
-type PathfindingAlgorithm = Callable[
-    [Point2, Point2, "PathfindingBarrierSet"], list[Point2]
-]
 
 
 class PathfindingBarrierSet:

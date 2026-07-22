@@ -9,7 +9,7 @@ from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
 from src.visual.pathfinding.astar import astar_search
-from src.visual.pathfinding import PathfindingAlgorithm, PathfindingBarrierSet
+from src.visual.pathfinding import PathfindingBarrierSet
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 
@@ -33,8 +33,6 @@ class VEntityEnemyCommon(VEntityMoving):
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
         self.maze: Maze = maze
-
-        self.pathfinding_algo: PathfindingAlgorithm = astar_search
 
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
@@ -67,7 +65,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
         start = self.closest_floor.position
         goal = self.target_sprite.position
-        path = self.pathfinding_algo(start, goal, self.barrier_set)
+        path = astar_search(start, goal, self.barrier_set)
 
         if not path:
             self.path = None
