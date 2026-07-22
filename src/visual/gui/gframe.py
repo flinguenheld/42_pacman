@@ -24,7 +24,8 @@ class GFrame:
         bevels: bool = False,
     ) -> None:
 
-        raw_maze = self.build_raw_maze(nb_rows, nb_cols, separators, bevels)
+        self.separators = separators
+        raw_maze = self.build_raw_maze(nb_rows, nb_cols, bevels)
         raw_maze = self.randomise_raw_maze(raw_maze)
         self.maze = Maze(atlas, raw_maze, floor_as_frame=True)
         self.maze.build_sprites(offset=bot_left)
@@ -35,7 +36,6 @@ class GFrame:
         self,
         nb_rows: int,
         nb_cols: int,
-        separators: list[int],
         bevels: bool,
     ) -> list[list[int]]:
         """Create a simple raw maze which can be used as frame"""
@@ -50,7 +50,7 @@ class GFrame:
                     new_row.append(1)
                 elif row == 0 or row == nb_rows - 1:
                     new_row.append(1)
-                elif row in separators:
+                elif row in self.separators:
                     new_row.append(1)
                 elif (row, col) in bevels_points:
                     new_row.append(1)
@@ -64,7 +64,7 @@ class GFrame:
     # ########################################################################
     # ############################################################ BEVELS ####
     def get_bevels(self, nb_rows: int, nb_cols: int) -> set[Tuple[int, int]]:
-        return set(
+        blah = set(
             [
                 (1, 1),
                 (1, 2),
@@ -80,6 +80,14 @@ class GFrame:
                 (nb_rows - 3, 1),
             ]
         )
+
+        for separator in self.separators:
+            blah.add((separator - 1, 1))
+            blah.add((separator + 1, 1))
+            blah.add((separator - 1, nb_cols - 2))
+            blah.add((separator + 1, nb_cols - 2))
+
+        return blah
 
     # ########################################################################
     # ######################################################### RANDOMISE ####
