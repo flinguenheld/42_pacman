@@ -50,7 +50,7 @@ class GFrame:
                     new_row.append(1)
                 elif row == 0 or row == nb_rows - 1:
                     new_row.append(1)
-                elif row in self.separators:
+                elif row in self.separators and col > 3 and col < nb_cols - 4:
                     new_row.append(1)
                 elif (row, col) in bevels_points:
                     new_row.append(1)
@@ -64,7 +64,7 @@ class GFrame:
     # ########################################################################
     # ############################################################ BEVELS ####
     def get_bevels(self, nb_rows: int, nb_cols: int) -> set[Tuple[int, int]]:
-        blah = set(
+        return set(
             [
                 (1, 1),
                 (1, 2),
@@ -80,14 +80,6 @@ class GFrame:
                 (nb_rows - 3, 1),
             ]
         )
-
-        for separator in self.separators:
-            blah.add((separator - 1, 1))
-            blah.add((separator + 1, 1))
-            blah.add((separator - 1, nb_cols - 2))
-            blah.add((separator + 1, nb_cols - 2))
-
-        return blah
 
     # ########################################################################
     # ######################################################### RANDOMISE ####
