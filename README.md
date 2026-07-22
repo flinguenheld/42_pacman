@@ -63,11 +63,13 @@ Ghosts! More ghosts!
   - [ ] Game over
     - [ ] Display final score
     - [ ] Highscore: enter player name
+      - [ ] Max 10 characters, alphanumeric and spaces only
 
   - [ ] Victory
     - [ ] Display final score
     - [ ] Congratulation
     - [ ] Highscore: enter player name
+      - [ ] Max 10 characters, alphanumeric and spaces only
 
 - [ ] Deployment
   - [ ] Deployment to a public gaming platform (Itch.io)
