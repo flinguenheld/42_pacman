@@ -240,6 +240,8 @@ class VGame(arcade.View):
 
             self.hud.update(delta_time)
 
+    # ########################################################################
+    # ###################################################### PLAYER DEATH ####
     def is_player_dead(self) -> bool:
         return self.player not in self.player_list
 
@@ -247,7 +249,8 @@ class VGame(arcade.View):
         if self.is_player_dead():
             self.gamestate.decrement_lives()
             if self.gamestate.is_game_over():
-                self.window.switch_view(VNames.VIEW_WELCOME)
+                # TODO: Find a beautiful way to send the score
+                self.window.switch_view(VNames.VIEW_GAMEOVER)
             else:
                 self.setup()
                 self.cameras_update()

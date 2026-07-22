@@ -13,6 +13,7 @@ class VNames(Enum):
     VIEW_INSTRUCTIONS = auto()
     VIEW_PAUSE = auto()
     VIEW_PREVIOUS = auto()
+    VIEW_VICTORY = auto()
     VIEW_WELCOME = auto()
 
 
