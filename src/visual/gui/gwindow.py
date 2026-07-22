@@ -5,7 +5,7 @@ from arcade import Vec2
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
-from src.visual.gui.title.gtitle import GTitle
+from src.visual.gui.titles.gtitle import GTitle
 from src.visual.gui.gbackground import GBackground
 
 
@@ -37,6 +37,7 @@ class GWindow(arcade.View):
         )
 
         # Background --
+        arcade.set_background_color(self.atlas.get_color("background"))
         self.background = GBackground(atlas)
         self.background.build(
             center=self.frame.center_position,
@@ -83,9 +84,13 @@ class GWindow(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         for widget in self.to_draw_and_update:
-            widget.update(delta_time)
+            if hasattr(widget, "update"):
+                widget.update(delta_time)
 
     # ########################################################################
-    # ######################################################### ON RESIZE ####
+    # ############################################### ON RESIZE / ON SHOW ####
     def on_resize(self, width: int, height: int) -> None:
+        self.cameras_init()
+
+    def on_show_view(self) -> None:
         self.cameras_init()

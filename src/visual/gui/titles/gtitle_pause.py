@@ -1,5 +1,5 @@
 from src.visual.vatlas import VAtlas
-from src.visual.gui.title.gtitle import GTitle
+from src.visual.gui.titles.gtitle import GTitle
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░▀█▀░▀█▀░▀█▀░█░░░█▀▀░░░█▀█░█▀█░█░█░█▀▀░█▀▀░░

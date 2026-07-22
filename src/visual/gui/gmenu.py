@@ -36,8 +36,8 @@ class GMenu:
             )
             self.choices.append(new_entry)
 
-        self.current = 1
-        self.next_up()
+        self.current = 0
+        self.choices[self.current].active = True
 
     # ########################################################################
     # ############################################################## DRAW ####

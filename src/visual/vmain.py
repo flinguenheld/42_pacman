@@ -6,6 +6,7 @@ from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
 from src.visual.views.vpause import VPause
 from src.visual.views.vwelcome import VWelcome
+from src.visual.views.vinstructions import VIinstructions
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▄█░█▀█░▀█▀░█▀█░░
@@ -29,8 +30,9 @@ class VMain(arcade.Window):
         self.atlas = VAtlas()
         self.atlas.load()
 
-        self.vwelcome = VWelcome(self.atlas)
         self.vgame = VGame(self.atlas)
+        self.vwelcome = VWelcome(self.atlas)
+        self.previous_view: arcade.View = self.vwelcome
 
         self.setup()
 
@@ -42,13 +44,23 @@ class VMain(arcade.Window):
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
     def switch_view(self, to: VNames) -> None:
+
+        def save_and_show(which: arcade.View) -> None:
+            if self.current_view:
+                self.previous_view = self.current_view
+            self.show_view(which)
+
         match to:
-            case VNames.VIEW_WELCOME:
-                self.show_view(self.vwelcome)
             case VNames.VIEW_GAME:
-                self.show_view(self.vgame)
+                save_and_show(self.vgame)
+            case VNames.VIEW_INSTRUCTIONS:
+                save_and_show(VIinstructions(self.atlas))
             case VNames.VIEW_PAUSE:
-                self.show_view(VPause(self.atlas))
+                save_and_show(VPause(self.atlas))
+            case VNames.VIEW_PREVIOUS:
+                save_and_show(self.previous_view)
+            case VNames.VIEW_WELCOME:
+                save_and_show(self.vwelcome)
 
     # ########################################################################
     # ######################################################### ON RESIZE ####

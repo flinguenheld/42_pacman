@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import Self
 
 from src.config.config import Config
@@ -8,9 +8,11 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░█░█░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
-    VIEW_WELCOME = 0
-    VIEW_GAME = 1
-    VIEW_PAUSE = 2
+    VIEW_GAME = auto()
+    VIEW_INSTRUCTIONS = auto()
+    VIEW_PAUSE = auto()
+    VIEW_PREVIOUS = auto()
+    VIEW_WELCOME = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░░█▀▄░█▀█░▀█▀░█▀█░░

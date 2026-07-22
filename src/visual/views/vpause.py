@@ -6,7 +6,7 @@ from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.gmenu_entry import GMenuEntry
-from src.visual.gui.title.gtitle_pause import GTitlePause
+from src.visual.gui.titles.gtitle_pause import GTitlePause
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█▀█░█░█░█▀▀░█▀▀░░
@@ -40,8 +40,7 @@ class VPause(GWindow):
                 ),
                 "INSTRUCTIONS": GMenuEntry.ToCall(
                     func=self.window.switch_view,
-                    # TODO: SET TO INSTRUCTION
-                    args=[VNames.VIEW_GAME],
+                    args=[VNames.VIEW_INSTRUCTIONS],
                 ),
                 "GIVE UP": GMenuEntry.ToCall(
                     func=self.window.switch_view,

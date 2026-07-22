@@ -298,9 +298,6 @@ class VGame(arcade.View):
                     self.display_hitboxes = not self.display_hitboxes
                     self.display_enemy_paths = not self.display_enemy_paths
                     VData.debug_on = not VData.debug_on
-                case arcade.key.H:
-                    self.display_hitboxes = not self.display_hitboxes
-                    VData.debug_on = not VData.debug_on
                 case _:
                     pass
 

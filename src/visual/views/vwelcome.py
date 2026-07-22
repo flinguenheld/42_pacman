@@ -7,7 +7,7 @@ from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.gmenu_entry import GMenuEntry
-from src.visual.gui.title.gtitle_pacman import GTitlePacman
+from src.visual.gui.titles.gtitle_pacman import GTitlePacman
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░█░█▀▀░█░░░█▀▀░█▀█░█▄█░█▀▀░░
@@ -42,7 +42,7 @@ class VWelcome(GWindow):
                 ),
                 "INSTRUCTIONS": GMenuEntry.ToCall(
                     func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME],
+                    args=[VNames.VIEW_INSTRUCTIONS],
                 ),
                 "EXIT": GMenuEntry.ToCall(
                     func=arcade.exit,
