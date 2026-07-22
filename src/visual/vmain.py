@@ -6,6 +6,7 @@ from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
 from src.visual.views.vpause import VPause
 from src.visual.views.vwelcome import VWelcome
+from src.visual.views.vgame_over import VGameOver
 from src.visual.views.vinstructions import VIinstructions
 
 
@@ -39,7 +40,8 @@ class VMain(arcade.Window):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.show_view(self.vwelcome)
+        # self.show_view(self.vwelcome)
+        self.show_view(VGameOver(self.atlas))
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
@@ -53,6 +55,8 @@ class VMain(arcade.Window):
         match to:
             case VNames.VIEW_GAME:
                 save_and_show(self.vgame)
+            case VNames.VIEW_GAMEOVER:
+                save_and_show(VGameOver(self.atlas))
             case VNames.VIEW_INSTRUCTIONS:
                 save_and_show(VIinstructions(self.atlas))
             case VNames.VIEW_PAUSE:

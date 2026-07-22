@@ -9,6 +9,7 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
     VIEW_GAME = auto()
+    VIEW_GAMEOVER = auto()
     VIEW_INSTRUCTIONS = auto()
     VIEW_PAUSE = auto()
     VIEW_PREVIOUS = auto()

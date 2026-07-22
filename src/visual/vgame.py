@@ -5,7 +5,7 @@ from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
-from src.visual.gui.vhud import VHud
+from src.visual.gui.ghud import VHud
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
