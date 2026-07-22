@@ -1,10 +1,13 @@
 from dataclasses import dataclass, field
 import heapq
 
-from arcade import Sprite, SpriteList
 from arcade.types import Point2
 
-from src.visual.pathfinding import PATHFINDING_GRID_SIZE
+from src.visual.pathfinding import (
+    PathfindingBarrierSet,
+    convert_cells_to_world_positions,
+    convert_world_position_to_cell,
+)
 
 
 @dataclass(order=True)
@@ -13,116 +16,75 @@ class AStarOpenNode:
     position: Point2 = field(compare=False)
 
 
-class AStarSearch:
-    def __init__(
-        self, start: Point2, goal: Point2, blocked_sprites: SpriteList[Sprite]
-    ) -> None:
-        self.start_cell: Point2 = self.convert_world_position_to_cell(start)
-        self.goal_cell: Point2 = self.convert_world_position_to_cell(goal)
-        self.blocked_cells = self.get_blocked_cells(blocked_sprites)
+def astar_search(
+    start: Point2, goal: Point2, barrier_set: PathfindingBarrierSet
+) -> list[Point2]:
+    start_cell = convert_world_position_to_cell(start)
+    goal_cell = convert_world_position_to_cell(goal)
 
-        self.open_set: list[AStarOpenNode] = list()
-        heapq.heappush(
-            self.open_set,
-            AStarOpenNode(
-                self.heuristic(self.start_cell, self.goal_cell),
-                self.start_cell,
-            ),
-        )
+    open_set: list[AStarOpenNode] = []
+    heapq.heappush(
+        open_set,
+        AStarOpenNode(
+            f_score=_astar_heuristic(start_cell, goal_cell),
+            position=start_cell,
+        ),
+    )
 
-        self.closed_set: set[Point2] = set()
+    closed_set: set[Point2] = set()
 
-        self.came_from: dict[Point2, Point2] = dict()
+    came_from: dict[Point2, Point2] = {}
 
-        self.g_score: dict[Point2, float] = {self.start_cell: 0}
+    g_score: dict[Point2, float] = {start_cell: 0}
 
-        self.finished = False
-        self.failed = False
+    while open_set:
+        current = heapq.heappop(open_set).position
 
-    def get_blocked_cells(
-        self, blocked_sprites: SpriteList[Sprite]
-    ) -> set[Point2]:
-        blocked_cells: set[Point2] = set()
-        for sprite in blocked_sprites:
-            cell = self.convert_world_position_to_cell(sprite.position)
-            blocked_cells.add(cell)
-        return blocked_cells
+        if current == goal_cell:
+            reconstructed_path = _astar_reconstruct_path(
+                goal_cell, start_cell, came_from
+            )
+            return convert_cells_to_world_positions(reconstructed_path)
 
-    def calculate_path(self) -> list[Point2]:
-        while True:
-            if not self.open_set:
-                self.finished = True
-                self.failed = True
-                return []
+        closed_set.add(current)
 
-            current = heapq.heappop(self.open_set).position
+        for neighbor in _astar_get_neighbors(current):
+            if neighbor in closed_set or neighbor in barrier_set.barrier_cells:
+                continue
 
-            if current == self.goal_cell:
-                reconstructed_path = self.reconstruct_path()
-                path = self.convert_cells_to_world_positions(
-                    reconstructed_path
-                )
-                self.finished = True
-                return path
+            tentative_g = g_score[current] + 1
 
-            self.closed_set.add(current)
+            if tentative_g < g_score.get(neighbor, float("inf")):
+                came_from[neighbor] = current
 
-            for neighbor in self.get_neighbors(current):
-                if (
-                    neighbor in self.closed_set
-                    or neighbor in self.blocked_cells
-                ):
-                    continue
+                g_score[neighbor] = tentative_g
 
-                tentative_g = self.g_score[current] + 1
+                f = tentative_g + _astar_heuristic(neighbor, goal_cell)
 
-                if tentative_g < self.g_score.get(neighbor, float("inf")):
-                    self.came_from[neighbor] = current
+                heapq.heappush(open_set, AStarOpenNode(f, neighbor))
+    return []
 
-                    self.g_score[neighbor] = tentative_g
 
-                    f = tentative_g + self.heuristic(neighbor, self.goal_cell)
+def _astar_heuristic(a: Point2, b: Point2) -> float:
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-                    heapq.heappush(self.open_set, AStarOpenNode(f, neighbor))
 
-    def heuristic(self, a: Point2, b: Point2) -> float:
-        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+def _astar_get_neighbors(cell: Point2) -> list[Point2]:
+    return [
+        (cell[0] + 1, cell[1]),
+        (cell[0] - 1, cell[1]),
+        (cell[0], cell[1] + 1),
+        (cell[0], cell[1] - 1),
+    ]
 
-    def get_neighbors(self, cell: Point2) -> list[Point2]:
-        return [
-            (cell[0] + 1, cell[1]),
-            (cell[0] - 1, cell[1]),
-            (cell[0], cell[1] + 1),
-            (cell[0], cell[1] - 1),
-        ]
 
-    def reconstruct_path(self) -> list[Point2]:
-        current = self.goal_cell
-
-        path = [current]
-
-        while current != self.start_cell:
-            current = self.came_from[current]
-
-            path.append(current)
-
-        path.reverse()
-
-        return path
-
-    def convert_cell_to_world_position(self, cell: Point2) -> Point2:
-        return (
-            cell[0] * PATHFINDING_GRID_SIZE,
-            cell[1] * PATHFINDING_GRID_SIZE,
-        )
-
-    def convert_world_position_to_cell(self, position: Point2) -> Point2:
-        return (
-            int(position[0] // PATHFINDING_GRID_SIZE),
-            int(position[1] // PATHFINDING_GRID_SIZE),
-        )
-
-    def convert_cells_to_world_positions(
-        self, cells: list[Point2]
-    ) -> list[Point2]:
-        return [self.convert_cell_to_world_position(cell) for cell in cells]
+def _astar_reconstruct_path(
+    goal_cell: Point2, start_cell: Point2, came_from: dict[Point2, Point2]
+) -> list[Point2]:
+    current = goal_cell
+    path = [current]
+    while current != start_cell:
+        current = came_from[current]
+        path.append(current)
+    path.reverse()
+    return path

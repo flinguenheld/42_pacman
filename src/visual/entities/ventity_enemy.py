@@ -8,8 +8,8 @@ from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.vgamestate import VGameState
 from src.visual.sprites.sfloor import SFloor
-from src.visual.pathfinding.astar import AStarSearch
-from src.visual.pathfinding import PathfindingAlgorithm
+from src.visual.pathfinding.astar import astar_search
+from src.visual.pathfinding import PathfindingAlgorithm, PathfindingBarrierSet
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 
@@ -34,7 +34,7 @@ class VEntityEnemyCommon(VEntityMoving):
         self.gamestate: VGameState = gamestate
         self.maze: Maze = maze
 
-        self.pathfinder: type[PathfindingAlgorithm] = AStarSearch
+        self.pathfinding_algo: PathfindingAlgorithm = astar_search
 
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
@@ -48,6 +48,7 @@ class VEntityEnemyCommon(VEntityMoving):
         self.dummy_target_sprite = Sprite()
         self.last_player_direction: Vec2 = VPlayerDirection.UP.get_vector()
 
+        self.barrier_set = PathfindingBarrierSet(self.walls.sprites)
         self.update_closest_floor()
         self.update_next_position()
 
@@ -66,11 +67,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
         start = self.closest_floor.position
         goal = self.target_sprite.position
-        path = self.pathfinder(
-            start=start,
-            goal=goal,
-            blocked_sprites=self.walls.sprites,
-        ).calculate_path()
+        path = self.pathfinding_algo(start, goal, self.barrier_set)
 
         if not path:
             self.path = None
