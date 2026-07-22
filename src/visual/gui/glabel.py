@@ -22,12 +22,18 @@ class GLabel(Text):
         align: str = "center",
         anchor_x: str = "center",
         anchor_y: str = "center",
+        multiline: bool = False,
+        width: int | None = None,  # Only for multilines
     ):
 
         if not color:
             color = atlas.get_color("menu_font")
         if not text:
-            text = "hello"
+            text = ""
+
+        width_for_multi = None
+        if multiline and not width:
+            width_for_multi = int(frame.width * 0.9)
 
         super().__init__(
             text=text,
@@ -39,4 +45,6 @@ class GLabel(Text):
             anchor_x=anchor_x,
             anchor_y=anchor_y,
             color=color,
+            multiline=multiline,
+            width=width_for_multi,
         )

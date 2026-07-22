@@ -1,3 +1,4 @@
+from src.visual.views.vvictory import VVictory
 import arcade
 from mazegenerator import MazeGenerator
 
@@ -41,7 +42,8 @@ class VMain(arcade.Window):
     # ############################################################# SETUP ####
     def setup(self) -> None:
         # self.show_view(self.vwelcome)
-        self.show_view(VGameOver(self.atlas))
+        # self.show_view(VGameOver(self.atlas))
+        self.show_view(VVictory(self.atlas))
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
@@ -65,6 +67,8 @@ class VMain(arcade.Window):
                 save_and_show(self.previous_view)
             case VNames.VIEW_WELCOME:
                 save_and_show(self.vwelcome)
+            case VNames.VIEW_VICTORY:
+                save_and_show(VVictory(self.atlas))
 
     # ########################################################################
     # ######################################################### ON RESIZE ####
