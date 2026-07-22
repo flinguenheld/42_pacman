@@ -1,10 +1,13 @@
 from dataclasses import dataclass, field
 import heapq
 
+from arcade import Vec2
 from arcade.types import Point2
 
 from src.visual.pathfinding import (
     PathfindingBarrierSet,
+    _get_neighbors,
+    convert_cell_to_world_position,
     convert_cells_to_world_positions,
     convert_world_position_to_cell,
 )
@@ -48,7 +51,7 @@ def astar_search(
 
         closed_set.add(current)
 
-        for neighbor in _astar_get_neighbors(current, closed_set):
+        for neighbor in _get_neighbors(current, closed_set):
             tentative_g = g_score[current] + 1
 
             if tentative_g < g_score.get(neighbor, float("inf")):
@@ -66,18 +69,6 @@ def _astar_heuristic(a: Point2, b: Point2) -> float:
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def _astar_get_neighbors(
-    cell: Point2, closed_set: set[Point2]
-) -> list[Point2]:
-    neighbors = [
-        (cell[0] + 1, cell[1]),
-        (cell[0] - 1, cell[1]),
-        (cell[0], cell[1] + 1),
-        (cell[0], cell[1] - 1),
-    ]
-    return [n for n in neighbors if n not in closed_set]
-
-
 def _astar_reconstruct_path(
     goal_cell: Point2, start_cell: Point2, came_from: dict[Point2, Point2]
 ) -> list[Point2]:
@@ -88,3 +79,21 @@ def _astar_reconstruct_path(
         path.append(current)
     path.reverse()
     return path
+
+
+def random_path_search(
+    start: Point2,
+    barrier_set: PathfindingBarrierSet,
+    current_direction: Point2,
+) -> Point2 | None:
+    start_cell = convert_world_position_to_cell(start)
+    neighbors = _get_neighbors(
+        start_cell,
+        barrier_set.barrier_cells.union(
+            {Vec2(*start_cell) - Vec2(*current_direction)}
+        ),
+    )
+    if not neighbors:
+        return None
+
+    return convert_cell_to_world_position(neighbors[0])

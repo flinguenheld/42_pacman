@@ -30,3 +30,13 @@ def convert_world_position_to_cell(position: Point2) -> Point2:
 
 def convert_cells_to_world_positions(cells: list[Point2]) -> list[Point2]:
     return [convert_cell_to_world_position(cell) for cell in cells]
+
+
+def _get_neighbors(cell: Point2, forbidden_set: set[Point2]) -> list[Point2]:
+    neighbors = [
+        (cell[0] + 1, cell[1]),
+        (cell[0] - 1, cell[1]),
+        (cell[0], cell[1] + 1),
+        (cell[0], cell[1] - 1),
+    ]
+    return [n for n in neighbors if n not in forbidden_set]
