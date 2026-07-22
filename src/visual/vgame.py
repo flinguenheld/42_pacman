@@ -266,7 +266,7 @@ class VGame(arcade.View):
         collided: list[VEntityEnemyCommon] = (
             arcade.check_for_collision_with_list(self.player, self.enemy_list)
         )
-        for _enemy in collided:
+        if len(collided) > 0:
             self.player.kill()
 
     # ########################################################################

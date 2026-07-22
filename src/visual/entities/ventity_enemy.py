@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 import arcade
 from arcade.types import Point2
 from arcade import Sprite, Vec2
@@ -12,6 +14,16 @@ from src.visual.pathfinding.astar import astar_search
 from src.visual.pathfinding import PathfindingBarrierSet
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
+
+
+class EnemyState(Enum):
+    """
+    Enum for the different states an enemy can be in.
+    """
+
+    CHASING = auto()
+    FLEEING = auto()
+    DEAD = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -33,6 +45,8 @@ class VEntityEnemyCommon(VEntityMoving):
         self.player: VEntityPlayer = player
         self.gamestate: VGameState = gamestate
         self.maze: Maze = maze
+
+        self.state: EnemyState = EnemyState.CHASING
 
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None

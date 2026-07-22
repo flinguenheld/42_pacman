@@ -31,7 +31,7 @@ def astar_search(
         ),
     )
 
-    closed_set: set[Point2] = set()
+    closed_set: set[Point2] = barrier_set.barrier_cells.copy()
 
     came_from: dict[Point2, Point2] = {}
 
@@ -48,10 +48,7 @@ def astar_search(
 
         closed_set.add(current)
 
-        for neighbor in _astar_get_neighbors(current):
-            if neighbor in closed_set or neighbor in barrier_set.barrier_cells:
-                continue
-
+        for neighbor in _astar_get_neighbors(current, closed_set):
             tentative_g = g_score[current] + 1
 
             if tentative_g < g_score.get(neighbor, float("inf")):
@@ -69,13 +66,16 @@ def _astar_heuristic(a: Point2, b: Point2) -> float:
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def _astar_get_neighbors(cell: Point2) -> list[Point2]:
-    return [
+def _astar_get_neighbors(
+    cell: Point2, closed_set: set[Point2]
+) -> list[Point2]:
+    neighbors = [
         (cell[0] + 1, cell[1]),
         (cell[0] - 1, cell[1]),
         (cell[0], cell[1] + 1),
         (cell[0], cell[1] - 1),
     ]
+    return [n for n in neighbors if n not in closed_set]
 
 
 def _astar_reconstruct_path(
