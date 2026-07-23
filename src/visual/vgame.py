@@ -1,3 +1,4 @@
+import time
 import random
 import arcade
 from arcade.types import Color
@@ -10,6 +11,7 @@ from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
     Charlie,
+    EnemyState,
     EnemyVariant,
     Johnny,
     Michael,
@@ -133,6 +135,9 @@ class VGame(arcade.View):
                         VEntityPacGum(self.atlas, position)
                     )
 
+        self.time_last_super_pacgum_ms: float = 0.0
+        self.duration_super_pacgum_secs: float = 10.0
+
         self.setup_done = True
 
     # ########################################################################
@@ -226,6 +231,7 @@ class VGame(arcade.View):
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
             self.handle_player_death()
+            self.handle_super_pacgum_duration()
 
             self.maze.update(delta_time)
             self.background.update(delta_time)
@@ -255,6 +261,17 @@ class VGame(arcade.View):
                 self.setup()
                 self.cameras_update()
 
+    def handle_super_pacgum_duration(self) -> None:
+        if (
+            self.time_last_super_pacgum_ms + self.duration_super_pacgum_secs
+            < time.time()
+        ):
+            self.set_all_enemies_state(EnemyState.CHASING)
+
+    def set_all_enemies_state(self, state: EnemyState) -> None:
+        for enemy in self.enemy_list:
+            enemy.set_state(state)
+
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
     def resolve_player_pacgum_collisions(self) -> None:
@@ -263,13 +280,20 @@ class VGame(arcade.View):
         )
         for pacgum in collided:
             self.gamestate.increment_score(pacgum.get_points())
+            if isinstance(pacgum, VEntitySuperPacGum):
+                self.time_last_super_pacgum_ms = time.time()
+                self.set_all_enemies_state(EnemyState.FLEEING)
             pacgum.kill()
 
     def resolve_player_enemy_collisions(self) -> None:
         collided: list[VEntityEnemyCommon] = (
             arcade.check_for_collision_with_list(self.player, self.enemy_list)
         )
-        if len(collided) > 0:
+        if not collided:
+            return
+        if all(enemy.state == EnemyState.FLEEING for enemy in collided):
+            pass
+        else:
             self.player.kill()
 
     # ########################################################################
