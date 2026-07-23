@@ -5,17 +5,19 @@ from arcade.types import Color
 from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
+from src.visual.entities.venemy_variants import (
+    Charlie,
+    EnemyVariant,
+    Johnny,
+    Michael,
+    ReverseMichael,
+)
 from src.visual.vatlas import VAtlas
 from src.visual.gui.ghud import VHud
 from src.visual.vdata import VNames, VData
 from src.visual.vgamestate import VGameState
 from src.visual.entities.ventity_enemy import (
-    Charlie,
     EnemyState,
-    EnemyVariant,
-    Johnny,
-    Michael,
-    ReverseMichael,
     VEntityEnemyCommon,
 )
 from src.visual.gui.gbackground import GBackground
