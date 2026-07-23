@@ -1,4 +1,5 @@
 import arcade
+from arcade.types import Color
 from arcade import Vec2, key, SpriteList
 
 from src.visual.vdata import VData
@@ -20,6 +21,7 @@ class GInput:
         self,
         atlas: VAtlas,
         frame: GFrame,
+        color: Color,
         offset: Vec2 = Vec2(0, 0),
     ):
 
@@ -32,7 +34,7 @@ class GInput:
             frame=frame,
             offset=offset,
             font_size_factor=GInput.FONT_SIZE_FACTOR,
-            color=atlas.get_color("input"),
+            color=color,
         )
 
         # Help ########################
@@ -41,9 +43,9 @@ class GInput:
             atlas=atlas,
             frame=frame,
             text="Max 10 characters, alphanumeric and spaces only",
-            offset=offset + Vec2(0, font_size * 1.3),
+            offset=offset + Vec2(0, font_size * 1.4),
             font_size_factor=0.8,
-            color=arcade.csscolor.DARK_RED,
+            color=arcade.csscolor.RED,
         )
 
         # Icon ########################

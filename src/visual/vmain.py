@@ -1,5 +1,5 @@
-from typing import Tuple
 import arcade
+from typing import Tuple
 from mazegenerator import MazeGenerator
 
 from src.visual.vgame import VGame
@@ -44,10 +44,9 @@ class VMain(arcade.Window):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.switch_view(VNames.VIEW_WELCOME)
-        # self.show_view(VWelcome(self.atlas))
+        # self.switch_view(VNames.VIEW_WELCOME)
         # self.show_view(VGameOver(self.atlas))
-        # self.show_view(VVictory(self.atlas))
+        self.show_view(VVictory(self.atlas))
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####

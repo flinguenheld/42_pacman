@@ -84,15 +84,15 @@ Ghosts! More ghosts!
   - [ ] Handle errors gracefully
 
 - [ ] Highscore system
-  - [ ] JSON File management
-    - [ ] Player name: max 10 chars, only alphanumeric and spaces
-    - [ ] Score: Only non-negative integers
-    - [ ] Store max top 10 highscores
-  - [ ] Manage display on screen
-  - [ ] Handle empty file
-  - [ ] Handle adding new highscores (View, System)
-  - [ ] Allow players to enter their name and register new high score
-  - [ ] Do not update previous high score of the same name, add new entry
+  - [X] JSON File management
+    - [X] Player name: max 10 chars, only alphanumeric and spaces
+    - [X] Score: Only non-negative integers
+    - [X] Store max top 10 highscores
+  - [X] Manage display on screen
+  - [X] Handle empty file
+  - [X] Handle adding new highscores (View, System)
+  - [X] Allow players to enter their name and register new high score
+  - [X] Do not update previous high score of the same name, add new entry
 
 - [ ] Game
   - [ ] Player
@@ -155,9 +155,9 @@ Ghosts! More ghosts!
   - [] Entity system
     - [X] VEntity ABC, common API for entities
     - [X] VPlayerEntity
-    - [] VGhostEntity
-    - [] VPacgumEntity
-    - [] VSuperPacgumEntity
+    - [ ] VGhostEntity
+    - [ ] VPacgumEntity
+    - [ ] VSuperPacgumEntity
 
 ### Description
 

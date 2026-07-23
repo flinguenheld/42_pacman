@@ -1,4 +1,3 @@
-from src.high_scores.high_scores import HighScores
 from arcade import Vec2
 
 from src.visual.vdata import VNames
@@ -10,6 +9,7 @@ from src.visual.gui.ginput import GInput
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.titles.gtitle import GTitle
 from src.visual.gui.gmenu_entry import GMenuEntry
+from src.high_scores.high_scores import HighScores
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░█▀▄░░░█▀▄░█▀█░█▀▀░█▀▀░░
@@ -33,10 +33,10 @@ class VEndBase(GWindow):
             title=title,
             frame=GFrame(
                 atlas=atlas,
-                nb_rows=24,
+                nb_rows=26,
                 nb_cols=36,
                 bevels=True,
-                separators=[r for r in range(7, 18)],
+                separators=[r for r in range(8, 19)],
             ),
         )
         self.score = score
@@ -48,7 +48,7 @@ class VEndBase(GWindow):
             font_size_factor=1.7,
             text=text,
             multiline=True,
-            offset=Vec2(0, 250),
+            offset=Vec2(0, 290),
         )
 
         # Request ##########################
@@ -57,13 +57,15 @@ class VEndBase(GWindow):
             frame=self.frame,
             text="Enter your name:",
             offset=Vec2(0, 90),
+            color=self.atlas.get_color("high_scores"),
         )
 
         # Input ############################
         self.input = GInput(
             atlas=self.atlas,
             frame=self.frame,
-            offset=Vec2(0, -40),
+            offset=Vec2(0, -60),
+            color=self.atlas.get_color("high_scores"),
         )
 
         # Menu #############################
@@ -79,7 +81,7 @@ class VEndBase(GWindow):
                     args=[VNames.VIEW_WELCOME],
                 ),
             },
-            center_top_first=Vec2(self.frame.center_position.x, 140),
+            center_top_first=Vec2(self.frame.center_position.x, 150),
         )
 
         # --
