@@ -73,6 +73,10 @@ class VEntityEnemyCommon(VEntityMoving):
             self.next_sprite = None
             self.last_goal = None
 
+    @staticmethod
+    def get_points() -> int:
+        return VData.points_per_ghost
+
     # ########################################################################
     # ############################################################# SPEED ####
     def get_speed(self) -> float:
