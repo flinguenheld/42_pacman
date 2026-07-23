@@ -7,9 +7,10 @@ from src.visual.gui.titles.gtitle_game_over import GTitleGameOver
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░░█░█░▀▄▀░█▀▀░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░░▀▀▀░░▀░░▀▀▀░▀░▀░░
 class VGameOver(VEndBase):
-    def __init__(self, atlas: VAtlas, score: int = 42) -> None:
+    def __init__(self, atlas: VAtlas, score: int) -> None:
         super().__init__(
             atlas=atlas,
             title=GTitleGameOver(atlas),
             text=f"Oh no !\nYou loose with {score} points.",
+            score=score,
         )

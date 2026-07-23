@@ -31,9 +31,8 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
-    def __init__(self, atlas: VAtlas) -> None:
+    def __init__(self, atlas: VAtlas, gamestate: VGameState) -> None:
         super().__init__()
-        arcade.enable_timings()
 
         self.atlas = atlas
         self.setup_done = False
@@ -47,19 +46,18 @@ class VGame(arcade.View):
 
         # Game state --
         # Needs to be first initialized here
-        self.gamestate = VGameState()
+        self.gamestate = gamestate
+        self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
         """Restart the game."""
 
-        self.setup_done = False
+        # TODO: Implement the logic when the level is done
+        # TODO:   -> Call setup and level - 1
 
-        # Used if the previous game was over
-        # but the player wants to start a new game
-        if self.gamestate.is_game_over():
-            self.gamestate = VGameState()
+        self.setup_done = False
 
         # Maze --
         self.new_maze(
@@ -145,7 +143,10 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################### ON SHOW ####
     def on_show_view(self) -> None:
-        self.setup()
+        # NOTE: We have to think about the setup and the process
+        #       Check the subject page 7 about the game loop
+
+        # self.setup()
         self.cameras_update()
 
     # ########################################################################
@@ -248,6 +249,8 @@ class VGame(arcade.View):
 
             self.hud.update(delta_time)
 
+            self.gamestate.update(delta_time)
+
     # ########################################################################
     # ###################################################### PLAYER DEATH ####
     def is_player_dead(self) -> bool:
@@ -256,10 +259,13 @@ class VGame(arcade.View):
     def handle_player_death(self) -> None:
         if self.is_player_dead():
             self.gamestate.decrement_lives()
-            if self.gamestate.is_game_over():
-                # TODO: Find a beautiful way to send the score
+
+            if self.gamestate.is_game_over:
                 self.window.switch_view(VNames.VIEW_GAMEOVER)
             else:
+                # QUESTION Why setup() here and not just continuing
+                # QUESTION the current map ?
+
                 self.setup()
                 self.cameras_update()
 
@@ -320,6 +326,8 @@ class VGame(arcade.View):
 
                 # TODO: Potentially replace the current pause view with this
                 # for pausing the game?
+                # ANSWER: The subject explicitly requires a pause menu
+                #         But it could be a cheat ?
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates
 

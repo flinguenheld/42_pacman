@@ -19,25 +19,25 @@ class HighScores:
         Add the new one, sort and only keep the MAX ENTRIES first values.
         Replace the file with a brand new one.
         """
+        if score > 0:
+            # Add new score --
+            entries = self._read_file()
+            entries.append({"name": player_name, "score": score})
 
-        # Add new score --
-        entries = self._read_file()
-        entries.append({"name": player_name, "score": score})
+            self.sort(entries)
+            while len(entries) > HighScores.MAX_ENTRIES:
+                entries.pop(len(entries) - 1)
 
-        self.sort(entries)
-        while len(entries) > HighScores.MAX_ENTRIES:
-            entries.pop(len(entries) - 1)
-
-        # Overwrite file --
-        try:
-            with open(HighScores.FILE_NAME, "w+") as file:
-                file.write(json.dumps(entries))
-        except IOError:
-            cprint(
-                "Cannot save high scores.",
-                HighScores.WARNING_COLOR,
-                file=sys.stdout,
-            )
+            # Overwrite file --
+            try:
+                with open(HighScores.FILE_NAME, "w+") as file:
+                    file.write(json.dumps(entries))
+            except IOError:
+                cprint(
+                    "Cannot save high scores.",
+                    HighScores.WARNING_COLOR,
+                    file=sys.stdout,
+                )
 
     # ########################################################################
     # ############################################################## SORT ####

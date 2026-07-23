@@ -8,7 +8,8 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░█░█░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
-    VIEW_GAME = auto()
+    VIEW_GAME_RESUME = auto()
+    VIEW_GAME_NEW = auto()
     VIEW_GAMEOVER = auto()
     VIEW_INSTRUCTIONS = auto()
     VIEW_PAUSE = auto()
@@ -38,13 +39,6 @@ class VData:
 
     debug_on: bool = False
 
-    FONT_SIZE: int = 32
-    # FONT_NAME: str = "Kenney Mini"
-    # FONT_NAME: str = "Kenney Future"
-    # FONT_NAME: str = "Kenney Pixel Square"
-    # TODO: USELESS --
-    FONT_SIZE_TITLE: int = FONT_SIZE * 3
-
     SPRITE_SIZE = 32
     SPRITE_SIZE_BACKGROUND = SPRITE_SIZE * 4
     TEXTURES = "textures"
@@ -55,7 +49,7 @@ class VData:
     points_per_pacgum: int = 50
     points_per_super_pacgum: int = 200
 
-    time_max: int = 90
+    time_max: float = 90.0
 
     @classmethod
     def apply_config(cls: type[Self], config: Config) -> None:

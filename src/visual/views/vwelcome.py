@@ -41,7 +41,7 @@ class VWelcome(GWindow):
             choices={
                 "PLAY": GMenuEntry.ToCall(
                     func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME],
+                    args=[VNames.VIEW_GAME_NEW],
                 ),
                 "INSTRUCTIONS": GMenuEntry.ToCall(
                     func=self.window.switch_view,

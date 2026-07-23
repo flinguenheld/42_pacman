@@ -36,7 +36,7 @@ class VPause(GWindow):
             choices={
                 "RESUME": GMenuEntry.ToCall(
                     func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME],
+                    args=[VNames.VIEW_GAME_RESUME],
                 ),
                 "INSTRUCTIONS": GMenuEntry.ToCall(
                     func=self.window.switch_view,

@@ -26,7 +26,7 @@ class VEndBase(GWindow):
         atlas: VAtlas,
         title: GTitle,
         text: str,
-        score: int = 42,
+        score: int,
     ) -> None:
         super().__init__(
             atlas,

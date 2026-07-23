@@ -1,4 +1,3 @@
-import time
 import arcade
 from math import ceil
 from arcade.types import Color
@@ -141,14 +140,12 @@ class VHud:
     # ########################################################################
     # ##################################################### GET TIME LEFT ####
     def get_time_left(self) -> str:
-        time_spend = time.time() - self.gamestate.time_start
-        time_left = VData.time_max - time_spend
-
-        minutes = int(time_left) // 60
-        seconds = int(time_left) % 60
-
-        if minutes < 0:
+        if self.gamestate.timer <= 0:
             return "OVER"
+
+        minutes = int(self.gamestate.timer) // 60
+        seconds = int(self.gamestate.timer) % 60
+
         return f"{minutes:02}:{seconds:02}"
 
     # ########################################################################

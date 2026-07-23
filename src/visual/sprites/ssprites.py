@@ -136,7 +136,7 @@ class SSprites:
         """
 
         current = self.sprites[0]
-        current_distance = sys.maxsize
+        current_distance = float(sys.maxsize)
 
         for sprite in self.sprites:
             d = from_point.distance(Vec2(sprite.center_x, sprite.center_y))
