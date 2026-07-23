@@ -109,45 +109,39 @@ class SSprites:
         return self.rect.center
 
     # ########################################################################
-    # ##################################################### FLOOR CORNERS ####
-
+    # ############################################ SPRITE CORNER / CENTER ####
     @property
-    def sprites_corners(self) -> list[Vec2]:
+    def sprite_corners(self) -> list[Vec2]:
         """Return corners:  left/bot, left/top, right/top, right/bot."""
 
-        in_bot = [s for s in self.sprites if s.center_y == self.__bot]
-        in_top = [s for s in self.sprites if s.center_y == self.__top]
-
-        bot_left = min(in_bot, key=lambda s: s.center_x)
-        top_left = min(in_top, key=lambda s: s.center_x)
-        top_right = max(in_top, key=lambda s: s.center_x)
-        bot_right = max(in_bot, key=lambda s: s.center_x)
-
         return [
-            Vec2(bot_left.center_x, bot_left.center_y),
-            Vec2(top_left.center_x, top_left.center_y),
-            Vec2(top_right.center_x, top_right.center_y),
-            Vec2(bot_right.center_x, bot_right.center_y),
+            self.find_closest_sprite(self.rect.bottom_left),
+            self.find_closest_sprite(self.rect.top_left),
+            self.find_closest_sprite(self.rect.top_right),
+            self.find_closest_sprite(self.rect.bottom_right),
         ]
 
-    # ########################################################################
-    # ###################################################### FLOOR CENTER ####
     @property
     def sprite_center(self) -> Vec2:
-        """Center of the sprite which is the closest to the center."""
+        """Center of the sprite which is the closest to the real center."""
 
-        # Find y --
-        perfect_y = (self.__top - self.__bot) / 2
-        closer = min(self.sprites, key=lambda s: abs(perfect_y - s.center_y))
-        y = closer.center_y
+        return self.find_closest_sprite(self.center_position)
 
-        # Middle row --
-        middle_row = [f for f in self.sprites if f.center_y == y]
-        middle_row.sort(key=lambda sp: sp.center_x)
+    # ########################################################################
+    # ############################################### FIND CLOSEST SPRITE ####
+    def find_closest_sprite(self, from_point: Vec2) -> Vec2:
+        """
+        Loop in all sprites to find the closest one.
+        Return its center position
+        """
 
-        center = self.center_position.x - VData.SPRITE_SIZE
-        for s in middle_row:
-            if s.center_x >= center:
-                return Vec2(s.center_x, s.center_y)
+        current = self.sprites[0]
+        current_distance = sys.maxsize
 
-        return Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE)
+        for sprite in self.sprites:
+            d = from_point.distance(Vec2(sprite.center_x, sprite.center_y))
+            if d < current_distance:
+                current = sprite
+                current_distance = d
+
+        return Vec2(current.center_x, current.center_y)

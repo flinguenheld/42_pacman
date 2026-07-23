@@ -55,9 +55,9 @@ class GMenu:
     # ####################################################### KEY PRESSED ####
     def key_press(self, symbol: int) -> None:
         match symbol:
-            case arcade.key.UP | arcade.key.Z | arcade.key.W | arcade.key.L:
+            case arcade.key.UP:
                 self.next_up()
-            case arcade.key.DOWN | arcade.key.S | arcade.key.K:
+            case arcade.key.DOWN:
                 self.next_down()
             case arcade.key.ENTER | arcade.key.NUM_ENTER:
                 self.choices[self.current].call_action()
