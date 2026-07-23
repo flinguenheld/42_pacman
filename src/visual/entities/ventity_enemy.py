@@ -53,10 +53,6 @@ class VEntityEnemyCommon(VEntityMoving):
         self.next_sprite: Sprite | None = None
         self.last_goal: Point2 | None = None
 
-        self.path = random_path_search(
-            Vec2(*self.position),
-            PathfindingBarrierSet(self.walls.sprites)
-        )
         self.setup()
 
     # ########################################################################
@@ -68,6 +64,14 @@ class VEntityEnemyCommon(VEntityMoving):
         self.barrier_set = PathfindingBarrierSet(self.walls.sprites)
         self.update_closest_floor()
         self.update_next_position()
+
+    def set_state(self, new_state: EnemyState) -> None:
+        if self.state != new_state:
+            self.state = new_state
+            self.path = None
+            self.next_position = None
+            self.next_sprite = None
+            self.last_goal = None
 
     # ########################################################################
     # ############################################################# SPEED ####
