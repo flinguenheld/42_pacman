@@ -46,7 +46,7 @@ class VEntityEnemyCommon(VEntityMoving):
         self.gamestate: VGameState = gamestate
         self.maze: Maze = maze
 
-        self.state: EnemyState = EnemyState.FLEEING
+        self.state: EnemyState = EnemyState.CHASING
 
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
