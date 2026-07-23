@@ -14,6 +14,8 @@ class GFrame:
     Create and manage a maze to display a frame.
     """
 
+    SEPARATOR_GAP = 4
+
     def __init__(
         self,
         atlas: VAtlas,
@@ -41,7 +43,8 @@ class GFrame:
         """Create a simple raw maze which can be used as frame"""
 
         raw_maze: list[list[int]] = []
-        bevels_points = self.get_bevels(nb_rows, nb_cols) if bevels else set()
+        BEVELS = self.get_bevels(bevels, nb_rows, nb_cols)
+        BEVELS_SEP = self.get_bevels_separators(bevels, nb_cols)
 
         for row in range(nb_rows):
             new_row: list[int] = []
@@ -50,9 +53,15 @@ class GFrame:
                     new_row.append(1)
                 elif row == 0 or row == nb_rows - 1:
                     new_row.append(1)
-                elif row in self.separators and col > 3 and col < nb_cols - 4:
+                elif (row, col) in BEVELS:
                     new_row.append(1)
-                elif (row, col) in bevels_points:
+                elif (row, col) in BEVELS_SEP:
+                    new_row.append(0)
+                elif (
+                    row in self.separators
+                    and col > GFrame.SEPARATOR_GAP
+                    and col < nb_cols - GFrame.SEPARATOR_GAP - 1
+                ):
                     new_row.append(1)
                 else:
                     new_row.append(0)
@@ -63,7 +72,16 @@ class GFrame:
 
     # ########################################################################
     # ############################################################ BEVELS ####
-    def get_bevels(self, nb_rows: int, nb_cols: int) -> set[Tuple[int, int]]:
+    def get_bevels(
+        self,
+        active: bool,
+        nb_rows: int,
+        nb_cols: int,
+    ) -> set[Tuple[int, int]]:
+
+        if not active:
+            return set()
+
         return set(
             [
                 (1, 1),
@@ -80,6 +98,45 @@ class GFrame:
                 (nb_rows - 3, 1),
             ]
         )
+
+    # ########################################################################
+    # ################################################# BEVELS SEPARATORS ####
+    def get_bevels_separators(
+        self,
+        active: bool,
+        nb_cols: int,
+    ) -> set[Tuple[int, int]]:
+        """
+        Loop in the separators to find consecutive ones.
+        If there are, add their corners in the set.
+        """
+
+        GAP = GFrame.SEPARATOR_GAP + 1
+        bevels: set[Tuple[int, int]] = set()
+
+        if not active:
+            return bevels
+
+        # --
+        def add_bevel_separator() -> None:
+            if len(group) >= 3:
+                bevels.add((group[0], GAP))
+                bevels.add((group[0], nb_cols - GAP - 1))
+                bevels.add((group[-1], GAP))
+                bevels.add((group[-1], nb_cols - GAP - 1))
+
+        # --
+        group: list[int] = []
+        for sep in self.separators:
+            if not group:
+                group.append(sep)
+            elif group[-1] == sep - 1:
+                group.append(sep)
+            else:
+                add_bevel_separator()
+
+        add_bevel_separator()
+        return bevels
 
     # ########################################################################
     # ######################################################### RANDOMISE ####
