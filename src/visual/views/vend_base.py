@@ -1,3 +1,4 @@
+from src.high_scores.high_scores import HighScores
 from arcade import Vec2
 
 from src.visual.vdata import VNames
@@ -96,9 +97,8 @@ class VEndBase(GWindow):
         if not user_value:
             self.input.toggle_help()
         else:
-            # TODO: ADD HIGHSCORES MANAGEMENT HERE
-            # TODO: ADD HIGHSCORES MANAGEMENT HERE
-            # TODO: ADD HIGHSCORES MANAGEMENT HERE
+            high_scores = HighScores()
+            high_scores.save(user_value, self.score)
             self.window.switch_view(VNames.VIEW_WELCOME)
 
     # ########################################################################

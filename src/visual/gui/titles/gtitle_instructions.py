@@ -2,6 +2,9 @@ from src.visual.vatlas import VAtlas
 from src.visual.gui.titles.gtitle import GTitle
 
 
+# ░█▀▀░▀█▀░▀█▀░▀█▀░█░░░█▀▀░░░▀█▀░█▀█░█▀▀░▀█▀░█▀▄░█░█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀░░
+# ░█░█░░█░░░█░░░█░░█░░░█▀▀░░░░█░░█░█░▀▀█░░█░░█▀▄░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█░░
+# ░▀▀▀░░▀░░▀▀▀░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀░▀░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░░
 class GTitleInstructions(GTitle):
     def __init__(self, atlas: VAtlas):
         # fmt: off

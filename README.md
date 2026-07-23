@@ -57,19 +57,19 @@ Ghosts! More ghosts!
 
   - [ ] Pause
     - [X] Resume the game
-    - [ ] Link to instructions
+    - [X] Link to instructions
     - [X] Return to main (give up)
 
   - [ ] Game over
     - [ ] Display final score
-    - [ ] Highscore: enter player name
-      - [ ] Max 10 characters, alphanumeric and spaces only
+    - [X] Highscore: enter player name
+      - [X] Max 10 characters, alphanumeric and spaces only
 
   - [ ] Victory
     - [ ] Display final score
-    - [ ] Congratulation
-    - [ ] Highscore: enter player name
-      - [ ] Max 10 characters, alphanumeric and spaces only
+    - [X] Congratulation
+    - [X] Highscore: enter player name
+      - [X] Max 10 characters, alphanumeric and spaces only
 
 - [ ] Deployment
   - [ ] Deployment to a public gaming platform (Itch.io)
