@@ -32,7 +32,9 @@ def convert_cells_to_world_positions(cells: list[Point2]) -> list[Point2]:
     return [convert_cell_to_world_position(cell) for cell in cells]
 
 
-def _get_neighbors(cell: Point2, forbidden_set: set[Point2]) -> list[Point2]:
+def pathfinding_get_neighbors(
+    cell: Point2, forbidden_set: set[Point2]
+) -> list[Point2]:
     neighbors = [
         (cell[0] + 1, cell[1]),
         (cell[0] - 1, cell[1]),

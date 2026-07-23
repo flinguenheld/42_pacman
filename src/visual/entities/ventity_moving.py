@@ -56,24 +56,6 @@ class VEntityMoving(VEntity):
         else:
             return "wait"
 
-    def get_vector_from_direction(self, direction: EntityDirection) -> Vec2:
-        """
-        Takes an entity direction ("top", "right", "bot", "left") as input
-        and returns the corresponding normalized vector.
-        If the direction is "wait", returns a zero vector.
-        """
-        match direction:
-            case "top":
-                return Vec2(0, 1)
-            case "right":
-                return Vec2(1, 0)
-            case "bot":
-                return Vec2(0, -1)
-            case "left":
-                return Vec2(-1, 0)
-            case _:
-                return Vec2(0, 0)
-
     # ########################################################################
     # #################################################### UPDATE TEXTURE ####
     def update_texture(self) -> None:

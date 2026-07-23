@@ -51,14 +51,12 @@ class VEntityEnemyCommon(VEntityMoving):
         self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
         self.next_sprite: Sprite | None = None
-        self.last_goal: Sprite | None = None
+        self.last_goal: Point2 | None = None
 
-        d = random_path_search(
+        self.path = random_path_search(
             Vec2(*self.position),
-            PathfindingBarrierSet(self.walls.sprites),
-            self.get_vector_from_direction("right"),
+            PathfindingBarrierSet(self.walls.sprites)
         )
-        self.path = [d] if d else None
         self.setup()
 
     # ########################################################################
@@ -84,10 +82,11 @@ class VEntityEnemyCommon(VEntityMoving):
     def calculate_path(self) -> None:
         match self.state:
             case EnemyState.CHASING:
-                self.last_goal = self.get_target_sprite()
+                target_sprite = self.get_target_sprite()
+                self.last_goal = target_sprite.position
 
                 start = self.closest_floor.position
-                goal = self.last_goal.position
+                goal = target_sprite.position
                 path = astar_search(start, goal, self.barrier_set)
 
                 if not path:
@@ -96,30 +95,22 @@ class VEntityEnemyCommon(VEntityMoving):
                     return
                 self.path = path
             case EnemyState.FLEEING:
-                current_direction = self._current_direction
                 start = self.closest_floor.position
-                target = random_path_search(
+                path = random_path_search(
                     start,
                     self.barrier_set,
-                    self.get_vector_from_direction(current_direction),
                 )
-                if not target:
+                if not path:
                     self.path = None
                     self.last_goal = None
                     return
                 else:
-                    self.dummy_target_sprite.position = target
-                    closest_sprite_result = arcade.get_closest_sprite(
-                        self.dummy_target_sprite, self.floors.sprites
-                    )
-                    _error_msg = (
-                        "Could not find a closest sprite for "
-                        f"{self.dummy_target_sprite} in {self.floors.sprites}."
-                    )
-                    assert closest_sprite_result is not None, _error_msg
-                    (target_sprite, _) = closest_sprite_result
-                    self.last_goal = target_sprite
-                    self.path = [target]
+                    self.last_goal = path[-1]
+                    self.path = path
+            case _:
+                self.path = None
+                self.last_goal = None
+                return
 
     def should_recalculate_path(self) -> bool:
         if (
@@ -127,7 +118,7 @@ class VEntityEnemyCommon(VEntityMoving):
             and self.next_position == self.closest_floor.position
         ):
             return False
-        if not self.path or len(self.path) < 1 or not self.last_goal:
+        if not self.path or len(self.path) == 1 or not self.last_goal:
             return True
         current_player_direction = self.player.get_direction_vector()
         if (
@@ -135,11 +126,11 @@ class VEntityEnemyCommon(VEntityMoving):
             and current_player_direction != self.last_player_direction
         ):
             return True
-        distance_to_player_from_target_sprite = (
-            arcade.get_distance_between_sprites(self.last_goal, self.player)
+        player_distance_to_last_goal = Vec2(*self.player.position).distance(
+            Vec2(*self.last_goal)
         )
         distance_threshold = 3.0 * VData.SPRITE_SIZE
-        if distance_to_player_from_target_sprite > distance_threshold:
+        if player_distance_to_last_goal > distance_threshold:
             return True
         return False
 
