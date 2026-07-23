@@ -83,7 +83,6 @@ class VEntityEnemyCommon(VEntityMoving):
         match self.state:
             case EnemyState.CHASING:
                 target_sprite = self.get_target_sprite()
-                self.last_goal = target_sprite.position
 
                 start = self.closest_floor.position
                 goal = target_sprite.position
@@ -94,6 +93,7 @@ class VEntityEnemyCommon(VEntityMoving):
                     self.last_goal = None
                     return
                 self.path = path
+                self.last_goal = target_sprite.position
             case EnemyState.FLEEING:
                 start = self.closest_floor.position
                 path = random_path_search(
@@ -104,15 +104,15 @@ class VEntityEnemyCommon(VEntityMoving):
                     self.path = None
                     self.last_goal = None
                     return
-                else:
-                    self.last_goal = path[-1]
-                    self.path = path
+                self.path = path
+                self.last_goal = path[-1]
             case _:
                 self.path = None
                 self.last_goal = None
                 return
 
     def should_recalculate_path(self) -> bool:
+        # Generic checks
         if (
             self.next_position
             and self.next_position == self.closest_floor.position
@@ -120,6 +120,10 @@ class VEntityEnemyCommon(VEntityMoving):
             return False
         if not self.path or len(self.path) == 1 or not self.last_goal:
             return True
+
+        # Reserved for CHASING state
+        if self.state != EnemyState.CHASING:
+            return False
         current_player_direction = self.player.get_direction_vector()
         if (
             current_player_direction != Vec2(0, 0)
