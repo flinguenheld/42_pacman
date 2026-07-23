@@ -16,7 +16,7 @@ class Maze:
         - 0 -> floor
         - 1 -> wall
 
-    Build and manage two sprite_lists.
+    Build and manage SWall and SFloor.
     Use sprite_lists properties for the maze such as center_position or rect...
     """
 
@@ -91,4 +91,4 @@ class Maze:
 
     @property
     def floor_corners(self) -> list[Vec2]:
-        return self.floors.sprites_corners
+        return self.floors.sprite_corners
