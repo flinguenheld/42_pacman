@@ -1,4 +1,4 @@
-from src.visual.views.vvictory import VVictory
+from typing import Tuple
 import arcade
 from mazegenerator import MazeGenerator
 
@@ -6,6 +6,7 @@ from src.visual.vgame import VGame
 from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
 from src.visual.views.vpause import VPause
+from src.visual.views.vvictory import VVictory
 from src.visual.views.vwelcome import VWelcome
 from src.visual.views.vgame_over import VGameOver
 from src.visual.views.vinstructions import VIinstructions
@@ -33,25 +34,27 @@ class VMain(arcade.Window):
         self.atlas.load()
 
         self.vgame = VGame(self.atlas)
-        self.vwelcome = VWelcome(self.atlas)
-        self.previous_view: arcade.View = self.vwelcome
+        self.views_prev_curr: Tuple[VNames, VNames] = (
+            VNames.VIEW_WELCOME,
+            VNames.VIEW_WELCOME,
+        )
 
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        # self.show_view(self.vwelcome)
+        self.switch_view(VNames.VIEW_WELCOME)
+        # self.show_view(VWelcome(self.atlas))
         # self.show_view(VGameOver(self.atlas))
-        self.show_view(VVictory(self.atlas))
+        # self.show_view(VVictory(self.atlas))
 
     # ########################################################################
     # ####################################################### SWITCH VIEW ####
     def switch_view(self, to: VNames) -> None:
 
         def save_and_show(which: arcade.View) -> None:
-            if self.current_view:
-                self.previous_view = self.current_view
+            self.views_prev_curr = (self.views_prev_curr[1], to)
             self.show_view(which)
 
         match to:
@@ -63,12 +66,13 @@ class VMain(arcade.Window):
                 save_and_show(VIinstructions(self.atlas))
             case VNames.VIEW_PAUSE:
                 save_and_show(VPause(self.atlas))
-            case VNames.VIEW_PREVIOUS:
-                save_and_show(self.previous_view)
             case VNames.VIEW_WELCOME:
-                save_and_show(self.vwelcome)
+                save_and_show(VWelcome(self.atlas))
             case VNames.VIEW_VICTORY:
                 save_and_show(VVictory(self.atlas))
+
+            case VNames.VIEW_PREVIOUS:
+                self.switch_view(self.views_prev_curr[0])
 
     # ########################################################################
     # ######################################################### ON RESIZE ####

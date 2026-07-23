@@ -24,7 +24,7 @@ class HighScores:
         entries = self._read_file()
         entries.append({"name": player_name, "score": score})
 
-        entries.sort(key=lambda e: e["score"])
+        self.sort(entries)
         while len(entries) > HighScores.MAX_ENTRIES:
             entries.pop(len(entries) - 1)
 
@@ -40,10 +40,25 @@ class HighScores:
             )
 
     # ########################################################################
+    # ############################################################## SORT ####
+    def sort(self, scores: list[dict[str, str | int]]) -> None:
+        scores.sort(key=lambda e: e["name"])
+        scores.sort(key=lambda e: e["score"], reverse=True)
+
+    # ########################################################################
     # ############################################################### STR ####
     def __str__(self) -> str:
         entries = self._read_file()
-        return str(entries)
+        self.sort(entries)
+
+        if not entries:
+            return "No high score yet."
+
+        text = ""
+        for i, entry in enumerate(entries):
+            text += f"{i + 1} - {entry['name']}: {entry['score']}\n"
+
+        return text
 
     # ########################################################################
     # ###################################################### CHECK FORMAT ####
@@ -64,7 +79,6 @@ class HighScores:
             )
 
         checked = []
-
         for entry in values:
             if not isinstance(entry, dict):
                 print_msg("The entry is not a dictionary.")
@@ -80,7 +94,6 @@ class HighScores:
 
             else:
                 checked.append(entry)
-                print(f"this one is ok: {entry}")
 
         return checked
 
