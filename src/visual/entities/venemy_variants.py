@@ -1,12 +1,12 @@
-from arcade import Sprite, Vec2
 import arcade
+from arcade import Sprite, Vec2
 
 from src.maze.maze import Maze
-from src.visual.entities.ventity_enemy import VEntityEnemyCommon
-from src.visual.entities.ventity_player import VEntityPlayer
-from src.visual.vatlas import VAtlas
 from src.visual.vdata import VData
-from src.visual.vgamestate import VGameState
+from src.visual.vatlas import VAtlas
+from src.visual.gamestate import GameState
+from src.visual.entities.ventity_player import VEntityPlayer
+from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 
 
 type EnemyVariant = type["Johnny | Michael | Charlie | ReverseMichael"]
@@ -26,7 +26,7 @@ class Johnny(VEntityEnemyCommon):
         position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         id = 0
         super().__init__(
@@ -65,7 +65,7 @@ class Michael(VEntityEnemyCommon):
         position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         id = 1
         super().__init__(
@@ -113,7 +113,7 @@ class Charlie(VEntityEnemyCommon):
         position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         id = 2
         self.player_movement_buffer: list[Vec2] = []
@@ -189,7 +189,7 @@ class ReverseMichael(VEntityEnemyCommon):
         position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         id = 3
         super().__init__(

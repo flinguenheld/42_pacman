@@ -8,7 +8,7 @@ from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
-from src.visual.vgamestate import VGameState
+from src.visual.gamestate import GameState
 from src.visual.sprites.sfloor import SFloor
 from src.visual.pathfinding.astar import astar_search, random_path_search
 from src.visual.pathfinding import PathfindingBarrierSet
@@ -37,13 +37,13 @@ class VEntityEnemyCommon(VEntityMoving):
         position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
         self.floors: SFloor = maze.floors
         self.walls: SWall = maze.walls
         self.player: VEntityPlayer = player
-        self.gamestate: VGameState = gamestate
+        self.gamestate: GameState = gamestate
         self.maze: Maze = maze
 
         self.state: EnemyState = EnemyState.CHASING

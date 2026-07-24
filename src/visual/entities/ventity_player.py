@@ -1,12 +1,11 @@
-from enum import Enum, auto
-
 import arcade
+from enum import Enum, auto
 from arcade import Sprite, Vec2, key
 
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
+from src.visual.gamestate import GameState
 from src.visual.entities.ventity_moving import VEntityMoving
-from src.visual.vgamestate import VGameState
 
 
 class VPlayerDirection(Enum):
@@ -60,11 +59,11 @@ class VEntityPlayer(VEntityMoving):
         atlas: VAtlas,
         position: Vec2,
         walls: SWall,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
         super().__init__(atlas, "player", position)
         self.walls: SWall = walls
-        self.gamestate: VGameState = gamestate
+        self.gamestate: GameState = gamestate
         self.setup()
 
     # ########################################################################

@@ -15,7 +15,7 @@ from src.visual.entities.venemy_variants import (
 from src.visual.vatlas import VAtlas
 from src.visual.gui.ghud import VHud
 from src.visual.vdata import VNames, VData
-from src.visual.vgamestate import VGameState
+from src.visual.gamestate import GameState
 from src.visual.entities.ventity_enemy import (
     EnemyState,
     VEntityEnemyCommon,
@@ -31,7 +31,7 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
-    def __init__(self, atlas: VAtlas, gamestate: VGameState) -> None:
+    def __init__(self, atlas: VAtlas, gamestate: GameState) -> None:
         super().__init__()
 
         self.atlas = atlas

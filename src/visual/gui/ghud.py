@@ -8,7 +8,7 @@ from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gui.glabel import GLabel
 from src.visual.gui.gframe import GFrame
-from src.visual.vgamestate import VGameState
+from src.visual.gamestate import GameState
 from src.visual.gui.gbackground import GBackground
 
 
@@ -22,7 +22,7 @@ class VHud:
         self,
         maze: Maze,
         atlas: VAtlas,
-        gamestate: VGameState,
+        gamestate: GameState,
     ) -> None:
 
         self.maze = maze

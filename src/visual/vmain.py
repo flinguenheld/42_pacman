@@ -4,7 +4,7 @@ from src.visual.vgame import VGame
 from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
 from src.visual.views.vpause import VPause
-from src.visual.vgamestate import VGameState
+from src.visual.gamestate import GameState
 from src.visual.views.vvictory import VVictory
 from src.visual.views.vwelcome import VWelcome
 from src.visual.views.vgame_over import VGameOver
@@ -50,7 +50,7 @@ class VMain(arcade.Window):
         match to:
             case VNames.VIEW_GAME_NEW:
                 # --> Init a new game here <--
-                self.game_state = VGameState()
+                self.game_state = GameState()
                 self.vgame = VGame(self.atlas, self.game_state)
                 save_and_show(self.vgame)
 
