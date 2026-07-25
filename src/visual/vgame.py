@@ -1,3 +1,4 @@
+from src.visual.pathfinding.bfs import BFS
 import time
 import random
 import arcade
@@ -163,7 +164,7 @@ class VGame(arcade.View):
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build_sprites()
         self.maze.build_floor_graph()
-        print(self.maze.graph)
+        # print(self.maze.graph)
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
@@ -326,6 +327,9 @@ class VGame(arcade.View):
                     self.setup()
                     self.cameras_update()
 
+                case arcade.key.T:
+                    self.test_bfs()
+
                 # TODO: Potentially replace the current pause view with this
                 # for pausing the game?
                 # ANSWER: The subject explicitly requires a pause menu
@@ -397,3 +401,15 @@ class VGame(arcade.View):
         # --
         cameras_setup()
         cameras_zoom()
+
+    # ########################################################################
+    # ########################################################## TEST BFS ####
+    def test_bfs(self) -> None:
+        algo = BFS(self.maze.graph)
+        algo.print_debug()
+
+        algo.set_costs(self.maze.floor_center, self.maze.floor_corners[0])
+        algo.print_debug()
+
+        algo.extract_path(self.maze.floor_corners[0])
+        algo.print_debug()

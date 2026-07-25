@@ -59,7 +59,7 @@ class Maze:
 
     # ########################################################################
     # ################################################# BUILD FLOOR GRAPH ####
-    def build_floor_graph(self):
+    def build_floor_graph(self) -> None:
         """
         From the floor sprites, build a dict which will be used by the
         BFS algorithm.
