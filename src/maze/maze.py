@@ -1,3 +1,4 @@
+from src.utils.usage import sprite_center
 from arcade import Vec2, Rect
 
 from src.visual.vdata import VData
@@ -31,9 +32,10 @@ class Maze:
 
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas, frame_texture=floor_as_frame)
+        self.graph: dict[Vec2, list[Vec2]] = dict()
 
     # ########################################################################
-    # ############################################################# SETUP ####
+    # ##################################################### BUILD SPRITES ####
     def build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
@@ -54,6 +56,38 @@ class Maze:
 
         self.walls.reload(wall_points, floor_points)
         self.floors.reload(floor_points)
+
+    # ########################################################################
+    # ################################################# BUILD FLOOR GRAPH ####
+    def build_floor_graph(self):
+        """
+        From the floor sprites, build a dict which will be used by the
+        BFS algorithm.
+        Each entry contains its list of neighbours.
+        """
+        self.graph = dict()
+        neighbours: list[Vec2] = [
+            Vec2(0, VData.SPRITE_SIZE),
+            Vec2(0, -VData.SPRITE_SIZE),
+            Vec2(VData.SPRITE_SIZE, 0),
+            Vec2(-VData.SPRITE_SIZE, 0),
+        ]
+
+        def get_neighbours(of: Vec2) -> list[Vec2]:
+            possibles = [p + of for p in neighbours]
+
+            found = []
+            for sprite in self.floors.sprites:
+                center = sprite_center(sprite)
+                if center in possibles:
+                    found.append(center)
+
+            return found
+
+        # --
+        for sprite in self.floors.sprites:
+            center = sprite_center(sprite)
+            self.graph[center] = get_neighbours(center)
 
     # ########################################################################
     # ############################################################## DRAW ####

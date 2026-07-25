@@ -162,6 +162,8 @@ class VGame(arcade.View):
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build_sprites()
+        self.maze.build_floor_graph()
+        print(self.maze.graph)
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
