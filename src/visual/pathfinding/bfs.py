@@ -1,3 +1,5 @@
+import sys
+import random
 from arcade import Vec2
 from termcolor import cprint
 from collections import deque
@@ -18,10 +20,27 @@ class BFS:
       - Extract one of the shortest path
     """
 
+    NOT_VISITED = sys.maxsize
+
     def __init__(self, graph: dict[Vec2, list[Vec2]]):
         self.graph = graph
         self.buffer: dict[Vec2, int] = dict()
         self.path: list[Vec2] = list()
+
+    # ########################################################################
+    # ############################################################### RUN ####
+    def run(self, start: Vec2, target: Vec2) -> Vec2:
+        """
+        Helper which launches the algo and returns the next postion.
+        Randomly select the position when possible.
+        """
+
+        self.set_costs(start, target)
+
+        # Random or not (it has to loop in the entire buffer...)?
+        # return next((pt for pt, val in self.buffer.items() if val == 1))
+        ones = [pt for pt, val in self.buffer.items() if val == 1]
+        return random.choice(ones)
 
     # ########################################################################
     # ######################################################### SET COSTS ####
@@ -31,7 +50,7 @@ class BFS:
         has been reached.
         """
 
-        self.buffer = {k: -1 for k in self.graph.keys()}
+        self.buffer = {k: BFS.NOT_VISITED for k in self.graph.keys()}
         self.buffer[start] = 0
 
         queue = deque([start])
@@ -40,7 +59,7 @@ class BFS:
             cost = self.buffer[current] + 1
 
             for neighbour in self.graph[current]:
-                if self.buffer[neighbour] == -1:
+                if self.buffer[neighbour] == BFS.NOT_VISITED:
                     self.buffer[neighbour] = cost
                     queue.append(neighbour)
 
@@ -50,14 +69,12 @@ class BFS:
     # ########################################################################
     # ###################################################### EXTRACT PATH ####
     def extract_path(self, target: Vec2) -> list[Vec2]:
-        """Sail back up in the buffer to get the path"""
+        """Sail back up in the buffer to get one of the shortest path."""
 
         self.path = [target]
         while self.buffer[self.path[-1]] != 0:
-            neigbours = [
-                n for n in self.graph[self.path[-1]] if self.buffer[n] >= 0
-            ]
-            self.path.append(min(neigbours, key=lambda n: self.buffer[n]))
+            neighbours = self.graph[self.path[-1]]
+            self.path.append(min(neighbours, key=lambda n: self.buffer[n]))
 
         self.path.reverse()
         return self.path
@@ -78,7 +95,7 @@ class BFS:
                 point = Vec2(x, y)
 
                 if point in self.buffer:
-                    if self.buffer[point] == -1:
+                    if self.buffer[point] == BFS.NOT_VISITED:
                         cprint(" . ", end="", color="grey")
                     else:
                         colour = "red" if point in self.path else "yellow"

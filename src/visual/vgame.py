@@ -405,6 +405,9 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################## TEST BFS ####
     def test_bfs(self) -> None:
+
+        # Test from the maze center to one corner
+
         algo = BFS(self.maze.graph)
         algo.print_debug()
 
@@ -413,3 +416,15 @@ class VGame(arcade.View):
 
         algo.extract_path(self.maze.floor_corners[0])
         algo.print_debug()
+
+        # Just the next point ?
+        print(
+            f"maze center: {self.maze.center_position}\n"
+            f"next point: {algo.run(self.maze.floor_center, self.maze.floor_corners[0])}"
+        )
+
+        # Just the next point with an impossible point
+        print(
+            f"maze center: {self.maze.center_position}\n"
+            f"next point: {algo.run(self.maze.floor_center, Vec2(-999, -999))}"
+        )
