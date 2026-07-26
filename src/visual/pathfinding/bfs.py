@@ -1,9 +1,16 @@
 import sys
-import random
 from arcade import Vec2
 from termcolor import cprint
 from collections import deque
+
 from src.visual.vdata import VData
+
+
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▀░░░█▀▀░█▀▄░█▀▄░█▀█░█▀▄░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░▀▀█░░░█▀▀░█▀▄░█▀▄░█░█░█▀▄░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀░░▀░░░▀▀▀░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░▀░░
+class BFSError(Exception):
+    pass
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▀░░
@@ -32,22 +39,22 @@ class BFS:
     def run(self, start: Vec2, target: Vec2) -> Vec2:
         """
         Helper which launches the algo and returns the next postion.
-        Randomly select the position when possible.
+        Raise a BFSError if the target can't be found.
         """
 
         self.set_costs(start, target)
-
-        # Random or not (it has to loop in the entire buffer...)?
-        # return next((pt for pt, val in self.buffer.items() if val == 1))
-        ones = [pt for pt, val in self.buffer.items() if val == 1]
-        return random.choice(ones)
+        try:
+            self.extract_path(target)
+            return self.path[1]
+        except Exception:
+            raise BFSError("Unreachable target")
 
     # ########################################################################
     # ######################################################### SET COSTS ####
     def set_costs(self, start: Vec2, target: Vec2) -> None:
         """
-        Fill the buffer with cost per floor until the target
-        has been reached.
+        Fill the buffer with cost per floor.
+        Stop if the target has been reached.
         """
 
         self.buffer = {k: BFS.NOT_VISITED for k in self.graph.keys()}
@@ -69,7 +76,15 @@ class BFS:
     # ########################################################################
     # ###################################################### EXTRACT PATH ####
     def extract_path(self, target: Vec2) -> list[Vec2]:
-        """Sail back up in the buffer to get one of the shortest path."""
+        """
+        Sail back up in the buffer to get one of the shortest path.
+        Path order is from start to target (start included).
+
+        Raise BFSError if the target is unreachable.
+        """
+
+        if target not in self.buffer or self.buffer[target] == BFS.NOT_VISITED:
+            raise BFSError("Unreachable target")
 
         self.path = [target]
         while self.buffer[self.path[-1]] != 0:
@@ -108,6 +123,6 @@ class BFS:
                 elif point in self.graph.keys():
                     print("   ", end="")
                 else:
-                    cprint("███", end="", color="grey")
+                    cprint("███", end="", color="light_grey")
 
             print()

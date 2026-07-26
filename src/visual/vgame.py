@@ -1,4 +1,3 @@
-from src.visual.pathfinding.bfs import BFS
 import time
 import random
 import arcade
@@ -22,6 +21,7 @@ from src.visual.entities.ventity_enemy import (
     VEntityEnemyCommon,
 )
 from src.visual.gui.gbackground import GBackground
+from src.visual.pathfinding.bfs import BFS, BFSError
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -414,17 +414,26 @@ class VGame(arcade.View):
         algo.set_costs(self.maze.floor_center, self.maze.floor_corners[0])
         algo.print_debug()
 
-        algo.extract_path(self.maze.floor_corners[0])
-        algo.print_debug()
+        try:
+            algo.extract_path(self.maze.floor_corners[0])
+            algo.print_debug()
+        except BFSError as e:
+            print(e)
 
         # Just the next point ?
-        print(
-            f"maze center: {self.maze.center_position}\n"
-            f"next point: {algo.run(self.maze.floor_center, self.maze.floor_corners[0])}"
-        )
+        try:
+            print(
+                f"maze center: {self.maze.center_position}\n"
+                f"next point: {algo.run(self.maze.floor_center, self.maze.floor_corners[0])}"
+            )
+        except BFSError as e:
+            print(e)
 
         # Just the next point with an impossible point
-        print(
-            f"maze center: {self.maze.center_position}\n"
-            f"next point: {algo.run(self.maze.floor_center, Vec2(-999, -999))}"
-        )
+        try:
+            print(
+                f"maze center: {self.maze.center_position}\n"
+                f"next point: {algo.run(self.maze.floor_center, Vec2(-999, -999))}"
+            )
+        except BFSError as e:
+            print(e)
