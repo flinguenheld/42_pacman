@@ -86,15 +86,10 @@ class VGame(arcade.View):
         )
 
         # Player --
-        self.player: VEntityPlayer = VEntityPlayer(
-            self.atlas,
-            self.maze.floor_center,
-            self.maze.walls,
-            self.gamestate,
-        )
-        self.player_list.append(self.player)
+        self.spawn_player()
 
-        enemies: tuple[
+        # Enemies --
+        self.enemy_classes: tuple[
             EnemyVariant,
             EnemyVariant,
             EnemyVariant,
@@ -105,18 +100,8 @@ class VGame(arcade.View):
             Michael,
             Johnny,
         )
-        # Enemies --
-        for enemy_cls, floor_corner in zip(enemies, self.maze.floor_corners):
-            enemy = enemy_cls(
-                self.atlas,
-                floor_corner,
-                self.maze,
-                self.player,
-                self.gamestate,
-            )
-            self.enemy_list.append(
-                enemy,
-            )
+
+        self.spawn_all_enemies()
 
         # Super pacgums --
         for floor_corner in self.maze.floor_corners:
@@ -140,6 +125,50 @@ class VGame(arcade.View):
         self.duration_super_pacgum_secs: float = 10.0
 
         self.setup_done = True
+
+    def spawn_player(self) -> None:
+        """
+        Spawn/respawn the player
+
+        Calls self.player.kill() beforehand, thus acting as a respawn
+        """
+        if self.player_list:
+            self.player.kill()
+
+        self.player = VEntityPlayer(
+            self.atlas,
+            self.maze.floor_center,
+            self.maze.walls,
+            self.gamestate,
+        )
+        self.player_list.append(self.player)
+
+    def spawn_all_enemies(self) -> None:
+        for id in range(0, 4):
+            self.spawn_enemy(id)
+
+    def spawn_enemy(self, id: int) -> None:
+        """
+        Spawn/respawn an enemy
+
+        If an enemy with this id already exists, it kills it and respawns it
+        """
+        if id < 0 or id > 3:
+            raise ValueError("id must be a number between 0 and 3 (inclusive)")
+        floor_corners = self.maze.floor_corners
+
+        enemy = next(
+            (enemy for enemy in self.enemy_list if enemy.id == id), None
+        )
+        if enemy:
+            enemy.kill()
+
+        cls = self.enemy_classes[id]
+        corner = floor_corners[id]
+        enemy = cls(
+            id, self.atlas, corner, self.maze, self.player, self.gamestate
+        )
+        self.enemy_list.append(enemy)
 
     # ########################################################################
     # ########################################################### ON SHOW ####

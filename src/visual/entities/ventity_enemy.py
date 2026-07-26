@@ -39,6 +39,7 @@ class VEntityEnemyCommon(VEntityMoving):
         gamestate: GameState,
     ) -> None:
         super().__init__(atlas, f"enemy_{id}", position)
+        self.id = id
         self.floors: SFloor = maze.floors
         self.walls: SWall = maze.walls
         self.player: VEntityPlayer = player
