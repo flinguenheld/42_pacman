@@ -44,8 +44,6 @@ class VGame(arcade.View):
         self.camera = arcade.Camera2D()
         self.camera_hud = arcade.Camera2D()
 
-        # Game state --
-        # Needs to be first initialized here
         self.gamestate = gamestate
         self.setup()
 
@@ -355,6 +353,9 @@ class VGame(arcade.View):
                 case arcade.key.N:
                     self.setup()
                     self.cameras_update()
+                case arcade.key.R:
+                    self.spawn_player()
+                    self.spawn_all_enemies()
 
                 case arcade.key.T:
                     self.test_bfs()
