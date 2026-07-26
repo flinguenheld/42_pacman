@@ -1,6 +1,5 @@
 from enum import Enum, auto
 
-from arcade.types import Point2
 from arcade import Sprite, Vec2
 
 from src.maze.maze import Maze
@@ -48,7 +47,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
         self.state: EnemyState = EnemyState.CHASING
 
-        self.next_position: Point2 | None = None
+        self.next_position: Vec2 | None = None
 
         self.setup()
 
@@ -116,13 +115,13 @@ class VEntityEnemyCommon(VEntityMoving):
 
     def update_velocity(self, delta_time: float) -> None:
         if not self.next_position:
-            self.change_x = 0
-            self.change_y = 0
             return
+        self.change_x = 0
+        self.change_y = 0
 
         speed = self.apply_delta_time(self.get_speed(), delta_time)
 
-        next_position_delta = Vec2(*self.next_position) - Vec2(*self.position)
+        next_position_delta = self.next_position - self.center
         next_position_normalized = next_position_delta.normalize()
 
         self.change_x = next_position_normalized.x * speed * delta_time
