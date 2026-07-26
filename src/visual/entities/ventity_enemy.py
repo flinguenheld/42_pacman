@@ -1,17 +1,16 @@
 from enum import Enum, auto
 
-import arcade
 from arcade.types import Point2
 from arcade import Sprite, Vec2
 
 from src.maze.maze import Maze
+from src.visual.pathfinding.bfs import BFS
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.sprites.swall import SWall
 from src.visual.gamestate import GameState
 from src.visual.sprites.sfloor import SFloor
-from src.visual.pathfinding.astar import astar_search, random_path_search
-from src.visual.pathfinding import PathfindingBarrierSet
+from src.visual.pathfinding.astar import random_path_search
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 
@@ -48,10 +47,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
         self.state: EnemyState = EnemyState.CHASING
 
-        self.path: list[Point2] | None = None
         self.next_position: Point2 | None = None
-        self.next_sprite: Sprite | None = None
-        self.last_goal: Point2 | None = None
 
         self.setup()
 
@@ -61,17 +57,12 @@ class VEntityEnemyCommon(VEntityMoving):
         self.dummy_target_sprite = Sprite()
         self.last_player_direction: Vec2 = VPlayerDirection.UP.get_vector()
 
-        self.barrier_set = PathfindingBarrierSet(self.walls.sprites)
-        self.update_closest_floor()
+        self.bfs = BFS(self.maze.graph)
         self.update_next_position()
 
     def set_state(self, new_state: EnemyState) -> None:
         if self.state != new_state:
             self.state = new_state
-            self.path = None
-            self.next_position = None
-            self.next_sprite = None
-            self.last_goal = None
 
     @staticmethod
     def get_points() -> int:
@@ -82,102 +73,38 @@ class VEntityEnemyCommon(VEntityMoving):
     def get_speed(self) -> float:
         return self.gamestate.enemy_speed
 
-    def get_target_sprite(self) -> Sprite:
+    def get_target(self) -> Vec2:
         raise NotImplementedError(
             "This method should be implemented in subclasses."
         )
 
-    def calculate_path(self) -> None:
+    def update_next_position(self) -> None:
+        # TODO: Update method to use closest_floor_of if possible
+        # TODO: Update method to return Vec2 instead of Sprite
+        start = self.maze.closest_floor_of(self.center)
+        target = self.get_target()
+
+        if self.next_position and start != self.next_position:
+            return
+
+        def next_pos_chasing() -> Vec2 | None:
+            return self.bfs.run(start, target)
+
+        def next_pos_fleeing() -> Vec2 | None:
+            path = random_path_search(start, self.maze.graph)
+            return Vec2(*path[1]) if len(path) > 1 else None
+
         match self.state:
             case EnemyState.CHASING:
-                target_sprite = self.get_target_sprite()
-
-                start = self.closest_floor.position
-                goal = target_sprite.position
-                path = astar_search(start, goal, self.barrier_set)
-
-                if not path:
-                    self.path = None
-                    self.last_goal = None
-                    return
-                self.path = path
-                self.last_goal = target_sprite.position
+                self.next_position = next_pos_chasing()
             case EnemyState.FLEEING:
-                start = self.closest_floor.position
-                path = random_path_search(
-                    start,
-                    self.barrier_set,
-                )
-                if not path:
-                    self.path = None
-                    self.last_goal = None
-                    return
-                self.path = path
-                self.last_goal = path[-1]
+                self.next_position = next_pos_fleeing()
             case _:
-                self.path = None
-                self.last_goal = None
-                return
-
-    def should_recalculate_path(self) -> bool:
-        # Generic checks
-        if (
-            self.next_position
-            and self.next_position == self.closest_floor.position
-        ):
-            return False
-        if not self.path or len(self.path) == 1 or not self.last_goal:
-            return True
-
-        # Reserved for CHASING state
-        if self.state != EnemyState.CHASING:
-            return False
-        current_player_direction = self.player.get_direction_vector()
-        if (
-            current_player_direction != Vec2(0, 0)
-            and current_player_direction != self.last_player_direction
-        ):
-            return True
-        player_distance_to_last_goal = Vec2(*self.player.position).distance(
-            Vec2(*self.last_goal)
-        )
-        distance_threshold = 3.0 * VData.SPRITE_SIZE
-        if player_distance_to_last_goal > distance_threshold:
-            return True
-        return False
-
-    def update_next_position(self) -> None:
-        if self.should_recalculate_path():
-            self.calculate_path()
-        if not self.path:
-            self.next_position = None
-            self.next_sprite = None
-            return
-        if (
-            not self.next_position
-            or self.closest_floor.position == self.next_position
-        ):
-            self.path.pop(0)
-
-            if len(self.path) > 0:
-                self.next_position = self.path[0]
-                sprites_at_next_pos = arcade.get_sprites_at_point(
-                    self.next_position, self.floors.sprites
-                )
-                if sprites_at_next_pos:
-                    self.next_sprite = sprites_at_next_pos[0]
-
-    def update_closest_floor(self) -> Sprite | None:
-        closest_floor = self.get_closest_sprite(self.floors.sprites)
-        assert closest_floor, "Enemy is not on a floor tile."
-        self.closest_floor = closest_floor
-        return self.closest_floor
+                self.next_position = None
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        if not self.update_closest_floor():
-            return
         self.update_next_position()
 
         self.update_velocity(delta_time)

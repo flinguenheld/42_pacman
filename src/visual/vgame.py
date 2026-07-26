@@ -191,7 +191,7 @@ class VGame(arcade.View):
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
                 self._draw_hitboxes()
-                self._draw_enemy_paths()
+                # self._draw_enemy_paths()
 
             with self.camera_hud.activate():
                 self.hud.draw()
@@ -213,24 +213,24 @@ class VGame(arcade.View):
                 color=arcade.color.AFRICAN_VIOLET, line_thickness=2
             )
 
-    def _draw_enemy_paths(self) -> None:
-        colors: tuple[Color, Color, Color, Color] = (
-            arcade.color.RED,
-            arcade.color.GREEN,
-            arcade.color.BLUE,
-            arcade.color.YELLOW,
-        )
-        line_width = 20
-        if self.display_enemy_paths:
-            for color, enemy in zip(colors, self.enemy_list):
-                if not enemy.path:
-                    continue
-                arcade.draw_line_strip(
-                    [Vec2(*enemy.position)] + enemy.path,
-                    color,
-                    line_width,
-                )
-                line_width -= 5
+    # def _draw_enemy_paths(self) -> None:
+    #     colors: tuple[Color, Color, Color, Color] = (
+    #         arcade.color.RED,
+    #         arcade.color.GREEN,
+    #         arcade.color.BLUE,
+    #         arcade.color.YELLOW,
+    #     )
+    #     line_width = 20
+    #     if self.display_enemy_paths:
+    #         for color, enemy in zip(colors, self.enemy_list):
+    #             if not enemy.path:
+    #                 continue
+    #             arcade.draw_line_strip(
+    #                 [Vec2(*enemy.position)] + enemy.path,
+    #                 color,
+    #                 line_width,
+    #             )
+    #             line_width -= 5
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -407,8 +407,9 @@ class VGame(arcade.View):
     def test_bfs(self) -> None:
 
         # Test from the player to the first enemy
-        start = self.maze.closest_floor_of(self.player.center)
+        # start = self.maze.closest_floor_of(self.player.position)
         target = self.maze.closest_floor_of(self.enemy_list[0].center)
+        start = target
 
         algo = BFS(self.maze.graph)
         algo.print_debug()
@@ -432,10 +433,10 @@ class VGame(arcade.View):
             print(e)
 
         # Just the next point with an impossible point
-        try:
-            print(
-                f"maze center: {self.maze.center_position}\n"
-                f"next point: {algo.run(start, Vec2(-999, -999))}"
-            )
-        except BFSError as e:
-            print(e)
+        # try:
+        #     print(
+        #         f"maze center: {self.maze.center_position}\n"
+        #         f"next point: {algo.run(start, Vec2(-999, -999))}"
+        #     )
+        # except BFSError as e:
+        #     print(e)

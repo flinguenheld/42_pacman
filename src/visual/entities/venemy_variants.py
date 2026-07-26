@@ -1,5 +1,4 @@
-import arcade
-from arcade import Sprite, Vec2
+from arcade import Vec2
 
 from src.maze.maze import Maze
 from src.visual.vdata import VData
@@ -41,9 +40,8 @@ class Johnny(VEntityEnemyCommon):
     def get_speed(self) -> float:
         return super().get_speed() * 0.9
 
-    def get_target_sprite(self) -> Sprite:
-        target_sprite = self.player.get_closest_sprite(self.floors.sprites)
-        return target_sprite
+    def get_target(self) -> Vec2:
+        return self.maze.closest_floor_of(self.player.center)
 
 
 class Michael(VEntityEnemyCommon):
@@ -77,26 +75,12 @@ class Michael(VEntityEnemyCommon):
             gamestate,
         )
 
-    def get_target_sprite(self) -> Sprite:
+    def get_target(self) -> Vec2:
         player_direction = self.last_player_direction
-        # 3 tiles ahead of the player
         distance_threshold = 3.0 * VData.SPRITE_SIZE
-        target_pos = Vec2(*self.player.position) + (
-            player_direction * distance_threshold
-        )
+        possible = self.player.center + (player_direction * distance_threshold)
 
-        self.dummy_target_sprite.position = target_pos
-        target_sprite_result = arcade.get_closest_sprite(
-            self.dummy_target_sprite, self.floors.sprites
-        )
-        _error_msg = (
-            "Could not find a closest sprite for "
-            f"{self.dummy_target_sprite} in {self.floors.sprites}."
-        )
-        assert target_sprite_result is not None, _error_msg
-        (target_sprite, _) = target_sprite_result
-
-        return target_sprite
+        return self.maze.closest_floor_of(possible)
 
 
 class Charlie(VEntityEnemyCommon):
@@ -145,28 +129,17 @@ class Charlie(VEntityEnemyCommon):
         self.update_player_movement_buffer()
         return super().update(delta_time)
 
-    def get_target_sprite(self) -> Sprite:
+    def get_target(self) -> Vec2:
         if not self.player_movement_buffer:
             # If the buffer is empty, just return the player's
             # current position.
-            target_pos = Vec2(*self.player.position)
+            possible = Vec2(*self.player.position)
         else:
             # Get the oldest position in the buffer, which is
             # probably 3 seconds behind.
-            target_pos = self.player_movement_buffer[0]
+            possible = self.player_movement_buffer[0]
 
-        self.dummy_target_sprite.position = target_pos
-        target_sprite_result = arcade.get_closest_sprite(
-            self.dummy_target_sprite, self.floors.sprites
-        )
-        _error_msg = (
-            "Could not find a closest sprite for "
-            f"{self.dummy_target_sprite} in {self.floors.sprites}."
-        )
-        assert target_sprite_result is not None, _error_msg
-        (target_sprite, _) = target_sprite_result
-
-        return target_sprite
+        return self.maze.closest_floor_of(possible)
 
 
 class ReverseMichael(VEntityEnemyCommon):
@@ -201,23 +174,9 @@ class ReverseMichael(VEntityEnemyCommon):
             gamestate,
         )
 
-    def get_target_sprite(self) -> Sprite:
+    def get_target(self) -> Vec2:
         player_direction = self.last_player_direction
-        # 3 tiles ahead of the player
         distance_threshold = 3.0 * VData.SPRITE_SIZE
-        target_pos = Vec2(*self.player.position) + (
-            -player_direction * distance_threshold
-        )
+        possible = self.player.center + (player_direction * distance_threshold)
 
-        self.dummy_target_sprite.position = target_pos
-        target_sprite_result = arcade.get_closest_sprite(
-            self.dummy_target_sprite, self.floors.sprites
-        )
-        _error_msg = (
-            "Could not find a closest sprite for "
-            f"{self.dummy_target_sprite} in {self.floors.sprites}."
-        )
-        assert target_sprite_result is not None, _error_msg
-        (target_sprite, _) = target_sprite_result
-
-        return target_sprite
+        return self.maze.closest_floor_of(possible)

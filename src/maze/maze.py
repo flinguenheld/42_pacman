@@ -6,6 +6,8 @@ from src.utils.usage import sprite_center
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
 
+type Graph = dict[Vec2, list[Vec2]]
+
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
@@ -32,7 +34,7 @@ class Maze:
 
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas, frame_texture=floor_as_frame)
-        self.graph: dict[Vec2, list[Vec2]] = dict()
+        self.graph: Graph = dict()
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
@@ -76,7 +78,7 @@ class Maze:
         def get_neighbours(of: Vec2) -> list[Vec2]:
             possibles = [p + of for p in neighbours]
 
-            found = []
+            found: list[Vec2] = []
             for sprite in self.floors.sprites:
                 center = sprite_center(sprite)
                 if center in possibles:

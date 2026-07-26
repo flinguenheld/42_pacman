@@ -28,8 +28,6 @@ class VEntityMoving(VEntity):
         self, atlas: VAtlas, sprite_name: str, position: Vec2
     ) -> None:
         super().__init__(atlas, sprite_name, position)
-        self._change_x = 0.0
-        self._change_y = 0.0
 
         # Texture helpers --
         self._current_direction: EntityDirection = "wait"

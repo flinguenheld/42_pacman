@@ -34,7 +34,15 @@ class VEntity(TextureAnimationSprite):
         )
 
     # ########################################################################
-    # ################################################### CENTER POSITION ####
+    # ########################################## OVERRIDE CENTER POSITION ####
     @property
     def center(self) -> Vec2:
+        """
+        Override of Sprite.position to return Vec2 instead of Point2
+        """
         return Vec2(self.center_x, self.center_y)
+
+    @center.setter
+    def center(self, new_pos: Vec2) -> None:
+        self.center_x = new_pos.x
+        self.center_y = new_pos.y

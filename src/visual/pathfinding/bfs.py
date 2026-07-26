@@ -22,7 +22,7 @@ class BFS:
     From the maze graph {floor point: list of all neighbours},
     a start and a target:
 
-      - Create a buffer {point: -1}
+      - Create a buffer {point: sys.maxsize}
       - Fill the buffer with the 'cost' per floor
       - Extract one of the shortest path
     """
@@ -41,13 +41,14 @@ class BFS:
         Helper which launches the algo and returns the next postion.
         Raise a BFSError if the target can't be found.
         """
-
+        if start == target:
+            return start
         self.set_costs(start, target)
         try:
             self.extract_path(target)
             return self.path[1]
-        except Exception:
-            raise BFSError("Unreachable target")
+        except Exception as e:
+            raise BFSError(e)
 
     # ########################################################################
     # ######################################################### SET COSTS ####
