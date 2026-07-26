@@ -1,7 +1,6 @@
 import time
 import random
 import arcade
-from arcade.types import Color
 from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
