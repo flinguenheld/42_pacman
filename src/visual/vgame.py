@@ -94,7 +94,7 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
-        ennemies: tuple[
+        enemies: tuple[
             EnemyVariant,
             EnemyVariant,
             EnemyVariant,
@@ -106,15 +106,16 @@ class VGame(arcade.View):
             Johnny,
         )
         # Enemies --
-        for ennemy, floor_corner in zip(ennemies, self.maze.floor_corners):
+        for enemy_cls, floor_corner in zip(enemies, self.maze.floor_corners):
+            enemy = enemy_cls(
+                self.atlas,
+                floor_corner,
+                self.maze,
+                self.player,
+                self.gamestate,
+            )
             self.enemy_list.append(
-                ennemy(
-                    self.atlas,
-                    floor_corner,
-                    self.maze,
-                    self.player,
-                    self.gamestate,
-                ),
+                enemy,
             )
 
         # Super pacgums --
