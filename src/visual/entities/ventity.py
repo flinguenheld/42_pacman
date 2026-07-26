@@ -32,3 +32,9 @@ class VEntity(TextureAnimationSprite):
             center=position,
             scale=tile.width / VData.SPRITE_SIZE,
         )
+
+    # ########################################################################
+    # ################################################### CENTER POSITION ####
+    @property
+    def center(self) -> Vec2:
+        return Vec2(self.center_x, self.center_y)

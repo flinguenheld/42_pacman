@@ -1,8 +1,8 @@
-from src.utils.usage import sprite_center
 from arcade import Vec2, Rect
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
+from src.utils.usage import sprite_center
 from src.visual.sprites.swall import SWall
 from src.visual.sprites.sfloor import SFloor
 
@@ -126,3 +126,10 @@ class Maze:
     @property
     def floor_corners(self) -> list[Vec2]:
         return self.floors.sprite_corners
+
+    # ########################################################################
+    # ################################################### CLOSET FLOOR OF ####
+    def closest_floor_of(self, point: Vec2) -> Vec2:
+        """Helper of 'find closest sprite' for floor"""
+
+        return self.floors.find_closest_sprite_of(point)

@@ -406,16 +406,18 @@ class VGame(arcade.View):
     # ########################################################## TEST BFS ####
     def test_bfs(self) -> None:
 
-        # Test from the maze center to one corner
+        # Test from the player to the first enemy
+        start = self.maze.closest_floor_of(self.player.center)
+        target = self.maze.closest_floor_of(self.enemy_list[0].center)
 
         algo = BFS(self.maze.graph)
         algo.print_debug()
 
-        algo.set_costs(self.maze.floor_center, self.maze.floor_corners[0])
+        algo.set_costs(start, target)
         algo.print_debug()
 
         try:
-            algo.extract_path(self.maze.floor_corners[0])
+            algo.extract_path(target)
             algo.print_debug()
         except BFSError as e:
             print(e)
@@ -424,7 +426,7 @@ class VGame(arcade.View):
         try:
             print(
                 f"maze center: {self.maze.center_position}\n"
-                f"next point: {algo.run(self.maze.floor_center, self.maze.floor_corners[0])}"
+                f"next point: {algo.run(start, target)}"
             )
         except BFSError as e:
             print(e)
@@ -433,7 +435,7 @@ class VGame(arcade.View):
         try:
             print(
                 f"maze center: {self.maze.center_position}\n"
-                f"next point: {algo.run(self.maze.floor_center, Vec2(-999, -999))}"
+                f"next point: {algo.run(start, Vec2(-999, -999))}"
             )
         except BFSError as e:
             print(e)

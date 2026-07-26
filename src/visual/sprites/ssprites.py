@@ -115,21 +115,21 @@ class SSprites:
         """Return corners:  left/bot, left/top, right/top, right/bot."""
 
         return [
-            self.find_closest_sprite(self.rect.bottom_left),
-            self.find_closest_sprite(self.rect.top_left),
-            self.find_closest_sprite(self.rect.top_right),
-            self.find_closest_sprite(self.rect.bottom_right),
+            self.find_closest_sprite_of(self.rect.bottom_left),
+            self.find_closest_sprite_of(self.rect.top_left),
+            self.find_closest_sprite_of(self.rect.top_right),
+            self.find_closest_sprite_of(self.rect.bottom_right),
         ]
 
     @property
     def sprite_center(self) -> Vec2:
         """Center of the sprite which is the closest to the real center."""
 
-        return self.find_closest_sprite(self.center_position)
+        return self.find_closest_sprite_of(self.center_position)
 
     # ########################################################################
     # ############################################### FIND CLOSEST SPRITE ####
-    def find_closest_sprite(self, from_point: Vec2) -> Vec2:
+    def find_closest_sprite_of(self, point: Vec2) -> Vec2:
         """
         Loop in all sprites to find the closest one.
         Return its center position
@@ -139,7 +139,7 @@ class SSprites:
         current_distance = float(sys.maxsize)
 
         for sprite in self.sprites:
-            d = from_point.distance(Vec2(sprite.center_x, sprite.center_y))
+            d = point.distance(Vec2(sprite.center_x, sprite.center_y))
             if d < current_distance:
                 current = sprite
                 current_distance = d
