@@ -154,10 +154,10 @@ Ghosts! More ghosts!
 
   - [] Entity system
     - [X] VEntity ABC, common API for entities
-    - [X] VPlayerEntity
-    - [ ] VGhostEntity
-    - [ ] VPacgumEntity
-    - [ ] VSuperPacgumEntity
+    - [X] VEntityPlayer
+    - [ ] VEntityEnemyCommon
+    - [ ] VEntityPacgum
+    - [ ] VEntitySuperPacgum
 
 ### Description
 
