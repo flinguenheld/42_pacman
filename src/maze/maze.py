@@ -65,31 +65,21 @@ class Maze:
         """
         From the floor sprites, build a dict which will be used by the
         BFS algorithm.
-        Each entry contains its list of neighbours.
+        Each entry is a point (sprite center) with its list of neighbours.
         """
-        self.graph = dict()
-        neighbours: list[Vec2] = [
+        coordinates: list[Vec2] = [
             Vec2(0, VData.SPRITE_SIZE),
             Vec2(0, -VData.SPRITE_SIZE),
             Vec2(VData.SPRITE_SIZE, 0),
             Vec2(-VData.SPRITE_SIZE, 0),
         ]
 
-        def get_neighbours(of: Vec2) -> list[Vec2]:
-            possibles = [p + of for p in neighbours]
+        self.graph = {sprite_center(sp): [] for sp in self.floors.sprites}
 
-            found: list[Vec2] = []
-            for sprite in self.floors.sprites:
-                center = sprite_center(sprite)
-                if center in possibles:
-                    found.append(center)
-
-            return found
-
-        # --
-        for sprite in self.floors.sprites:
-            center = sprite_center(sprite)
-            self.graph[center] = get_neighbours(center)
+        for point, neighbours in self.graph.items():
+            for possible_neighbour in (n + point for n in coordinates):
+                if possible_neighbour in self.graph.keys():
+                    neighbours.append(possible_neighbour)
 
     # ########################################################################
     # ############################################################## DRAW ####
