@@ -19,8 +19,17 @@ class Johnny(VEntityEnemyCommon):
     Its target sprite is always the sprite the player is currently on.
     """
 
-    def get_speed(self) -> float:
-        return super().get_speed() * 0.9
+    def __init__(
+        self,
+        id: int,
+        atlas: VAtlas,
+        maze: Maze,
+        player: VEntityPlayer,
+        gamestate: GameState,
+    ) -> None:
+        super().__init__(id, atlas, maze, player, gamestate)
+
+        self.speed *= 0.9
 
     def get_target(self) -> Vec2:
         return self.maze.closest_floor_of(self.player.center)
@@ -40,7 +49,7 @@ class Michael(VEntityEnemyCommon):
     """
 
     def get_target(self) -> Vec2:
-        player_direction = self.last_player_direction
+        player_direction = self.player.get_direction_vector()
         distance_threshold = 3.0 * VData.SPRITE_SIZE
         possible = self.player.center + (player_direction * distance_threshold)
 
@@ -59,7 +68,6 @@ class Charlie(VEntityEnemyCommon):
         self,
         id: int,
         atlas: VAtlas,
-        position: Vec2,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
@@ -69,15 +77,11 @@ class Charlie(VEntityEnemyCommon):
         super().__init__(
             id,
             atlas,
-            position,
             maze,
             player,
             gamestate,
         )
-
-    def get_speed(self) -> float:
-        # Charlie is slightly slower than the player
-        return self.player.get_speed() * 0.5
+        self.speed *= 0.5
 
     def update_player_movement_buffer(self) -> None:
         """
@@ -122,7 +126,7 @@ class ReverseMichael(VEntityEnemyCommon):
     # TODO: Find a name for this enemy
 
     def get_target(self) -> Vec2:
-        player_direction = self.last_player_direction
+        player_direction = self.player.get_direction_vector()
         distance_threshold = 3.0 * VData.SPRITE_SIZE
         possible = self.player.center + (player_direction * distance_threshold)
 

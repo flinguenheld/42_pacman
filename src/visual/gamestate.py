@@ -14,6 +14,8 @@ class GameState:
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
 
+        self.mode: str = "chasing"
+
     # ########################################################################
     # ##################################################### SCORE & LIVES ####
     def increment_score(self, points: int) -> None:

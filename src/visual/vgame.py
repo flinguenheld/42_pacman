@@ -6,7 +6,6 @@ from arcade import SpriteList, Vec2, LBWH
 from src.maze.maze import Maze
 from src.visual.entities.venemy_variants import (
     Charlie,
-    EnemyVariant,
     Johnny,
     Michael,
     ReverseMichael,
@@ -16,10 +15,8 @@ from src.visual.gui.ghud import VHud
 from src.visual.vdata import VNames, VData
 from src.visual.gamestate import GameState
 from src.visual.pathfinding.bfs import BFS
-from src.visual.entities.ventity_enemy import (
-    EnemyState,
-    VEntityEnemyCommon,
-)
+from src.visual.entities.ventity_enemy import VEntityEnemyCommon
+
 from src.visual.gui.gbackground import GBackground
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
@@ -87,19 +84,7 @@ class VGame(arcade.View):
         self.spawn_player()
 
         # Enemies --
-        self.enemy_classes: tuple[
-            EnemyVariant,
-            EnemyVariant,
-            EnemyVariant,
-            EnemyVariant,
-        ] = (
-            ReverseMichael,
-            Charlie,
-            Michael,
-            Johnny,
-        )
-
-        self.spawn_all_enemies()
+        self.spawn_enemies()
 
         # Super pacgums --
         for floor_corner in self.maze.floor_corners:
@@ -108,8 +93,7 @@ class VGame(arcade.View):
             )
 
         # Pacgums --
-        forbbiden = set(self.maze.floor_corners)
-        forbbiden.add(Vec2(*self.player.position))
+        forbbiden = {*self.maze.floor_corners, self.player.center}
 
         for floor_sprite in self.maze.floors.sprites:
             if floor_sprite.position not in forbbiden:
@@ -124,6 +108,7 @@ class VGame(arcade.View):
 
         self.setup_done = True
 
+    # TODO: Check that --
     def spawn_player(self) -> None:
         """
         Spawn/respawn the player
@@ -141,32 +126,14 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
-    def spawn_all_enemies(self) -> None:
-        for id in range(0, 4):
-            self.spawn_enemy(id)
+    # ########################################################################
+    # ##################################################### SPAWN ENEMIES ####
+    def spawn_enemies(self) -> None:
+        self.enemy_list.clear()
 
-    def spawn_enemy(self, id: int) -> None:
-        """
-        Spawn/respawn an enemy
-
-        If an enemy with this id already exists, it kills it and respawns it
-        """
-        if id < 0 or id > 3:
-            raise ValueError("id must be a number between 0 and 3 (inclusive)")
-        floor_corners = self.maze.floor_corners
-
-        enemy = next(
-            (enemy for enemy in self.enemy_list if enemy.id == id), None
-        )
-        if enemy:
-            enemy.kill()
-
-        cls = self.enemy_classes[id]
-        corner = floor_corners[id]
-        enemy = cls(
-            id, self.atlas, corner, self.maze, self.player, self.gamestate
-        )
-        self.enemy_list.append(enemy)
+        for id, e in enumerate([ReverseMichael, Charlie, Michael, Johnny]):
+            enemy = e(id, self.atlas, self.maze, self.player, self.gamestate)
+            self.enemy_list.append(enemy)
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -304,11 +271,7 @@ class VGame(arcade.View):
             self.time_last_super_pacgum_ms + self.duration_super_pacgum_secs
             < time.time()
         ):
-            self.set_all_enemies_state(EnemyState.CHASING)
-
-    def set_all_enemies_state(self, state: EnemyState) -> None:
-        for enemy in self.enemy_list:
-            enemy.set_state(state)
+            self.gamestate.mode = "chasing"
 
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
@@ -320,16 +283,17 @@ class VGame(arcade.View):
             self.gamestate.increment_score(pacgum.get_points())
             if isinstance(pacgum, VEntitySuperPacGum):
                 self.time_last_super_pacgum_ms = time.time()
-                self.set_all_enemies_state(EnemyState.FLEEING)
+                self.gamestate.mode = "fleeing"
             pacgum.kill()
 
     def resolve_player_enemy_collisions(self) -> None:
+        # TODO: Clean that
         collided: list[VEntityEnemyCommon] = (
             arcade.check_for_collision_with_list(self.player, self.enemy_list)
         )
         if not collided:
             return
-        if all(enemy.state == EnemyState.FLEEING for enemy in collided):
+        if self.gamestate.mode == "fleeing":
             pass
         else:
             self.player.kill()
@@ -355,7 +319,7 @@ class VGame(arcade.View):
                     self.cameras_update()
                 case arcade.key.R:
                     self.spawn_player()
-                    self.spawn_all_enemies()
+                    self.spawn_enemies()
 
                 case arcade.key.T:
                     self.test_bfs()
