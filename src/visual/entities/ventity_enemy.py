@@ -4,7 +4,7 @@ from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
 from src.visual.gamestate import GameState
 from src.visual.pathfinding.bfs import BFS
-from src.visual.pathfinding.astar import random_path_search
+from src.visual.pathfinding.fleeing import Fleeing
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer
 
@@ -31,6 +31,8 @@ class VEntityEnemyCommon(VEntityMoving):
         self.speed = self.gamestate.enemy_speed
         self.next_position: Vec2 = self.center
         self.bfs = BFS(self.maze.graph)
+        self.fleeing = Fleeing(self.maze.graph)
+
         self.update_next_position()
 
     # TODO: Clean that --
@@ -56,12 +58,7 @@ class VEntityEnemyCommon(VEntityMoving):
             case "chasing":
                 self.next_position = self.bfs.run_algo(start, target)
             case "fleeing":
-                # TODO: Clean that
-                # TODO: Random path has to work like BFS
-                path = random_path_search(start, self.maze.graph)
-                self.next_position = (
-                    Vec2(*path[1]) if len(path) > 1 else self.center
-                )
+                self.next_position = self.fleeing.run_algo(start, target)
 
     # ########################################################################
     # ########################################################## VELOCITY ####

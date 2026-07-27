@@ -1,11 +1,8 @@
 from dataclasses import dataclass, field
 import heapq
-import random
 
-from arcade import Vec2
 from arcade.types import Point2
 
-from src.maze.maze import Graph
 from src.visual.pathfinding import (
     PathfindingBarrierSet,
     pathfinding_get_neighbors,
@@ -80,22 +77,3 @@ def _astar_reconstruct_path(
         path.append(current)
     path.reverse()
     return path
-
-
-# TODO: Move elsewhere
-def random_path_search(
-    start: Vec2,
-    graph: Graph
-) -> list[Vec2]:
-    max_steps = 10
-    path: list[Vec2] = []
-
-    current = start
-    for _ in range(max_steps):
-        neighbors = graph.get(current)
-        if not neighbors:
-            break
-        next = random.choice(neighbors)
-        path.append(next)
-        current = next
-    return [start] + path
