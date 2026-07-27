@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import arcade
-from enum import Enum, auto
+from enum import Enum
 from arcade import Sprite, Vec2, key
 
 from src.visual.vatlas import VAtlas
@@ -8,46 +10,36 @@ from src.visual.gamestate import GameState
 from src.visual.entities.ventity_moving import VEntityMoving
 
 
+# ░░░░░░░░░█░█░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░░█▀▄░▀█▀░█▀▄░█▀▀░█▀▀░▀█▀░▀█▀░█▀█░█▀█░░
+# ░░░░░░░░░▀▄▀░█▀▀░█░░░█▀█░░█░░█▀▀░█▀▄░░░█░█░░█░░█▀▄░█▀▀░█░░░░█░░░█░░█░█░█░█░░
+# ░░░░░░░░░░▀░░▀░░░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░░
 class VPlayerDirection(Enum):
     """
     Enum representing the possible movement directions for the player.
     """
 
-    UP = auto()
-    LEFT = auto()
-    DOWN = auto()
-    RIGHT = auto()
+    UP = Vec2(0, 1)
+    LEFT = Vec2(-1, 0)
+    DOWN = Vec2(0, -1)
+    RIGHT = Vec2(1, 0)
 
     @staticmethod
-    def return_direction_from_key(symbol: int) -> "VPlayerDirection | None":
+    def return_direction_from_key(symbol: int) -> VPlayerDirection | None:
         """
         Takes a key as input and returns the corresponding player direction.
         If the key does not correspond to any direction, returns None.
         """
-        valid_keys: dict["VPlayerDirection", list[int]] = {
-            VPlayerDirection.UP: [key.UP, key.W, key.Z],
-            VPlayerDirection.LEFT: [key.LEFT, key.A, key.Q],
-            VPlayerDirection.DOWN: [key.DOWN, key.S],
-            VPlayerDirection.RIGHT: [key.RIGHT, key.D],
-        }
-        for direction, keys in valid_keys.items():
-            if symbol in keys:
-                return direction
-        return None
-
-    def get_vector(self) -> Vec2:
-        """
-        Returns the vector representation of the direction.
-        """
-        match self:
-            case VPlayerDirection.UP:
-                return Vec2(0, 1)
-            case VPlayerDirection.LEFT:
-                return Vec2(-1, 0)
-            case VPlayerDirection.DOWN:
-                return Vec2(0, -1)
-            case VPlayerDirection.RIGHT:
-                return Vec2(1, 0)
+        match symbol:
+            case key.UP | key.W | key.Z:
+                return VPlayerDirection.UP
+            case key.LEFT | key.A | key.Q:
+                return VPlayerDirection.LEFT
+            case key.DOWN | key.S:
+                return VPlayerDirection.DOWN
+            case key.RIGHT | key.D:
+                return VPlayerDirection.RIGHT
+            case _:
+                return None
 
 
 # ░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀█░█░░░█▀█░█░█░█▀▀░█▀▄░░
@@ -64,36 +56,20 @@ class VEntityPlayer(VEntityMoving):
         super().__init__(atlas, "player", position)
         self.walls: SWall = walls
         self.gamestate: GameState = gamestate
-        self.setup()
+
+        self.current_directions: set[Vec2] = set()
+
+        # QUESTION: Does the diagonal work with your keyboard ?
 
     # ########################################################################
-    # ############################################################# SETUP ####
-    def setup(self) -> None:
-        self.current_directions: set[VPlayerDirection] = set()
-        self.valid_keys: set[int] = {key.UP, key.DOWN, key.LEFT, key.RIGHT}
-
+    # ################################################## DIRECTION VECTOR ####
     def get_direction_vector(self) -> Vec2:
         """
         Returns the combined vector of all currently pressed directions.
         If no direction is pressed, returns a zero vector.
+        Normalize the vector to ensure consistent speed in diagonal.
         """
-        if not self.current_directions:
-            return Vec2(0, 0)
-
-        combined_vector = Vec2(0, 0)
-        for direction in self.current_directions:
-            combined_vector += direction.get_vector()
-
-        # Normalize the vector to ensure consistent speed in diagonal movement
-        if combined_vector.length() > 0:
-            combined_vector = combined_vector.normalize()
-
-        return combined_vector
-
-    # ########################################################################
-    # ############################################################# SPEED ####
-    def get_speed(self) -> float:
-        return self.gamestate.player_speed
+        return sum(self.current_directions, Vec2(0, 0)).normalize()
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -107,7 +83,7 @@ class VEntityPlayer(VEntityMoving):
     def update_velocity(self, delta_time: float) -> None:
         """Update player movement based on pressed keys"""
 
-        speed = self.apply_delta_time(self.get_speed(), delta_time)
+        speed = self.apply_delta_time(self.gamestate.player_speed, delta_time)
 
         direction_vector = self.get_direction_vector()
         self.change_x = direction_vector.x * speed * delta_time
@@ -145,9 +121,9 @@ class VEntityPlayer(VEntityMoving):
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
-            self.current_directions.add(direction)
+            self.current_directions.add(direction.value)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
-            self.current_directions.discard(direction)
+            self.current_directions.discard(direction.value)
