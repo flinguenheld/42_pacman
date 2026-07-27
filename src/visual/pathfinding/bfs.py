@@ -6,13 +6,6 @@ from collections import deque
 from src.visual.vdata import VData
 
 
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▀░░░█▀▀░█▀▄░█▀▄░█▀█░█▀▄░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░▀▀█░░░█▀▀░█▀▄░█▀▄░█░█░█▀▄░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀░░▀░░░▀▀▀░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░▀░░
-class BFSError(Exception):
-    pass
-
-
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀░░▀░░░▀▀▀░░
@@ -34,21 +27,24 @@ class BFS:
         self.buffer: dict[Vec2, int] = dict()
         self.path: list[Vec2] = list()
 
+        self.start = Vec2(0, 0)
+        self.target = Vec2(0, 0)
+
     # ########################################################################
     # ############################################################### RUN ####
-    def run(self, start: Vec2, target: Vec2) -> Vec2:
+    def run_algo(self, start: Vec2, target: Vec2) -> Vec2:
         """
-        Helper which launches the algo and returns the next postion.
-        Raise a BFSError if the target can't be found.
+        Helper which launches the algo and returns only the next position.
+        The full path is accessible via self.path.
         """
-        if start == target:
-            return start
+
         self.set_costs(start, target)
-        try:
-            self.extract_path(target)
+        self.extract_path()
+
+        if len(self.path) <= 1:
+            return self.start
+        else:
             return self.path[1]
-        except Exception as e:
-            raise BFSError(e)
 
     # ########################################################################
     # ######################################################### SET COSTS ####
@@ -56,44 +52,50 @@ class BFS:
         """
         Fill the buffer with cost per floor.
         Stop if the target has been reached.
+
+        No check, the user has to provide a correct start & target.
         """
 
         self.buffer = {k: BFS.NOT_VISITED for k in self.graph.keys()}
         self.buffer[start] = 0
 
-        queue = deque([start])
-        while queue:
-            current = queue.popleft()
-            cost = self.buffer[current] + 1
+        self.start = start
+        self.target = target
 
-            for neighbour in self.graph[current]:
-                if self.buffer[neighbour] == BFS.NOT_VISITED:
-                    self.buffer[neighbour] = cost
-                    queue.append(neighbour)
+        if start != target:
+            queue = deque([start])
+            while queue:
+                current = queue.popleft()
+                cost = self.buffer[current] + 1
 
-                    if neighbour == target:
-                        return
+                for neighbour in self.graph[current]:
+                    if self.buffer[neighbour] == BFS.NOT_VISITED:
+                        self.buffer[neighbour] = cost
+                        queue.append(neighbour)
+
+                        if neighbour == target:
+                            return
 
     # ########################################################################
     # ###################################################### EXTRACT PATH ####
-    def extract_path(self, target: Vec2) -> list[Vec2]:
+    def extract_path(self) -> None:
         """
         Sail back up in the buffer to get one of the shortest path.
         Path order is from start to target (start included).
 
-        Raise BFSError if the target is unreachable.
+        No check, the user has to provide a correct start & target.
         """
 
-        if target not in self.buffer or self.buffer[target] == BFS.NOT_VISITED:
-            raise BFSError("Unreachable target")
+        if self.target not in self.buffer:
+            self.path = [self.start]
 
-        self.path = [target]
-        while self.buffer[self.path[-1]] != 0:
-            neighbours = self.graph[self.path[-1]]
-            self.path.append(min(neighbours, key=lambda n: self.buffer[n]))
+        else:
+            self.path = [self.target]
+            while self.buffer[self.path[-1]] != 0:
+                neighbours = self.graph[self.path[-1]]
+                self.path.append(min(neighbours, key=lambda n: self.buffer[n]))
 
-        self.path.reverse()
-        return self.path
+            self.path.reverse()
 
     # ########################################################################
     # ###################################################### PRINT DEBUG_ ####

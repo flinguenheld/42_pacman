@@ -15,12 +15,12 @@ from src.visual.vatlas import VAtlas
 from src.visual.gui.ghud import VHud
 from src.visual.vdata import VNames, VData
 from src.visual.gamestate import GameState
+from src.visual.pathfinding.bfs import BFS
 from src.visual.entities.ventity_enemy import (
     EnemyState,
     VEntityEnemyCommon,
 )
 from src.visual.gui.gbackground import GBackground
-from src.visual.pathfinding.bfs import BFS, BFSError
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
@@ -437,9 +437,9 @@ class VGame(arcade.View):
     def test_bfs(self) -> None:
 
         # Test from the player to the first enemy
-        # start = self.maze.closest_floor_of(self.player.position)
+        start = self.maze.closest_floor_of(self.player.center)
         target = self.maze.closest_floor_of(self.enemy_list[0].center)
-        start = target
+        # start = target
 
         algo = BFS(self.maze.graph)
         algo.print_debug()
@@ -447,26 +447,5 @@ class VGame(arcade.View):
         algo.set_costs(start, target)
         algo.print_debug()
 
-        try:
-            algo.extract_path(target)
-            algo.print_debug()
-        except BFSError as e:
-            print(e)
-
-        # Just the next point ?
-        try:
-            print(
-                f"maze center: {self.maze.center_position}\n"
-                f"next point: {algo.run(start, target)}"
-            )
-        except BFSError as e:
-            print(e)
-
-        # Just the next point with an impossible point
-        # try:
-        #     print(
-        #         f"maze center: {self.maze.center_position}\n"
-        #         f"next point: {algo.run(start, Vec2(-999, -999))}"
-        #     )
-        # except BFSError as e:
-        #     print(e)
+        algo.extract_path()
+        algo.print_debug()

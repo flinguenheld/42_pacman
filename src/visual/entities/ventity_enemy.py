@@ -3,11 +3,11 @@ from enum import Enum, auto
 from arcade import Sprite, Vec2
 
 from src.maze.maze import Maze
-from src.visual.pathfinding.bfs import BFS
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
-from src.visual.sprites.swall import SWall
 from src.visual.gamestate import GameState
+from src.visual.sprites.swall import SWall
+from src.visual.pathfinding.bfs import BFS
 from src.visual.sprites.sfloor import SFloor
 from src.visual.pathfinding.astar import random_path_search
 from src.visual.entities.ventity_moving import VEntityMoving
@@ -88,7 +88,7 @@ class VEntityEnemyCommon(VEntityMoving):
             return
 
         def next_pos_chasing() -> Vec2 | None:
-            return self.bfs.run(start, target)
+            return self.bfs.run_algo(start, target)
 
         def next_pos_fleeing() -> Vec2 | None:
             path = random_path_search(start, self.maze.graph)
