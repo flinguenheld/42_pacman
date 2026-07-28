@@ -1,26 +1,26 @@
 import time
 import random
 import arcade
+from arcade.types import Color
 from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
+from src.visual.vatlas import VAtlas
+from src.visual.gui.ghud import VHud
+from src.visual.gamestate import GameState
+from src.visual.vdata import VNames, VData
+from src.visual.pathfinding.bfs import BFS
+from src.visual.gui.gbackground import GBackground
 from src.visual.entities.venemy_variants import (
     Charlie,
     Johnny,
     Michael,
     ReverseMichael,
 )
-from src.visual.vatlas import VAtlas
-from src.visual.gui.ghud import VHud
-from src.visual.vdata import VNames, VData
-from src.visual.gamestate import GameState
-from src.visual.pathfinding.bfs import BFS
-from src.visual.entities.ventity_enemy import VEntityEnemyCommon
-
-from src.visual.gui.gbackground import GBackground
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
+from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 
 
@@ -182,49 +182,34 @@ class VGame(arcade.View):
                 self.background.draw()
                 self.maze.draw()
                 self.pacgum_list.draw(pixelated=True)
+                self.draw_enemy_paths()
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
-                self._draw_hitboxes()
-                # self._draw_enemy_paths()
+                self.draw_hitboxes()
 
             with self.camera_hud.activate():
                 self.hud.draw()
 
     # ########################################################################
-    # ##################################################### DRAW HITBOXES ####
-    def _draw_hitboxes(self) -> None:
+    # ############################################# DRAW HITBOXES & PATHS ####
+    def draw_hitboxes(self) -> None:
         if self.display_hitboxes:
-            self.maze.walls.sprites.draw_hit_boxes(
-                color=arcade.color.RED, line_thickness=2
-            )
-            self.pacgum_list.draw_hit_boxes(
-                color=arcade.color.WHITE, line_thickness=1
-            )
-            self.player_list.draw_hit_boxes(
-                color=arcade.color.GRANNY_SMITH_APPLE, line_thickness=2
-            )
-            self.enemy_list.draw_hit_boxes(
-                color=arcade.color.AFRICAN_VIOLET, line_thickness=2
-            )
+            self.maze.walls.sprites.draw_hit_boxes(arcade.color.RED, 2)
+            self.pacgum_list.draw_hit_boxes(arcade.color.WHITE, 1)
+            self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
+            self.enemy_list.draw_hit_boxes(arcade.color.AFRICAN_VIOLET, 2)
 
-    # def _draw_enemy_paths(self) -> None:
-    #     colors: tuple[Color, Color, Color, Color] = (
-    #         arcade.color.RED,
-    #         arcade.color.GREEN,
-    #         arcade.color.BLUE,
-    #         arcade.color.YELLOW,
-    #     )
-    #     line_width = 20
-    #     if self.display_enemy_paths:
-    #         for color, enemy in zip(colors, self.enemy_list):
-    #             if not enemy.path:
-    #                 continue
-    #             arcade.draw_line_strip(
-    #                 [Vec2(*enemy.position)] + enemy.path,
-    #                 color,
-    #                 line_width,
-    #             )
-    #             line_width -= 5
+    def draw_enemy_paths(self) -> None:
+        if self.display_enemy_paths:
+            line_width = VData.SPRITE_SIZE // 1.8
+            if self.display_enemy_paths:
+                for val, enemy in enumerate(self.enemy_list):
+                    arcade.draw_line_strip(
+                        enemy.bfs.path,
+                        Color(val * 30, val * 50, val * 80),
+                        line_width,
+                    )
+                    line_width -= 4
 
     # ########################################################################
     # ############################################################ UPDATE ####
