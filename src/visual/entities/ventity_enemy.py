@@ -22,6 +22,9 @@ class VEntityEnemyCommon(VEntityMoving):
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
+        assert id < atlas.nb_of_enemies, (
+            "id must be less than the number of enemies in the atlas"
+        )
         super().__init__(atlas, f"enemy_{id}_chasing", position)
 
         # Keep the sprite name & mode to easily switch
@@ -63,6 +66,8 @@ class VEntityEnemyCommon(VEntityMoving):
         """Switch the sprite_name according to the currnt gamestate"""
         # QUESTION: GOOD IDEA ????
         # IDEA: We could adapt their speed ??
+        # TODO: UPDATE ALL TEXTURES
+        # IDEA: Add something in HUD or an obvious way to say current mode ??
 
         # IDEA: Reimplement the get_speed() method or a speed property
         # and change the speed in the gamestate class according to the mode

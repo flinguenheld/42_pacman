@@ -166,7 +166,7 @@ class VGame(arcade.View):
             (
                 enemy
                 for enemy in self.enemy_list
-                if enemy.ID == enemy_variant.ID
+                if type(enemy) is enemy_variant
             ),
             None,
         )

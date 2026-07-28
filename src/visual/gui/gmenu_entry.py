@@ -57,7 +57,7 @@ class GMenuEntry:
 
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]
-        for id in range(4):
+        for id in range(self.atlas.nb_of_enemies):
             possible_tiles.append(f"enemy_{id}_{GameState.Mode.CHASING.value}")
 
         tile_name = random.choice(possible_tiles)

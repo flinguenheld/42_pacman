@@ -78,7 +78,7 @@ class Charlie(VEntityEnemyCommon):
     but with a delay of 3 seconds.
     """
 
-    ID = 2
+    ID = 0
 
     def __init__(
         self,
@@ -136,7 +136,7 @@ class ReverseMichael(VEntityEnemyCommon):
 
     # TODO: Find a name for this enemy
 
-    ID = 3
+    ID = 1
 
     def __init__(
         self,
