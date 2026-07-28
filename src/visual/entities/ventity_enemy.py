@@ -65,12 +65,14 @@ class VEntityEnemyCommon(VEntityMoving):
     def update_velocity(self, delta_time: float) -> None:
 
         speed = self.apply_delta_time(self.speed, delta_time)
+        next_position_delta = (self.next_position - self.center).normalize()
 
-        next_position_delta = self.next_position - self.center
-        next_position_normalized = next_position_delta.normalize()
+        # Change x/y are used by update_texture() --
+        self.change_x = next_position_delta.x * speed * delta_time
+        self.change_y = next_position_delta.y * speed * delta_time
 
-        self.center_x += next_position_normalized.x * speed * delta_time
-        self.center_y += next_position_normalized.y * speed * delta_time
+        self.center_x += self.change_x
+        self.center_y += self.change_y
 
     # ########################################################################
     # ############################################################ UPDATE ####
