@@ -22,11 +22,13 @@ class VEntityEnemyCommon(VEntityMoving):
         gamestate: GameState,
     ) -> None:
         super().__init__(
-            atlas, f"enemy_{id}_chasing", position=maze.floor_corners[id]
+            atlas,
+            f"enemy_{id % atlas.nb_of_enemies}_chasing",
+            position=maze.floor_corners[id],
         )
 
         # Keep the sprite name & mode to easily switch
-        self.BASENAME = f"enemy_{id}"
+        self.BASENAME = f"enemy_{id % atlas.nb_of_enemies}"
         self.current_mode = GameState.Mode.CHASING
 
         self.maze: Maze = maze
@@ -53,6 +55,8 @@ class VEntityEnemyCommon(VEntityMoving):
         """Switch the sprite_name according to the currnt gamestate"""
         # QUESTION: GOOD IDEA ????
         # IDEA: We could adapt their speed ??
+        # TODO: UPDATE ALL TEXTURES
+        # IDEA: Add something in HUD or an obvious way to say current mode ??
 
         if self.current_mode != self.gamestate.mode:
             self._sprite_name = f"{self.BASENAME}_{self.gamestate.mode.value}"

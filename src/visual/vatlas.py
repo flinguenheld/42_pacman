@@ -243,6 +243,12 @@ class VAtlas:
         return int(self.info["font"]["size"])
 
     # ########################################################################
+    # ###################################### NUMBER OF ENEMIES IN THE PNG ####
+    @property
+    def nb_of_enemies(self) -> int:
+        return int(self.info["number_of_enemies"])
+
+    # ########################################################################
     # ######################################################### PICK TILE ####
     def pick_tile(self, name: str, randomly: bool = True) -> VTile:
         """
