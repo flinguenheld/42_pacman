@@ -425,7 +425,7 @@
       }
     },
     {
-      "name": "enemy_0_top",
+      "name": "enemy_0_chasing_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -437,7 +437,7 @@
       }
     },
     {
-      "name": "enemy_0_right",
+      "name": "enemy_0_chasing_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -449,7 +449,7 @@
       }
     },
     {
-      "name": "enemy_0_bot",
+      "name": "enemy_0_chasing_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -461,7 +461,7 @@
       }
     },
     {
-      "name": "enemy_0_left",
+      "name": "enemy_0_chasing_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -473,7 +473,7 @@
       }
     },
     {
-      "name": "enemy_0_wait",
+      "name": "enemy_0_chasing_wait",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -486,7 +486,7 @@
       }
     },
     {
-      "name": "enemy_1_top",
+      "name": "enemy_1_chasing_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -498,7 +498,7 @@
       }
     },
     {
-      "name": "enemy_1_right",
+      "name": "enemy_1_chasing_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -510,7 +510,7 @@
       }
     },
     {
-      "name": "enemy_1_bot",
+      "name": "enemy_1_chasing_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -522,7 +522,7 @@
       }
     },
     {
-      "name": "enemy_1_left",
+      "name": "enemy_1_chasing_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -534,7 +534,7 @@
       }
     },
     {
-      "name": "enemy_1_wait",
+      "name": "enemy_1_chasing_wait",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -547,7 +547,7 @@
       }
     },
     {
-      "name": "enemy_2_top",
+      "name": "enemy_2_chasing_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -559,7 +559,7 @@
       }
     },
     {
-      "name": "enemy_2_right",
+      "name": "enemy_2_chasing_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -571,7 +571,7 @@
       }
     },
     {
-      "name": "enemy_2_bot",
+      "name": "enemy_2_chasing_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -583,7 +583,7 @@
       }
     },
     {
-      "name": "enemy_2_left",
+      "name": "enemy_2_chasing_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -595,7 +595,7 @@
       }
     },
     {
-      "name": "enemy_2_wait",
+      "name": "enemy_2_chasing_wait",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -608,7 +608,7 @@
       }
     },
     {
-      "name": "enemy_3_top",
+      "name": "enemy_3_chasing_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -620,7 +620,7 @@
       }
     },
     {
-      "name": "enemy_3_right",
+      "name": "enemy_3_chasing_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -632,7 +632,7 @@
       }
     },
     {
-      "name": "enemy_3_bot",
+      "name": "enemy_3_chasing_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -644,7 +644,7 @@
       }
     },
     {
-      "name": "enemy_3_left",
+      "name": "enemy_3_chasing_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -656,7 +656,251 @@
       }
     },
     {
-      "name": "enemy_3_wait",
+      "name": "enemy_3_chasing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_2_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_2_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_2_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_2_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_2_fleeing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_3_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_3_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_3_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_3_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_3_fleeing_wait",
       "nb": 4,
       "animated": true,
       "duration": [

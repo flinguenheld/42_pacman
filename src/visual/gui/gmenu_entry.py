@@ -4,6 +4,7 @@ import random
 from typing import Callable, Any
 from dataclasses import dataclass
 from arcade import Vec2, Text, SpriteList
+from src.visual.gamestate import GameState
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
@@ -53,9 +54,13 @@ class GMenuEntry:
 
         # Icons --
         shift = self.text.content_width / 2 + VData.SPRITE_SIZE
-        tile_name = random.choice(
-            ["player", "enemy_0", "enemy_1", "enemy_2", "enemy_3"],
-        )
+
+        # QUESTION: Is it clean ?
+        possible_tiles = ["player"]
+        for id in range(4):
+            possible_tiles.append(f"enemy_{id}_{GameState.Mode.CHASING.value}")
+
+        tile_name = random.choice(possible_tiles)
 
         self.icons: SpriteList = SpriteList()
         tile = self.atlas.pick_tile(f"{tile_name}_right")

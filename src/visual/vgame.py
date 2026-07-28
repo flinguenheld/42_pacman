@@ -256,7 +256,7 @@ class VGame(arcade.View):
             self.time_last_super_pacgum_ms + self.duration_super_pacgum_secs
             < time.time()
         ):
-            self.gamestate.mode = "chasing"
+            self.gamestate.mode = GameState.Mode.CHASING
 
     # ########################################################################
     # ########################################## PLAYER PACGUM COLLISIONS ####
@@ -268,7 +268,7 @@ class VGame(arcade.View):
             self.gamestate.increment_score(pacgum.get_points())
             if isinstance(pacgum, VEntitySuperPacGum):
                 self.time_last_super_pacgum_ms = time.time()
-                self.gamestate.mode = "fleeing"
+                self.gamestate.mode = GameState.Mode.FLEEING
             pacgum.kill()
 
     def resolve_player_enemy_collisions(self) -> None:
@@ -278,7 +278,7 @@ class VGame(arcade.View):
         )
         if not collided:
             return
-        if self.gamestate.mode == "fleeing":
+        if self.gamestate.mode == GameState.Mode.FLEEING:
             pass
         else:
             self.player.kill()

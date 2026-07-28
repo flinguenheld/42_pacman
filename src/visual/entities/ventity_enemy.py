@@ -21,7 +21,13 @@ class VEntityEnemyCommon(VEntityMoving):
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        super().__init__(atlas, f"enemy_{id}", position=maze.floor_corners[id])
+        super().__init__(
+            atlas, f"enemy_{id}_chasing", position=maze.floor_corners[id]
+        )
+
+        # Keep the sprite name & mode to easily switch
+        self.BASENAME = f"enemy_{id}"
+        self.current_mode = GameState.Mode.CHASING
 
         self.maze: Maze = maze
         self.player: VEntityPlayer = player
@@ -42,6 +48,17 @@ class VEntityEnemyCommon(VEntityMoving):
         )
 
     # ########################################################################
+    # ######################################################## CHECK MODE ####
+    def update_game_mode(self) -> None:
+        """Switch the sprite_name according to the currnt gamestate"""
+        # QUESTION: GOOD IDEA ????
+        # IDEA: We could adapt their speed ??
+
+        if self.current_mode != self.gamestate.mode:
+            self._sprite_name = f"{self.BASENAME}_{self.gamestate.mode.value}"
+            self.current_mode = self.gamestate.mode
+
+    # ########################################################################
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
 
@@ -55,9 +72,9 @@ class VEntityEnemyCommon(VEntityMoving):
             return
 
         match self.gamestate.mode:
-            case "chasing":
+            case GameState.Mode.CHASING:
                 self.next_position = self.bfs.run_algo(start, target)
-            case "fleeing":
+            case GameState.Mode.FLEEING:
                 self.next_position = self.fleeing.run_algo(start, target)
 
     # ########################################################################
@@ -77,6 +94,7 @@ class VEntityEnemyCommon(VEntityMoving):
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
+        self.update_game_mode()
         self.update_next_position()
         self.update_velocity(delta_time)
         self.update_texture()
