@@ -92,7 +92,7 @@ class Charlie(VEntityEnemyCommon):
         self.max_buffer_size: int = int(3.0 * 60.0)  # 3 seconds at 60 FPS
 
         super().__init__(self.ID, position, atlas, maze, player, gamestate)
-        self.speed *= 0.5
+        self.speed = self.gamestate.player_speed * 0.8
 
     def update_player_movement_buffer(self) -> None:
         """
