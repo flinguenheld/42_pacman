@@ -76,7 +76,8 @@ class VEntityMoving(VEntity):
     # ################################################## APPLY DELTA TIME ####
     def apply_delta_time(self, speed: float, delta_time: float) -> float:
 
-        # QUESTION: What is that number ?
-        # QUESTION: Should it be managed somewhere else like Config or VData ?
-        multiplier = 500.0
-        return speed * multiplier * delta_time
+        # Magic number used to compensate for the delta time
+        # So that you don't need to put absurd values for speed
+        # Magic numbers are bad but this one is acceptable
+        MULTIPLIER = 500.0
+        return speed * MULTIPLIER * delta_time

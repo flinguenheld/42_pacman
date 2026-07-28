@@ -8,7 +8,8 @@ from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 
 
-type EnemyVariant = type["Johnny | Michael | Charlie | ReverseMichael"]
+type EnemyVariantClass = type["Johnny | Michael | Charlie | ReverseMichael"]
+type EnemyVariant = "Johnny | Michael | Charlie | ReverseMichael"
 
 
 class Johnny(VEntityEnemyCommon):
@@ -19,16 +20,17 @@ class Johnny(VEntityEnemyCommon):
     Its target sprite is always the sprite the player is currently on.
     """
 
+    ID = 0
+
     def __init__(
         self,
-        id: int,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
+        position: Vec2,
     ) -> None:
-        super().__init__(id, atlas, maze, player, gamestate)
-
+        super().__init__(self.ID, position, atlas, maze, player, gamestate)
         self.speed *= 0.9
 
     def get_target(self) -> Vec2:
@@ -48,8 +50,20 @@ class Michael(VEntityEnemyCommon):
     player is currently moving.
     """
 
+    ID = 1
+
+    def __init__(
+        self,
+        position: Vec2,
+        atlas: VAtlas,
+        maze: Maze,
+        player: VEntityPlayer,
+        gamestate: GameState,
+    ) -> None:
+        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+
     def get_target(self) -> Vec2:
-        player_direction = self.player.get_direction_vector()
+        player_direction = self.last_player_direction
         distance_threshold = 3.0 * VData.SPRITE_SIZE
         possible = self.player.center + (player_direction * distance_threshold)
 
@@ -64,9 +78,11 @@ class Charlie(VEntityEnemyCommon):
     but with a delay of 3 seconds.
     """
 
+    ID = 2
+
     def __init__(
         self,
-        id: int,
+        position: Vec2,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
@@ -74,13 +90,8 @@ class Charlie(VEntityEnemyCommon):
     ) -> None:
         self.player_movement_buffer: list[Vec2] = []
         self.max_buffer_size: int = int(3.0 * 60.0)  # 3 seconds at 60 FPS
-        super().__init__(
-            id,
-            atlas,
-            maze,
-            player,
-            gamestate,
-        )
+
+        super().__init__(self.ID, position, atlas, maze, player, gamestate)
         self.speed *= 0.5
 
     def update_player_movement_buffer(self) -> None:
@@ -112,22 +123,36 @@ class Charlie(VEntityEnemyCommon):
 
 class ReverseMichael(VEntityEnemyCommon):
     """
-    Michael is a more advanced enemy that tries to predict the player's
+    ReverseMichael is a more advanced enemy that tries to predict the player's
     movement.
     He is more clever (or a coward, depending on how you see it) than Johnny,
     and will try to anticipate where the player is going.
     He won't try to kill the player directly, but will try to cut him off by
     predicting his next move.
 
-    His target sprite is X tiles ahead of the player in the direction the
-    player is currently moving.
+    His target sprite is X tiles ahead of the player in the opposite direction
+    the player is currently moving.
     """
 
     # TODO: Find a name for this enemy
 
+    ID = 3
+
+    def __init__(
+        self,
+        position: Vec2,
+        atlas: VAtlas,
+        maze: Maze,
+        player: VEntityPlayer,
+        gamestate: GameState,
+    ) -> None:
+        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+
     def get_target(self) -> Vec2:
-        player_direction = self.player.get_direction_vector()
+        player_direction = self.last_player_direction
         distance_threshold = 3.0 * VData.SPRITE_SIZE
-        possible = self.player.center + (player_direction * distance_threshold)
+        possible = self.player.center + (
+            -player_direction * distance_threshold
+        )
 
         return self.maze.closest_floor_of(possible)

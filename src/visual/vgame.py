@@ -13,6 +13,8 @@ from src.visual.pathfinding.bfs import BFS
 from src.visual.gui.gbackground import GBackground
 from src.visual.entities.venemy_variants import (
     Charlie,
+    EnemyVariant,
+    EnemyVariantClass,
     Johnny,
     Michael,
     ReverseMichael,
@@ -28,6 +30,13 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
+    ENEMY_ORDER: tuple[EnemyVariantClass, ...] = (
+        Johnny,
+        Michael,
+        Charlie,
+        ReverseMichael,
+    )
+
     def __init__(self, atlas: VAtlas, gamestate: GameState) -> None:
         super().__init__()
 
@@ -42,6 +51,7 @@ class VGame(arcade.View):
         self.camera_hud = arcade.Camera2D()
 
         self.gamestate = gamestate
+
         self.setup()
 
     # ########################################################################
@@ -74,13 +84,14 @@ class VGame(arcade.View):
         )
 
         # Init sprite lists first --
-        self.enemy_list: SpriteList[VEntityEnemyCommon] = arcade.SpriteList()
+        self.enemy_list: SpriteList[EnemyVariant] = arcade.SpriteList()
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
         self.pacgum_list: SpriteList[VEntityPacGum | VEntitySuperPacGum] = (
             arcade.SpriteList()
         )
 
         # Player --
+        self.player: VEntityPlayer
         self.spawn_player()
 
         # Enemies --
@@ -126,14 +137,53 @@ class VGame(arcade.View):
         )
         self.player_list.append(self.player)
 
+    # TODO: Move enemy or entity management (spawning, updating, etc...)
+    # to a separate class?
+    # I feel like this class is becoming too big and complex
+    def spawn_enemies(self) -> None:
+        """
+        Spawn/respawn all enemies in the order defined by self.ENEMY_ORDER
+        """
+        for enemy_class in self.ENEMY_ORDER:
+            self.spawn_enemy(enemy_class)
+
     # ########################################################################
     # ##################################################### SPAWN ENEMIES ####
-    def spawn_enemies(self) -> None:
-        self.enemy_list.clear()
+    def spawn_enemy(self, enemy_variant: EnemyVariantClass) -> None:
+        """
+        Spawn/respawn an enemy of the given variant
+        """
 
-        for id, e in enumerate([ReverseMichael, Charlie, Michael, Johnny]):
-            enemy = e(id, self.atlas, self.maze, self.player, self.gamestate)
-            self.enemy_list.append(enemy)
+        # Store the spawn positions for each enemy variant in a dictionary
+        ENEMY_SPAWN_POSITIONS: dict[EnemyVariantClass, Vec2] = dict()
+        for corner, enemy_class in zip(
+            self.maze.floor_corners, self.ENEMY_ORDER
+        ):
+            ENEMY_SPAWN_POSITIONS[enemy_class] = corner
+
+        # Get the existing enemy of the given variant, if any, and kill it
+        enemy = next(
+            (
+                enemy
+                for enemy in self.enemy_list
+                if enemy.ID == enemy_variant.ID
+            ),
+            None,
+        )
+        if enemy:
+            enemy.kill()
+
+        # Instantiate a new enemy
+        spawn_position = ENEMY_SPAWN_POSITIONS[enemy_variant]
+        new_enemy = enemy_variant(
+            position=spawn_position,
+            atlas=self.atlas,
+            maze=self.maze,
+            player=self.player,
+            gamestate=self.gamestate,
+        )
+        # This is self-explanatory but it felt empty without this comment
+        self.enemy_list.append(new_enemy)
 
     # ########################################################################
     # ########################################################### ON SHOW ####

@@ -6,7 +6,7 @@ from src.visual.gamestate import GameState
 from src.visual.pathfinding.bfs import BFS
 from src.visual.pathfinding.fleeing import Fleeing
 from src.visual.entities.ventity_moving import VEntityMoving
-from src.visual.entities.ventity_player import VEntityPlayer
+from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -16,14 +16,13 @@ class VEntityEnemyCommon(VEntityMoving):
     def __init__(
         self,
         id: int,
+        position: Vec2,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        super().__init__(
-            atlas, f"enemy_{id}_chasing", position=maze.floor_corners[id]
-        )
+        super().__init__(atlas, f"enemy_{id}_chasing", position)
 
         # Keep the sprite name & mode to easily switch
         self.BASENAME = f"enemy_{id}"
@@ -38,6 +37,9 @@ class VEntityEnemyCommon(VEntityMoving):
         self.next_position: Vec2 = self.center
         self.bfs = BFS(self.maze.graph)
         self.fleeing = Fleeing(self.maze.graph)
+        # NOTE: I need that, as I want Michael and ReverseMichael to block
+        # the player but not go straight for it if it stops moving.
+        self.last_player_direction: Vec2 = VPlayerDirection.UP.value
 
         self.update_next_position()
 
@@ -47,6 +49,14 @@ class VEntityEnemyCommon(VEntityMoving):
             "This method should be implemented in subclasses."
         )
 
+    def update_last_player_direction(self) -> None:
+        current_player_direction = self.player.get_direction_vector()
+        if (
+            current_player_direction != Vec2(0, 0)
+            and current_player_direction != self.last_player_direction
+        ):
+            self.last_player_direction = current_player_direction
+
     # ########################################################################
     # ######################################################## CHECK MODE ####
     def update_game_mode(self) -> None:
@@ -54,6 +64,10 @@ class VEntityEnemyCommon(VEntityMoving):
         # QUESTION: GOOD IDEA ????
         # IDEA: We could adapt their speed ??
 
+        # IDEA: Reimplement the get_speed() method or a speed property
+        # and change the speed in the gamestate class according to the mode
+        # Or add a multiplier variable in the property so that if
+        # the mode is fleeing we can alter the speed
         if self.current_mode != self.gamestate.mode:
             self._sprite_name = f"{self.BASENAME}_{self.gamestate.mode.value}"
             self.current_mode = self.gamestate.mode
@@ -94,7 +108,10 @@ class VEntityEnemyCommon(VEntityMoving):
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
+        self.update_last_player_direction()
+
         self.update_game_mode()
         self.update_next_position()
+
         self.update_velocity(delta_time)
         self.update_texture()
