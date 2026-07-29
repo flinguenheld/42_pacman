@@ -1,4 +1,3 @@
-from enum import Enum
 from src.visual.vdata import VData
 
 
@@ -6,10 +5,6 @@ from src.visual.vdata import VData
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
-    class Mode(Enum):
-        CHASING = "chasing"
-        FLEEING = "fleeing"
-
     def __init__(self) -> None:
         # TODO: These values have to be set with the config
         self.score: int = 0
@@ -18,8 +13,6 @@ class GameState:
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
-
-        self.mode: GameState.Mode = GameState.Mode.CHASING
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####

@@ -668,6 +668,67 @@
         "size": 20,
         "bevel": 5
       }
+    },
+    {
+      "name": "enemy_dead_top",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_dead_right",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_dead_bot",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_dead_left",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_dead_wait",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        10000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
     }
   ]
 }

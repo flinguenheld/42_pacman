@@ -9,6 +9,8 @@ from src.visual.vdata import VData
 # ░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░▀▀█░█░█░█▀▀░█▀▀░█▀▄░░░█▀▀░█▀█░█░░░░
 # ░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀▀▀░▀▀▀░▀░░░▀▀▀░▀░▀░░░▀░░░▀░▀░▀▀▀░░
 class VEntitySuperPacGum(VEntityPacGum):
+    TIMER: float = 10.0
+
     def __init__(
         self,
         atlas: VAtlas,

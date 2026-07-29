@@ -1,3 +1,7 @@
+from __future__ import annotations
+from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
+
+from enum import Enum
 from arcade import Vec2
 
 from src.maze.maze import Maze
@@ -13,6 +17,11 @@ from src.visual.entities.ventity_player import VEntityPlayer, VPlayerDirection
 # ░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░░
 class VEntityEnemyCommon(VEntityMoving):
+    class Mode(Enum):
+        CHASING = "chasing"
+        FLEEING = "fleeing"
+        DEAD = "dead"
+
     def __init__(
         self,
         id: int,
@@ -22,14 +31,17 @@ class VEntityEnemyCommon(VEntityMoving):
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        assert id < atlas.nb_of_enemies, (
-            "id must be less than the number of enemies in the atlas"
-        )
+        # assert id < atlas.nb_of_enemies, (
+        #     "id must be less than the number of enemies in the atlas"
+        # )
         super().__init__(atlas, f"enemy_{id}_chasing", position)
 
-        # Keep the sprite name & mode to easily switch
-        self.BASENAME = f"enemy_{id}"
-        self.current_mode = GameState.Mode.CHASING
+        self.id = id
+
+        self._mode = (
+            VEntityEnemyCommon.Mode.CHASING,
+            VEntityEnemyCommon.Mode.CHASING,
+        )
 
         self.maze: Maze = maze
         self.player: VEntityPlayer = player
@@ -40,8 +52,20 @@ class VEntityEnemyCommon(VEntityMoving):
         self.next_position: Vec2 = self.center
         self.bfs = BFS(self.maze.graph)
         self.fleeing = Fleeing(self.maze.graph)
+
+        # DEAL WITH DEATH HERE ????
+        # - When dead, come back to start
+        # - Then wait a timer to come back
+        # self.dead = False
+        # self.affected_corner = self.maze.floor_corners[id]
+
+        # Timers --
+        self.timer_dead = 0.0
+        self.timer_fleeing = 0.0
+
         # NOTE: I need that, as I want Michael and ReverseMichael to block
         # the player but not go straight for it if it stops moving.
+        # TODO: Put that in player not here to perform update once ?
         self.last_player_direction: Vec2 = VPlayerDirection.UP.value
 
         self.update_next_position()
@@ -61,23 +85,6 @@ class VEntityEnemyCommon(VEntityMoving):
             self.last_player_direction = current_player_direction
 
     # ########################################################################
-    # ######################################################## CHECK MODE ####
-    def update_game_mode(self) -> None:
-        """Switch the sprite_name according to the currnt gamestate"""
-        # QUESTION: GOOD IDEA ????
-        # IDEA: We could adapt their speed ??
-        # TODO: UPDATE ALL TEXTURES
-        # IDEA: Add something in HUD or an obvious way to say current mode ??
-
-        # IDEA: Reimplement the get_speed() method or a speed property
-        # and change the speed in the gamestate class according to the mode
-        # Or add a multiplier variable in the property so that if
-        # the mode is fleeing we can alter the speed
-        if self.current_mode != self.gamestate.mode:
-            self._sprite_name = f"{self.BASENAME}_{self.gamestate.mode.value}"
-            self.current_mode = self.gamestate.mode
-
-    # ########################################################################
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
 
@@ -90,11 +97,18 @@ class VEntityEnemyCommon(VEntityMoving):
         if self.next_position and start != self.next_position:
             return
 
-        match self.gamestate.mode:
-            case GameState.Mode.CHASING:
+        match self.current_mode:
+            case VEntityEnemyCommon.Mode.CHASING:
                 self.next_position = self.bfs.run_algo(start, target)
-            case GameState.Mode.FLEEING:
+            case VEntityEnemyCommon.Mode.FLEEING:
                 self.next_position = self.fleeing.run_algo(start, target)
+            case VEntityEnemyCommon.Mode.DEAD:
+                # TODO: Change that
+                # TODO: Run the algo each time which is useless...
+
+                self.next_position = self.bfs.run_algo(
+                    start, self.maze.floor_corners[self.id]
+                )
 
     # ########################################################################
     # ########################################################## VELOCITY ####
@@ -115,8 +129,48 @@ class VEntityEnemyCommon(VEntityMoving):
     def update(self, delta_time: float = 1 / 60) -> None:
         self.update_last_player_direction()
 
-        self.update_game_mode()
         self.update_next_position()
 
         self.update_velocity(delta_time)
         self.update_texture()
+        self.update_timers()
+
+    # ########################################################################
+    # ############################################################ TIMERS ####
+    def update_timers(self, delta_time: float = 1 / 60) -> None:
+        match self.current_mode:
+            case VEntityEnemyCommon.Mode.FLEEING:
+                self.timer_fleeing -= delta_time
+                if self.timer_fleeing <= 0:
+                    self.current_mode = VEntityEnemyCommon.Mode.CHASING
+
+            case VEntityEnemyCommon.Mode.DEAD:
+                self.timer_dead -= delta_time
+                if self.timer_dead <= 0:
+                    self.current_mode = VEntityEnemyCommon.Mode.CHASING
+
+    # ########################################################################
+    # ################################################### MODE PROPERTIES ####
+    @property
+    def previous_mode(self):
+        return self._mode[0]
+
+    @property
+    def current_mode(self):
+        return self._mode[1]
+
+    @current_mode.setter
+    def current_mode(self, new_mode: VEntityEnemyCommon.Mode):
+        self._mode = (self._mode[1], new_mode)
+
+        match new_mode:
+            case VEntityEnemyCommon.Mode.CHASING:
+                self._sprite_name = f"enemy_{self.id}_chasing"
+            case VEntityEnemyCommon.Mode.FLEEING:
+                self._sprite_name = f"enemy_{self.id}_fleeing"
+                self.timer_fleeing = VEntitySuperPacGum.TIMER
+            case VEntityEnemyCommon.Mode.DEAD:
+                # TODO: Set the magic numbre somewhere ---
+                # TODO: Set the magic numbre somewhere ---
+                self._sprite_name = "enemy_dead"
+                self.timer_dead = 10.0
