@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from arcade import Vec2
 
 from src.maze.maze import Maze
@@ -46,11 +48,9 @@ class VEntityEnemyCommon(VEntityMoving):
 
         self.update_next_position()
 
-    # TODO: Clean that --
+    @abstractmethod
     def get_target(self) -> Vec2:
-        raise NotImplementedError(
-            "This method should be implemented in subclasses."
-        )
+        pass
 
     def update_last_player_direction(self) -> None:
         current_player_direction = self.player.get_direction_vector()
