@@ -3,7 +3,7 @@ import random
 
 from typing import Callable, Any
 from dataclasses import dataclass
-from arcade import Vec2, Text, SpriteList
+from arcade import Sprite, TextureAnimationSprite, Vec2, Text, SpriteList
 from src.visual.gamestate import GameState
 
 from src.visual.vdata import VData
@@ -24,7 +24,7 @@ class GMenuEntry:
 
     @dataclass
     class ToCall:
-        func: Callable
+        func: Callable[[Any], Any]
         args: list[Any]
 
     def __init__(
@@ -62,7 +62,7 @@ class GMenuEntry:
 
         tile_name = random.choice(possible_tiles)
 
-        self.icons: SpriteList = SpriteList()
+        self.icons = SpriteList[Sprite | TextureAnimationSprite]()
         tile = self.atlas.pick_tile(f"{tile_name}_right")
         self.icons.append(
             self.atlas.tile_to_sprite(

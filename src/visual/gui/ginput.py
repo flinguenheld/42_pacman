@@ -1,6 +1,6 @@
 import arcade
 from arcade.types import Color
-from arcade import Sprite, Vec2, key, SpriteList
+from arcade import Sprite, TextureAnimationSprite, Vec2, key, SpriteList
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
@@ -26,13 +26,13 @@ class GInput:
     ):
 
         font_size = atlas.font_size * GInput.FONT_SIZE_FACTOR
-
+        offsetted_position = frame.center_position + offset
         # LABEL ########################
         self.label = GLabel(
             text="",
             atlas=atlas,
             frame=frame,
-            offset=offset,
+            position=offsetted_position,
             font_size_factor=GInput.FONT_SIZE_FACTOR,
             color=color,
         )
@@ -43,7 +43,7 @@ class GInput:
             atlas=atlas,
             frame=frame,
             text="Max 10 characters, alphanumeric and spaces only",
-            offset=offset + Vec2(0, font_size * 1.4),
+            position=offsetted_position + Vec2(0, font_size * 1.4),
             font_size_factor=0.8,
             color=arcade.csscolor.RED,
         )
@@ -53,11 +53,11 @@ class GInput:
         self.icon = atlas.tile_to_sprite(
             tile,
             Vec2(
-                self.label.rect.center_x,
-                self.label.rect.center_y - atlas.font_size / 2,
+                self.label.text.rect.center_x,
+                self.label.text.rect.center_y - atlas.font_size / 2,
             ),
         )
-        self.icons = SpriteList[Sprite]()
+        self.icons = SpriteList[Sprite | TextureAnimationSprite]()
         self.icons.append(self.icon)
 
     # ########################################################################
@@ -84,23 +84,23 @@ class GInput:
     def key_press_management(self, symbol: int, modifiers: int) -> None:
 
         if symbol == key.BACKSPACE and self.label.text:
-            self.label.text = self.label.text[:-1]
+            self.text = self.text[:-1]
 
-        elif len(self.label.text) < GInput.MAX_LENGTH:
+        elif len(self.text) < GInput.MAX_LENGTH:
             if symbol >= key.A and symbol <= key.Z:
                 if modifiers & 0x1 == 0x1:
-                    self.label.text += chr(symbol - 32)
+                    self.text += chr(symbol - 32)
                 else:
-                    self.label.text += chr(symbol)
+                    self.text += chr(symbol)
 
             if symbol >= key.KEY_0 and symbol <= key.KEY_9:
-                self.label.text += chr(symbol)
+                self.text += chr(symbol)
 
             if symbol >= key.NUM_0 and symbol <= key.NUM_9:
-                self.label.text += chr(symbol - 65408)
+                self.text += chr(symbol - 65408)
 
             if symbol == key.SPACE:
-                self.label.text += chr(symbol)
+                self.text += chr(symbol)
 
         # --
         self.up_icon_position()
@@ -109,7 +109,11 @@ class GInput:
     # ######################################################## PROPERTIES ####
     @property
     def text(self) -> str:
-        return self.label.text
+        return self.label.text.text
+
+    @text.setter
+    def text(self, value: str) -> None:
+        self.label.text.text = value
 
     # ########################################################################
     # ####################################################### TOGGLE HELP ####

@@ -6,7 +6,7 @@ from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
-from src.visual.gui.ghud import VHud
+from src.visual.gui.ghud import GHud
 from src.visual.gamestate import GameState
 from src.visual.vdata import VNames, VData
 from src.visual.pathfinding.bfs import BFS
@@ -77,7 +77,7 @@ class VGame(arcade.View):
         arcade.set_background_color(self.atlas.get_color("background"))
 
         # HUD --
-        self.hud = VHud(
+        self.hud = GHud(
             self.maze,
             self.atlas,
             self.gamestate,

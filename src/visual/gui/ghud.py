@@ -1,7 +1,7 @@
 import arcade
 from math import ceil
 from arcade.types import Color
-from arcade import Text, Vec2, SpriteList
+from arcade import Sprite, Text, TextureAnimationSprite, Vec2, SpriteList
 
 from src.maze.maze import Maze
 from src.visual.vdata import VData
@@ -15,7 +15,7 @@ from src.visual.gui.gbackground import GBackground
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█░█░█▀▄░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█░█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀▀▀░▀▀░░░
-class VHud:
+class GHud:
     OFFSET: int = 10000
 
     def __init__(
@@ -31,11 +31,11 @@ class VHud:
 
         self.frame = GFrame(
             atlas,
-            bot_left=Vec2(VHud.OFFSET, VHud.OFFSET),
+            bot_left=Vec2(GHud.OFFSET, GHud.OFFSET),
             nb_cols=ceil(self.maze.width / VData.SPRITE_SIZE),
             nb_rows=3,
         )
-        self.icons: SpriteList = arcade.SpriteList()
+        self.icons: SpriteList[Sprite | TextureAnimationSprite] = SpriteList()
         self.fields_debug: dict[str, Text] = dict()
         self.fields: dict[str, Text] = dict()
 
@@ -47,7 +47,7 @@ class VHud:
     # ############################################################# SETUP ####
     def build_fields(self) -> None:
         self.font_size = VData.SPRITE_SIZE * 0.6
-        self.y_text_line = VHud.OFFSET + VData.SPRITE_SIZE
+        self.y_text_line = GHud.OFFSET + VData.SPRITE_SIZE
 
         self.add_field(
             entry_name="score",
