@@ -1,6 +1,6 @@
 import arcade
 from arcade.types import Color
-from arcade import Vec2, key, SpriteList
+from arcade import Sprite, Vec2, key, SpriteList
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
@@ -57,7 +57,7 @@ class GInput:
                 self.label.rect.center_y - atlas.font_size / 2,
             ),
         )
-        self.icons: SpriteList = SpriteList()
+        self.icons = SpriteList[Sprite]()
         self.icons.append(self.icon)
 
     # ########################################################################

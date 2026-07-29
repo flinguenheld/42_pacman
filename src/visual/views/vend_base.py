@@ -73,7 +73,7 @@ class VEndBase(GWindow):
             atlas=self.atlas,
             choices={
                 "SAVE": GMenuEntry.ToCall(
-                    func=self.Process_input,
+                    func=self.process_input,
                     args=[],
                 ),
                 "QUIT": GMenuEntry.ToCall(
@@ -92,7 +92,7 @@ class VEndBase(GWindow):
 
     # ########################################################################
     # ##################################################### PROCESS INPUT ####
-    def Process_input(self) -> None:
+    def process_input(self) -> None:
 
         user_value = self.input.text.strip()
 
