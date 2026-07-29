@@ -16,7 +16,7 @@ class GLabel(GWidget):
             self,
             atlas: VAtlas,
             frame: GFrame,
-            position: Vec2 = Vec2(0, 0),
+            offset: Vec2 = Vec2(0, 0),
             font_size_factor: float = 1,
             text: str = "",
             color: Color | None = None,
@@ -35,7 +35,7 @@ class GLabel(GWidget):
         width_for_multi = None
         if multiline and not width:
             width_for_multi = int(frame.width * 0.9)
-
+        position = frame.center_position + offset
         self.text = Text(
             text=text,
             x=position.x,

@@ -26,13 +26,13 @@ class GInput:
     ):
 
         font_size = atlas.font_size * GInput.FONT_SIZE_FACTOR
-        offsetted_position = frame.center_position + offset
+
         # LABEL ########################
         self.label = GLabel(
             text="",
             atlas=atlas,
             frame=frame,
-            position=offsetted_position,
+            offset=offset,
             font_size_factor=GInput.FONT_SIZE_FACTOR,
             color=color,
         )
@@ -43,7 +43,7 @@ class GInput:
             atlas=atlas,
             frame=frame,
             text="Max 10 characters, alphanumeric and spaces only",
-            position=offsetted_position + Vec2(0, font_size * 1.4),
+            offset=offset + Vec2(0, font_size * 1.4),
             font_size_factor=0.8,
             color=arcade.csscolor.RED,
         )
