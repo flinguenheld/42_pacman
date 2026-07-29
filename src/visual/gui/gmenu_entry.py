@@ -1,4 +1,5 @@
 from __future__ import annotations
+from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 import random
 
 from typing import Callable, Any
@@ -58,7 +59,9 @@ class GMenuEntry:
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]
         for id in range(self.atlas.nb_of_enemies):
-            possible_tiles.append(f"enemy_{id}_{GameState.Mode.CHASING.value}")
+            possible_tiles.append(
+                f"enemy_{id}_{VEntityEnemyCommon.Mode.CHASING.value}"
+            )
 
         tile_name = random.choice(possible_tiles)
 

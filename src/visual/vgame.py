@@ -140,46 +140,15 @@ class VGame(arcade.View):
         """
         Spawn/respawn all enemies in the order defined by self.ENEMY_ORDER
         """
-        for enemy_class in self.ENEMY_ORDER:
-            self.spawn_enemy(enemy_class)
-
-    # ########################################################################
-    # ##################################################### SPAWN ENEMIES ####
-    def spawn_enemy(self, enemy_variant: EnemyVariantClass) -> None:
-        """
-        Spawn/respawn an enemy of the given variant
-        """
-
-        # Store the spawn positions for each enemy variant in a dictionary
-        ENEMY_SPAWN_POSITIONS: dict[EnemyVariantClass, Vec2] = dict()
-        for corner, enemy_class in zip(
-            self.maze.floor_corners, self.ENEMY_ORDER
-        ):
-            ENEMY_SPAWN_POSITIONS[enemy_class] = corner
-
-        # Get the existing enemy of the given variant, if any, and kill it
-        enemy = next(
-            (
-                enemy
-                for enemy in self.enemy_list
-                if type(enemy) is enemy_variant
-            ),
-            None,
-        )
-        if enemy:
-            enemy.kill()
-
-        # Instantiate a new enemy
-        spawn_position = ENEMY_SPAWN_POSITIONS[enemy_variant]
-        new_enemy = enemy_variant(
-            position=spawn_position,
-            atlas=self.atlas,
-            maze=self.maze,
-            player=self.player,
-            gamestate=self.gamestate,
-        )
-        # This is self-explanatory but it felt empty without this comment
-        self.enemy_list.append(new_enemy)
+        for who in (Johnny, Michael, Charlie, ReverseMichael):
+            self.enemy_list.append(
+                who(
+                    atlas=self.atlas,
+                    maze=self.maze,
+                    player=self.player,
+                    gamestate=self.gamestate,
+                )
+            )
 
     # ########################################################################
     # ########################################################### ON SHOW ####

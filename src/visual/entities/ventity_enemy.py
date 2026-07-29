@@ -24,19 +24,20 @@ class VEntityEnemyCommon(VEntityMoving):
 
     def __init__(
         self,
-        id: int,
-        position: Vec2,
+        corner_id: int,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        # assert id < atlas.nb_of_enemies, (
-        #     "id must be less than the number of enemies in the atlas"
-        # )
-        super().__init__(atlas, f"enemy_{id}_chasing", position)
+        self.corner_id = corner_id
+        self.texture_id = corner_id % atlas.nb_of_enemies
 
-        self.id = id
+        super().__init__(
+            atlas,
+            f"enemy_{self.texture_id}_chasing",
+            self.maze.floor_corners[corner_id],
+        )
 
         self._mode = (
             VEntityEnemyCommon.Mode.CHASING,
@@ -52,12 +53,6 @@ class VEntityEnemyCommon(VEntityMoving):
         self.next_position: Vec2 = self.center
         self.bfs = BFS(self.maze.graph)
         self.fleeing = Fleeing(self.maze.graph)
-
-        # DEAL WITH DEATH HERE ????
-        # - When dead, come back to start
-        # - Then wait a timer to come back
-        # self.dead = False
-        # self.affected_corner = self.maze.floor_corners[id]
 
         # Timers --
         self.timer_dead = 0.0
@@ -107,7 +102,7 @@ class VEntityEnemyCommon(VEntityMoving):
                 # TODO: Run the algo each time which is useless...
 
                 self.next_position = self.bfs.run_algo(
-                    start, self.maze.floor_corners[self.id]
+                    start, self.maze.floor_corners[self.corner_id]
                 )
 
     # ########################################################################
@@ -165,9 +160,9 @@ class VEntityEnemyCommon(VEntityMoving):
 
         match new_mode:
             case VEntityEnemyCommon.Mode.CHASING:
-                self._sprite_name = f"enemy_{self.id}_chasing"
+                self._sprite_name = f"enemy_{self.texture_id}_chasing"
             case VEntityEnemyCommon.Mode.FLEEING:
-                self._sprite_name = f"enemy_{self.id}_fleeing"
+                self._sprite_name = f"enemy_{self.texture_id}_fleeing"
                 self.timer_fleeing = VEntitySuperPacGum.TIMER
             case VEntityEnemyCommon.Mode.DEAD:
                 # TODO: Set the magic numbre somewhere ---
