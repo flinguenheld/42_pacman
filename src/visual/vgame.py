@@ -13,7 +13,6 @@ from src.visual.gui.gbackground import GBackground
 from src.visual.entities.venemy_variants import (
     Charlie,
     EnemyVariant,
-    EnemyVariantClass,
     Johnny,
     Michael,
     ReverseMichael,
@@ -29,13 +28,6 @@ from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░█░█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░░
 class VGame(arcade.View):
-    ENEMY_ORDER: tuple[EnemyVariantClass, ...] = (
-        Johnny,
-        Michael,
-        Charlie,
-        ReverseMichael,
-    )
-
     def __init__(self, atlas: VAtlas, gamestate: GameState) -> None:
         super().__init__()
 

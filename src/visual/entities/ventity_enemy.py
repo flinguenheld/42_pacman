@@ -67,29 +67,31 @@ class VEntityEnemyCommon(VEntityMoving):
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
 
-        # QUESTION: Find a way to reduce the call of that method ?
-        # QUESTION: Like only call after x times or when it has reached a pos ?
+        # Wait to be close to the next position
+        # before relaunching a new calculation
+        if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
+            start = self.maze.closest_floor_of(self.center)
+            target = self.get_target()
 
-        start = self.maze.closest_floor_of(self.center)
-        target = self.get_target()
-
-        match self.mode:
-            case VEntityEnemyCommon.Mode.CHASING:
-                self.next_position = self.bfs.run_algo(start, target)
-            case VEntityEnemyCommon.Mode.FLEEING:
-                self.next_position = self.fleeing.run_algo(start, target)
-            case VEntityEnemyCommon.Mode.DEAD:
-                # TODO: Change that
-                # TODO: It runs the algo each time which is useless...
-                # TODO: But it would add ugly code -_-'
-                affected_corner = self.maze.floor_corners[self.corner_id]
-                self.next_position = self.bfs.run_algo(start, affected_corner)
+            match self.mode:
+                case VEntityEnemyCommon.Mode.CHASING:
+                    self.next_position = self.bfs.run_algo(start, target)
+                case VEntityEnemyCommon.Mode.FLEEING:
+                    self.next_position = self.fleeing.run_algo(start, target)
+                case VEntityEnemyCommon.Mode.DEAD:
+                    # TODO: Change that ?
+                    # TODO: It runs the algo each time which is useless...
+                    # TODO: But it would add ugly code -_-'
+                    self.next_position = self.bfs.run_algo(
+                        start,
+                        self.maze.floor_corners[self.corner_id],
+                    )
 
     # ########################################################################
     # ########################################################## VELOCITY ####
     def update_velocity(self, delta_time: float) -> None:
 
-        # Stop the enemy which will set the texture to wait
+        # Stop the enemy, which will set the texture to wait
         if abs(self.next_position.distance(self.center)) < 1:
             self.change_x = 0
             self.change_y = 0
@@ -108,7 +110,6 @@ class VEntityEnemyCommon(VEntityMoving):
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        # self.update_last_player_direction()
         self.update_next_position()
         self.update_velocity(delta_time)
         self.update_texture()
