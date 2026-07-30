@@ -19,8 +19,6 @@ class GMenuEntry:
     Save a ToCall object to launch with call_action().
     """
 
-    FONT_SIZE_FACTOR: float = 1.7
-
     def __init__(
         self,
         atlas: VAtlas,

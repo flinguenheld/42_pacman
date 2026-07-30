@@ -27,6 +27,7 @@ class GLabel(GWidget):
         width: int | None = None,
     ) -> None:
         super().__init__(atlas, frame)
+        self.font_size_factor = font_size_factor
 
         if not color:
             color = atlas.get_color("menu_font")

@@ -270,14 +270,14 @@ class VGame(arcade.View):
 
             self.maze.update(delta_time)
             self.background.update(delta_time)
-            self.enemy_list.update(delta_time)
-            self.player_list.update(delta_time)
+            self.enemy_list.update(delta_time)  # type: ignore
+            self.player_list.update(delta_time)  # type: ignore
             self.resolve_player_pacgum_collisions()
             self.resolve_player_enemy_collisions()
 
-            self.enemy_list.update_animation(delta_time)
-            self.player_list.update_animation(delta_time)
-            self.pacgum_list.update_animation(delta_time)
+            self.enemy_list.update_animation(delta_time)  # type: ignore
+            self.player_list.update_animation(delta_time)  # type: ignore
+            self.pacgum_list.update_animation(delta_time)  # type: ignore
 
             self.hud.update(delta_time)
 
@@ -297,7 +297,8 @@ class VGame(arcade.View):
             else:
                 # QUESTION Why setup() here and not just continuing
                 # QUESTION the current map ?
-
+                # TODO: Use the spawning system to respawn the player and
+                # the enemies instead of starting a new level
                 self.setup()
                 self.cameras_update()
 

@@ -1,6 +1,6 @@
 from arcade import Vec2
 
-from src.visual.gui.gbasic_button import GBasicButton
+from src.visual.gui.gbutton import GButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
@@ -34,7 +34,7 @@ class VPause(GWindow):
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(
@@ -42,7 +42,7 @@ class VPause(GWindow):
                     ),
                     text="RESUME",
                 ),
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(
@@ -50,7 +50,7 @@ class VPause(GWindow):
                     ),
                     text="INSTRUCTIONS",
                 ),
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(

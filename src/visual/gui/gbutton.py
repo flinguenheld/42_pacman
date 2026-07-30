@@ -8,14 +8,14 @@ from src.visual.gui.gframe import GFrame
 from src.visual.gui.glabel import GLabel
 
 
-class GBasicButton(GLabel):
+class GButton(GLabel):
     def __init__(
         self,
         atlas: VAtlas,
         frame: GFrame,
         callback: Callable[[], None],
         offset: Vec2 = Vec2(0, 0),
-        font_size_factor: float = 1.7,
+        font_size_factor: float = 1.0,
         text: str = "",
         align: str = "center",
         anchor_x: str = "center",

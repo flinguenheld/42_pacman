@@ -1,7 +1,7 @@
 import arcade
 from arcade import Vec2
 
-from src.visual.gui.gbasic_button import GBasicButton
+from src.visual.gui.gbutton import GButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
@@ -34,35 +34,38 @@ class VWelcome(GWindow):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-
+        font_size_factor = 1.5
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(
                         VNames.VIEW_GAME_NEW
                     ),
+                    font_size_factor=font_size_factor,
                     text="PLAY",
                 ),
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(
                         VNames.VIEW_INSTRUCTIONS
                     ),
+                    font_size_factor=font_size_factor,
                     text="INSTRUCTIONS",
                 ),
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=arcade.exit,
+                    font_size_factor=font_size_factor,
                     text="EXIT",
                 ),
             ],
-            center_top_first=Vec2(0, 400),
+            center_top_first=Vec2(0, 370),
         )
 
         # Scores ####################

@@ -1,6 +1,6 @@
 from arcade import Vec2
 
-from src.visual.gui.gbasic_button import GBasicButton
+from src.visual.gui.gbutton import GButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
@@ -30,7 +30,7 @@ class VIinstructions(GWindow):
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
-                GBasicButton(
+                GButton(
                     atlas=self.atlas,
                     frame=self.frame,
                     callback=lambda: self.window.switch_view(
@@ -39,7 +39,7 @@ class VIinstructions(GWindow):
                     text="OK",
                 ),
             ],
-            center_top_first=Vec2(self.frame.center_position.x, 100),
+            center_top_first=Vec2(0, -(self.frame.height / 2) + 150),
         )
 
         self.to_draw_and_update.append(self.menu)

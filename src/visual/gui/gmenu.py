@@ -1,8 +1,8 @@
 import arcade
 from arcade import Vec2
 
-from src.visual.gui.gwidget import GWidget
 from src.visual.vatlas import VAtlas
+from src.visual.gui.glabel import GLabel
 from src.visual.gui.gmenu_entry import GMenuEntry
 
 
@@ -18,21 +18,17 @@ class GMenu:
     def __init__(
         self,
         atlas: VAtlas,
-        widgets: list[GWidget],
+        widgets: list[GLabel],
         center_top_first: Vec2,
     ) -> None:
         self.atlas = atlas
 
         self.entries: list[GMenuEntry] = []
         for widget in widgets:
-            new_entry = GMenuEntry(
-                atlas,
-                widget,
-                center_top_first
-            )
+            new_entry = GMenuEntry(atlas, widget, center_top_first)
 
             center_top_first -= Vec2(
-                0, atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.6
+                0, atlas.font_size * widget.font_size_factor * 1.6
             )
             self.entries.append(new_entry)
 
