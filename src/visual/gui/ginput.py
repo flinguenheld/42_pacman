@@ -2,6 +2,7 @@ import arcade
 from arcade.types import Color
 from arcade import Sprite, TextureAnimationSprite, Vec2, key, SpriteList
 
+from src.visual.gui.gwidget import GWidget
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
@@ -11,7 +12,7 @@ from src.visual.gui.glabel import GLabel
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░▀█▀░█▀█░█▀█░█░█░▀█▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░█░░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░░▀░░░
-class GInput:
+class GInput(GWidget):
     """Simple input which limits keys to the bare minimum"""
 
     MAX_LENGTH: int = 10
@@ -24,6 +25,7 @@ class GInput:
         color: Color,
         offset: Vec2 = Vec2(0, 0),
     ):
+        super().__init__(atlas, frame)
 
         font_size = atlas.font_size * GInput.FONT_SIZE_FACTOR
 
@@ -71,7 +73,7 @@ class GInput:
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
-        self.icons.update_animation(delta_time)
+        self.icons.update_animation(delta_time)  # type: ignore
 
     def up_icon_position(self) -> None:
         if self.text:
@@ -81,7 +83,7 @@ class GInput:
 
     # ########################################################################
     # ####################################################### KEY PRESSED ####
-    def key_press_management(self, symbol: int, modifiers: int) -> None:
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
 
         if symbol == key.BACKSPACE and self.label.text:
             self.text = self.text[:-1]

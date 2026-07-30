@@ -1,11 +1,11 @@
 from arcade import Vec2
 
+from src.visual.gui.gbasic_button import GBasicButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
-from src.visual.gui.gmenu_entry import GMenuEntry
 from src.visual.gui.titles.gtitle_pause import GTitlePause
 
 
@@ -33,20 +33,32 @@ class VPause(GWindow):
 
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "RESUME": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME_RESUME],
+            widgets=[
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_GAME_RESUME
+                    ),
+                    text="RESUME",
                 ),
-                "INSTRUCTIONS": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_INSTRUCTIONS],
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_INSTRUCTIONS
+                    ),
+                    text="INSTRUCTIONS",
                 ),
-                "GIVE UP": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_WELCOME],
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_WELCOME
+                    ),
+                    text="GIVE UP",
                 ),
-            },
+            ],
             center_top_first=Vec2(self.frame.center_position.x, 280),
         )
 
@@ -55,4 +67,4 @@ class VPause(GWindow):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)
+        self.menu.on_key_press(symbol)

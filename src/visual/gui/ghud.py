@@ -1,7 +1,7 @@
 import arcade
 from math import ceil
 from arcade.types import Color
-from arcade import Sprite, Text, TextureAnimationSprite, Vec2, SpriteList
+from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 
 from src.maze.maze import Maze
 from src.visual.vdata import VData
@@ -36,8 +36,8 @@ class GHud:
             nb_rows=3,
         )
         self.icons: SpriteList[Sprite | TextureAnimationSprite] = SpriteList()
-        self.fields_debug: dict[str, Text] = dict()
-        self.fields: dict[str, Text] = dict()
+        self.fields_debug: dict[str, GLabel] = dict()
+        self.fields: dict[str, GLabel] = dict()
 
         self.build_fields()
         self.background = GBackground(atlas)
@@ -124,16 +124,16 @@ class GHud:
         self.frame.draw()
         self.icons.draw(pixelated=True)
 
-        self.fields["score"].text = self.gamestate.score
-        self.fields["lives"].text = f"{self.gamestate.lives:>2}"
-        self.fields["timer"].text = self.get_time_left()
+        self.fields["score"].text.text = self.gamestate.score
+        self.fields["lives"].text.text = f"{self.gamestate.lives:>2}"
+        self.fields["timer"].text.text = self.get_time_left()
 
         for text in self.fields.values():
             text.draw()
 
         # Debug --
         if VData.debug_on:
-            self.fields_debug["fps"].text = f"FPS: {arcade.get_fps():.2f}"
+            self.fields_debug["fps"].text.text = f"FPS: {arcade.get_fps():.2f}"
             for text in self.fields_debug.values():
                 text.draw()
 
@@ -153,7 +153,7 @@ class GHud:
     def update(self, delta_time: int | float) -> None:
         self.frame.update(delta_time)
         self.background.update(delta_time)
-        self.icons.update_animation(delta_time)
+        self.icons.update_animation(delta_time)  # type: ignore
 
     # ########################################################################
     # ############################################################ CENTER ####

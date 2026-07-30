@@ -1,5 +1,6 @@
 from arcade import Vec2
 
+from src.visual.gui.gbasic_button import GBasicButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
@@ -8,7 +9,6 @@ from src.visual.gui.glabel import GLabel
 from src.visual.gui.ginput import GInput
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.titles.gtitle import GTitle
-from src.visual.gui.gmenu_entry import GMenuEntry
 from src.high_scores.high_scores import HighScores
 
 
@@ -71,16 +71,22 @@ class VEndBase(GWindow):
         # Menu #############################
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "SAVE": GMenuEntry.ToCall(
-                    func=self.process_input,
-                    args=[],
+            widgets=[
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=self.process_input,
+                    text="SAVE",
                 ),
-                "QUIT": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_WELCOME],
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_WELCOME
+                    ),
+                    text="QUIT",
                 ),
-            },
+            ],
             center_top_first=Vec2(self.frame.center_position.x, 150),
         )
 
@@ -106,5 +112,5 @@ class VEndBase(GWindow):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.input.key_press_management(symbol, modifiers)
-        self.menu.key_press(symbol)
+        self.input.on_key_press(symbol, modifiers)
+        self.menu.on_key_press(symbol)

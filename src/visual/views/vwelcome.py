@@ -1,13 +1,13 @@
 import arcade
 from arcade import Vec2
 
+from src.visual.gui.gbasic_button import GBasicButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.glabel import GLabel
 from src.visual.gui.gwindow import GWindow
-from src.visual.gui.gmenu_entry import GMenuEntry
 from src.high_scores.high_scores import HighScores
 from src.visual.gui.titles.gtitle_pacman import GTitlePacman
 
@@ -38,21 +38,31 @@ class VWelcome(GWindow):
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "PLAY": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME_NEW],
+            widgets=[
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_GAME_NEW
+                    ),
+                    text="PLAY",
                 ),
-                "INSTRUCTIONS": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_INSTRUCTIONS],
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=lambda: self.window.switch_view(
+                        VNames.VIEW_INSTRUCTIONS
+                    ),
+                    text="INSTRUCTIONS",
                 ),
-                "EXIT": GMenuEntry.ToCall(
-                    func=arcade.exit,
-                    args=[],
+                GBasicButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    callback=arcade.exit,
+                    text="EXIT",
                 ),
-            },
-            center_top_first=Vec2(self.frame.center_position.x, 820),
+            ],
+            center_top_first=Vec2(0, 400),
         )
 
         # Scores ####################
@@ -80,4 +90,4 @@ class VWelcome(GWindow):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)
+        self.menu.on_key_press(symbol)
