@@ -359,6 +359,9 @@ class VGame(arcade.View):
                 case arcade.key.T:
                     self.test_bfs()
 
+                case arcade.key.K:
+                    self.window.switch_view(VNames.VIEW_GAMEOVER)
+
                 # TODO: Potentially replace the current pause view with this
                 # for pausing the game?
                 # ANSWER: The subject explicitly requires a pause menu
