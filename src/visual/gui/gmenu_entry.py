@@ -4,10 +4,10 @@ import random
 from typing import Callable, Any
 from dataclasses import dataclass
 from arcade import Vec2, Text, SpriteList
-from src.visual.gamestate import GameState
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
+from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▄█░█▀▀░█▀█░█░█░░░█▀▀░█▀█░▀█▀░█▀▄░█░█░░
@@ -58,7 +58,9 @@ class GMenuEntry:
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]
         for id in range(self.atlas.nb_of_enemies):
-            possible_tiles.append(f"enemy_{id}_{GameState.Mode.CHASING.value}")
+            possible_tiles.append(
+                f"enemy_{id}_{VEntityEnemyCommon.Mode.CHASING.value}"
+            )
 
         tile_name = random.choice(possible_tiles)
 

@@ -1,4 +1,3 @@
-import time
 import random
 import arcade
 from arcade.types import Color
@@ -91,7 +90,6 @@ class VGame(arcade.View):
         )
 
         # Player --
-        self.player: VEntityPlayer
         self.spawn_player()
 
         # Enemies --
@@ -114,76 +112,43 @@ class VGame(arcade.View):
                         VEntityPacGum(self.atlas, position)
                     )
 
-        self.time_last_super_pacgum_ms: float = 0.0
-        self.duration_super_pacgum_secs: float = 10.0
-
         self.setup_done = True
 
+    @property
+    def player(self) -> VEntityPlayer:
+        # if self.player_list:
+        return self.player_list[0]
+        # return None
+
+    # ########################################################################
+    # ############################################ SPAWN PLAYER / ENEMIES ####
     # TODO: Check that --
     def spawn_player(self) -> None:
-        """
-        Spawn/respawn the player
-
-        Calls self.player.kill() beforehand, thus acting as a respawn
-        """
-        if self.player_list:
-            self.player.kill()
-
-        self.player = VEntityPlayer(
-            self.atlas,
-            self.maze.floor_center,
-            self.maze.walls,
-            self.gamestate,
+        self.player_list.clear()
+        self.player_list.append(
+            VEntityPlayer(
+                self.atlas,
+                self.maze.floor_center,
+                self.maze.walls,
+                self.gamestate,
+            )
         )
-        self.player_list.append(self.player)
 
     # TODO: Move enemy or entity management (spawning, updating, etc...)
     # to a separate class?
     # I feel like this class is becoming too big and complex
     def spawn_enemies(self) -> None:
-        """
-        Spawn/respawn all enemies in the order defined by self.ENEMY_ORDER
-        """
-        for enemy_class in self.ENEMY_ORDER:
-            self.spawn_enemy(enemy_class)
-
-    # ########################################################################
-    # ##################################################### SPAWN ENEMIES ####
-    def spawn_enemy(self, enemy_variant: EnemyVariantClass) -> None:
-        """
-        Spawn/respawn an enemy of the given variant
-        """
-
-        # Store the spawn positions for each enemy variant in a dictionary
-        ENEMY_SPAWN_POSITIONS: dict[EnemyVariantClass, Vec2] = dict()
-        for corner, enemy_class in zip(
-            self.maze.floor_corners, self.ENEMY_ORDER
-        ):
-            ENEMY_SPAWN_POSITIONS[enemy_class] = corner
-
-        # Get the existing enemy of the given variant, if any, and kill it
-        enemy = next(
-            (
-                enemy
-                for enemy in self.enemy_list
-                if type(enemy) is enemy_variant
-            ),
-            None,
-        )
-        if enemy:
-            enemy.kill()
-
-        # Instantiate a new enemy
-        spawn_position = ENEMY_SPAWN_POSITIONS[enemy_variant]
-        new_enemy = enemy_variant(
-            position=spawn_position,
-            atlas=self.atlas,
-            maze=self.maze,
-            player=self.player,
-            gamestate=self.gamestate,
-        )
-        # This is self-explanatory but it felt empty without this comment
-        self.enemy_list.append(new_enemy)
+        self.enemy_list.clear()
+        # for who in (Johnny, Michael, Charlie, ReverseMichael):
+        for who in (Johnny,):
+            self.enemy_list.append(
+                who(
+                    atlas=self.atlas,
+                    maze=self.maze,
+                    player=self.player,
+                    gamestate=self.gamestate,
+                )
+            )
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -265,15 +230,12 @@ class VGame(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
-            self.handle_player_death()
-            self.handle_super_pacgum_duration()
-
             self.maze.update(delta_time)
             self.background.update(delta_time)
             self.enemy_list.update(delta_time)
             self.player_list.update(delta_time)
-            self.resolve_player_pacgum_collisions()
-            self.resolve_player_enemy_collisions()
+            self.pacgum_collisions()
+            self.enemy_collisions()
 
             self.enemy_list.update_animation(delta_time)
             self.player_list.update_animation(delta_time)
@@ -284,54 +246,46 @@ class VGame(arcade.View):
             self.gamestate.update(delta_time)
 
     # ########################################################################
-    # ###################################################### PLAYER DEATH ####
-    def is_player_dead(self) -> bool:
-        return self.player not in self.player_list
-
-    def handle_player_death(self) -> None:
-        if self.is_player_dead():
-            self.gamestate.decrement_lives()
-
-            if self.gamestate.is_game_over:
-                self.window.switch_view(VNames.VIEW_GAMEOVER)
-            else:
-                # QUESTION Why setup() here and not just continuing
-                # QUESTION the current map ?
-
-                self.setup()
-                self.cameras_update()
-
-    def handle_super_pacgum_duration(self) -> None:
-        if (
-            self.time_last_super_pacgum_ms + self.duration_super_pacgum_secs
-            < time.time()
+    # ######################################################## COLLISIONS ####
+    def pacgum_collisions(self) -> None:
+        for pacgum in arcade.check_for_collision_with_list(
+            self.player,
+            self.pacgum_list,
         ):
-            self.gamestate.mode = GameState.Mode.CHASING
-
-    # ########################################################################
-    # ########################################## PLAYER PACGUM COLLISIONS ####
-    def resolve_player_pacgum_collisions(self) -> None:
-        collided: list[VEntityPacGum | VEntitySuperPacGum] = (
-            arcade.check_for_collision_with_list(self.player, self.pacgum_list)
-        )
-        for pacgum in collided:
             self.gamestate.increment_score(pacgum.get_points())
             if isinstance(pacgum, VEntitySuperPacGum):
-                self.time_last_super_pacgum_ms = time.time()
-                self.gamestate.mode = GameState.Mode.FLEEING
+                self.switch_all_enemies_to_fleeing()
             pacgum.kill()
 
-    def resolve_player_enemy_collisions(self) -> None:
-        # TODO: Clean that
-        collided: list[VEntityEnemyCommon] = (
-            arcade.check_for_collision_with_list(self.player, self.enemy_list)
-        )
-        if not collided:
-            return
-        if self.gamestate.mode == GameState.Mode.FLEEING:
-            pass
+    def enemy_collisions(self) -> None:
+        for enemy in arcade.check_for_collision_with_list(
+            self.player, self.enemy_list
+        ):
+            match enemy.mode:
+                case VEntityEnemyCommon.Mode.CHASING:
+                    self.player_death()
+
+                case VEntityEnemyCommon.Mode.FLEEING:
+                    enemy.mode = VEntityEnemyCommon.Mode.DEAD
+
+    # ########################################################################
+    # ###################################################### PLAYER DEATH ####
+    def player_death(self) -> None:
+        self.gamestate.decrement_lives()
+
+        if self.gamestate.is_game_over:
+            self.window.switch_view(VNames.VIEW_GAMEOVER)
         else:
-            self.player.kill()
+            # QUESTION Why setup() here and not just continuing
+            # QUESTION the current map ?
+            self.setup()
+            self.cameras_update()
+
+    # ########################################################################
+    # ######################################### SWITCH ENEMIES TO FLEEING ####
+    def switch_all_enemies_to_fleeing(self):
+        for enemy in self.enemy_list:
+            enemy.mode = VEntityEnemyCommon.Mode.FLEEING
 
     # ########################################################################
     # ############################################################## KEYS ####

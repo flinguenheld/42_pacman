@@ -20,17 +20,14 @@ class Johnny(VEntityEnemyCommon):
     Its target sprite is always the sprite the player is currently on.
     """
 
-    ID = 0
-
     def __init__(
         self,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
-        position: Vec2,
     ) -> None:
-        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+        super().__init__(0, atlas, maze, player, gamestate)
         self.speed *= 0.9
 
     def get_target(self) -> Vec2:
@@ -50,17 +47,14 @@ class Michael(VEntityEnemyCommon):
     player is currently moving.
     """
 
-    ID = 1
-
     def __init__(
         self,
-        position: Vec2,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+        super().__init__(1, atlas, maze, player, gamestate)
 
     def get_target(self) -> Vec2:
         player_direction = self.last_player_direction
@@ -78,11 +72,8 @@ class Charlie(VEntityEnemyCommon):
     but with a delay of 3 seconds.
     """
 
-    ID = 0
-
     def __init__(
         self,
-        position: Vec2,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
@@ -91,7 +82,7 @@ class Charlie(VEntityEnemyCommon):
         self.player_movement_buffer: list[Vec2] = []
         self.max_buffer_size: int = int(3.0 * 60.0)  # 3 seconds at 60 FPS
 
-        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+        super().__init__(2, atlas, maze, player, gamestate)
         self.speed = self.gamestate.player_speed * 0.8
 
     def update_player_movement_buffer(self) -> None:
@@ -136,17 +127,14 @@ class ReverseMichael(VEntityEnemyCommon):
 
     # TODO: Find a name for this enemy
 
-    ID = 1
-
     def __init__(
         self,
-        position: Vec2,
         atlas: VAtlas,
         maze: Maze,
         player: VEntityPlayer,
         gamestate: GameState,
     ) -> None:
-        super().__init__(self.ID, position, atlas, maze, player, gamestate)
+        super().__init__(3, atlas, maze, player, gamestate)
 
     def get_target(self) -> Vec2:
         player_direction = self.last_player_direction

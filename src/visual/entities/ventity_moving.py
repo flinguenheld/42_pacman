@@ -32,7 +32,7 @@ class VEntityMoving(VEntity):
 
     # ########################################################################
     # ##################################################### GET DIRECTION ####
-    def get_direction(self, vector: Vec2) -> str:
+    def get_direction(self) -> str:
         """
         Takes a non-normalized vector as input and returns the corresponding
         entity direction ("top", "right", "bot", "left").
@@ -43,27 +43,27 @@ class VEntityMoving(VEntity):
         # Threshold to avoid detecting small movements.
         # Like an enemy slightly adjusting its position in the maze.
         MINIMAL_THRESHOLD = 0.9
-        if vector.y > MINIMAL_THRESHOLD:
+        if self.change_y > MINIMAL_THRESHOLD:
             return "top"
-        elif vector.x > MINIMAL_THRESHOLD:
+        elif self.change_x > MINIMAL_THRESHOLD:
             return "right"
-        elif vector.y < -MINIMAL_THRESHOLD:
+        elif self.change_y < -MINIMAL_THRESHOLD:
             return "bot"
-        elif vector.x < -MINIMAL_THRESHOLD:
+        elif self.change_x < -MINIMAL_THRESHOLD:
             return "left"
         else:
             return "wait"
 
     # ########################################################################
     # #################################################### UPDATE TEXTURE ####
-    def update_texture(self) -> None:
+    def update_texture(self, force: bool = False) -> None:
         """
         Change the texture of the entity based on its current direction.
         """
 
-        new_dir = self.get_direction(Vec2(self.change_x, self.change_y))
+        new_dir = self.get_direction()
 
-        if self._current_direction != new_dir:
+        if self._current_direction != new_dir or force:
             new_tile = self._atlas.pick_tile(f"{self._sprite_name}_{new_dir}")
 
             if not isinstance(new_tile.texture, arcade.TextureAnimation):
