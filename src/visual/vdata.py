@@ -50,6 +50,8 @@ class VData:
     points_per_super_pacgum: int = 200
 
     time_max: float = 90.0
+    TIMER_ENEMY_DEATH: float = 10.0
+    TIMER_ENEMY_FLEEING: float = 10.0
 
     @classmethod
     def apply_config(cls: type[Self], config: Config) -> None:

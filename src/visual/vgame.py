@@ -122,7 +122,6 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ############################################ SPAWN PLAYER / ENEMIES ####
-    # TODO: Check that --
     def spawn_player(self) -> None:
         self.player_list.clear()
         self.player_list.append(
@@ -134,13 +133,9 @@ class VGame(arcade.View):
             )
         )
 
-    # TODO: Move enemy or entity management (spawning, updating, etc...)
-    # to a separate class?
-    # I feel like this class is becoming too big and complex
     def spawn_enemies(self) -> None:
         self.enemy_list.clear()
-        # for who in (Johnny, Michael, Charlie, ReverseMichael):
-        for who in (Johnny,):
+        for who in (Johnny, Michael, Charlie, ReverseMichael):
             self.enemy_list.append(
                 who(
                     atlas=self.atlas,
@@ -283,7 +278,7 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ######################################### SWITCH ENEMIES TO FLEEING ####
-    def switch_all_enemies_to_fleeing(self):
+    def switch_all_enemies_to_fleeing(self) -> None:
         for enemy in self.enemy_list:
             enemy.mode = VEntityEnemyCommon.Mode.FLEEING
 
@@ -333,11 +328,11 @@ class VGame(arcade.View):
             #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
             #     arcade.set_background_color(self.sprite_manager.background_color)
 
-            self.player.on_key_press(symbol, modifiers)
+            self.player.on_key_press(symbol)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
         if self.setup_done:
-            self.player.on_key_release(symbol, modifiers)
+            self.player.on_key_release(symbol)
 
     # ########################################################################
     # ########################################################### CAMERAS ####

@@ -57,7 +57,12 @@ class Michael(VEntityEnemyCommon):
         super().__init__(1, atlas, maze, player, gamestate)
 
     def get_target(self) -> Vec2:
-        player_direction = self.last_player_direction
+        # TODO: To confirm
+        if self.player.direction_previous != Vec2(0, 0):
+            player_direction = self.player.direction_previous
+        else:
+            player_direction = self.player.direction_current
+
         distance_threshold = 3.0 * VData.SPRITE_SIZE
         possible = self.player.center + (player_direction * distance_threshold)
 
@@ -137,7 +142,12 @@ class ReverseMichael(VEntityEnemyCommon):
         super().__init__(3, atlas, maze, player, gamestate)
 
     def get_target(self) -> Vec2:
-        player_direction = self.last_player_direction
+        # TODO: To confirm
+        if self.player.direction_previous != Vec2(0, 0):
+            player_direction = self.player.direction_previous
+        else:
+            player_direction = self.player.direction_current
+
         distance_threshold = 3.0 * VData.SPRITE_SIZE
         possible = self.player.center + (
             -player_direction * distance_threshold

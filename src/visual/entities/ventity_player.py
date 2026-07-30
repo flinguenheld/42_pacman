@@ -57,23 +57,38 @@ class VEntityPlayer(VEntityMoving):
         self.walls: SWall = walls
         self.gamestate: GameState = gamestate
 
-        self.current_directions: set[Vec2] = set()
+        self.directions_from_keys: set[Vec2] = set()
+        self._direction_vector = (Vec2(0, 0), Vec2(0, 0))
 
         # QUESTION: Does the diagonal work with your keyboard ?
 
     # ########################################################################
     # ################################################## DIRECTION VECTOR ####
-    def get_direction_vector(self) -> Vec2:
+    # TODO: To confirm
+    def update_direction_vector(self) -> None:
         """
-        Returns the combined vector of all currently pressed directions.
+        Save the combined vector of all currently pressed directions.
         If no direction is pressed, returns a zero vector.
         Normalize the vector to ensure consistent speed in diagonal.
         """
-        return sum(self.current_directions, Vec2(0, 0)).normalize()
+        self._direction_vector = (
+            self._direction_vector[1],
+            sum(self.directions_from_keys, Vec2(0, 0)).normalize(),
+        )
+
+    @property
+    def direction_previous(self) -> Vec2:
+        """Used by enemies logic"""
+        return self._direction_vector[0]
+
+    @property
+    def direction_current(self) -> Vec2:
+        return self._direction_vector[1]
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
+        self.update_direction_vector()
         self.update_velocity(delta_time)
         self.update_texture()
         self.resolve_wall_collisions()
@@ -85,9 +100,9 @@ class VEntityPlayer(VEntityMoving):
 
         speed = self.apply_delta_time(self.gamestate.player_speed, delta_time)
 
-        direction_vector = self.get_direction_vector()
-        self.change_x = direction_vector.x * speed * delta_time
-        self.change_y = direction_vector.y * speed * delta_time
+        # direction_vector = self.get_direction_vector()
+        self.change_x = self.direction_current.x * speed * delta_time
+        self.change_y = self.direction_current.y * speed * delta_time
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
@@ -118,12 +133,12 @@ class VEntityPlayer(VEntityMoving):
 
     # ########################################################################
     # ############################################################ ON KEY ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
+    def on_key_press(self, symbol: int) -> None:
         direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
-            self.current_directions.add(direction.value)
+            self.directions_from_keys.add(direction.value)
 
-    def on_key_release(self, symbol: int, modifiers: int) -> None:
+    def on_key_release(self, symbol: int) -> None:
         direction = VPlayerDirection.return_direction_from_key(symbol)
         if direction is not None:
-            self.current_directions.discard(direction.value)
+            self.directions_from_keys.discard(direction.value)
