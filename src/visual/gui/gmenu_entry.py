@@ -5,6 +5,7 @@ from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 from src.visual.gamestate import GameState
 
 from src.visual.gui.gbutton import GButton
+from src.visual.gui.glabel import GLabel
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
@@ -22,7 +23,7 @@ class GMenuEntry:
     def __init__(
         self,
         atlas: VAtlas,
-        widget: GButton,
+        widget: GLabel,
         offset: Vec2,
     ) -> None:
 
@@ -34,13 +35,7 @@ class GMenuEntry:
         center = widget.center
 
         # Icons --
-        # TODO: Not sure which version to choose
-        # I feel like the second one is better but maybe you will disagree
-        # First one is just like before, the icon follow the width of the text
-        # The second one is fixed, all the icons are aligned
-        # on the same x position
-        # shift = (widget.text.content_width / 2) + VData.SPRITE_SIZE
-        shift = (widget.center.x / 2) + VData.SPRITE_SIZE
+        shift = VData.SPRITE_SIZE * 4
 
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]
@@ -54,7 +49,7 @@ class GMenuEntry:
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(center.x - shift - 5, center.y - 5),
+                Vec2(widget.left - shift, center.y - 5),
             )
         )
 
@@ -62,14 +57,15 @@ class GMenuEntry:
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(center.x + shift, center.y - 5),
+                Vec2(widget.right + shift, center.y - 5),
             )
         )
 
     # ########################################################################
     # ####################################################### CALL ACTION ####
     def run_callback(self) -> None:
-        self.widget.run_callback()
+        if isinstance(self.widget, GButton):
+            self.widget.run_callback()
 
     # ########################################################################
     # ##################################################### TOGGLE ACTIVE ####
@@ -93,3 +89,7 @@ class GMenuEntry:
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
         self.icons.update_animation(delta_time)  # type: ignore
+
+    @property
+    def selectable(self) -> bool:
+        return self.widget.selectable

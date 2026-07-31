@@ -14,6 +14,8 @@ class GToggleButton(GButton):
     When the button is pressed, it stays pressed until it is pressed again.
     """
 
+    CHECKBOX_PADDING = VData.SPRITE_SIZE * 10
+
     def __init__(
         self,
         atlas: VAtlas,
@@ -28,6 +30,7 @@ class GToggleButton(GButton):
         anchor_y: str = "center",
         multiline: bool = False,
         width: int | None = None,
+        selectable: bool = True,
     ) -> None:
         self.pressed = pressed
 
@@ -50,6 +53,7 @@ class GToggleButton(GButton):
             anchor_y=anchor_y,
             multiline=multiline,
             width=width,
+            selectable=selectable
         )
 
         self.elements.append(self._checkbox_sprite_list)
@@ -62,9 +66,26 @@ class GToggleButton(GButton):
         return super().run_callback()
 
     def update_offset(self, offset: Vec2) -> None:
+        offset = Vec2(
+            offset.x
+            - (self.checkbox.rect.width / 2)
+            - (self.CHECKBOX_PADDING / 2),
+            offset.y,
+        )
         super().update_offset(offset)
         self.checkbox.position = Vec2(
-            self.text.rect.right
-            + (VData.SPRITE_SIZE * 2),
-            self.center.y,
+            self.text.rect.right + self.CHECKBOX_PADDING,
+            self.text.rect.center.y,
         )
+
+    @property
+    def left(self) -> float:
+        return self.text.rect.left
+
+    @property
+    def right(self) -> float:
+        return self.checkbox.rect.right
+
+    @property
+    def center(self) -> Vec2:
+        return (self.text.rect.center + self.checkbox.rect.center) / 2

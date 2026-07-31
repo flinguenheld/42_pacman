@@ -25,9 +25,11 @@ class GLabel(GWidget):
         anchor_y: str = "center",
         multiline: bool = False,
         width: int | None = None,
+        selectable: bool = False,
     ) -> None:
         super().__init__(atlas, frame)
         self.font_size_factor = font_size_factor
+        self.selectable = selectable
 
         if not color:
             color = atlas.get_color("menu_font")
@@ -68,3 +70,15 @@ class GLabel(GWidget):
     @property
     def center(self) -> Vec2:
         return Vec2(*self.text.rect.center)
+
+    @property
+    def active(self) -> bool:
+        return self._active
+
+    @active.setter
+    def active(self, value: bool) -> None:
+        self._active = value
+        self.update_color()
+
+    def update_color(self) -> None:
+        pass

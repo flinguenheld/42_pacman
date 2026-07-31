@@ -26,6 +26,7 @@ class GButton(GLabel):
         anchor_y: str = "center",
         multiline: bool = False,
         width: int | None = None,
+        selectable: bool = True,
     ) -> None:
         super().__init__(
             atlas=atlas,
@@ -39,6 +40,7 @@ class GButton(GLabel):
             anchor_y=anchor_y,
             multiline=multiline,
             width=width,
+            selectable=selectable,
         )
         self.update_color()
         self.callback = callback
@@ -60,11 +62,3 @@ class GButton(GLabel):
         else:
             self.text.color = self.atlas.get_color("menu_font")
 
-    @property
-    def active(self) -> bool:
-        return self._active
-
-    @active.setter
-    def active(self, value: bool) -> None:
-        self._active = value
-        self.update_color()

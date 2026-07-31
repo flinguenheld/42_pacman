@@ -3,6 +3,7 @@ import arcade
 from src.visual.vgame import VGame
 from src.visual.vatlas import VAtlas
 from src.visual.vdata import VNames, VData
+from src.visual.views.vcheat import VCheat
 from src.visual.views.vpause import VPause
 from src.visual.gamestate import GameState
 from src.visual.views.vvictory import VVictory
@@ -67,7 +68,8 @@ class VMain(arcade.Window):
                 save_and_show(VWelcome(self.atlas))
             case VNames.VIEW_VICTORY:
                 save_and_show(VVictory(self.atlas, self.game_state.score))
-
+            case VNames.VIEW_CHEAT:
+                save_and_show(VCheat(self.atlas, self.game_state))
             # --
             case VNames.VIEW_PREVIOUS:
                 if self.previous_vname == VNames.VIEW_GAME_NEW:

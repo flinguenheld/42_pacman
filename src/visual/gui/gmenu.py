@@ -1,7 +1,7 @@
 import arcade
 from arcade import Vec2
 
-from src.visual.gui.gbutton import GButton
+from src.visual.gui.glabel import GLabel
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu_entry import GMenuEntry
 
@@ -18,7 +18,7 @@ class GMenu:
     def __init__(
         self,
         atlas: VAtlas,
-        widgets: list[GButton],
+        widgets: list[GLabel],
         center_top_first: Vec2,
     ) -> None:
         self.atlas = atlas
@@ -64,10 +64,28 @@ class GMenu:
     # ######################################################### UP / DOWN ####
     def next_up(self) -> None:
         self.entries[self.current].active = False
-        self.current = (self.current - 1) % len(self.entries)
+
+        self.current -= 1
+        if self.current < 0:
+            self.current = len(self.entries) - 1
+        while (
+            self.current > 0
+            and not self.entries[self.current].widget.selectable
+        ):
+            self.current -= 1
+
         self.entries[self.current].active = True
 
     def next_down(self) -> None:
         self.entries[self.current].active = False
-        self.current = (self.current + 1) % len(self.entries)
+
+        self.current += 1
+        if self.current >= len(self.entries):
+            self.current = 0
+        while (
+            self.current < len(self.entries) - 1
+            and not self.entries[self.current].widget.selectable
+        ):
+            self.current += 1
+
         self.entries[self.current].active = True
