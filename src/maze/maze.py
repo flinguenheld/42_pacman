@@ -5,9 +5,9 @@ from src.visual.vatlas import VAtlas
 from src.utils.usage import sprite_center
 from src.visual.sprites.swall import SWall
 from src.visual.pathfinding.bfs import BFS
-from src.maze.floor_debug import FloorDebug
 from src.visual.sprites.sfloor import SFloor
 from src.visual.vdata import VData, DebugMode
+from src.visual.sprites.sfloor_debug import SFloorDebug
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
@@ -36,17 +36,12 @@ class Maze:
         # Sprites --
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas, frame_texture=floor_as_frame)
-        self.floors_debug = FloorDebug(self.atlas)
+        self.floors_debug: SFloorDebug = SFloorDebug(self.atlas)
 
         # Graph --
         self.graph_neighbours: dict[Vec2, list[Vec2]] = dict()
         self.graph_costs: dict[Vec2, int] = dict()
         self.graph_corners: list[dict[Vec2, int]] = list()
-
-        # TODO: TO REMOVE
-        # TODO: TO REMOVE
-        # TODO: TO REMOVE
-        self.graph = dict()
 
     # ########################################################################
     # ############################################################# BUILD ####
@@ -55,7 +50,10 @@ class Maze:
         sprite_offset: Vec2 = Vec2(0, 0),
         include_graph: bool = False,
     ) -> None:
-        """Build the maze, its sprites and the graph for the BFS."""
+        """
+        Build the maze, its sprites and the graph for the BFS.
+        include_graph = False to skip the algorithm management.
+        """
 
         self._build_sprites(sprite_offset)
 
@@ -65,7 +63,7 @@ class Maze:
 
             self.graph_corners = list()
             for corner in self.floor_corners:
-                self.graph_corners.append(self.bfs.set_costs(corner))
+                self.graph_corners.append(self.bfs.get_costs(corner))
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
@@ -121,7 +119,7 @@ class Maze:
         """
         Relaunch the algorithm from the player on the entire maze.
         """
-        self.graph_costs = self.bfs.set_costs(start)
+        self.graph_costs = self.bfs.get_costs(start)
         self.floors_debug.update_costs(self.graph_costs)
 
     # ########################################################################

@@ -7,22 +7,34 @@ from src.visual.vatlas import VAtlas
 from src.visual.vdata import VData, DebugMode
 
 
-class FloorDebug:
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█░░░█▀█░█▀█░█▀▄░░░█▀▄░█▀▀░█▀▄░█░█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀█░█▀▀░█░░░█░█░█░█░█▀▄░░░█░█░█▀▀░█▀▄░█░█░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀▀░░▀▀▀░▀▀▀░░
+class SFloorDebug:
     def __init__(self, atlas: VAtlas) -> None:
-
         self.atlas = atlas
+        self.setup()
 
-        self.texts_batch = Batch()
+    def setup(self):
+        """
+        Create a batch and a dict to easily update them (text & squares).
+        """
+
         self.texts: dict[Vec2, arcade.Text] = dict()
+        self.texts_batch = Batch()
 
-        self.squares_batch = SpriteList()
         self.squares: dict[Vec2, Sprite] = dict()
+        self.squares_batch = SpriteList()
 
     # ########################################################################
     # ####################################################### RELOAD MAZE ####
     def reload_maze(self, floors: set[Vec2]) -> None:
-        self.texts = dict()
-        self.texts_batch = Batch()
+        """
+        Reload the sprites and texts.
+        Has to be done for each new maze.
+        """
+
+        self.setup()
 
         for point in floors:
             self.texts[point] = arcade.Text(
@@ -46,6 +58,10 @@ class FloorDebug:
     # ########################################################################
     # ###################################################### UPDATE COSTS ####
     def update_costs(self, graph_costs: dict[Vec2, int]):
+        """
+        Update the texts and the squares according to the graph.
+        Limit the amount of texts to preserve fps.
+        """
 
         def colour(value: int):
             if value > 45:

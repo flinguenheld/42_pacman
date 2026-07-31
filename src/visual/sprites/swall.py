@@ -15,6 +15,10 @@ class SWall(SSprites):
     # ########################################################################
     # ############################################################ RELOAD ####
     def reload(self, walls: set[Vec2], floors: set[Vec2]) -> None:
+        """
+        Reload the sprites.
+        Has to be done for each new maze.
+        """
         self.clear()
 
         # ############################### EXTRA ANGLES ###

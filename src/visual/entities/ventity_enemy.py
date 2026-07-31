@@ -7,8 +7,6 @@ from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gamestate import GameState
-from src.visual.pathfinding.bfs import BFS
-from src.visual.pathfinding.fleeing import Fleeing
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer
 
@@ -47,15 +45,15 @@ class VEntityEnemyCommon(VEntityMoving):
         self.speed = self.gamestate.enemy_speed
         self.mode = VEntityEnemyCommon.Mode.CHASING
 
-        # Algos --
-        self.bfs = BFS(self.maze.graph_neighbours)
-        self.fleeing = Fleeing(self.maze.graph)
-
         # Timers --
         self.timer_dead = 0.0
         self.timer_fleeing = 0.0
 
         self.update_next_position()
+
+    # TODO: Add a control to keep the enemy close to it's corner
+    # TODO: Add a control to keep the enemy close to it's corner
+    # TODO: Add a control to keep the enemy close to it's corner
 
     # ########################################################################
     # ######################################################## GET TARGET ####
@@ -66,9 +64,12 @@ class VEntityEnemyCommon(VEntityMoving):
     # ########################################################################
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
+        """
+        Get in the maze's graph the next position to move according
+        to the current move.
+        """
 
-        # Wait to be close to the next position
-        # before relaunching a new calculation
+        # Wait to be close to the next position before relaunching updating
         if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
             start = self.maze.closest_floor_of(self.center)
             # target = self.get_target()
@@ -78,7 +79,10 @@ class VEntityEnemyCommon(VEntityMoving):
                     self.next_position = self.maze.get_next_lowest(start)
 
                 case VEntityEnemyCommon.Mode.FLEEING:
-                    self.next_position = self.maze.get_next_lowest(start, True)
+                    self.next_position = self.maze.get_next_lowest(
+                        start,
+                        reversed=True,
+                    )
 
                 case VEntityEnemyCommon.Mode.DEAD:
                     self.next_position = self.maze.get_next_lowest(

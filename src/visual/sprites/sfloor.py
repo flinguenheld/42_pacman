@@ -12,6 +12,10 @@ class SFloor(SSprites):
         super().__init__(atlas, base_name)
 
     def reload(self, floors: set[Vec2]) -> None:
+        """
+        Reload the sprites.
+        Has to be done for each new maze.
+        """
         self.clear()
         for point in floors:
             self.add_sprite(self.base_name, center=point)

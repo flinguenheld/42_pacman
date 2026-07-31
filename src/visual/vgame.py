@@ -275,7 +275,8 @@ class VGame(arcade.View):
     # ######################################### SWITCH ENEMIES TO FLEEING ####
     def switch_all_enemies_to_fleeing(self) -> None:
         for enemy in self.enemy_list:
-            enemy.mode = VEntityEnemyCommon.Mode.FLEEING
+            if enemy.mode != VEntityEnemyCommon.Mode.DEAD:
+                enemy.mode = VEntityEnemyCommon.Mode.FLEEING
 
     # ########################################################################
     # ############################################################## KEYS ####
