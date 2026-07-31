@@ -10,6 +10,11 @@ class GameState:
         CHASING = "chasing"
         FLEEING = "fleeing"
 
+    class Cheats:
+        def __init__(self) -> None:
+            self.god_mode: bool = False
+            self.no_clip: bool = False
+
     def __init__(self) -> None:
         # TODO: These values have to be set with the config
         self.score: int = 0
@@ -20,6 +25,8 @@ class GameState:
         self._enemy_speed: float = 15.0
 
         self.mode: GameState.Mode = GameState.Mode.CHASING
+
+        self.cheats = GameState.Cheats()
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####
