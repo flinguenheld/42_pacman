@@ -4,7 +4,7 @@ from arcade.types import Color
 from arcade import Text, Vec2, SpriteList
 
 from src.maze.maze import Maze
-from src.visual.vdata import VData
+from src.visual.vdata import VData, DebugMode
 from src.visual.vatlas import VAtlas
 from src.visual.gui.glabel import GLabel
 from src.visual.gui.gframe import GFrame
@@ -132,7 +132,7 @@ class VHud:
             text.draw()
 
         # Debug --
-        if VData.debug_on:
+        if VData.debug_mode != DebugMode.OFF:
             self.fields_debug["fps"].text = f"FPS: {arcade.get_fps():.2f}"
             for text in self.fields_debug.values():
                 text.draw()

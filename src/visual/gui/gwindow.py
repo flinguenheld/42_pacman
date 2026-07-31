@@ -23,6 +23,7 @@ class GWindow(arcade.View):
     def __init__(self, atlas: VAtlas, title: GTitle, frame: GFrame) -> None:
         super().__init__()
         self.atlas = atlas
+        VData.deactivate_debug_mode()
 
         # Frame --
         self.frame = frame

@@ -30,7 +30,7 @@ class GFrame:
         raw_maze = self.build_raw_maze(nb_rows, nb_cols, bevels)
         raw_maze = self.randomise_raw_maze(raw_maze)
         self.maze = Maze(atlas, raw_maze, floor_as_frame=True)
-        self.maze.build_sprites(offset=bot_left)
+        self.maze.build(sprite_offset=bot_left)
 
     # ########################################################################
     # ########################################################## RAW MAZE ####

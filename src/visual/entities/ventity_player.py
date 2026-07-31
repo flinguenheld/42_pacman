@@ -4,8 +4,8 @@ import arcade
 from enum import Enum
 from arcade import Sprite, Vec2, key
 
+from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
-from src.visual.sprites.swall import SWall
 from src.visual.gamestate import GameState
 from src.visual.entities.ventity_moving import VEntityMoving
 
@@ -49,16 +49,18 @@ class VEntityPlayer(VEntityMoving):
     def __init__(
         self,
         atlas: VAtlas,
-        position: Vec2,
-        walls: SWall,
+        maze: Maze,
         gamestate: GameState,
     ) -> None:
-        super().__init__(atlas, "player", position)
-        self.walls: SWall = walls
+        super().__init__(atlas, "player", maze.floor_center)
+
+        self.maze: Maze = maze
         self.gamestate: GameState = gamestate
 
         self.directions_from_keys: set[Vec2] = set()
         self._direction_vector = (Vec2(0, 0), Vec2(0, 0))
+
+        self.current_floor = self.maze.closest_floor_of(self.center)
 
         # QUESTION: Does the diagonal work with your keyboard ?
 
@@ -92,6 +94,23 @@ class VEntityPlayer(VEntityMoving):
         self.update_velocity(delta_time)
         self.update_texture()
         self.resolve_wall_collisions()
+        self.update_maze_graph()
+
+    # ########################################################################
+    # ################################################# UPDATE MAZE GRAPH ####
+    def update_maze_graph(self):
+        """If the player has moved to another floor, refresh the maze graph"""
+
+        current_floor = self.maze.closest_floor_of(self.center)
+        if self.current_floor != current_floor:
+            self.maze.update_graph_values(
+                self.maze.closest_floor_of(self.center)
+            )
+            # TODO: CLEAN THAT
+            # if VData.debug_on:
+            #     self.maze.bfs.print_debug(self.maze.graph_costs)
+
+            self.current_floor = current_floor
 
     # ########################################################################
     # ########################################################## VELOCITY ####
@@ -111,7 +130,7 @@ class VEntityPlayer(VEntityMoving):
         # and multi-wall phasing.
         self.center_x += self.change_x
         collided_x: list[Sprite] = arcade.check_for_collision_with_list(
-            self, self.walls.sprites
+            self, self.maze.walls.sprites
         )
         if self.change_x > 0:
             for wall in collided_x:
@@ -122,7 +141,7 @@ class VEntityPlayer(VEntityMoving):
 
         self.center_y += self.change_y
         collided_y: list[Sprite] = arcade.check_for_collision_with_list(
-            self, self.walls.sprites
+            self, self.maze.walls.sprites
         )
         if self.change_y > 0:
             for wall in collided_y:

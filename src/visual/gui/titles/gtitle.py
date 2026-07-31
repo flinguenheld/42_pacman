@@ -27,7 +27,7 @@ class GTitle:
             bottom_middle.y,
         )
 
-        self.maze.build_sprites(offset=offset)
+        self.maze.build(sprite_offset=offset)
 
     # ########################################################################
     # ############################################################## DRAW ####

@@ -48,7 +48,7 @@ class VEntityEnemyCommon(VEntityMoving):
         self.mode = VEntityEnemyCommon.Mode.CHASING
 
         # Algos --
-        self.bfs = BFS(self.maze.graph)
+        self.bfs = BFS(self.maze.graph_neighbours)
         self.fleeing = Fleeing(self.maze.graph)
 
         # Timers --
@@ -67,6 +67,7 @@ class VEntityEnemyCommon(VEntityMoving):
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
 
+        return
         # Wait to be close to the next position
         # before relaunching a new calculation
         if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:

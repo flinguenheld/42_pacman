@@ -708,6 +708,10 @@
       "duration": [
         200
       ]
+    },
+    {
+      "name": "debug_square",
+      "nb": 1
     }
   ]
 }

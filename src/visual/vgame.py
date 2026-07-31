@@ -1,14 +1,12 @@
 import random
 import arcade
-from arcade.types import Color
 from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
 from src.visual.gui.ghud import VHud
 from src.visual.gamestate import GameState
-from src.visual.vdata import VNames, VData
-from src.visual.pathfinding.bfs import BFS
+from src.visual.vdata import VNames, VData, DebugMode
 from src.visual.gui.gbackground import GBackground
 from src.visual.entities.venemy_variants import (
     Charlie,
@@ -35,8 +33,6 @@ class VGame(arcade.View):
         self.setup_done = False
 
         self.process_updates = True
-        self.display_hitboxes = False
-        self.display_enemy_paths = False
 
         self.camera = arcade.Camera2D()
         self.camera_hud = arcade.Camera2D()
@@ -119,8 +115,7 @@ class VGame(arcade.View):
         self.player_list.append(
             VEntityPlayer(
                 self.atlas,
-                self.maze.floor_center,
-                self.maze.walls,
+                self.maze,
                 self.gamestate,
             )
         )
@@ -158,9 +153,7 @@ class VGame(arcade.View):
         maze_gen = MazeGeneratorWrapper()
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
-        self.maze.build_sprites()
-        self.maze.build_floor_graph()
-        # print(self.maze.graph)
+        self.maze.build(include_graph=True)
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
@@ -183,11 +176,18 @@ class VGame(arcade.View):
             with self.camera.activate():
                 self.background.draw()
                 self.maze.draw()
-                self.pacgum_list.draw(pixelated=True)
-                self.draw_enemy_paths()
+
+                match VData.debug_mode:
+                    case DebugMode.HITBOXES:
+                        self.pacgum_list.draw(pixelated=True)
+                        self.draw_hitboxes()
+                    case DebugMode.ALGO:
+                        pass
+                    case DebugMode.OFF:
+                        self.pacgum_list.draw(pixelated=True)
+
                 self.player_list.draw(pixelated=True)
                 self.enemy_list.draw(pixelated=True)
-                self.draw_hitboxes()
 
             with self.camera_hud.activate():
                 self.hud.draw()
@@ -195,23 +195,26 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################# DRAW HITBOXES & PATHS ####
     def draw_hitboxes(self) -> None:
-        if self.display_hitboxes:
-            self.maze.walls.sprites.draw_hit_boxes(arcade.color.RED, 2)
-            self.pacgum_list.draw_hit_boxes(arcade.color.WHITE, 1)
-            self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
-            self.enemy_list.draw_hit_boxes(arcade.color.AFRICAN_VIOLET, 2)
+        self.maze.walls.sprites.draw_hit_boxes(arcade.color.RED, 2)
+        self.pacgum_list.draw_hit_boxes(arcade.color.WHITE, 1)
+        self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
+        self.enemy_list.draw_hit_boxes(arcade.color.AFRICAN_VIOLET, 2)
 
     def draw_enemy_paths(self) -> None:
-        if self.display_enemy_paths:
-            line_width = VData.SPRITE_SIZE // 1.8
-            if self.display_enemy_paths:
-                for val, enemy in enumerate(self.enemy_list):
-                    arcade.draw_line_strip(
-                        enemy.bfs.path,
-                        Color(val * 30, val * 50, val * 80),
-                        line_width,
-                    )
-                    line_width -= 4
+        pass
+        # if self.display_hitboxes:
+        #     self.maze.floors.up_debug_graph(self.maze.graph_costs)
+        # pass
+        # if self.display_enemy_paths:
+        #     line_width = VData.SPRITE_SIZE // 1.8
+        #     if self.display_enemy_paths:
+        #         for val, enemy in enumerate(self.enemy_list):
+        #             arcade.draw_line_strip(
+        #                 enemy.bfs.path,
+        #                 Color(val * 30, val * 50, val * 80),
+        #                 line_width,
+        #             )
+        #             line_width -= 4
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -297,20 +300,12 @@ class VGame(arcade.View):
                     self.spawn_player()
                     self.spawn_enemies()
 
-                case arcade.key.T:
-                    self.test_bfs()
-
-                # TODO: Potentially replace the current pause view with this
-                # for pausing the game?
-                # ANSWER: The subject explicitly requires a pause menu
-                #         But it could be a cheat ?
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates
 
                 case arcade.key.H:
-                    self.display_hitboxes = not self.display_hitboxes
-                    self.display_enemy_paths = not self.display_enemy_paths
-                    VData.debug_on = not VData.debug_on
+                    VData.toggle_debug_mode()
+
                 case _:
                     pass
 
@@ -371,21 +366,3 @@ class VGame(arcade.View):
         # --
         cameras_setup()
         cameras_zoom()
-
-    # ########################################################################
-    # ########################################################## TEST BFS ####
-    def test_bfs(self) -> None:
-
-        # Test from the player to the first enemy
-        start = self.maze.closest_floor_of(self.player.center)
-        target = self.maze.closest_floor_of(self.enemy_list[0].center)
-        # start = target
-
-        algo = BFS(self.maze.graph)
-        algo.print_debug()
-
-        algo.set_costs(start, target)
-        algo.print_debug()
-
-        algo.extract_path()
-        algo.print_debug()

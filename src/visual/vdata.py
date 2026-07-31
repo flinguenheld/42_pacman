@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum, auto
 from typing import Self
 
@@ -16,6 +18,12 @@ class VNames(Enum):
     VIEW_PREVIOUS = auto()
     VIEW_VICTORY = auto()
     VIEW_WELCOME = auto()
+
+
+class DebugMode(Enum):
+    OFF = auto()
+    HITBOXES = auto()
+    ALGO = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░░█▀▄░█▀█░▀█▀░█▀█░░
@@ -37,7 +45,7 @@ class VData:
     height: int = 1300
     width: int = 1300
 
-    debug_on: bool = False
+    debug_mode: DebugMode = DebugMode.OFF
 
     SPRITE_SIZE = 32
     SPRITE_SIZE_BACKGROUND = SPRITE_SIZE * 4
@@ -60,6 +68,22 @@ class VData:
         cls.points_per_super_pacgum = config.points_per_super_pacgum
 
         cls.time_max = config.level_max_time
+
+    # ########################################################################
+    # ####################################################### _DEBUG MODE ####
+    @classmethod
+    def toggle_debug_mode(cls):
+        match cls.debug_mode:
+            case DebugMode.OFF:
+                cls.debug_mode = DebugMode.HITBOXES
+            case DebugMode.HITBOXES:
+                cls.debug_mode = DebugMode.ALGO
+            case DebugMode.ALGO:
+                cls.debug_mode = DebugMode.OFF
+
+    @classmethod
+    def deactivate_debug_mode(cls):
+        cls.debug_mode = DebugMode.OFF
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░▀█▀░█░█░█░░░█▀▀░█▀▀░░

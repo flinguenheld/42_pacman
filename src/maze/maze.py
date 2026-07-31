@@ -1,12 +1,12 @@
 from arcade import Vec2, Rect
 
-from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.utils.usage import sprite_center
 from src.visual.sprites.swall import SWall
+from src.visual.pathfinding.bfs import BFS
+from src.maze.floor_debug import FloorDebug
 from src.visual.sprites.sfloor import SFloor
-
-type Graph = dict[Vec2, list[Vec2]]
+from src.visual.vdata import VData, DebugMode
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
@@ -32,9 +32,33 @@ class Maze:
         self.raw_maze = raw_maze
         self.atlas = atlas
 
+        # Sprites --
         self.walls: SWall = SWall(self.atlas)
         self.floors: SFloor = SFloor(self.atlas, frame_texture=floor_as_frame)
-        self.graph: Graph = dict()
+        self.floors_debug = FloorDebug(self.atlas)
+
+        # Graph --
+        self.graph_neighbours: dict[Vec2, list[Vec2]] = dict()
+        self.graph_costs: dict[Vec2, int] = dict()
+
+        # TODO: TO REMOVE
+        # TODO: TO REMOVE
+        # TODO: TO REMOVE
+        self.graph = dict()
+
+    # ########################################################################
+    # ############################################################# BUILD ####
+    def build(
+        self,
+        sprite_offset: Vec2 = Vec2(0, 0),
+        include_graph: bool = False,
+    ) -> None:
+
+        self.build_sprites(sprite_offset)
+
+        if include_graph:
+            self._build_floor_graph()
+            self.bfs = BFS(self.graph_neighbours)
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
@@ -58,13 +82,14 @@ class Maze:
 
         self.walls.reload(wall_points, floor_points)
         self.floors.reload(floor_points)
+        self.floors_debug.reload_maze(floor_points)
 
     # ########################################################################
     # ################################################# BUILD FLOOR GRAPH ####
-    def build_floor_graph(self) -> None:
+    def _build_floor_graph(self) -> None:
         """
-        From the floor sprites, build a dict which will be used by the
-        BFS algorithm.
+        From the floor sprites,
+        build a dict which will be used by the BFS algorithm.
         Each entry is a point (sprite center) with its list of neighbours.
         """
         coordinates: list[Vec2] = [
@@ -74,18 +99,31 @@ class Maze:
             Vec2(-VData.SPRITE_SIZE, 0),
         ]
 
-        self.graph = {sprite_center(sp): [] for sp in self.floors.sprites}
+        self.graph_neighbours = {
+            sprite_center(sp): [] for sp in self.floors.sprites
+        }
 
-        for point, neighbours in self.graph.items():
+        for point, neighbours in self.graph_neighbours.items():
             for possible_neighbour in (n + point for n in coordinates):
-                if possible_neighbour in self.graph.keys():
+                if possible_neighbour in self.graph_neighbours.keys():
                     neighbours.append(possible_neighbour)
+
+    # ########################################################################
+    # ############################################### UPDATE GRAPH VALUES ####
+    def update_graph_values(self, start: Vec2):
+        """
+        Relaunch the algorithm from the player on the entire maze.
+        """
+        self.graph_costs = self.bfs.set_costs(start)
+        self.floors_debug.update_costs(self.graph_costs)
 
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
         self.walls.draw()
         self.floors.draw()
+        if VData.debug_mode == DebugMode.ALGO:
+            self.floors_debug.draw()
 
     # ########################################################################
     # ############################################################ UPDATE ####
