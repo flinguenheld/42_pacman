@@ -41,6 +41,7 @@ class Maze:
         # Graph --
         self.graph_neighbours: dict[Vec2, list[Vec2]] = dict()
         self.graph_costs: dict[Vec2, int] = dict()
+        self.graph_corners: list[dict[Vec2, int]] = list()
 
         # TODO: TO REMOVE
         # TODO: TO REMOVE
@@ -54,16 +55,21 @@ class Maze:
         sprite_offset: Vec2 = Vec2(0, 0),
         include_graph: bool = False,
     ) -> None:
+        """Build the maze, its sprites and the graph for the BFS."""
 
-        self.build_sprites(sprite_offset)
+        self._build_sprites(sprite_offset)
 
         if include_graph:
             self._build_floor_graph()
             self.bfs = BFS(self.graph_neighbours)
 
+            self.graph_corners = list()
+            for corner in self.floor_corners:
+                self.graph_corners.append(self.bfs.set_costs(corner))
+
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
-    def build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
+    def _build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
 
@@ -166,22 +172,35 @@ class Maze:
         return self.floors.find_closest_sprite_of(point)
 
     # ########################################################################
-    # ###################################################  ####
+    # ################################################### GET NEXT LOWEST ####
     # TODO: To refactor
     # TODO: To refactor
-    def get_next_lowest(self, point: Vec2, reversed: bool = False) -> Vec2:
+    def get_next_lowest(
+        self,
+        point: Vec2,
+        reversed: bool = False,
+        corner: int | None = None,
+    ) -> Vec2:
         """Get the point neighbour with the lowest cost."""
 
-        if self.graph_costs:
-            neighbours = self.graph_neighbours[point]
-            neighbours_costs = {n: self.graph_costs[n] for n in neighbours}
+        def next_one(graph_costs: dict, point: Vec2, reversed: bool) -> Vec2:
 
-            if reversed:
-                value = max(neighbours_costs.values())
+            if graph_costs and graph_costs[point] > 0:
+                neighbours = self.graph_neighbours[point]
+                with_costs = {n: graph_costs[n] for n in neighbours}
+
+                if reversed:
+                    target = max(with_costs.values())
+                else:
+                    target = min(with_costs.values())
+
+                options = [k for k, v in with_costs.items() if v == target]
+                return random.choice(options)
             else:
-                value = min(neighbours_costs.values())
+                return point
 
-            options = [k for k, v in neighbours_costs.items() if v == value]
-            return random.choice(options)
+        # --
+        if corner is not None:
+            return next_one(self.graph_corners[corner], point, reversed)
         else:
-            return point
+            return next_one(self.graph_costs, point, reversed)
