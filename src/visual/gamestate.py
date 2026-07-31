@@ -2,6 +2,18 @@ from enum import Enum
 from src.visual.vdata import VData
 
 
+class Cheats:
+    def __init__(self) -> None:
+        self.god_mode: bool = False
+        self.no_clip: bool = False
+
+    def toggle_god_mode(self) -> None:
+        self.god_mode = not self.god_mode
+
+    def toggle_no_clip(self) -> None:
+        self.no_clip = not self.no_clip
+
+
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▄█░█▀▀░█▀▀░▀█▀░█▀█░▀█▀░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
@@ -9,11 +21,6 @@ class GameState:
     class Mode(Enum):
         CHASING = "chasing"
         FLEEING = "fleeing"
-
-    class Cheats:
-        def __init__(self) -> None:
-            self.god_mode: bool = False
-            self.no_clip: bool = False
 
     def __init__(self) -> None:
         # TODO: These values have to be set with the config
@@ -26,7 +33,7 @@ class GameState:
 
         self.mode: GameState.Mode = GameState.Mode.CHASING
 
-        self.cheats = GameState.Cheats()
+        self.cheats: Cheats = Cheats()
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####

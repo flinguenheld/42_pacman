@@ -332,7 +332,8 @@ class VGame(arcade.View):
         if self.gamestate.mode == GameState.Mode.FLEEING:
             pass
         else:
-            self.player.kill()
+            if not self.gamestate.cheats.god_mode:
+                self.player.kill()
 
     # ########################################################################
     # ############################################################## KEYS ####

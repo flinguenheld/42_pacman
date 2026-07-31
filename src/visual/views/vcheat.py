@@ -27,13 +27,13 @@ class VCheat(GWindow):
                 bevels=True,
             ),
         )
-
+        self.game_state = game_state
+        self.cheats = game_state.cheats
         self.setup()
 
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.god_mode = False
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
@@ -41,11 +41,9 @@ class VCheat(GWindow):
                     atlas=self.atlas,
                     frame=self.frame,
                     # update the god_mode variable when the button is pressed
-                    callback=lambda: setattr(
-                        self, "god_mode", not self.god_mode
-                    ),
-                    pressed=self.god_mode,
-                    text="TOGGLE",
+                    callback=lambda: self.cheats.toggle_god_mode(),
+                    pressed=self.cheats.god_mode,
+                    text="GOD MODE",
                     font_size_factor=1,
                 ),
                 GPadding(
