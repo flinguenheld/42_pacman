@@ -34,7 +34,13 @@ class GMenuEntry:
         center = widget.center
 
         # Icons --
-        shift = (widget.text.content_width / 2) + VData.SPRITE_SIZE
+        # TODO: Not sure which version to choose
+        # I feel like the second one is better but maybe you will disagree
+        # First one is just like before, the icon follow the width of the text
+        # The second one is fixed, all the icons are aligned
+        # on the same x position
+        # shift = (widget.text.content_width / 2) + VData.SPRITE_SIZE
+        shift = (widget.center.x / 2) + VData.SPRITE_SIZE
 
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]
