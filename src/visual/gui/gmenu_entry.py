@@ -4,7 +4,7 @@ import random
 from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 from src.visual.gamestate import GameState
 
-from src.visual.gui.gwidget import GWidget
+from src.visual.gui.glabel import GLabel
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
@@ -22,7 +22,7 @@ class GMenuEntry:
     def __init__(
         self,
         atlas: VAtlas,
-        widget: GWidget,
+        widget: GLabel,
         offset: Vec2,
     ) -> None:
 
@@ -34,7 +34,7 @@ class GMenuEntry:
         center = widget.center
 
         # Icons --
-        shift = (self.widget.center.x / 2) + VData.SPRITE_SIZE
+        shift = (widget.text.content_width / 2) + VData.SPRITE_SIZE
 
         # QUESTION: Is it clean ?
         possible_tiles = ["player"]

@@ -55,8 +55,8 @@ class GInput(GWidget):
         self.icon = atlas.tile_to_sprite(
             tile,
             Vec2(
-                self.label.text.rect.center_x,
-                self.label.text.rect.center_y - atlas.font_size / 2,
+                self.label.center.x,
+                self.label.center.y - atlas.font_size / 2,
             ),
         )
         self.icons = SpriteList[Sprite | TextureAnimationSprite]()
@@ -79,7 +79,7 @@ class GInput(GWidget):
         if self.text:
             self.icon.center_x = self.label.right + VData.SPRITE_SIZE
         else:
-            self.icon.center_x = self.label.right
+            self.icon.center_x = self.label.center.x
 
     # ########################################################################
     # ####################################################### KEY PRESSED ####

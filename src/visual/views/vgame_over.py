@@ -11,6 +11,6 @@ class VGameOver(VEndBase):
         super().__init__(
             atlas=atlas,
             title=GTitleGameOver(atlas),
-            text=f"Oh no !\nYou loose with {score} points.",
+            text=f"Oh no !\nYou lost with {score} points.",
             score=score,
         )

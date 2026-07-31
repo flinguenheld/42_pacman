@@ -57,15 +57,15 @@ class GLabel(GWidget):
 
     @property
     def left(self) -> float:
-        return self.text.left
+        return self.text.rect.left
 
     @property
     def right(self) -> float:
-        return self.text.right
+        return self.text.rect.right
 
     def update_offset(self, offset: Vec2) -> None:
         self.text.position = self.frame.center_position + offset
 
     @property
     def center(self) -> Vec2:
-        return Vec2(*self.text.position)
+        return Vec2(*self.text.rect.center)
