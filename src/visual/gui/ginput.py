@@ -75,7 +75,7 @@ class GInput(GWidget):
     def update(self, delta_time: int | float) -> None:
         self.icons.update_animation(delta_time)  # type: ignore
 
-    def up_icon_position(self) -> None:
+    def update_icon_position(self) -> None:
         if self.text:
             self.icon.center_x = self.label.right + VData.SPRITE_SIZE
         else:
@@ -105,7 +105,7 @@ class GInput(GWidget):
                 self.text += chr(symbol)
 
         # --
-        self.up_icon_position()
+        self.update_icon_position()
 
     # ########################################################################
     # ######################################################## PROPERTIES ####
