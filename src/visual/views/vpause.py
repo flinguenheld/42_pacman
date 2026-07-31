@@ -59,7 +59,7 @@ class VPause(GWindow):
                     text="GIVE UP",
                 ),
             ],
-            center_top_first=Vec2(self.frame.center_position.x, 280),
+            center_top_first=Vec2(0, 75),
         )
 
         self.to_draw_and_update.append(self.menu)

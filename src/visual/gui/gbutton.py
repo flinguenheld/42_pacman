@@ -15,7 +15,7 @@ class GButton(GLabel):
         frame: GFrame,
         callback: Callable[[], None],
         offset: Vec2 = Vec2(0, 0),
-        font_size_factor: float = 1.0,
+        font_size_factor: float = 1.7,
         text: str = "",
         align: str = "center",
         anchor_x: str = "center",
