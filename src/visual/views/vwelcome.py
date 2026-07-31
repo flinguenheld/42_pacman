@@ -2,6 +2,7 @@ import arcade
 from arcade import Vec2
 
 from src.visual.gui.gbutton import GButton
+from src.visual.gui.gtogglebutton import GToggleButton
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
@@ -34,6 +35,7 @@ class VWelcome(GWindow):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
+        self.test_value = False
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
@@ -59,6 +61,16 @@ class VWelcome(GWindow):
                     frame=self.frame,
                     callback=arcade.exit,
                     text="EXIT",
+                ),
+                GToggleButton(
+                    atlas=self.atlas,
+                    frame=self.frame,
+                    # update the test_value variable when the button is pressed
+                    callback=lambda: setattr(
+                        self, "test_value", not self.test_value
+                    ),
+                    pressed=self.test_value,
+                    text="TOGGLE",
                 ),
             ],
             center_top_first=Vec2(0, 372),
