@@ -67,7 +67,6 @@ class VEntityEnemyCommon(VEntityMoving):
     # ##################################################### NEXT POSITION ####
     def update_next_position(self) -> None:
 
-        return
         # Wait to be close to the next position
         # before relaunching a new calculation
         if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
@@ -76,17 +75,20 @@ class VEntityEnemyCommon(VEntityMoving):
 
             match self.mode:
                 case VEntityEnemyCommon.Mode.CHASING:
-                    self.next_position = self.bfs.run_algo(start, target)
+                    self.next_position = self.maze.get_next_lowest(start)
+
                 case VEntityEnemyCommon.Mode.FLEEING:
-                    self.next_position = self.fleeing.run_algo(start, target)
+                    self.next_position = self.maze.get_next_lowest(start, True)
+
                 case VEntityEnemyCommon.Mode.DEAD:
+                    pass
                     # TODO: Change that ?
                     # TODO: It runs the algo each time which is useless...
                     # TODO: But it would add ugly code -_-'
-                    self.next_position = self.bfs.run_algo(
-                        start,
-                        self.maze.floor_corners[self.corner_id],
-                    )
+                    # self.next_position = self.bfs.run_algo(
+                    #     start,
+                    #     self.maze.floor_corners[self.corner_id],
+                    # )
 
     # ########################################################################
     # ########################################################## VELOCITY ####

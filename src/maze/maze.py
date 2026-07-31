@@ -1,3 +1,4 @@
+import random
 from arcade import Vec2, Rect
 
 from src.visual.vatlas import VAtlas
@@ -163,3 +164,24 @@ class Maze:
         """Helper of 'find closest sprite' for floor"""
 
         return self.floors.find_closest_sprite_of(point)
+
+    # ########################################################################
+    # ###################################################  ####
+    # TODO: To refactor
+    # TODO: To refactor
+    def get_next_lowest(self, point: Vec2, reversed: bool = False) -> Vec2:
+        """Get the point neighbour with the lowest cost."""
+
+        if self.graph_costs:
+            neighbours = self.graph_neighbours[point]
+            neighbours_costs = {n: self.graph_costs[n] for n in neighbours}
+
+            if reversed:
+                value = max(neighbours_costs.values())
+            else:
+                value = min(neighbours_costs.values())
+
+            options = [k for k, v in neighbours_costs.items() if v == value]
+            return random.choice(options)
+        else:
+            return point
