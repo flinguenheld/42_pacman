@@ -1,4 +1,6 @@
-from typing import Callable
+from collections.abc import Callable
+import inspect
+from typing import Any
 
 from arcade import Vec2
 import arcade
@@ -9,11 +11,13 @@ from src.visual.gui.glabel import GLabel
 
 
 class GButton(GLabel):
+    type Callback = Callable[[], None] | Callable[[GLabel], None]
+
     def __init__(
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: Callable[[], None],
+        callback: "Callback",
         offset: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,
         text: str = "",
@@ -39,8 +43,16 @@ class GButton(GLabel):
         self.update_color()
         self.callback = callback
 
+    # TODO: Check if we even need the argument in the callback
+    # If not, then we can just define Callback as "Callable[[], None]"
+    # and simplify things a lot
     def run_callback(self) -> None:
-        self.callback()
+        callback: Any = self.callback
+        sig = inspect.signature(callback)
+        if len(sig.parameters) == 0:
+            callback()
+        else:
+            callback(self)
 
     def update_color(self) -> None:
         if self.active:

@@ -62,18 +62,14 @@ class GInput(GWidget):
         self.icons = SpriteList[Sprite | TextureAnimationSprite]()
         self.icons.append(self.icon)
 
+        self.elements.extend([self.label, self.icons])
+
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
-        self.label.draw()
-        self.icons.draw()
+        super().draw()
         if self.help_on:
             self.help.draw()
-
-    # ########################################################################
-    # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
-        self.icons.update_animation(delta_time)  # type: ignore
 
     def update_icon_position(self) -> None:
         if self.text:

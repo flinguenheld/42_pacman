@@ -52,8 +52,7 @@ class GLabel(GWidget):
         )
         self.update_offset(offset)
 
-    def draw(self) -> None:
-        self.text.draw()
+        self.elements.append(self.text)
 
     @property
     def left(self) -> float:

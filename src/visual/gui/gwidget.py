@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Any
 
 from arcade import Vec2
 
@@ -13,11 +14,21 @@ class GWidget(ABC):
 
         self._active = False
 
+        self.elements: list[Any] = []
+
+    # TODO: Not sure if this is better than just overriding these methods
+    # in subclasses and manually calling draw and update on the elements.
     def update(self, delta_time: float) -> None:
-        pass
+        for element in self.elements:
+            if hasattr(element, "update"):
+                element.update(delta_time)
+            if hasattr(element, "update_animation"):
+                element.update_animation(delta_time)
 
     def draw(self) -> None:
-        pass
+        for element in self.elements:
+            if hasattr(element, "draw"):
+                element.draw()
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         pass
