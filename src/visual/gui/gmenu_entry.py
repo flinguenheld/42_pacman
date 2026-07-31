@@ -4,7 +4,7 @@ import random
 from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 from src.visual.gamestate import GameState
 
-from src.visual.gui.glabel import GLabel
+from src.visual.gui.gbutton import GButton
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 
@@ -22,7 +22,7 @@ class GMenuEntry:
     def __init__(
         self,
         atlas: VAtlas,
-        widget: GLabel,
+        widget: GButton,
         offset: Vec2,
     ) -> None:
 

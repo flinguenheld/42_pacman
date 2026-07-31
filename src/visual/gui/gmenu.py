@@ -1,8 +1,8 @@
 import arcade
 from arcade import Vec2
 
+from src.visual.gui.gbutton import GButton
 from src.visual.vatlas import VAtlas
-from src.visual.gui.glabel import GLabel
 from src.visual.gui.gmenu_entry import GMenuEntry
 
 
@@ -18,7 +18,7 @@ class GMenu:
     def __init__(
         self,
         atlas: VAtlas,
-        widgets: list[GLabel],
+        widgets: list[GButton],
         center_top_first: Vec2,
     ) -> None:
         self.atlas = atlas

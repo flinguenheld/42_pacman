@@ -59,3 +59,12 @@ class GButton(GLabel):
             self.text.color = self.atlas.get_color("menu_font_active")
         else:
             self.text.color = self.atlas.get_color("menu_font")
+
+    @property
+    def active(self) -> bool:
+        return self._active
+
+    @active.setter
+    def active(self, value: bool) -> None:
+        self._active = value
+        self.update_color()
