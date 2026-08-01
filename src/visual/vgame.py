@@ -6,8 +6,8 @@ from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
 from src.visual.gui.ghud import VHud
 from src.visual.gamestate import GameState
-from src.visual.vdata import VNames, VData, DebugMode
 from src.visual.gui.gbackground import GBackground
+from src.visual.vdata import VNames, VData, DebugMode
 from src.visual.entities.venemy_variants import (
     Charlie,
     EnemyVariant,
@@ -123,6 +123,7 @@ class VGame(arcade.View):
     def spawn_enemies(self) -> None:
         self.enemy_list.clear()
         for who in (Johnny, Michael, Charlie, ReverseMichael):
+            # for who in (Johnny,):
             self.enemy_list.append(
                 who(
                     atlas=self.atlas,

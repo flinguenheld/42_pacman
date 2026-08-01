@@ -1,6 +1,7 @@
 import arcade
 from arcade import Vec2
 
+from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
 from src.visual.entities.ventity import VEntity
 
@@ -22,10 +23,12 @@ class VEntityMoving(VEntity):
     def __init__(
         self,
         atlas: VAtlas,
+        maze: Maze,
         sprite_name: str,
         position: Vec2,
     ) -> None:
         super().__init__(atlas, sprite_name, position)
+        self.maze = maze
 
         # Texture helpers --
         self._current_direction: str = "wait"
@@ -81,3 +84,10 @@ class VEntityMoving(VEntity):
         # Magic numbers are bad but this one is acceptable
         MULTIPLIER = 500.0
         return speed * MULTIPLIER * delta_time
+
+    # ########################################################################
+    # ##################################################### CURRENT FLOOR ####
+    @property
+    def current_floor(self) -> Vec2:
+        """Helper which returns the closest floor of entity."""
+        return self.maze.closest_floor_of(self.center)

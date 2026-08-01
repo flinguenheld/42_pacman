@@ -52,15 +52,14 @@ class VEntityPlayer(VEntityMoving):
         maze: Maze,
         gamestate: GameState,
     ) -> None:
-        super().__init__(atlas, "player", maze.floor_center)
+        super().__init__(atlas, maze, "player", maze.floor_center)
 
-        self.maze: Maze = maze
         self.gamestate: GameState = gamestate
 
         self.directions_from_keys: set[Vec2] = set()
         self._direction_vector = (Vec2(0, 0), Vec2(0, 0))
 
-        self.current_floor = self.maze.closest_floor_of(self.center)
+        self.saved_floor = self.current_floor
 
         # QUESTION: Does the diagonal work with your keyboard ?
 
@@ -101,8 +100,8 @@ class VEntityPlayer(VEntityMoving):
     def update_maze_graph(self):
         """If the player has moved to another floor, refresh the maze graph"""
 
-        current_floor = self.maze.closest_floor_of(self.center)
-        if self.current_floor != current_floor:
+        current_floor = self.current_floor
+        if self.saved_floor != current_floor:
             self.maze.update_graph_values(
                 self.maze.closest_floor_of(self.center)
             )
@@ -110,7 +109,7 @@ class VEntityPlayer(VEntityMoving):
             # if VData.debug_on:
             #     self.maze.bfs.print_debug(self.maze.graph_costs)
 
-            self.current_floor = current_floor
+            self.saved_floor = current_floor
 
     # ########################################################################
     # ########################################################## VELOCITY ####
