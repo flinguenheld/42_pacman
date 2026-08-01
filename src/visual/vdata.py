@@ -16,7 +16,7 @@ class VNames(Enum):
     VIEW_PREVIOUS = auto()
     VIEW_VICTORY = auto()
     VIEW_WELCOME = auto()
-    VIEW_CHEAT = auto()
+    VIEW_CHEATS = auto()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░░█▀▄░█▀█░▀█▀░█▀█░░

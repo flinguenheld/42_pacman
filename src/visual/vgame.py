@@ -365,7 +365,7 @@ class VGame(arcade.View):
                     self.window.switch_view(VNames.VIEW_GAMEOVER)
 
                 case arcade.key.C:
-                    self.window.switch_view(VNames.VIEW_CHEAT)
+                    self.window.switch_view(VNames.VIEW_CHEATS)
 
                 # TODO: Potentially replace the current pause view with this
                 # for pausing the game?
