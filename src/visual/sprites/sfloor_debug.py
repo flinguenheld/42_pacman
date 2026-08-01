@@ -1,7 +1,7 @@
 import arcade
+from typing import Tuple
 from pyglet.graphics import Batch
 from arcade import Vec2, SpriteList, Sprite
-
 
 from src.visual.vatlas import VAtlas
 from src.visual.vdata import VData, DebugMode
@@ -15,7 +15,7 @@ class SFloorDebug:
         self.atlas = atlas
         self.setup()
 
-    def setup(self):
+    def setup(self) -> None:
         """
         Create a batch and a dict to easily update them (text & squares).
         """
@@ -24,7 +24,7 @@ class SFloorDebug:
         self.texts_batch = Batch()
 
         self.squares: dict[Vec2, Sprite] = dict()
-        self.squares_batch = SpriteList()
+        self.squares_batch = SpriteList[Sprite]()
 
     # ########################################################################
     # ####################################################### RELOAD MAZE ####
@@ -57,13 +57,13 @@ class SFloorDebug:
 
     # ########################################################################
     # ###################################################### UPDATE COSTS ####
-    def update_costs(self, graph_costs: dict[Vec2, int]):
+    def update_costs(self, graph_costs: dict[Vec2, int]) -> None:
         """
         Update the texts and the squares according to the graph.
         Limit the amount of texts to preserve fps.
         """
 
-        def colour(value: int):
+        def colour(value: int) -> Tuple[int, int, int]:
             if value > 45:
                 value -= 45
                 red = (100 + value * 2) % 255
@@ -76,6 +76,7 @@ class SFloorDebug:
 
             return (red, green, blue)
 
+        # --
         if VData.debug_mode == DebugMode.ALGO:
             for point, cost in graph_costs.items():
                 self.squares[point].color = colour(cost)

@@ -72,7 +72,7 @@ class VData:
     # ########################################################################
     # ####################################################### _DEBUG MODE ####
     @classmethod
-    def toggle_debug_mode(cls):
+    def toggle_debug_mode(cls) -> None:
         match cls.debug_mode:
             case DebugMode.OFF:
                 cls.debug_mode = DebugMode.HITBOXES
@@ -82,7 +82,7 @@ class VData:
                 cls.debug_mode = DebugMode.OFF
 
     @classmethod
-    def deactivate_debug_mode(cls):
+    def deactivate_debug_mode(cls) -> None:
         cls.debug_mode = DebugMode.OFF
 
 

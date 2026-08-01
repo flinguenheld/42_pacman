@@ -55,7 +55,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
     # ########################################################################
     # ############################################## HOME MODE - TRIGGERS ####
-    def set_home_mode_triggers(self):
+    def set_home_mode_triggers(self) -> None:
         """Set the triggers used in the home mode:
         - max_from_home: the enemy will come back near its start
         - max_from_player: if closer to player, it will continue to chase
@@ -65,7 +65,7 @@ class VEntityEnemyCommon(VEntityMoving):
         # TODO: Overload this method to change their behaviours ?
 
         value = max(self.maze.width, self.maze.height)
-        value /= VData.SPRITE_SIZE
+        value //= VData.SPRITE_SIZE
 
         self.max_from_home = int(value * 0.8)
         self.max_from_player = int(value * 0.4)
@@ -75,7 +75,7 @@ class VEntityEnemyCommon(VEntityMoving):
 
     # ########################################################################
     # ############################################ HOME MODE - MANAGEMENT ####
-    def home_mode_management(self):
+    def home_mode_management(self) -> None:
         """
         Get the distances from corner and from player.
         According to triggers, switch in home mode and move back to its corner.

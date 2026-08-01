@@ -115,7 +115,7 @@ class Maze:
 
     # ########################################################################
     # ############################################### UPDATE GRAPH VALUES ####
-    def update_graph_values(self, start: Vec2):
+    def update_graph_values(self, start: Vec2) -> None:
         """
         Relaunch the algorithm from the player on the entire maze.
         """

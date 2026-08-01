@@ -97,7 +97,7 @@ class VEntityPlayer(VEntityMoving):
 
     # ########################################################################
     # ################################################# UPDATE MAZE GRAPH ####
-    def update_maze_graph(self):
+    def update_maze_graph(self) -> None:
         """If the player has moved to another floor, refresh the maze graph"""
 
         current_floor = self.current_floor
