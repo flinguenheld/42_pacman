@@ -34,33 +34,33 @@ class VWelcome(GWindow):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.test_value = False
+        # Buttons ###################
+        self.play_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_GAME_NEW),
+            text="PLAY",
+        )
+        self.instructions_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_INSTRUCTIONS),
+            text="INSTRUCTIONS",
+        )
+        self.exit_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=arcade.exit,
+            text="EXIT",
+        )
+
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_GAME_NEW
-                    ),
-                    text="PLAY",
-                ),
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_INSTRUCTIONS
-                    ),
-                    text="INSTRUCTIONS",
-                ),
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=arcade.exit,
-                    text="EXIT",
-                ),
+                self.play_button,
+                self.instructions_button,
+                self.exit_button,
             ],
             center_top_first=Vec2(0, 372),
         )

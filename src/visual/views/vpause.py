@@ -30,42 +30,38 @@ class VPause(GWindow):
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
+        self.resume_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_GAME_RESUME),
+            text="RESUME",
+        )
+        self.instructions_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_INSTRUCTIONS),
+            text="INSTRUCTIONS",
+        )
+        self.cheats_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_CHEATS),
+            text="CHEATS",
+        )
+        self.give_up_button = GButton(
+            atlas=self.atlas,
+            frame=self.frame,
+            callback=lambda: self.window.switch_view(VNames.VIEW_WELCOME),
+            text="GIVE UP",
+        )
 
         self.menu = GMenu(
             atlas=self.atlas,
             widgets=[
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_GAME_RESUME
-                    ),
-                    text="RESUME",
-                ),
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_INSTRUCTIONS
-                    ),
-                    text="INSTRUCTIONS",
-                ),
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_CHEATS
-                    ),
-                    text="CHEATS",
-                ),
-                GButton(
-                    atlas=self.atlas,
-                    frame=self.frame,
-                    callback=lambda: self.window.switch_view(
-                        VNames.VIEW_WELCOME
-                    ),
-                    text="GIVE UP",
-                ),
+                self.resume_button,
+                self.instructions_button,
+                self.cheats_button,
+                self.give_up_button,
             ],
             center_top_first=Vec2(0, 107),
         )
