@@ -172,6 +172,10 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
+        def draw_people():
+            self.player_list.draw(pixelated=True)
+            self.enemy_list.draw(pixelated=True)
+
         if self.setup_done:
             self.clear()
             with self.camera.activate():
@@ -181,14 +185,13 @@ class VGame(arcade.View):
                 match VData.debug_mode:
                     case DebugMode.HITBOXES:
                         self.pacgum_list.draw(pixelated=True)
+                        draw_people()
                         self.draw_hitboxes()
                     case DebugMode.ALGO:
-                        pass
+                        draw_people()
                     case DebugMode.OFF:
                         self.pacgum_list.draw(pixelated=True)
-
-                self.player_list.draw(pixelated=True)
-                self.enemy_list.draw(pixelated=True)
+                        draw_people()
 
             with self.camera_hud.activate():
                 self.hud.draw()
@@ -196,10 +199,9 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################# DRAW HITBOXES & PATHS ####
     def draw_hitboxes(self) -> None:
-        self.maze.walls.sprites.draw_hit_boxes(arcade.color.RED, 2)
-        self.pacgum_list.draw_hit_boxes(arcade.color.WHITE, 1)
+        self.pacgum_list.draw_hit_boxes(arcade.color.BLUE_BELL, 2)
         self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
-        self.enemy_list.draw_hit_boxes(arcade.color.AFRICAN_VIOLET, 2)
+        self.enemy_list.draw_hit_boxes(arcade.color.RED_DEVIL, 2)
 
     def draw_enemy_paths(self) -> None:
         pass
