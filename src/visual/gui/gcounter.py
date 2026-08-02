@@ -20,7 +20,7 @@ class GCounter(GButton):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        update_callback: "GCounter.Callback",
+        update_callback: "GButton.Callback[GCounter]",
         count: int = 0,
         offset: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,

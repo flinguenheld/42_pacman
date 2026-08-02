@@ -14,7 +14,7 @@ class GButton(GLabel):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: "GButton.Callback",
+        callback: "GButton.Callback[Any]",
         offset: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,
         text: str = "",

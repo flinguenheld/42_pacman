@@ -12,7 +12,7 @@ from src.visual.gui.gframe import GFrame
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░░░█▀█░█▀▄░█▀▀░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░░
 class GLabel(GWidget):
-    type Callback = Callable[[], None] | Callable[["GLabel"], None]
+    type Callback[type] = Callable[[], None] | Callable[[type], None]
 
     """Text wrapper with common default values"""
 

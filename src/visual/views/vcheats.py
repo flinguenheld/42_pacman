@@ -1,5 +1,3 @@
-from typing import cast
-
 from arcade import Vec2
 
 from src.visual.gamestate import GameState
@@ -53,7 +51,7 @@ class VCheats(GWindow):
             atlas=self.atlas,
             frame=self.frame,
             update_callback=lambda button: self.cheats.update_lives(
-                cast(GCounter, button).count
+                button.count
             ),
             count=self.game_state.lives,
             text="LIVES",

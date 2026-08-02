@@ -20,7 +20,7 @@ class GToggleButton(GButton):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: "GToggleButton.Callback",
+        callback: "GButton.Callback[GToggleButton]",
         pressed: bool = False,
         offset: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,
