@@ -4,7 +4,6 @@ import random
 from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 from src.visual.gamestate import GameState
 
-from src.visual.gui.gbutton import GButton
 from src.visual.gui.glabel import GLabel
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
@@ -62,10 +61,9 @@ class GMenuEntry:
         )
 
     # ########################################################################
-    # ####################################################### CALL ACTION ####
-    def run_callback(self) -> None:
-        if isinstance(self.widget, GButton):
-            self.widget.run_callback()
+    # ################################################ HANDLE KEY PRESSES ####
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
+        self.widget.on_key_press(symbol, modifiers)
 
     # ########################################################################
     # ##################################################### TOGGLE ACTIVE ####

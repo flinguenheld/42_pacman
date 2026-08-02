@@ -1,4 +1,6 @@
-from arcade import Text, Vec2
+from collections.abc import Callable
+
+from arcade import Rect, Text, Vec2
 from arcade.types import Color
 
 from src.visual.vatlas import VAtlas
@@ -10,6 +12,8 @@ from src.visual.gui.gframe import GFrame
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░░░█▀█░█▀▄░█▀▀░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░░
 class GLabel(GWidget):
+    type Callback = Callable[[], None] | Callable[["GLabel"], None]
+
     """Text wrapper with common default values"""
 
     def __init__(
@@ -56,20 +60,24 @@ class GLabel(GWidget):
 
         self.elements.append(self.text)
 
-    @property
-    def left(self) -> float:
-        return self.text.rect.left
-
-    @property
-    def right(self) -> float:
-        return self.text.rect.right
-
     def update_offset(self, offset: Vec2) -> None:
         self.text.position = self.frame.center_position + offset
 
     @property
+    def rect(self) -> Rect:
+        return self.text.rect
+
+    @property
+    def left(self) -> float:
+        return self.rect.left
+
+    @property
+    def right(self) -> float:
+        return self.rect.right
+
+    @property
     def center(self) -> Vec2:
-        return Vec2(*self.text.rect.center)
+        return self.rect.center
 
     @property
     def active(self) -> bool:

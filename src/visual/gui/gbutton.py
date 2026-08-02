@@ -1,4 +1,3 @@
-from collections.abc import Callable
 import inspect
 from typing import Any
 
@@ -11,13 +10,11 @@ from src.visual.gui.glabel import GLabel
 
 
 class GButton(GLabel):
-    type Callback = Callable[[], None] | Callable[[GLabel], None]
-
     def __init__(
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: "Callback",
+        callback: "GButton.Callback",
         offset: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,
         text: str = "",
@@ -56,9 +53,15 @@ class GButton(GLabel):
         else:
             callback(self)
 
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
+        match symbol:
+            case arcade.key.ENTER | arcade.key.NUM_ENTER | arcade.key.SPACE:
+                self.run_callback()
+            case _:
+                pass
+
     def update_color(self) -> None:
         if self.active:
             self.text.color = self.atlas.get_color("menu_font_active")
         else:
             self.text.color = self.atlas.get_color("menu_font")
-

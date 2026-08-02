@@ -49,16 +49,15 @@ class GMenu:
 
     # ########################################################################
     # ####################################################### KEY PRESSED ####
-    def on_key_press(self, symbol: int) -> None:
+    def on_key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
             case arcade.key.UP:
                 self.next_up()
             case arcade.key.DOWN:
                 self.next_down()
-            case arcade.key.ENTER | arcade.key.NUM_ENTER:
-                self.entries[self.current].run_callback()
             case _:
                 pass
+        self.entries[self.current].on_key_press(symbol, modifiers)
 
     # ########################################################################
     # ######################################################### UP / DOWN ####

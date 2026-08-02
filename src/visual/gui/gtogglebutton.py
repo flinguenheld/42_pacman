@@ -1,4 +1,4 @@
-from arcade import Sprite, SpriteCircle, SpriteList, Vec2
+from arcade import Rect, Sprite, SpriteCircle, SpriteList, Vec2
 import arcade
 
 from src.visual.gui.gbutton import GButton
@@ -14,7 +14,7 @@ class GToggleButton(GButton):
     When the button is pressed, it stays pressed until it is pressed again.
     """
 
-    CHECKBOX_PADDING = VData.SPRITE_SIZE * 10
+    CHECKBOX_PADDING = VData.SPRITE_SIZE * 5
 
     def __init__(
         self,
@@ -32,14 +32,10 @@ class GToggleButton(GButton):
         width: int | None = None,
         selectable: bool = True,
     ) -> None:
-        self.pressed = pressed
-
-        self.checkbox = SpriteCircle(
+        self.checkbox: Sprite = SpriteCircle(
             radius=int(atlas.font_size * font_size_factor * 0.5),
-            color=arcade.color.GREEN if self.pressed else arcade.color.RED,
+            color=arcade.color.GREEN if pressed else arcade.color.RED,
         )
-        self._checkbox_sprite_list: SpriteList[Sprite] = SpriteList()
-        self._checkbox_sprite_list.append(self.checkbox)
 
         super().__init__(
             atlas=atlas,
@@ -53,10 +49,14 @@ class GToggleButton(GButton):
             anchor_y=anchor_y,
             multiline=multiline,
             width=width,
-            selectable=selectable
+            selectable=selectable,
         )
 
-        self.elements.append(self._checkbox_sprite_list)
+        self.pressed = pressed
+
+        self._sprite_list: SpriteList[Sprite] = SpriteList()
+        self._sprite_list.append(self.checkbox)
+        self.elements.append(self._sprite_list)
 
     def run_callback(self) -> None:
         self.pressed = not self.pressed
@@ -79,13 +79,5 @@ class GToggleButton(GButton):
         )
 
     @property
-    def left(self) -> float:
-        return self.text.rect.left
-
-    @property
-    def right(self) -> float:
-        return self.checkbox.rect.right
-
-    @property
-    def center(self) -> Vec2:
-        return (self.text.rect.center + self.checkbox.rect.center) / 2
+    def rect(self) -> Rect:
+        return self.text.rect.union(self.checkbox.rect)

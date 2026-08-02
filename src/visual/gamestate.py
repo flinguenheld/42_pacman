@@ -3,7 +3,9 @@ from src.visual.vdata import VData
 
 
 class Cheats:
-    def __init__(self) -> None:
+    def __init__(self, game_state: "GameState") -> None:
+        self.game_state = game_state
+
         self.god_mode: bool = False
         self.no_clip: bool = False
 
@@ -12,6 +14,9 @@ class Cheats:
 
     def toggle_no_clip(self) -> None:
         self.no_clip = not self.no_clip
+
+    def update_lives(self, lives: int) -> None:
+        self.game_state.lives = lives
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▄█░█▀▀░█▀▀░▀█▀░█▀█░▀█▀░█▀▀░░
@@ -33,7 +38,7 @@ class GameState:
 
         self.mode: GameState.Mode = GameState.Mode.CHASING
 
-        self.cheats: Cheats = Cheats()
+        self.cheats: Cheats = Cheats(self)
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####

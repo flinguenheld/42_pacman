@@ -67,4 +67,4 @@ class VCheats(GWindow):
     # ########################################################################
     # ############################################################## KEYS ####
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.on_key_press(symbol)
+        self.menu.on_key_press(symbol, modifiers)
