@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import arcade
 from enum import Enum
-from arcade import Sprite, Vec2, key
+from arcade import Vec2, key
 
 from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
@@ -55,99 +54,52 @@ class VEntityPlayer(VEntityMoving):
         super().__init__(atlas, maze, "player", maze.floor_center)
 
         self.gamestate: GameState = gamestate
-
         self.directions_from_keys: set[Vec2] = set()
-        self._direction_vector = (Vec2(0, 0), Vec2(0, 0))
-
-        self.saved_floor = self.current_floor
-
-        # QUESTION: Does the diagonal work with your keyboard ?
-
-    # ########################################################################
-    # ################################################## DIRECTION VECTOR ####
-    # TODO: To confirm
-    def update_direction_vector(self) -> None:
-        """
-        Save the combined vector of all currently pressed directions.
-        If no direction is pressed, returns a zero vector.
-        Normalize the vector to ensure consistent speed in diagonal.
-        """
-        self._direction_vector = (
-            self._direction_vector[1],
-            sum(self.directions_from_keys, Vec2(0, 0)).normalize(),
-        )
-
-    @property
-    def direction_previous(self) -> Vec2:
-        """Used by enemies logic"""
-        return self._direction_vector[0]
-
-    @property
-    def direction_current(self) -> Vec2:
-        return self._direction_vector[1]
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: float = 1 / 60) -> None:
-        self.update_direction_vector()
         self.update_velocity(delta_time)
+        self.update_position()
         self.update_texture()
-        self.resolve_wall_collisions()
-        self.update_maze_graph()
 
     # ########################################################################
-    # ################################################# UPDATE MAZE GRAPH ####
-    def update_maze_graph(self) -> None:
-        """If the player has moved to another floor, refresh the maze graph"""
-
-        current_floor = self.current_floor
-        if self.saved_floor != current_floor:
-            self.maze.update_graph_values(
-                self.maze.closest_floor_of(self.center)
-            )
-            # TODO: CLEAN THAT
-            # if VData.debug_on:
-            #     self.maze.bfs.print_debug(self.maze.graph_costs)
-
-            self.saved_floor = current_floor
-
-    # ########################################################################
-    # ########################################################## VELOCITY ####
+    # ################################################### UPDATE VELOCITY ####
     def update_velocity(self, delta_time: float) -> None:
-        """Update player movement based on pressed keys"""
+        """Update player movement based on pressed keys."""
 
         speed = self.apply_delta_time(self.gamestate.player_speed, delta_time)
+        direction = sum(self.directions_from_keys, Vec2(0, 0)).normalize()
 
-        # direction_vector = self.get_direction_vector()
-        self.change_x = self.direction_current.x * speed * delta_time
-        self.change_y = self.direction_current.y * speed * delta_time
+        self.change_x = direction.x * speed * delta_time
+        self.change_y = direction.y * speed * delta_time
 
     # ########################################################################
-    # ######################################################## COLLISIONS ####
-    def resolve_wall_collisions(self) -> None:
-        # Resolve movement per-axis to avoid corner tunneling
-        # and multi-wall phasing.
-        self.center_x += self.change_x
-        collided_x: list[Sprite] = arcade.check_for_collision_with_list(
-            self, self.maze.walls.sprites
-        )
-        if self.change_x > 0:
-            for wall in collided_x:
-                self.right = min(self.right, wall.left)
-        elif self.change_x < 0:
-            for wall in collided_x:
-                self.left = max(self.left, wall.right)
+    # ################################################### UPDATE POSITION ####
+    def update_position(self) -> None:
+        """
+        Update player position based on velocity.
+        Check if the new position is in floors.
+        If the player has moved in a new floor, update the maze graph.
+        """
+        if self.change_x or self.change_y:
+            new_position = self.center + Vec2(self.change_x, self.change_y)
 
-        self.center_y += self.change_y
-        collided_y: list[Sprite] = arcade.check_for_collision_with_list(
-            self, self.maze.walls.sprites
-        )
-        if self.change_y > 0:
-            for wall in collided_y:
-                self.top = min(self.top, wall.bottom)
-        elif self.change_y < 0:
-            for wall in collided_y:
-                self.bottom = max(self.bottom, wall.top)
+            # Still on current floor --
+            if self.is_in_sprite(new_position, self.current_floor):
+                self.center_x += self.change_x
+                self.center_y += self.change_y
+
+            else:
+                # Moved to a new floor --
+                next_floor = self.is_in_a_neigbhour(new_position)
+                if next_floor:
+                    self.center_x += self.change_x
+                    self.center_y += self.change_y
+
+                    # Update the floor and the maze graph costs !!
+                    self.current_floor = next_floor
+                    self.maze.update_graph_values(self.current_floor)
 
     # ########################################################################
     # ############################################################ ON KEY ####

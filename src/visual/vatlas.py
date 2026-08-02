@@ -1,10 +1,9 @@
-from arcade.types import Color
 import random
 import arcade
+from arcade.types import Color
 from typing import Any, Sequence
 from json import load as json_load
 from dataclasses import dataclass, field
-from src.visual.vdata import VStyles, VData
 from arcade import (
     TextureAnimationSprite,
     TextureAnimation,
@@ -12,6 +11,7 @@ from arcade import (
     Sprite,
     Vec2,
 )
+from src.visual.vdata import VStyles, VData
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░▀█▀░█░░░█▀▀░░

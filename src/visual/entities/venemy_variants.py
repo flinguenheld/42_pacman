@@ -1,7 +1,6 @@
 from arcade import Vec2
 
 from src.maze.maze import Maze
-from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gamestate import GameState
 from src.visual.entities.ventity_player import VEntityPlayer
@@ -30,9 +29,6 @@ class Johnny(VEntityEnemyCommon):
         super().__init__(0, atlas, maze, player, gamestate)
         self.speed *= 0.9
 
-    def get_target(self) -> Vec2:
-        return self.maze.closest_floor_of(self.player.center)
-
 
 class Michael(VEntityEnemyCommon):
     """
@@ -56,17 +52,17 @@ class Michael(VEntityEnemyCommon):
     ) -> None:
         super().__init__(1, atlas, maze, player, gamestate)
 
-    def get_target(self) -> Vec2:
-        # TODO: To confirm
-        if self.player.direction_previous != Vec2(0, 0):
-            player_direction = self.player.direction_previous
-        else:
-            player_direction = self.player.direction_current
+    # def get_target(self) -> Vec2:
+    #     # TODO: To confirm
+    #     if self.player.direction_previous != Vec2(0, 0):
+    #         player_direction = self.player.direction_previous
+    #     else:
+    #         player_direction = self.player.direction_current
 
-        distance_threshold = 3.0 * VData.SPRITE_SIZE
-        possible = self.player.center + (player_direction * distance_threshold)
+    #     distance_threshold = 3.0 * VData.SPRITE_SIZE
+    #     possible = self.player.center + (player_direction * distance_threshold)
 
-        return self.maze.closest_floor_of(possible)
+    #     return self.maze.closest_floor_of(possible)
 
 
 class Charlie(VEntityEnemyCommon):
@@ -90,31 +86,31 @@ class Charlie(VEntityEnemyCommon):
         super().__init__(2, atlas, maze, player, gamestate)
         self.speed = self.gamestate.player_speed * 0.8
 
-    def update_player_movement_buffer(self) -> None:
-        """
-        Updates the player movement buffer with the player's current position.
-        If the buffer has more than 3 seconds worth of positions, it pops the
-        oldest position.
-        """
-        self.player_movement_buffer.append(Vec2(*self.player.position))
-        if len(self.player_movement_buffer) > self.max_buffer_size:
-            self.player_movement_buffer.pop(0)
+    # def update_player_movement_buffer(self) -> None:
+    #     """
+    #     Updates the player movement buffer with the player's current position.
+    #     If the buffer has more than 3 seconds worth of positions, it pops the
+    #     oldest position.
+    #     """
+    #     self.player_movement_buffer.append(Vec2(*self.player.position))
+    #     if len(self.player_movement_buffer) > self.max_buffer_size:
+    #         self.player_movement_buffer.pop(0)
 
-    def update(self, delta_time: float = 1 / 60) -> None:
-        self.update_player_movement_buffer()
-        return super().update(delta_time)
+    # def update(self, delta_time: float = 1 / 60) -> None:
+    #     self.update_player_movement_buffer()
+    #     return super().update(delta_time)
 
-    def get_target(self) -> Vec2:
-        if not self.player_movement_buffer:
-            # If the buffer is empty, just return the player's
-            # current position.
-            possible = Vec2(*self.player.position)
-        else:
-            # Get the oldest position in the buffer, which is
-            # probably 3 seconds behind.
-            possible = self.player_movement_buffer[0]
+    # def get_target(self) -> Vec2:
+    #     if not self.player_movement_buffer:
+    #         # If the buffer is empty, just return the player's
+    #         # current position.
+    #         possible = Vec2(*self.player.position)
+    #     else:
+    #         # Get the oldest position in the buffer, which is
+    #         # probably 3 seconds behind.
+    #         possible = self.player_movement_buffer[0]
 
-        return self.maze.closest_floor_of(possible)
+    #     return self.maze.closest_floor_of(possible)
 
 
 class ReverseMichael(VEntityEnemyCommon):
@@ -141,16 +137,16 @@ class ReverseMichael(VEntityEnemyCommon):
     ) -> None:
         super().__init__(3, atlas, maze, player, gamestate)
 
-    def get_target(self) -> Vec2:
-        # TODO: To confirm
-        if self.player.direction_previous != Vec2(0, 0):
-            player_direction = self.player.direction_previous
-        else:
-            player_direction = self.player.direction_current
+    # def get_target(self) -> Vec2:
+    #     # TODO: To confirm
+    #     if self.player.direction_previous != Vec2(0, 0):
+    #         player_direction = self.player.direction_previous
+    #     else:
+    #         player_direction = self.player.direction_current
 
-        distance_threshold = 3.0 * VData.SPRITE_SIZE
-        possible = self.player.center + (
-            -player_direction * distance_threshold
-        )
+    #     distance_threshold = 3.0 * VData.SPRITE_SIZE
+    #     possible = self.player.center + (
+    #         -player_direction * distance_threshold
+    #     )
 
-        return self.maze.closest_floor_of(possible)
+    #     return self.maze.closest_floor_of(possible)

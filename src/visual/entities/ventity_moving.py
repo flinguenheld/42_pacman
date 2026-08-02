@@ -2,6 +2,7 @@ import arcade
 from arcade import Vec2
 
 from src.maze.maze import Maze
+from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.entities.ventity import VEntity
 
@@ -29,6 +30,11 @@ class VEntityMoving(VEntity):
     ) -> None:
         super().__init__(atlas, sprite_name, position)
         self.maze = maze
+
+        # TODO: Confirm that --
+        # Used by children to know where they are
+        # Has to be updated on after each move
+        self.current_floor = self.maze.closest_floor_of(self.center)
 
         # Texture helpers --
         self._current_direction: str = "wait"
@@ -86,8 +92,31 @@ class VEntityMoving(VEntity):
         return speed * MULTIPLIER * delta_time
 
     # ########################################################################
-    # ##################################################### CURRENT FLOOR ####
-    @property
-    def current_floor(self) -> Vec2:
-        """Helper which returns the closest floor of entity."""
-        return self.maze.closest_floor_of(self.center)
+    # ###################################################### IS IN SPRITE ####
+    def is_in_sprite(self, point: Vec2, sprite_center: Vec2) -> bool:
+        """
+        Return True if the given point is inside the square represented
+        by the sprite.
+        """
+
+        return (
+            point.x >= sprite_center.x - VData.SPRITE_SIZE // 2
+            and point.x <= sprite_center.x + VData.SPRITE_SIZE // 2
+            and point.y >= sprite_center.y - VData.SPRITE_SIZE // 2
+            and point.y <= sprite_center.y + VData.SPRITE_SIZE // 2
+        )
+
+    # ########################################################################
+    # ################################################# IS IN A NEIGHBOUR ####
+    def is_in_a_neigbhour(self, point: Vec2) -> Vec2 | None:
+        """
+        Get the neighbours of the current floor.
+        If the point is inside one of them, return its center.
+        Otherwise, return None.
+        """
+
+        for n in self.maze.graph_neighbours[self.current_floor]:
+            if self.is_in_sprite(point, n):
+                return n
+
+        return None
