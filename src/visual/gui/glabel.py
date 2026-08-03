@@ -26,7 +26,6 @@ class GLabel(GWidget):
         multiline: bool = False,
         width: int | None = None,  # Only for multilines
     ):
-
         super().__init__(atlas)
 
         if not color:
@@ -38,7 +37,7 @@ class GLabel(GWidget):
         if multiline and not width:
             width_for_multi = int(frame.width * 0.9)
 
-        self.text = Text(
+        self._text_widget = Text(
             text=text,
             x=frame.center_position.x + offset.x,
             y=frame.center_position.y + offset.y,
@@ -52,17 +51,17 @@ class GLabel(GWidget):
             width=width_for_multi,
         )
 
-        self.elements.append(self.text)
+        self.elements.append(self._text_widget)
 
     # ########################################################################
-    # ######################################################## PROPERTIES ####
+    # #################################################### GEO PROPERTIES ####
     @property
     def rect(self) -> Rect:
-        return self.text.rect
+        return self._text_widget.rect
 
     @property
     def left(self) -> float:
-        return self.text.rect.left
+        return self.rect.left
 
     @property
     def right(self) -> float:
@@ -71,3 +70,13 @@ class GLabel(GWidget):
     @property
     def center(self) -> Vec2:
         return self.rect.center
+
+    # ########################################################################
+    # ################################################### TEXT PROPERTIES ####
+    @property
+    def text(self) -> str:
+        return self._text_widget.text
+
+    @text.setter
+    def text(self, value: str) -> None:
+        self._text_widget.text = value

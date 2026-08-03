@@ -1,4 +1,3 @@
-import arcade
 from arcade.types import Color
 from arcade import Sprite, Vec2, key, SpriteList
 
@@ -6,13 +5,14 @@ from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.glabel import GLabel
+from src.visual.gui.gwidget import GWidget
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░▀█▀░█▀█░█▀█░█░█░▀█▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░█░░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░░▀░░░
-class GInput:
-    """Simple input which limits keys to the bare minimum"""
+class GInput(GWidget):
+    """Simple input which limits keys to the bare minimum."""
 
     MAX_LENGTH: int = 10
     FONT_SIZE_FACTOR: float = 2.5
@@ -24,6 +24,7 @@ class GInput:
         color: Color,
         offset: Vec2 = Vec2(0, 0),
     ):
+        super().__init__(atlas)
 
         font_size = atlas.font_size * GInput.FONT_SIZE_FACTOR
 
@@ -44,8 +45,8 @@ class GInput:
             frame=frame,
             text="Max 10 characters, alphanumeric and spaces only",
             offset=offset + Vec2(0, font_size * 1.4),
-            font_size_factor=0.8,
-            color=arcade.csscolor.RED,
+            font_size_factor=0.7,
+            color=color,
         )
 
         # Icon ########################
@@ -60,56 +61,52 @@ class GInput:
         self.icons = SpriteList[Sprite]()
         self.icons.append(self.icon)
 
-    # ########################################################################
-    # ############################################################## DRAW ####
-    def draw(self) -> None:
-        self.label.draw()
-        self.icons.draw()
-        if self.help_on:
-            self.help.draw()
+        # --
+        self.elements.extend([self.label, self.icons, self.help])
 
     # ########################################################################
-    # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
-        self.icons.update_animation(delta_time)
+    # ####################################################### KEY PRESSED ####
+    def key_press_management(self, symbol: int, modifiers: int) -> None:
 
-    def up_icon_position(self) -> None:
+        if symbol == key.BACKSPACE and self.text:
+            self.text = self.text[:-1]
+
+        elif len(self.text) < GInput.MAX_LENGTH:
+            if symbol >= key.A and symbol <= key.Z:
+                if modifiers & 0x1 == 0x1:
+                    self.text += chr(symbol - 32)
+                else:
+                    self.text += chr(symbol)
+
+            if symbol >= key.KEY_0 and symbol <= key.KEY_9:
+                self.text += chr(symbol)
+
+            if symbol >= key.NUM_0 and symbol <= key.NUM_9:
+                self.text += chr(symbol - 65408)
+
+            if symbol == key.SPACE:
+                self.text += chr(symbol)
+
+        # --
+        self.update_icon_position()
+
+    # ########################################################################
+    # ############################################## UPDATE ICON POSITION ####
+    def update_icon_position(self) -> None:
         if self.text:
             self.icon.center_x = self.label.right + VData.SPRITE_SIZE
         else:
             self.icon.center_x = self.label.right
 
     # ########################################################################
-    # ####################################################### KEY PRESSED ####
-    def key_press_management(self, symbol: int, modifiers: int) -> None:
-
-        if symbol == key.BACKSPACE and self.label.text:
-            self.label.text = self.label.text[:-1]
-
-        elif len(self.label.text) < GInput.MAX_LENGTH:
-            if symbol >= key.A and symbol <= key.Z:
-                if modifiers & 0x1 == 0x1:
-                    self.label.text += chr(symbol - 32)
-                else:
-                    self.label.text += chr(symbol)
-
-            if symbol >= key.KEY_0 and symbol <= key.KEY_9:
-                self.label.text += chr(symbol)
-
-            if symbol >= key.NUM_0 and symbol <= key.NUM_9:
-                self.label.text += chr(symbol - 65408)
-
-            if symbol == key.SPACE:
-                self.label.text += chr(symbol)
-
-        # --
-        self.up_icon_position()
-
-    # ########################################################################
     # ######################################################## PROPERTIES ####
     @property
     def text(self) -> str:
         return self.label.text
+
+    @text.setter
+    def text(self, value: str) -> None:
+        self.label.text = value
 
     # ########################################################################
     # ####################################################### TOGGLE HELP ####
