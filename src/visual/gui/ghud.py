@@ -124,7 +124,7 @@ class VHud:
         self.frame.draw()
         self.icons.draw(pixelated=True)
 
-        self.fields["score"].text = self.gamestate.score
+        self.fields["score"].text = str(self.gamestate.score)
         self.fields["lives"].text = f"{self.gamestate.lives:>2}"
         self.fields["timer"].text = self.get_time_left()
 

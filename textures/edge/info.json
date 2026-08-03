@@ -636,6 +636,26 @@
     {
       "name": "debug_square",
       "nb": 1
+    },
+    {
+      "name": "checkbox_off",
+      "nb": 4,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "checkbox_on",
+      "nb": 4,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
     }
   ]
 }

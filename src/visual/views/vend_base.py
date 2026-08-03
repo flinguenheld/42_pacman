@@ -9,7 +9,6 @@ from src.visual.gui.glabel import GLabel
 from src.visual.gui.ginput import GInput
 from src.visual.gui.gwindow import GWindow
 from src.visual.gui.titles.gtitle import GTitle
-from src.visual.gui.gmenu_entry import GMenuEntry
 from src.high_scores.high_scores import HighScores
 
 
@@ -65,7 +64,7 @@ class VEndBase(GWindow):
         self.input = GInput(
             atlas=self.atlas,
             frame=self.frame,
-            offset_from_center_frame=Vec2(0, -60),
+            offset_from_frame_center=Vec2(0, -60),
             color=self.atlas.get_color("high_scores"),
         )
 

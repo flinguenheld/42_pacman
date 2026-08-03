@@ -50,8 +50,9 @@ class GButton(GLabel):
     # ########################################################################
     # ####################################################### KEY PRESSED ####
     def on_key_press(self, symbol: int) -> None:
-        match symbol:
-            case arcade.key.ENTER | arcade.key.NUM_ENTER | arcade.key.SPACE:
-                self.run_callback()
-            case _:
-                pass
+        if symbol in [
+            arcade.key.ENTER,
+            arcade.key.NUM_ENTER,
+            arcade.key.SPACE,
+        ]:
+            self.run_callback()

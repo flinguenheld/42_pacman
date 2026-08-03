@@ -22,7 +22,7 @@ class GInput(GWidget):
         atlas: VAtlas,
         frame: GFrame,
         color: Color,
-        offset_from_center_frame: Vec2 = Vec2(0, 0),
+        offset_from_frame_center: Vec2 = Vec2(0, 0),
     ):
         super().__init__(atlas, frame)
 
@@ -33,7 +33,7 @@ class GInput(GWidget):
             text="",
             atlas=atlas,
             frame=frame,
-            offset_from_center_frame=offset_from_center_frame,
+            offset_from_center_frame=offset_from_frame_center,
             font_size_factor=GInput.FONT_SIZE_FACTOR,
             color=color,
         )
@@ -44,7 +44,7 @@ class GInput(GWidget):
             atlas=atlas,
             frame=frame,
             text="Max 10 characters, alphanumeric and spaces only",
-            offset_from_center_frame=offset_from_center_frame
+            offset_from_center_frame=offset_from_frame_center
             + Vec2(0, font_size * 1.4),
             font_size_factor=0.7,
             color=color,

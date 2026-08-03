@@ -20,6 +20,7 @@ class GMenuEntry(GWidget):
     """
 
     FONT_SIZE_FACTOR: float = 1.7
+    PADDING_ICON = VData.SPRITE_SIZE * 3
 
     def __init__(
         self,
@@ -55,14 +56,16 @@ class GMenuEntry(GWidget):
 
         tile_name = random.choice(possible_tiles)
         self.icons: SpriteList[Sprite] = SpriteList()
-        padd = VData.SPRITE_SIZE
 
         # On the left --
         tile = self.atlas.pick_tile(f"{tile_name}_right")
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(self.button.left - padd * 1.5, self.button.center.y - 2),
+                Vec2(
+                    self.button.left - GMenuEntry.PADDING_ICON * 1.1,
+                    self.button.center.y - 2,
+                ),
             )
         )
 
@@ -71,7 +74,10 @@ class GMenuEntry(GWidget):
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(self.button.right + padd * 1.2, self.button.center.y - 2),
+                Vec2(
+                    self.button.right + GMenuEntry.PADDING_ICON,
+                    self.button.center.y - 2,
+                ),
             )
         )
 

@@ -1,7 +1,7 @@
 import arcade
-from src.visual.vdata import VNames
 from arcade import Vec2
 
+from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
