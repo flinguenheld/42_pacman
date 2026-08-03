@@ -1,7 +1,7 @@
 import arcade
 from math import ceil
 from arcade.types import Color
-from arcade import Text, Vec2, SpriteList
+from arcade import Vec2, SpriteList
 
 from src.maze.maze import Maze
 from src.visual.vdata import VData, DebugMode
@@ -36,8 +36,8 @@ class VHud:
             nb_rows=3,
         )
         self.icons: SpriteList = arcade.SpriteList()
-        self.fields_debug: dict[str, Text] = dict()
-        self.fields: dict[str, Text] = dict()
+        self.fields_debug: dict[str, GLabel] = dict()
+        self.fields: dict[str, GLabel] = dict()
 
         self.build_fields()
         self.background = GBackground(atlas)

@@ -66,7 +66,7 @@ class VWelcome(GWindow):
                     },
                 ),
             ],
-            center_top_first=Vec2(0, 380),
+            y_first_entry_from_frame_center=380,
         )
 
         # Scores ####################

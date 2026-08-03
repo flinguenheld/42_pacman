@@ -6,7 +6,7 @@ from src.visual.gui.gmenu import GMenu
 from src.visual.gui.glabel import GLabel
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
-from src.visual.gui.gmenu_entry import GMenuEntry
+from src.visual.gui.gbutton import GButton
 from src.visual.gui.titles.gtitle_instructions import GTitleInstructions
 
 
@@ -29,13 +29,19 @@ class VIinstructions(GWindow):
         # --
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "OK": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_PREVIOUS],
+            frame=self.frame,
+            widgets=[
+                (
+                    GButton,
+                    {
+                        "text": "OK",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_PREVIOUS
+                        ),
+                    },
                 ),
-            },
-            center_top_first=Vec2(self.frame.center_position.x, 100),
+            ],
+            y_first_entry_from_frame_center=-450,
         )
 
         self.to_draw_and_update.append(self.menu)

@@ -27,7 +27,7 @@ class GMenuEntry(GWidget):
         frame: GFrame,
         button_class: Type[GButton],
         kwargs: dict[str, Any],
-        offset_from_center_frame: Vec2,
+        offset_from_frame_center: Vec2,
     ) -> None:
         super().__init__(atlas, frame)
         self.is_hoover = False
@@ -36,7 +36,7 @@ class GMenuEntry(GWidget):
         # No need to add them in the Views
         kwargs["atlas"] = atlas
         kwargs["frame"] = frame
-        kwargs["offset_from_center_frame"] = offset_from_center_frame
+        kwargs["offset_from_center_frame"] = offset_from_frame_center
         kwargs["color"] = self.atlas.get_color("menu_font")
         self.button = button_class(**kwargs)
 

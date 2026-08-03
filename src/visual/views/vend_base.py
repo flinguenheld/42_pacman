@@ -1,3 +1,4 @@
+from src.visual.gui.gbutton import GButton
 from arcade import Vec2
 
 from src.visual.vdata import VNames
@@ -48,7 +49,7 @@ class VEndBase(GWindow):
             font_size_factor=1.7,
             text=text,
             multiline=True,
-            offset=Vec2(0, 290),
+            offset_from_center_frame=Vec2(0, 290),
         )
 
         # Request ##########################
@@ -56,7 +57,7 @@ class VEndBase(GWindow):
             atlas=self.atlas,
             frame=self.frame,
             text="Enter your name:",
-            offset=Vec2(0, 90),
+            offset_from_center_frame=Vec2(0, 90),
             color=self.atlas.get_color("high_scores"),
         )
 
@@ -64,24 +65,33 @@ class VEndBase(GWindow):
         self.input = GInput(
             atlas=self.atlas,
             frame=self.frame,
-            offset=Vec2(0, -60),
+            offset_from_center_frame=Vec2(0, -60),
             color=self.atlas.get_color("high_scores"),
         )
 
         # Menu #############################
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "SAVE": GMenuEntry.ToCall(
-                    func=self.process_input,
-                    args=[],
+            frame=self.frame,
+            widgets=[
+                (
+                    GButton,
+                    {
+                        "text": "SAVE",
+                        "callback": self.process_input,
+                    },
                 ),
-                "QUIT": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_WELCOME],
+                (
+                    GButton,
+                    {
+                        "text": "QUIT",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_WELCOME
+                        ),
+                    },
                 ),
-            },
-            center_top_first=Vec2(self.frame.center_position.x, 150),
+            ],
+            y_first_entry_from_frame_center=-245,
         )
 
         # --

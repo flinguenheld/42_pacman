@@ -1,11 +1,9 @@
-from arcade import Vec2
-
 from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwindow import GWindow
-from src.visual.gui.gmenu_entry import GMenuEntry
+from src.visual.gui.gbutton import GButton
 from src.visual.gui.titles.gtitle_pause import GTitlePause
 
 
@@ -33,21 +31,35 @@ class VPause(GWindow):
 
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "RESUME": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME_RESUME],
+            frame=self.frame,
+            widgets=[
+                (
+                    GButton,
+                    {
+                        "text": "RESUME",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_GAME_RESUME
+                        ),
+                    },
                 ),
-                "INSTRUCTIONS": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_INSTRUCTIONS],
+                (
+                    GButton,
+                    {
+                        "text": "INSTRUCTIONS",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_INSTRUCTIONS
+                        ),
+                    },
                 ),
-                "GIVE UP": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_WELCOME],
+                (
+                    GButton,
+                    {
+                        "text": "GIVE UP",
+                        "callback": VNames.VIEW_WELCOME,
+                    },
                 ),
-            },
-            center_top_first=Vec2(self.frame.center_position.x, 280),
+            ],
+            y_first_entry_from_frame_center=85,
         )
 
         self.to_draw_and_update.append(self.menu)
