@@ -42,9 +42,6 @@ class GButton(GLabel):
         self.update_color()
         self.callback = callback
 
-    # TODO: Check if we even need the argument in the callback
-    # If not, then we can just define Callback as "Callable[[], None]"
-    # and simplify things a lot
     def run_callback(self) -> None:
         callback: Any = self.callback
         sig = inspect.signature(callback)
