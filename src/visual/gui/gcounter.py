@@ -14,7 +14,7 @@ class GCounter(GButton):
     When the button is pressed, it stays pressed until it is pressed again.
     """
 
-    CHECKBOX_PADDING = VData.SPRITE_SIZE * 5
+    COUNTER_PADDING = VData.SPRITE_SIZE * 5
 
     def __init__(
         self,
@@ -91,12 +91,12 @@ class GCounter(GButton):
         offset = Vec2(
             offset.x
             - (self.counter_text.rect.width / 2)
-            - (self.CHECKBOX_PADDING / 2),
+            - (self.COUNTER_PADDING / 2),
             offset.y,
         )
         super().update_offset(offset)
         self.counter_text.position = Vec2(
-            self.text.rect.right + self.CHECKBOX_PADDING,
+            self.text.rect.right + self.COUNTER_PADDING,
             self.text.rect.center.y,
         )
 
