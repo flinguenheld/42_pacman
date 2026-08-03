@@ -1,15 +1,16 @@
-from arcade import Text, Vec2
 from arcade.types import Color
+from arcade import Vec2, Text, Rect
 
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
+from src.visual.gui.gwidget import GWidget
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░░░█▀█░█▀▄░█▀▀░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░░░█▀█░█▀▄░█▀▀░█░░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░░
-class GLabel(Text):
-    """Text wrapper with common default values"""
+class GLabel(GWidget):
+    """Widget which manages an arcade.Text with common default values."""
 
     def __init__(
         self,
@@ -26,6 +27,8 @@ class GLabel(Text):
         width: int | None = None,  # Only for multilines
     ):
 
+        super().__init__(atlas)
+
         if not color:
             color = atlas.get_color("menu_font")
         if not text:
@@ -35,7 +38,7 @@ class GLabel(Text):
         if multiline and not width:
             width_for_multi = int(frame.width * 0.9)
 
-        super().__init__(
+        self.text = Text(
             text=text,
             x=frame.center_position.x + offset.x,
             y=frame.center_position.y + offset.y,
@@ -48,3 +51,23 @@ class GLabel(Text):
             multiline=multiline,
             width=width_for_multi,
         )
+
+        self.elements.append(self.text)
+
+    # ########################################################################
+    # ######################################################## PROPERTIES ####
+    @property
+    def rect(self) -> Rect:
+        return self.text.rect
+
+    @property
+    def left(self) -> float:
+        return self.text.rect.left
+
+    @property
+    def right(self) -> float:
+        return self.rect.right
+
+    @property
+    def center(self) -> Vec2:
+        return self.rect.center
