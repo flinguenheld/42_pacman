@@ -1,5 +1,7 @@
 from typing import Any
+
 from src.visual.vatlas import VAtlas
+from src.visual.gui.gframe import GFrame
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░█░▀█▀░█▀▄░█▀▀░█▀▀░▀█▀░░
@@ -12,8 +14,9 @@ class GWidget:
     draw/update elements.
     """
 
-    def __init__(self, atlas: VAtlas) -> None:
+    def __init__(self, atlas: VAtlas, frame: GFrame) -> None:
         self.atlas = atlas
+        self.frame = frame
         self.elements: list[Any] = []
 
     # ########################################################################

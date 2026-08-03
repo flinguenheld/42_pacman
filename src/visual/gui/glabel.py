@@ -17,7 +17,7 @@ class GLabel(GWidget):
         atlas: VAtlas,
         frame: GFrame,
         text: str = "",
-        offset: Vec2 = Vec2(0, 0),
+        offset_from_center_frame: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1,
         color: Color | None = None,
         align: str = "center",
@@ -26,7 +26,7 @@ class GLabel(GWidget):
         multiline: bool = False,
         width: int | None = None,  # Only for multilines
     ):
-        super().__init__(atlas)
+        super().__init__(atlas, frame)
 
         if not color:
             color = atlas.get_color("menu_font")
@@ -39,8 +39,8 @@ class GLabel(GWidget):
 
         self._text_widget = Text(
             text=text,
-            x=frame.center_position.x + offset.x,
-            y=frame.center_position.y + offset.y,
+            x=frame.center_position.x + offset_from_center_frame.x,
+            y=frame.center_position.y + offset_from_center_frame.y,
             font_name=atlas.font_name,
             font_size=atlas.font_size * font_size_factor,
             align=align,
@@ -54,7 +54,7 @@ class GLabel(GWidget):
         self.elements.append(self._text_widget)
 
     # ########################################################################
-    # #################################################### GEO PROPERTIES ####
+    # ########################################################## GEOMETRY ####
     @property
     def rect(self) -> Rect:
         return self._text_widget.rect
@@ -72,7 +72,7 @@ class GLabel(GWidget):
         return self.rect.center
 
     # ########################################################################
-    # ################################################### TEXT PROPERTIES ####
+    # ############################################################## TEXT ####
     @property
     def text(self) -> str:
         return self._text_widget.text
@@ -80,3 +80,13 @@ class GLabel(GWidget):
     @text.setter
     def text(self, value: str) -> None:
         self._text_widget.text = value
+
+    # ########################################################################
+    # ############################################################# COLOR ####
+    @property
+    def color(self) -> Color:
+        return self._text_widget.color
+
+    @color.setter
+    def color(self, value: Color) -> None:
+        self._text_widget.color = value

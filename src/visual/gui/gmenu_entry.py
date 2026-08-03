@@ -1,61 +1,52 @@
-from __future__ import annotations
 import random
-
-from typing import Callable, Any
-from dataclasses import dataclass
-from arcade import Vec2, Text, SpriteList
+from typing import Any, Type
+from arcade import Vec2, SpriteList, Sprite
 
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
+from src.visual.gui.gframe import GFrame
+from src.visual.gui.gwidget import GWidget
+from src.visual.gui.gbutton import GButton
 from src.visual.entities.ventity_enemy import VEntityEnemyCommon
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▄█░█▀▀░█▀█░█░█░░░█▀▀░█▀█░▀█▀░█▀▄░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█░█░█▀▀░█░█░█░█░░░█▀▀░█░█░░█░░█▀▄░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀▀░░░▀▀▀░▀░▀░░▀░░▀░▀░░▀░░░
-class GMenuEntry:
+class GMenuEntry(GWidget):
     """
     Manage an entry for GMenu.
     Toggle its active property to draw an icon and with a special color.
-    Save a ToCall object to launch with call_action().
     """
 
     FONT_SIZE_FACTOR: float = 1.7
 
-    @dataclass
-    class ToCall:
-        func: Callable
-        args: list[Any]
-
     def __init__(
         self,
         atlas: VAtlas,
-        to_print: str,
-        to_call: ToCall,
-        center: Vec2,
+        frame: GFrame,
+        button_class: Type[GButton],
+        kwargs: dict[str, Any],
+        offset_from_center_frame: Vec2,
     ) -> None:
+        super().__init__(atlas, frame)
+        self.is_hoover = False
 
-        self.atlas = atlas
-        self.to_call = to_call
-        self.is_on = False
+        # Since all entries are Buttons, they will need these arguments
+        # No need to add them in the Views
+        kwargs["atlas"] = atlas
+        kwargs["frame"] = frame
+        kwargs["offset_from_center_frame"] = offset_from_center_frame
+        kwargs["color"] = self.atlas.get_color("menu_font")
+        self.button = button_class(**kwargs)
 
-        # Text --
-        self.text = Text(
-            text=to_print,
-            x=center.x,
-            y=center.y,
-            font_name=self.atlas.font_name,
-            font_size=self.atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR,
-            align="center",
-            anchor_x="center",
-            anchor_y="center",
-            color=atlas.get_color("menu_font"),
-        )
+        # --
+        self.setup_icons()
 
-        # Icons --
-        shift = self.text.content_width / 2 + VData.SPRITE_SIZE
-
-        # QUESTION: Is it clean ?
+    # ########################################################################
+    # ####################################################### SETUP ICONS ####
+    def setup_icons(self) -> None:
+        # Select the icon --
         possible_tiles = ["player"]
         for id in range(self.atlas.nb_of_enemies):
             possible_tiles.append(
@@ -63,53 +54,50 @@ class GMenuEntry:
             )
 
         tile_name = random.choice(possible_tiles)
+        self.icons: SpriteList[Sprite] = SpriteList()
+        padd = VData.SPRITE_SIZE
 
-        self.icons: SpriteList = SpriteList()
+        # On the left --
         tile = self.atlas.pick_tile(f"{tile_name}_right")
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(center.x - shift - 5, center.y - 5),
+                Vec2(self.button.left - padd * 1.5, self.button.center.y - 2),
             )
         )
 
+        # On the right --
         tile = self.atlas.pick_tile(f"{tile_name}_left")
         self.icons.append(
             self.atlas.tile_to_sprite(
                 tile,
-                Vec2(center.x + shift, center.y - 5),
+                Vec2(self.button.right + padd * 1.2, self.button.center.y - 2),
             )
         )
 
     # ########################################################################
-    # ####################################################### CALL ACTION ####
-    def call_action(self) -> None:
-        self.to_call.func(*self.to_call.args)
-
-    # ########################################################################
     # ##################################################### TOGGLE ACTIVE ####
-    @property
-    def active(self) -> bool:
-        return self.is_on
-
-    @active.setter
-    def active(self, value: bool) -> None:
-        if value:
-            self.text.color = self.atlas.get_color("menu_font_active")
+    def toggle_hoover(self) -> None:
+        self.is_hoover = not self.is_hoover
+        if self.is_hoover:
+            self.button.color = self.atlas.get_color("menu_font_active")
         else:
-            self.text.color = self.atlas.get_color("menu_font")
-
-        self.is_on = value
+            self.button.color = self.atlas.get_color("menu_font")
 
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
-        self.text.draw()
+        self.button.draw()
 
-        if self.is_on:
+        if self.is_hoover:
             self.icons.draw(pixelated=True)
 
     # ########################################################################
     # ############################################################ UPDATE ####
     def update(self, delta_time: int | float) -> None:
         self.icons.update_animation(delta_time)
+
+    # ########################################################################
+    # ################################################ HANDLE KEY PRESSES ####
+    def on_key_press(self, symbol: int) -> None:
+        self.button.on_key_press(symbol)

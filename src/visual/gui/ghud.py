@@ -95,7 +95,7 @@ class VHud:
             frame=self.frame,
             align=anchor_x,
             anchor_x=anchor_x,
-            offset=Vec2(x, 2),
+            offset_from_center_frame=Vec2(x, 2),
             color=color,
         )
 

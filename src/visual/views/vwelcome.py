@@ -1,13 +1,13 @@
 import arcade
+from src.visual.vdata import VNames
 from arcade import Vec2
 
-from src.visual.vdata import VNames
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gmenu import GMenu
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.glabel import GLabel
+from src.visual.gui.gbutton import GButton
 from src.visual.gui.gwindow import GWindow
-from src.visual.gui.gmenu_entry import GMenuEntry
 from src.high_scores.high_scores import HighScores
 from src.visual.gui.titles.gtitle_pacman import GTitlePacman
 
@@ -38,21 +38,35 @@ class VWelcome(GWindow):
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
-            choices={
-                "PLAY": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_GAME_NEW],
+            frame=self.frame,
+            widgets=[
+                (
+                    GButton,
+                    {
+                        "text": "PLAY",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_GAME_NEW
+                        ),
+                    },
                 ),
-                "INSTRUCTIONS": GMenuEntry.ToCall(
-                    func=self.window.switch_view,
-                    args=[VNames.VIEW_INSTRUCTIONS],
+                (
+                    GButton,
+                    {
+                        "text": "INSTRUCTIONS",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_INSTRUCTIONS
+                        ),
+                    },
                 ),
-                "EXIT": GMenuEntry.ToCall(
-                    func=arcade.exit,
-                    args=[],
+                (
+                    GButton,
+                    {
+                        "text": "EXIT",
+                        "callback": arcade.exit,
+                    },
                 ),
-            },
-            center_top_first=Vec2(self.frame.center_position.x, 820),
+            ],
+            center_top_first=Vec2(0, 380),
         )
 
         # Scores ####################
@@ -61,7 +75,7 @@ class VWelcome(GWindow):
             frame=self.frame,
             font_size_factor=1.3,
             text="High scores",
-            offset=Vec2(0, 120),
+            offset_from_center_frame=Vec2(0, 120),
             color=self.atlas.get_color("high_scores"),
         )
         self.text_highscores = GLabel(
@@ -69,7 +83,7 @@ class VWelcome(GWindow):
             frame=self.frame,
             text=str(HighScores()),
             multiline=True,
-            offset=Vec2(0, -170),
+            offset_from_center_frame=Vec2(0, -170),
             color=self.atlas.get_color("high_scores"),
         )
 
