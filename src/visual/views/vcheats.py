@@ -62,6 +62,7 @@ class VCheats(GWindow):
                 ),
             ],
             y_first_entry_from_frame_center=100,
+            extra_line_spaces=[1],
         )
 
         self.to_draw_and_update.append(self.menu)

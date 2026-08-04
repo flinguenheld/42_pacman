@@ -1,6 +1,6 @@
-from typing import Any, Tuple, Type
 import arcade
 from arcade import Vec2
+from typing import Any, Tuple, Type
 
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
@@ -18,6 +18,8 @@ class GMenu(GWidget):
     Give a dict of GMenuEntry.ToCall and the position of the text on the top.
 
     The menu position is set from the frame center.
+
+    Use extra_line_spaces to add a padding at the given indexes.
     """
 
     def __init__(
@@ -26,13 +28,14 @@ class GMenu(GWidget):
         frame: GFrame,
         widgets: list[Tuple[Type[GButton], dict[str, Any]]],
         y_first_entry_from_frame_center: int | float,
+        extra_line_spaces: list[int] = list(),
     ) -> None:
         super().__init__(atlas, frame)
 
         self.entries: list[GMenuEntry] = []
 
         # Create and set button positions --
-        for class_type, kwargs in widgets:
+        for i, (class_type, kwargs) in enumerate(widgets):
             new_entry = GMenuEntry(
                 atlas=self.atlas,
                 frame=frame,
@@ -43,13 +46,18 @@ class GMenu(GWidget):
                 ),
             )
 
-            y_first_entry_from_frame_center -= (
-                atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.6
-            )
+            # Ligne space --
+            if i in extra_line_spaces:
+                space = atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 3
+            else:
+                space = atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.7
+            y_first_entry_from_frame_center -= space
 
+            # --
             self.entries.append(new_entry)
             self.elements.append(new_entry)  # Manage draw & update
 
+        # --
         self.current = 0
         self.entries[self.current].toggle_hoover()
 
