@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Callable
-
 from arcade import Vec2, key
 
 from src.maze.maze import Maze
@@ -81,49 +79,45 @@ class VEntityPlayer(VEntityMoving):
     def update_position(self) -> None:
         """
         Update player position based on velocity.
-        Check if the new position is in floors.
+        Check per axis, if the new position is in floors.
+
         If the player has moved in a new floor, update the maze graph.
         """
 
-        def _move_center_x(delta: float) -> None:
-            self.center_x += delta
+        def can_move_on(position: Vec2) -> bool:
+            return (
+                self.is_in_sprite(position, self.current_floor)
+                or self.is_in_a_neigbhour(position) is not None
+            )
 
-        def _move_center_y(delta: float) -> None:
-            self.center_y += delta
+        final_position = self.center
 
-        self._update_axis(
-            delta=self.change_x,
-            new_position=self.center + Vec2(self.change_x, 0),
-            move=_move_center_x,
-        )
-        self._update_axis(
-            delta=self.change_y,
-            new_position=self.center + Vec2(0, self.change_y),
-            move=_move_center_y,
-        )
+        # Can move on x ? --
+        if can_move_on(self.center + Vec2(self.change_x, 0)):
+            final_position += Vec2(self.change_x, 0)
+        else:
+            self.change_x = 0  # Set 0 to avoid sprite update
 
-    def _update_axis(
-        self,
-        delta: float,
-        new_position: Vec2,
-        move: Callable[[float], None],
-    ) -> None:
-        if not delta:
-            return
+        # Can move on y ? --
+        if can_move_on(self.center + Vec2(0, self.change_y)):
+            final_position += Vec2(0, self.change_y)
+        else:
+            self.change_y = 0
 
-        # Still on current floor --
-        if self.is_in_sprite(new_position, self.current_floor):
-            move(delta)
-            return
+        # --
+        if final_position != self.center:
+            # Is still on current floor ? --
+            if self.is_in_sprite(final_position, self.current_floor):
+                self.center = final_position
 
-        # Moved to a new floor --
-        next_floor = self.is_in_a_neigbhour(new_position)
-        if next_floor:
-            move(delta)
+            # Has moved to a new floor ? --
+            next_floor = self.is_in_a_neigbhour(final_position)
+            if next_floor:
+                self.center = final_position
 
-            # Update the floor and the maze graph costs !!
-            self.current_floor = next_floor
-            self.maze.update_graph_values(self.current_floor)
+                # Update the floor and the maze graph costs !!
+                self.current_floor = next_floor
+                self.maze.update_graph_values(self.current_floor)
 
     # ########################################################################
     # ############################################################ ON KEY ####
