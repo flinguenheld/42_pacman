@@ -80,7 +80,7 @@ class SFloorDebug:
         if VData.debug_mode == DebugMode.ALGO:
             for point, cost in graph_costs.items():
                 self.squares[point].color = colour(cost)
-                if cost <= 20:
+                if cost <= VData.FLOOR_DEBUG_MAX_NUMBERS:
                     self.texts[point].text = f"{cost}"
                 else:
                     self.texts[point].text = ""
