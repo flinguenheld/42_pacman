@@ -1,10 +1,33 @@
+from enum import Enum
 from src.visual.vdata import VData
+
+
+# QUESTION: cheats is in game states and game state is in cheats :|
+class Cheats:
+    def __init__(self, game_state: "GameState") -> None:
+        self.game_state = game_state
+
+        self.god_mode: bool = False
+        self.no_clip: bool = False
+
+    def toggle_god_mode(self) -> None:
+        self.god_mode = not self.god_mode
+
+    def toggle_no_clip(self) -> None:
+        self.no_clip = not self.no_clip
+
+    def update_lives(self, lives: int) -> None:
+        self.game_state.lives = lives
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▄█░█▀▀░█▀▀░▀█▀░█▀█░▀█▀░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
+    class Mode(Enum):
+        CHASING = "chasing"
+        FLEEING = "fleeing"
+
     def __init__(self) -> None:
         # TODO: These values have to be set with the config
         self.score: int = 0
@@ -13,6 +36,10 @@ class GameState:
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
+
+        self.mode: GameState.Mode = GameState.Mode.CHASING
+
+        self.cheats: Cheats = Cheats(self)
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####

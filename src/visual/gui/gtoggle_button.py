@@ -1,8 +1,7 @@
 import arcade
+from arcade import Vec2
 from arcade.types import Color
-from arcade import Sprite, SpriteList, Vec2
 
-from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gbutton import GButton
@@ -18,19 +17,18 @@ class GToggleButton(GButton):
        - not pressed
 
     The value can be changed with arrows.
+    Each change launches the callback function.
     """
-
-    CHECKBOX_PADDING = VData.SPRITE_SIZE * 5
 
     def __init__(
         self,
         atlas: VAtlas,
         frame: GFrame,
         callback: GButton.Callback,
+        text: str,
         pressed: bool = False,
         offset_from_center_frame: Vec2 = Vec2(0, 0),
         font_size_factor: float = 1.7,
-        text: str = "",
         color: Color | None = None,
     ) -> None:
 
@@ -43,37 +41,24 @@ class GToggleButton(GButton):
             text=text,
             color=color,
         )
+
+        # --
         self.pressed = pressed
-        self.sprite_list: SpriteList[Sprite] = SpriteList()
-        self.refresh_icons()
+        self.base_text = text
+        self._update_text()
 
     # ########################################################################
-    # ##################################################### REFRESH ICONS ####
-    def refresh_icons(self) -> None:
-        self.sprite_list.clear()
-
+    # ####################################################### UPDATE TEXT ####
+    def _update_text(self) -> None:
         if self.pressed:
-            tile = self.atlas.pick_tile("checkbox_on")
+            self.text = f"{self.base_text}:  ON"
         else:
-            tile = self.atlas.pick_tile("checkbox_off")
-
-        icon_position = Vec2(
-            self.center.x + self.content_width / 2 + VData.SPRITE_SIZE,
-            self.center.y - 4,
-        )
-
-        self.icon = self.atlas.tile_to_sprite(tile, icon_position)
-        self.sprite_list.append(self.icon)
-
-    # ########################################################################
-    # ############################################################## DRAW ####
-    def draw(self) -> None:
-        super().draw()
-        self.sprite_list.draw(pixelated=True)
+            self.text = f"{self.base_text}:  OFF"
 
     # ########################################################################
     # ######################################################### KEY PRESS ####
     def on_key_press(self, symbol: int) -> None:
         if symbol in [arcade.key.LEFT, arcade.key.RIGHT]:
             self.pressed = not self.pressed
-            self.refresh_icons()
+            self._update_text()
+            self.run_callback()

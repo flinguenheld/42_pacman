@@ -304,6 +304,9 @@ class VGame(arcade.View):
                     self.spawn_player()
                     self.spawn_enemies()
 
+                case arcade.key.C:
+                    self.window.switch_view(VNames.VIEW_CHEATS)
+
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates
 

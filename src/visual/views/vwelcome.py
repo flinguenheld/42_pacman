@@ -1,5 +1,3 @@
-from src.visual.gui.gtoggle_button import GToggleButton
-from src.visual.gui.gcounter import GCounter
 import arcade
 from arcade import Vec2
 
@@ -42,20 +40,6 @@ class VWelcome(GWindow):
             atlas=self.atlas,
             frame=self.frame,
             widgets=[
-                (
-                    GCounter,
-                    {
-                        "text": "TTEST",
-                        "callback": lambda: None,
-                    },
-                ),
-                (
-                    GToggleButton,
-                    {
-                        "text": "TTEST",
-                        "callback": lambda: None,
-                    },
-                ),
                 (
                     GButton,
                     {

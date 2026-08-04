@@ -10,6 +10,7 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░░░█░█░█▀█░█░█░█▀▀░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
+    VIEW_CHEATS = auto()
     VIEW_GAME_RESUME = auto()
     VIEW_GAME_NEW = auto()
     VIEW_GAMEOVER = auto()

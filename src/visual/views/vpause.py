@@ -17,7 +17,7 @@ class VPause(GWindow):
             title=GTitlePause(atlas),
             frame=GFrame(
                 atlas=atlas,
-                nb_rows=14,
+                nb_rows=15,
                 nb_cols=24,
                 bevels=True,
             ),
@@ -54,12 +54,21 @@ class VPause(GWindow):
                 (
                     GButton,
                     {
+                        "text": "CHEATS",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_CHEATS,
+                        ),
+                    },
+                ),
+                (
+                    GButton,
+                    {
                         "text": "GIVE UP",
                         "callback": VNames.VIEW_WELCOME,
                     },
                 ),
             ],
-            y_first_entry_from_frame_center=85,
+            y_first_entry_from_frame_center=90,
         )
 
         self.to_draw_and_update.append(self.menu)
