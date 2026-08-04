@@ -38,6 +38,7 @@ class VGame(arcade.View):
         self.camera_hud = arcade.Camera2D()
 
         self.gamestate = gamestate
+        self.cheats = gamestate.cheats
 
         self.setup()
 
@@ -256,7 +257,8 @@ class VGame(arcade.View):
         ):
             match enemy.mode:
                 case VEntityEnemyCommon.Mode.CHASING:
-                    self.player_death()
+                    if not self.cheats.god_mode:
+                        self.player_death()
 
                 case VEntityEnemyCommon.Mode.FLEEING:
                     enemy.mode = VEntityEnemyCommon.Mode.DEAD
