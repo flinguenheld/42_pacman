@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import arcade
 from arcade import Vec2
 from arcade.types import Color
@@ -21,7 +23,7 @@ class GCounter(GButton):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: GButton.Callback,
+        callback: GButton.Callback[GCounter],
         text: str,
         color: Color,
         offset_from_center_frame: Vec2 = Vec2(0, 0),
@@ -29,7 +31,6 @@ class GCounter(GButton):
         count: int = 0,
         min: int = 0,
     ) -> None:
-
         super().__init__(
             atlas=atlas,
             frame=frame,
@@ -70,8 +71,9 @@ class GCounter(GButton):
                 self.count += 1
                 self._update_text()
                 self.run_callback()
-
             case arcade.key.LEFT:
                 self.count -= 1
                 self._update_text()
                 self.run_callback()
+            case _:
+                pass

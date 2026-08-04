@@ -1,6 +1,6 @@
 import arcade
+from typing import Any
 from arcade import Vec2
-from typing import Any, Tuple, Type
 
 from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
@@ -26,12 +26,11 @@ class GMenu(GWidget):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        widgets: list[Tuple[Type[GButton], dict[str, Any]]],
+        widgets: list[tuple[type[GButton], dict[str, Any]]],
         y_first_entry_from_frame_center: int | float,
         extra_line_spaces: list[int] = list(),
     ) -> None:
         super().__init__(atlas, frame)
-
         self.entries: list[GMenuEntry] = []
 
         # Create and set button positions --
@@ -69,6 +68,8 @@ class GMenu(GWidget):
                 self.next_up()
             case arcade.key.DOWN:
                 self.next_down()
+            case _:
+                pass
 
         self.entries[self.current].on_key_press(symbol)
 

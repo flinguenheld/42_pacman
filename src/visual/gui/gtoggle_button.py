@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import arcade
 from arcade import Vec2
 from arcade.types import Color
@@ -24,7 +26,7 @@ class GToggleButton(GButton):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        callback: GButton.Callback,
+        callback: GButton.Callback[GToggleButton],
         text: str,
         pressed: bool = False,
         offset_from_center_frame: Vec2 = Vec2(0, 0),
@@ -58,7 +60,14 @@ class GToggleButton(GButton):
     # ########################################################################
     # ######################################################### KEY PRESS ####
     def on_key_press(self, symbol: int) -> None:
-        if symbol in [arcade.key.LEFT, arcade.key.RIGHT]:
+        if symbol in [
+            arcade.key.ENTER,
+            arcade.key.NUM_ENTER,
+            arcade.key.SPACE,
+            # --
+            arcade.key.LEFT,
+            arcade.key.RIGHT,
+        ]:
             self.pressed = not self.pressed
             self._update_text()
             self.run_callback()
