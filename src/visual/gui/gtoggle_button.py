@@ -1,3 +1,4 @@
+import arcade
 from arcade.types import Color
 from arcade import Sprite, SpriteList, Vec2
 
@@ -16,7 +17,7 @@ class GToggleButton(GButton):
        - pressed
        - not pressed
 
-    When the button is pressed, it stays pressed until it is pressed again.
+    The value can be changed with arrows.
     """
 
     CHECKBOX_PADDING = VData.SPRITE_SIZE * 5
@@ -47,33 +48,32 @@ class GToggleButton(GButton):
         self.refresh_icons()
 
     # ########################################################################
-    # ###################################################### RUN CALLBACK ####
-    def run_callback(self) -> None:
-        self.pressed = not self.pressed
-        self.refresh_icons()
-
-        return super().run_callback()
-
-    # ########################################################################
     # ##################################################### REFRESH ICONS ####
     def refresh_icons(self) -> None:
+        self.sprite_list.clear()
+
         if self.pressed:
             tile = self.atlas.pick_tile("checkbox_on")
         else:
             tile = self.atlas.pick_tile("checkbox_off")
 
-        # --
-        self.sprite_list.clear()
-        self.icon_left = self.atlas.tile_to_sprite(
-            tile, Vec2(self.left - VData.SPRITE_SIZE * 1.2, self.center.y - 2)
+        icon_position = Vec2(
+            self.center.x + self.content_width / 2 + VData.SPRITE_SIZE,
+            self.center.y - 4,
         )
-        self.icon_right = self.atlas.tile_to_sprite(
-            tile, Vec2(self.right + VData.SPRITE_SIZE, self.center.y - 2)
-        )
-        self.sprite_list.extend([self.icon_left, self.icon_right])
+
+        self.icon = self.atlas.tile_to_sprite(tile, icon_position)
+        self.sprite_list.append(self.icon)
 
     # ########################################################################
     # ############################################################## DRAW ####
     def draw(self) -> None:
         super().draw()
         self.sprite_list.draw(pixelated=True)
+
+    # ########################################################################
+    # ######################################################### KEY PRESS ####
+    def on_key_press(self, symbol: int) -> None:
+        if symbol in [arcade.key.LEFT, arcade.key.RIGHT]:
+            self.pressed = not self.pressed
+            self.refresh_icons()

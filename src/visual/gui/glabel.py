@@ -71,6 +71,10 @@ class GLabel(GWidget):
     def center(self) -> Vec2:
         return self.rect.center
 
+    @property
+    def content_width(self) -> int:
+        return self._text_widget.content_width
+
     # ########################################################################
     # ############################################################## TEXT ####
     @property
