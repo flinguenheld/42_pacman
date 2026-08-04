@@ -31,11 +31,12 @@ class VEntityEnemyCommon(VEntityMoving):
     ) -> None:
         self.corner_id = corner_id
         self.texture_id = corner_id % atlas.nb_of_enemies
+        self.mode = VEntityEnemyCommon.Mode.CHASING
 
         super().__init__(
             atlas,
             maze,
-            f"enemy_{self.texture_id}_{VEntityEnemyCommon.Mode.CHASING.value}",
+            f"enemy_{self.texture_id}_{self.mode.value}",
             maze.floor_corners[corner_id],
         )
 
@@ -44,7 +45,6 @@ class VEntityEnemyCommon(VEntityMoving):
 
         self.next_position: Vec2 = self.center
         self.speed = self.gamestate.enemy_speed
-        self.mode = VEntityEnemyCommon.Mode.CHASING
 
         # Home mode --
         self.set_home_mode_triggers()
@@ -79,13 +79,11 @@ class VEntityEnemyCommon(VEntityMoving):
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor
                     )
-
                 case VEntityEnemyCommon.Mode.FLEEING:
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor,
                         reversed=True,
                     )
-
                 case (
                     VEntityEnemyCommon.Mode.DEAD | VEntityEnemyCommon.Mode.HOME
                 ):
@@ -119,7 +117,7 @@ class VEntityEnemyCommon(VEntityMoving):
     def update_current_floor(self):
         """Update the current floor according to the position."""
 
-        next_floor = self.is_in_a_neigbhour(self.center)
+        next_floor = self.is_in_a_neighbour(self.center)
         if next_floor:
             self.current_floor = next_floor
 
@@ -131,11 +129,12 @@ class VEntityEnemyCommon(VEntityMoving):
                 self.timer_fleeing -= delta_time
                 if self.timer_fleeing <= 0:
                     self.mode = VEntityEnemyCommon.Mode.CHASING
-
             case VEntityEnemyCommon.Mode.DEAD:
                 self.timer_dead -= delta_time
                 if self.timer_dead <= 0:
                     self.mode = VEntityEnemyCommon.Mode.CHASING
+            case _:
+                pass
 
     # ########################################################################
     # ################################################### MODE PROPERTIES ####
@@ -156,6 +155,8 @@ class VEntityEnemyCommon(VEntityMoving):
                 self._sprite_name = f"enemy_{new_mode.value}"
                 self.timer_dead = VData.TIMER_ENEMY_DEATH
                 self.update_texture(force=True)
+            case _:
+                pass
 
     # ########################################################################
     # ############################################## HOME MODE - TRIGGERS ####
@@ -201,8 +202,9 @@ class VEntityEnemyCommon(VEntityMoving):
                         and from_home > self.max_from_home
                     ):
                         self.mode = VEntityEnemyCommon.Mode.HOME
-
                 case VEntityEnemyCommon.Mode.HOME:
                     # TODO: Magic number to check --
                     if from_home < 5 or from_player < self.max_from_player:
                         self.mode = VEntityEnemyCommon.Mode.CHASING
+                case _:
+                    pass

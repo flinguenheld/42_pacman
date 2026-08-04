@@ -108,7 +108,7 @@ class VEntityMoving(VEntity):
 
     # ########################################################################
     # ################################################# IS IN A NEIGHBOUR ####
-    def is_in_a_neigbhour(self, point: Vec2) -> Vec2 | None:
+    def is_in_a_neighbour(self, point: Vec2) -> Vec2 | None:
         """
         Get the neighbours of the current floor.
         If the point is inside one of them, return its center.

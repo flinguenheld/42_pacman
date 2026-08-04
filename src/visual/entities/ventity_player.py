@@ -87,7 +87,7 @@ class VEntityPlayer(VEntityMoving):
         def can_move_on(position: Vec2) -> bool:
             return (
                 self.is_in_sprite(position, self.current_floor)
-                or self.is_in_a_neigbhour(position) is not None
+                or self.is_in_a_neighbour(position) is not None
             )
 
         final_position = self.center
@@ -111,7 +111,7 @@ class VEntityPlayer(VEntityMoving):
                 self.center = final_position
 
             # Has moved to a new floor ? --
-            next_floor = self.is_in_a_neigbhour(final_position)
+            next_floor = self.is_in_a_neighbour(final_position)
             if next_floor:
                 self.center = final_position
 
