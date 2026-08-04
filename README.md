@@ -5,11 +5,6 @@ Ghosts! More ghosts!
 
 ### Todo list
 
-- [ ] Management
-  - [ ] Create a sub directory
-  - [ ] Add some files ??
-  - [ ] Yes it is required in the correction
-
 - [ ] Readme
   - [ ] Check the project management part
   - [ ] Description
@@ -38,12 +33,10 @@ Ghosts! More ghosts!
 
 - [ ] Views
   - [ ] Menus
-    - [ ] Main menu
-      - [ ] Display highscore
+    - [X] Main menu
+      - [X] Display highscore
       - [ ] Instructions
       - [X] Exit
-
-  - [ ] Options menu ? (Not required)
 
   - [X] Game view (HUD)
     - [X] Current score
@@ -55,18 +48,18 @@ Ghosts! More ghosts!
       - [ ] You can eat pacgums and super pacgums
       - [ ] You can die and re-spawn.
 
-  - [ ] Pause
+  - [X] Pause
     - [X] Resume the game
     - [X] Link to instructions
     - [X] Return to main (give up)
 
-  - [ ] Game over
-    - [ ] Display final score
+  - [X] Game over
+    - [X] Display final score
     - [X] Highscore: enter player name
       - [X] Max 10 characters, alphanumeric and spaces only
 
-  - [ ] Victory
-    - [ ] Display final score
+  - [X] Victory
+    - [X] Display final score
     - [X] Congratulation
     - [X] Highscore: enter player name
       - [X] Max 10 characters, alphanumeric and spaces only
@@ -78,12 +71,12 @@ Ghosts! More ghosts!
   - [ ] Provide minimal in-package instructions(controls, options, configuration)
   - [ ] Git repository must contain the full source and the packaging script/spec at the root
 
-- [ ] Integrate maze generation
+- [X] Integrate maze generation
   - [X] Use as-is
   - [X] PERFECT = False
-  - [ ] Handle errors gracefully
+  - [X] Handle errors gracefully
 
-- [ ] Highscore system
+- [X] Highscore system
   - [X] JSON File management
     - [X] Player name: max 10 chars, only alphanumeric and spaces
     - [X] Score: Only non-negative integers
@@ -112,7 +105,7 @@ Ghosts! More ghosts!
   - [ ] Super-Pacgum
     - [X] Create texture
     - [X] 1 per corner
-    - [ ] Makes ghosts edible for a short time
+    - [X] Makes ghosts edible for a short time
     - [ ] Eating an edible ghost increases the score by Z points
 
   - [ ] Ghost
@@ -122,22 +115,20 @@ Ghosts! More ghosts!
         - [X] Michael: Block the player
         - [X] Charlie: Follow the player with a delay
         - [X] ReverseMichael: Block the player but on the opposite direction
-      - [ ] Allow to switch their algo on the fly ?
-      - [ ] Hunter on regular
-      - [ ] Run away when edible
+      - [X] Hunter on regular
+      - [X] Run away when edible
       - [ ] Variable speed ?
     - [X] 1 ghost per corner
-    - [ ] Respawn
-      - [ ] In their corner
-      - [ ] After 5 or 10 seconds (variable ?)
+    - [X] Respawn
+      - [X] In their corner
+      - [X] After 5 or 10 seconds (variable ?)
 
   - [ ] Cheat mode
-    - [ ] Activation ?
     - [ ] Features
-      - [ ] Invincibility (no life lost; ghosts cannot eat the player)
+      - [X] Invincibility (no life lost; ghosts cannot eat the player)
       - [ ] Level skip (immediately win the current level)
       - [ ] Ghost freeze (ghosts stop moving)
-      - [ ] Extra lives (add extra lives to the player)
+      - [X] Extra lives (add extra lives to the player)
       - [ ] Increased speed (player moves faster)
 
   - [ ] Game progression
