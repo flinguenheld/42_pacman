@@ -80,6 +80,7 @@ class VEntityPlayer(VEntityMoving):
         """
         Update player position based on velocity.
         Check per axis, if the new position is in floors.
+        Allow diagonal moves since they exist in the maze graph.
 
         If the player has moved in a new floor, update the maze graph.
         """

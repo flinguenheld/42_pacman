@@ -53,7 +53,7 @@ class VData:
     TEXTURES = "textures"
     CAMERA_MARGIN: int = 100
     CAMERA_MAX_ZOOM: float = 2.8
-    FLOOR_DEBUG_MAX_NUMBERS: int = 12
+    FLOOR_DEBUG_MAX_NUMBERS: int = 10
 
     points_per_ghost: int = 10
     points_per_pacgum: int = 50

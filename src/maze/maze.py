@@ -24,6 +24,17 @@ class Maze:
     Use sprite_lists properties for the maze such as center_position or rect...
     """
 
+    NEIGHBOURS: list[Vec2] = [
+        Vec2(-VData.SPRITE_SIZE, VData.SPRITE_SIZE),
+        Vec2(0, VData.SPRITE_SIZE),
+        Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
+        Vec2(VData.SPRITE_SIZE, 0),
+        Vec2(VData.SPRITE_SIZE, -VData.SPRITE_SIZE),
+        Vec2(0, -VData.SPRITE_SIZE),
+        Vec2(-VData.SPRITE_SIZE, -VData.SPRITE_SIZE),
+        Vec2(-VData.SPRITE_SIZE, 0),
+    ]
+
     def __init__(
         self,
         atlas: VAtlas,
@@ -97,19 +108,13 @@ class Maze:
         build a dict which will be used by the BFS algorithm.
         Each entry is a point (sprite center) with its list of neighbours.
         """
-        coordinates: list[Vec2] = [
-            Vec2(0, VData.SPRITE_SIZE),
-            Vec2(0, -VData.SPRITE_SIZE),
-            Vec2(VData.SPRITE_SIZE, 0),
-            Vec2(-VData.SPRITE_SIZE, 0),
-        ]
 
         self.graph_neighbours = {
             sprite_center(sp): [] for sp in self.floors.sprites
         }
 
         for point, neighbours in self.graph_neighbours.items():
-            for possible_neighbour in (n + point for n in coordinates):
+            for possible_neighbour in (n + point for n in Maze.NEIGHBOURS):
                 if possible_neighbour in self.graph_neighbours.keys():
                     neighbours.append(possible_neighbour)
 
