@@ -1,10 +1,9 @@
-from enum import Enum
+from __future__ import annotations
 from src.visual.vdata import VData
 
 
-# QUESTION: cheats is in game states and game state is in cheats :|
 class Cheats:
-    def __init__(self, game_state: "GameState") -> None:
+    def __init__(self, game_state: GameState) -> None:
         self.game_state = game_state
 
         self.god_mode: bool = False
@@ -24,10 +23,6 @@ class Cheats:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
-    class Mode(Enum):
-        CHASING = "chasing"
-        FLEEING = "fleeing"
-
     def __init__(self) -> None:
         # TODO: These values have to be set with the config
         self.score: int = 0
@@ -36,8 +31,6 @@ class GameState:
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
-
-        self.mode: GameState.Mode = GameState.Mode.CHASING
 
         self.cheats: Cheats = Cheats(self)
 
