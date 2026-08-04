@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import Callable
+
 from arcade import Vec2, key
 
 from src.maze.maze import Maze
@@ -82,24 +84,46 @@ class VEntityPlayer(VEntityMoving):
         Check if the new position is in floors.
         If the player has moved in a new floor, update the maze graph.
         """
-        if self.change_x or self.change_y:
-            new_position = self.center + Vec2(self.change_x, self.change_y)
 
-            # Still on current floor --
-            if self.is_in_sprite(new_position, self.current_floor):
-                self.center_x += self.change_x
-                self.center_y += self.change_y
+        def _move_center_x(delta: float) -> None:
+            self.center_x += delta
 
-            else:
-                # Moved to a new floor --
-                next_floor = self.is_in_a_neigbhour(new_position)
-                if next_floor:
-                    self.center_x += self.change_x
-                    self.center_y += self.change_y
+        def _move_center_y(delta: float) -> None:
+            self.center_y += delta
 
-                    # Update the floor and the maze graph costs !!
-                    self.current_floor = next_floor
-                    self.maze.update_graph_values(self.current_floor)
+        self._update_axis(
+            delta=self.change_x,
+            new_position=self.center + Vec2(self.change_x, 0),
+            move=_move_center_x,
+        )
+        self._update_axis(
+            delta=self.change_y,
+            new_position=self.center + Vec2(0, self.change_y),
+            move=_move_center_y,
+        )
+
+    def _update_axis(
+        self,
+        delta: float,
+        new_position: Vec2,
+        move: Callable[[float], None],
+    ) -> None:
+        if not delta:
+            return
+
+        # Still on current floor --
+        if self.is_in_sprite(new_position, self.current_floor):
+            move(delta)
+            return
+
+        # Moved to a new floor --
+        next_floor = self.is_in_a_neigbhour(new_position)
+        if next_floor:
+            move(delta)
+
+            # Update the floor and the maze graph costs !!
+            self.current_floor = next_floor
+            self.maze.update_graph_values(self.current_floor)
 
     # ########################################################################
     # ############################################################ ON KEY ####
