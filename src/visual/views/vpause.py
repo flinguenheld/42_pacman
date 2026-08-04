@@ -71,6 +71,7 @@ class VPause(GWindow):
                 ),
             ],
             y_first_entry_from_frame_center=110,
+            escape_widget_index=0,
         )
 
         self.to_draw_and_update.append(self.menu)

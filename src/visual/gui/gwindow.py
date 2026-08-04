@@ -1,4 +1,4 @@
-import arcade.gui
+import arcade
 from typing import Any
 from arcade import Vec2
 

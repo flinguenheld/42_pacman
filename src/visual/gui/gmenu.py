@@ -29,8 +29,10 @@ class GMenu(GWidget):
         widgets: list[tuple[type[GButton], dict[str, Any]]],
         y_first_entry_from_frame_center: int | float,
         extra_line_spaces: list[int] = list(),
+        escape_widget_index: int = -1,
     ) -> None:
         super().__init__(atlas, frame)
+        self.escape_widget_index = escape_widget_index
         self.entries: list[GMenuEntry] = []
 
         # Create and set button positions --
@@ -64,6 +66,10 @@ class GMenu(GWidget):
     # ####################################################### KEY PRESSED ####
     def key_press(self, symbol: int) -> None:
         match symbol:
+            case arcade.key.ESCAPE:
+                self.entries[self.escape_widget_index].on_key_press(
+                    arcade.key.ENTER
+                )
             case arcade.key.UP:
                 self.next_up()
             case arcade.key.DOWN:
