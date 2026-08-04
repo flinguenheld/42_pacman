@@ -64,7 +64,9 @@ class VPause(GWindow):
                     GButton,
                     {
                         "text": "GIVE UP",
-                        "callback": VNames.VIEW_WELCOME,
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_WELCOME
+                        ),
                     },
                 ),
             ],

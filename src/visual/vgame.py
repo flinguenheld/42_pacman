@@ -292,11 +292,6 @@ class VGame(arcade.View):
         if self.setup_done:
             match symbol:
                 case arcade.key.ESCAPE:
-                    arcade.exit()
-
-                case arcade.key.M:
-                    self.window.switch_view(VNames.VIEW_WELCOME)
-                case arcade.key.P:
                     self.window.switch_view(VNames.VIEW_PAUSE)
 
                 case arcade.key.N:
@@ -305,9 +300,6 @@ class VGame(arcade.View):
                 case arcade.key.R:
                     self.spawn_player()
                     self.spawn_enemies()
-
-                case arcade.key.C:
-                    self.window.switch_view(VNames.VIEW_CHEATS)
 
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates
