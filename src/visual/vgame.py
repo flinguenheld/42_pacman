@@ -74,32 +74,14 @@ class VGame(arcade.View):
         # Init sprite lists first --
         self.enemy_list: SpriteList[EnemyVariant] = arcade.SpriteList()
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
-        self.pacgum_list: SpriteList[VEntityPacGum | VEntitySuperPacGum] = (
+        self.pacgum_list: SpriteList[VEntityPacGum] = arcade.SpriteList()
+        self.super_pacgum_list: SpriteList[VEntitySuperPacGum] = (
             arcade.SpriteList()
         )
-
-        # Player --
-        self.spawn_player()
-
-        # Enemies --
-        self.spawn_enemies()
-
-        # Super pacgums --
-        for floor_corner in self.maze.floor_corners:
-            self.pacgum_list.append(
-                VEntitySuperPacGum(self.atlas, floor_corner)
-            )
-
-        # Pacgums --
-        forbbiden = {*self.maze.floor_corners, self.player.center}
-
-        for floor_sprite in self.maze.floors.sprites:
-            if floor_sprite.position not in forbbiden:
-                if random.choices([True, False], weights=[70, 30])[0]:
-                    position = Vec2(*floor_sprite.position)
-                    self.pacgum_list.append(
-                        VEntityPacGum(self.atlas, position)
-                    )
+        self.combined_pacgum_list: SpriteList[
+            VEntityPacGum | VEntitySuperPacGum
+        ] = arcade.SpriteList()
+        self.spawn_entities()
 
         self.setup_done = True
 
@@ -124,7 +106,6 @@ class VGame(arcade.View):
     def spawn_enemies(self) -> None:
         self.enemy_list.clear()
         for who in (Johnny, Michael, Charlie, ReverseMichael):
-            # for who in (Johnny,):
             self.enemy_list.append(
                 who(
                     atlas=self.atlas,
@@ -133,6 +114,30 @@ class VGame(arcade.View):
                     gamestate=self.gamestate,
                 )
             )
+
+    def spawn_pacgums(self) -> None:
+        for pacgum in self.pacgum_list:
+            pacgum.kill()
+
+        forbidden = {*self.maze.floor_corners, self.player.center}
+
+        for floor_sprite in self.maze.floors.sprites:
+            if floor_sprite.position not in forbidden:
+                if random.choices([True, False], weights=[70, 30])[0]:
+                    position = Vec2(*floor_sprite.position)
+                    pacgum = VEntityPacGum(self.atlas, position)
+
+                    self.pacgum_list.append(pacgum)
+                    self.combined_pacgum_list.append(pacgum)
+
+    def spawn_super_pacgums(self) -> None:
+        for super_pacgum in self.super_pacgum_list:
+            super_pacgum.kill()
+
+        for floor_corner in self.maze.floor_corners:
+            super_pacgum = VEntitySuperPacGum(self.atlas, floor_corner)
+            self.super_pacgum_list.append(super_pacgum)
+            self.combined_pacgum_list.append(super_pacgum)
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -157,10 +162,18 @@ class VGame(arcade.View):
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
 
+    def spawn_entities(self) -> None:
+        self.gamestate.setup()
+        self.spawn_enemies()
+        self.spawn_player()
+        self.spawn_pacgums()
+        self.spawn_super_pacgums()
+
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
     def reload_maze_sprites(self) -> None:
-        # TODO: REWRITE IF NEEDED
+        # TODO: Might need this function if we reimplement
+        # the style switching feature
         pass
 
         # self.walls.reload(
@@ -185,13 +198,13 @@ class VGame(arcade.View):
 
                 match VData.debug_mode:
                     case DebugMode.HITBOXES:
-                        self.pacgum_list.draw(pixelated=True)
+                        self.combined_pacgum_list.draw(pixelated=True)
                         draw_people()
                         self.draw_hitboxes()
                     case DebugMode.ALGO:
                         draw_people()
                     case DebugMode.OFF:
-                        self.pacgum_list.draw(pixelated=True)
+                        self.combined_pacgum_list.draw(pixelated=True)
                         draw_people()
 
             with self.camera_hud.activate():
@@ -200,7 +213,7 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################# DRAW HITBOXES & PATHS ####
     def draw_hitboxes(self) -> None:
-        self.pacgum_list.draw_hit_boxes(arcade.color.BLUE_BELL, 2)
+        self.combined_pacgum_list.draw_hit_boxes(arcade.color.BLUE_BELL, 2)
         self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
         self.enemy_list.draw_hit_boxes(arcade.color.RED_DEVIL, 2)
 
@@ -233,7 +246,7 @@ class VGame(arcade.View):
 
             self.enemy_list.update_animation(delta_time)
             self.player_list.update_animation(delta_time)
-            self.pacgum_list.update_animation(delta_time)
+            self.combined_pacgum_list.update_animation(delta_time)
 
             self.hud.update(delta_time)
 
@@ -244,12 +257,17 @@ class VGame(arcade.View):
     def pacgum_collisions(self) -> None:
         for pacgum in arcade.check_for_collision_with_list(
             self.player,
-            self.pacgum_list,
+            self.combined_pacgum_list,
         ):
             self.gamestate.increment_score(pacgum.get_points())
-            if isinstance(pacgum, VEntitySuperPacGum):
-                self.switch_all_enemies_to_fleeing()
             pacgum.kill()
+
+        for super_pacgum in arcade.check_for_collision_with_list(
+            self.player, self.super_pacgum_list
+        ):
+            self.gamestate.increment_score(super_pacgum.get_points())
+            self.switch_all_enemies_to_fleeing()
+            super_pacgum.kill()
 
     def enemy_collisions(self) -> None:
         for enemy in arcade.check_for_collision_with_list(
@@ -271,9 +289,7 @@ class VGame(arcade.View):
         if self.gamestate.is_game_over:
             self.window.switch_view(VNames.VIEW_GAMEOVER)
         else:
-            # QUESTION Why setup() here and not just continuing
-            # QUESTION the current map ?
-            self.setup()
+            self.spawn_entities()
             self.cameras_update()
 
     # ########################################################################
@@ -298,8 +314,7 @@ class VGame(arcade.View):
                     self.setup()
                     self.cameras_update()
                 case arcade.key.R:
-                    self.spawn_player()
-                    self.spawn_enemies()
+                    self.spawn_entities()
 
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates

@@ -24,9 +24,16 @@ class Cheats:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
     def __init__(self) -> None:
-        # TODO: These values have to be set with the config
-        self.score: int = 0
-        self.lives: int = 3
+        self.setup()
+
+    def setup(self) -> None:
+        """
+        Initializes the game state with default values.
+        Let's us reset the game state in a more elegant way
+        """
+        # TODO: Check if this is the right solution for that problem
+        self.score = 0
+        self.lives = 3
         self.timer = VData.time_max
 
         self._player_speed: float = 30.0
