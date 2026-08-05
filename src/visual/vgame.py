@@ -91,6 +91,11 @@ class VGame(arcade.View):
         return self.player_list[0]
         # return None
 
+    def spawn_entities(self) -> None:
+        self.spawn_player()
+        self.spawn_enemies()
+        self.spawn_pacgums()
+
     # ########################################################################
     # ############################################ SPAWN PLAYER / ENEMIES ####
     def spawn_player(self) -> None:
@@ -116,8 +121,19 @@ class VGame(arcade.View):
             )
 
     def spawn_pacgums(self) -> None:
-        for pacgum in self.pacgum_list:
-            pacgum.kill()
+        self.combined_pacgum_list.clear()
+        self._spawn_normal_pacgums()
+        self._spawn_super_pacgums()
+
+        combined = self.combined_pacgum_list
+        combined.extend(self.pacgum_list)
+        combined.extend(self.super_pacgum_list)
+
+    def _spawn_normal_pacgums(self) -> None:
+        """
+        Do not use it by itself, use spawn_pacgums() instead.
+        """
+        self.pacgum_list.clear()
 
         forbidden = {*self.maze.floor_corners, self.player.center}
 
@@ -126,18 +142,17 @@ class VGame(arcade.View):
                 if random.choices([True, False], weights=[70, 30])[0]:
                     position = Vec2(*floor_sprite.position)
                     pacgum = VEntityPacGum(self.atlas, position)
-
                     self.pacgum_list.append(pacgum)
-                    self.combined_pacgum_list.append(pacgum)
 
-    def spawn_super_pacgums(self) -> None:
-        for super_pacgum in self.super_pacgum_list:
-            super_pacgum.kill()
+    def _spawn_super_pacgums(self) -> None:
+        """
+        Do not use it by itself, use spawn_pacgums() instead.
+        """
+        self.super_pacgum_list.clear()
 
         for floor_corner in self.maze.floor_corners:
             super_pacgum = VEntitySuperPacGum(self.atlas, floor_corner)
             self.super_pacgum_list.append(super_pacgum)
-            self.combined_pacgum_list.append(super_pacgum)
 
     # ########################################################################
     # ########################################################### ON SHOW ####
@@ -161,13 +176,6 @@ class VGame(arcade.View):
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
-
-    def spawn_entities(self) -> None:
-        self.gamestate.setup()
-        self.spawn_enemies()
-        self.spawn_player()
-        self.spawn_pacgums()
-        self.spawn_super_pacgums()
 
     # ########################################################################
     # #################################################### RELOAD SPRITES ####
