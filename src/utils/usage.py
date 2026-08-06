@@ -1,4 +1,4 @@
-import sys  # noqa: I001
+import sys
 from typing import TextIO
 
 from termcolor import cprint

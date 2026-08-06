@@ -262,9 +262,10 @@ class VGame(arcade.View):
                 case VEntityEnemy.Mode.CHASING:
                     if not self.cheats.god_mode:
                         self.player_death()
-
                 case VEntityEnemy.Mode.FLEEING:
                     enemy.mode = VEntityEnemy.Mode.DEAD
+                case _:
+                    pass
 
     # ########################################################################
     # ###################################################### PLAYER DEATH ####
