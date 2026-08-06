@@ -44,7 +44,7 @@ class VEntityEnemy(VEntityMoving):
         self.next_position: Vec2 = self.center
 
         # Patroling mode --
-        self.patroling_algo = Patroling(self.maze.graph_neighbours)
+        self.patroling_algo = Patroling(self.maze, self.corner_id)
         self.patroling_trigger = patroling_trigger
 
         # Timers --
@@ -87,10 +87,8 @@ class VEntityEnemy(VEntityMoving):
                         reversed=True,
                     )
                 case VEntityEnemy.Mode.PATROLING:
-                    self.next_position = (
-                        self.patroling_algo.next_random_positon(
-                            self.current_floor
-                        )
+                    self.next_position = self.patroling_algo.next_position(
+                        self.current_floor
                     )
                 case VEntityEnemy.Mode.DEAD:
                     self.next_position = self.maze.get_next_lowest(

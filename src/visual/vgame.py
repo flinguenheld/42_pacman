@@ -9,9 +9,9 @@ from src.visual.gamestate import GameState
 from src.visual.gui.gbackground import GBackground
 from src.visual.vdata import VNames, VData, DebugMode
 from src.maze.maze_wrapper import MazeGeneratorWrapper
+from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
-from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 
 
