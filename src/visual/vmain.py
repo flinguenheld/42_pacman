@@ -61,6 +61,9 @@ class VMain(arcade.Window):
             case VNames.VIEW_GAME_NEXT_LEVEL:
                 # list index is 0-indexed, but level_id is 1-indexed
                 next_level_index = self.game_state.level_data.level_id
+                if next_level_index >= len(VData.LEVELS_DATA):
+                    self.switch_view(VNames.VIEW_VICTORY)
+                    return
                 self.game_state = GameState(
                     VData.LEVELS_DATA[next_level_index]
                 )
