@@ -1,5 +1,5 @@
 from __future__ import annotations
-from src.visual.vdata import VData
+from src.visual.vdata import VData, VLevelData
 
 
 class Cheats:
@@ -23,7 +23,9 @@ class Cheats:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
-    def __init__(self) -> None:
+    def __init__(self, level_data: VLevelData) -> None:
+        self.level_data = level_data
+
         self.setup()
 
     def setup(self) -> None:

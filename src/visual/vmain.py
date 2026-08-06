@@ -51,11 +51,20 @@ class VMain(arcade.Window):
         match to:
             case VNames.VIEW_GAME_NEW:
                 # --> Init a new game here <--
-                self.game_state = GameState()
+                self.game_state = GameState(VData.LEVELS_DATA[0])
                 self.vgame = VGame(self.atlas, self.game_state)
                 save_and_show(self.vgame)
 
             case VNames.VIEW_GAME_RESUME:
+                save_and_show(self.vgame)
+
+            case VNames.VIEW_GAME_NEXT_LEVEL:
+                # list index is 0-indexed, but level_id is 1-indexed
+                next_level_index = self.game_state.level_data.level_id
+                self.game_state = GameState(
+                    VData.LEVELS_DATA[next_level_index]
+                )
+                self.vgame = VGame(self.atlas, self.game_state)
                 save_and_show(self.vgame)
 
             case VNames.VIEW_GAMEOVER:

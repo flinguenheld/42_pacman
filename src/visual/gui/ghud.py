@@ -1,7 +1,7 @@
 import arcade
 from math import ceil
 from arcade.types import Color
-from arcade import Vec2, SpriteList
+from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 
 from src.maze.maze import Maze
 from src.visual.vdata import VData, DebugMode
@@ -35,7 +35,9 @@ class VHud:
             nb_cols=ceil(self.maze.width / VData.SPRITE_SIZE),
             nb_rows=3,
         )
-        self.icons: SpriteList = arcade.SpriteList()
+        self.icons: SpriteList[Sprite | TextureAnimationSprite] = (
+            arcade.SpriteList()
+        )
         self.fields_debug: dict[str, GLabel] = dict()
         self.fields: dict[str, GLabel] = dict()
 

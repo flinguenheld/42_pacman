@@ -39,7 +39,7 @@ class VGame(arcade.View):
 
         self.gamestate = gamestate
         self.cheats = gamestate.cheats
-
+        self.level_data = gamestate.level_data
         self.setup()
 
     # ########################################################################
@@ -53,11 +53,7 @@ class VGame(arcade.View):
         self.setup_done = False
 
         # Maze --
-        self.new_maze(
-            random.randint(10, 20),
-            random.randint(5, 20),
-            random.randint(1, 200),
-        )
+        self.new_maze()
 
         # Background --
         self.background = GBackground(self.atlas)
@@ -171,9 +167,21 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ########################################################## NEW MAZE ####
-    def new_maze(self, raw_width: int, raw_height: int, seed: int) -> None:
+    def new_maze(self) -> None:
+        def get_seed() -> int:
+            if self.level_data.level_id == 1:
+                return 42
+            else:
+                return random.randint(1, 200)
+
+        raw_width = self.level_data.maze_width
+        raw_height = self.level_data.maze_height
+        seed = get_seed()
         maze_gen = MazeGeneratorWrapper()
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
+        print(
+            f"Generated new maze - Seed: {seed}, Size: {raw_width}x{raw_height}"
+        )
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
 

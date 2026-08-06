@@ -54,6 +54,15 @@ class VCheats(GWindow):
                 (
                     GButton,
                     {
+                        "text": "GO TO NEXT LEVEL",
+                        "callback": lambda: self.window.switch_view(
+                            VNames.VIEW_GAME_NEXT_LEVEL
+                        ),
+                    },
+                ),
+                (
+                    GButton,
+                    {
                         "text": "GO BACK",
                         "callback": lambda: self.window.switch_view(
                             VNames.VIEW_PREVIOUS
@@ -61,8 +70,8 @@ class VCheats(GWindow):
                     },
                 ),
             ],
-            y_first_entry_from_frame_center=100,
-            extra_line_spaces=[1],
+            y_first_entry_from_frame_center=140,
+            extra_line_spaces=[2],
         )
 
         self.to_draw_and_update.append(self.menu)
