@@ -1,10 +1,11 @@
 import sys
 from typing import TextIO
-from termcolor import cprint
-from arcade import Sprite, Vec2
 
-from src.visual.vdata import VData
+from arcade import Sprite, Vec2
+from termcolor import cprint
+
 from src.config.config import Config
+from src.visual.vdata import VData
 
 # TODO: Rename this file to utils ?
 
@@ -44,5 +45,5 @@ def sprite_center(sprite: Sprite) -> Vec2:
 # ############################################################################
 # ########################################################## PRINT DEBUG #####
 def print_debug(text: str, color: str = "magenta", end: str = "\n"):
-    if VData.is_debug_on:
+    if VData.is_debug_on():
         cprint(f"   {text}", color=color, end=end)

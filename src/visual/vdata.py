@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import Self
 from enum import Enum, auto
 
 from src.config.config import Config
@@ -75,7 +74,7 @@ class VData:
     TIMER_ENEMY_FLEEING: float = 10.0
 
     @classmethod
-    def apply_config(cls: type[Self], config: Config) -> None:
+    def apply_config(cls, config: Config) -> None:
         cls.points_per_ghost = config.points_per_ghost
         cls.points_per_pacgum = config.points_per_pacgum
         cls.points_per_super_pacgum = config.points_per_super_pacgum
@@ -93,5 +92,5 @@ class VData:
         cls.debug_mode = DebugMode.OFF
 
     @classmethod
-    def is_debug_on(cls) -> None:
-        cls.debug_mode.value > DebugMode.OFF.value
+    def is_debug_on(cls) -> bool:
+        return cls.debug_mode.value > DebugMode.OFF.value
