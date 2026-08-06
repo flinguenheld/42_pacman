@@ -1,11 +1,11 @@
-import sys
+import sys  # noqa: I001
 from typing import TextIO
 
-from arcade import Sprite, Vec2
 from termcolor import cprint
+from arcade import Sprite, Vec2
 
-from src.config.config import Config
 from src.visual.vdata import VData
+from src.config.config import Config
 
 # TODO: Rename this file to utils ?
 
