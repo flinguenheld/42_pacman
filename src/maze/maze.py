@@ -207,3 +207,9 @@ class Maze:
             return next_one(self.graph_corners[corner], point, reversed)
         else:
             return next_one(self.graph_costs, point, reversed)
+
+    # ########################################################################
+    # ####################################################### CLEAR COSTS ####
+    def clear_costs(self):
+        """Useful on player death, otherwise enemies follow obsolete values"""
+        self.graph_costs.clear()

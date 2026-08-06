@@ -1,5 +1,4 @@
 from __future__ import annotations
-import random
 
 from enum import Enum
 from arcade import Vec2
@@ -8,9 +7,8 @@ from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.utils.usage import print_debug
-from src.visual.gamestate import GameState
+from src.visual.pathfinding.patroling import Patroling
 from src.visual.entities.ventity_moving import VEntityMoving
-from src.visual.entities.ventity_player import VEntityPlayer
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
@@ -20,7 +18,7 @@ class VEntityEnemy(VEntityMoving):
     class Mode(Enum):
         CHASING = "chasing"
         FLEEING = "fleeing"
-        HOME = "no texture"
+        PATROLING = "no texture"
         DEAD = "dead"
 
     def __init__(
@@ -28,32 +26,34 @@ class VEntityEnemy(VEntityMoving):
         corner_id: int,
         atlas: VAtlas,
         maze: Maze,
-        player: VEntityPlayer,
-        gamestate: GameState,
+        speed: int | float,
+        patroling_trigger: int,
     ) -> None:
-        self.corner_id = corner_id
-        self.texture_id = corner_id % atlas.nb_of_enemies
+        self.corner_id = corner_id % len(maze.floor_corners)
+        self.texture_id = self.corner_id % atlas.nb_of_enemies
         self.mode = VEntityEnemy.Mode.CHASING
 
         super().__init__(
             atlas,
             maze,
             f"enemy_{self.texture_id}_{self.mode.value}",
-            maze.floor_corners[corner_id],
+            maze.floor_corners[self.corner_id],
         )
 
-        self.player: VEntityPlayer = player
-        self.gamestate: GameState = gamestate
-
+        self.base_speed = speed
         self.next_position: Vec2 = self.center
-        self.speed = self.gamestate.enemy_speed
 
-        # Home mode --
-        self.set_home_mode_triggers()
+        # Patroling mode --
+        self.patroling_algo = Patroling(self.maze.graph_neighbours)
+        self.patroling_trigger = patroling_trigger
 
         # Timers --
         self.timer_dead = 0.0
         self.timer_fleeing = 0.0
+
+        # --
+        print_debug(f"Enemy {self.corner_id} spawned:")
+        print_debug(f"  -> speed {speed} - trigger {patroling_trigger}")
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -74,7 +74,7 @@ class VEntityEnemy(VEntityMoving):
 
         # Wait to be close to the next position.
         if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
-            self.home_mode_management()
+            self.patroling_mode_management()
 
             match self.mode:
                 case VEntityEnemy.Mode.CHASING:
@@ -86,7 +86,13 @@ class VEntityEnemy(VEntityMoving):
                         self.current_floor,
                         reversed=True,
                     )
-                case VEntityEnemy.Mode.DEAD | VEntityEnemy.Mode.HOME:
+                case VEntityEnemy.Mode.PATROLING:
+                    self.next_position = (
+                        self.patroling_algo.next_random_positon(
+                            self.current_floor
+                        )
+                    )
+                case VEntityEnemy.Mode.DEAD:
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor,
                         corner=self.corner_id,
@@ -114,7 +120,7 @@ class VEntityEnemy(VEntityMoving):
 
     # ########################################################################
     # ############################################## UPDATE CURRENT FLOOR ####
-    def update_current_floor(self):
+    def update_current_floor(self) -> None:
         """Update the current floor according to the position."""
 
         next_floor = self.is_in_a_neighbour(self.center)
@@ -159,63 +165,40 @@ class VEntityEnemy(VEntityMoving):
                 pass
 
     # ########################################################################
-    # ############################################## HOME MODE - TRIGGERS ####
-    # Home mode allows to limit the enemy in its corner.
-    # (Otherwise they follow the player in a group -_-')
-
-    def set_home_mode_triggers(self) -> None:
-        """Set the triggers used in the home mode:
-        - hmode_trig_to_home: the enemy will come back near its start
-        - hmode_trig_to_player: if closer to player, it will continue to chase
-        - hmode_go_home_up_to: no need to touch the center
+    # ####################################### PATROLING MODE - MANAGEMENT ####
+    def patroling_mode_management(self) -> None:
         """
-
-        # TODO: Not very cool -_-'
-        # TODO: It would be great if the enemy has a kind of default path
-        #       And turn in its area like a guard...
-
-        manhattan_to_center = self.maze.center_position // VData.SPRITE_SIZE
-        max_axis = int(max(manhattan_to_center.x, manhattan_to_center.y))
-
-        self.hmode_trig_to_home = random.randint(
-            int(max_axis * 0.8), int(max_axis * 1.8)
-        )
-        self.hmode_trig_to_player = random.randint(4, 8)
-        self.hmode_go_home_up_to = random.randint(1, 5)
-
-        print_debug(f"-- enemy: {self.corner_id}")
-        print_debug(f"HM: manhattan to center: {manhattan_to_center}")
-        print_debug(f"HM: max axis: {max_axis}")
-        print_debug(f"HM: trigger from home: {self.hmode_trig_to_home}")
-        print_debug(f"HM: trigger from player: {self.hmode_trig_to_player}")
-        print_debug(f"HM: go home up to: {self.hmode_go_home_up_to}")
-
-    # ########################################################################
-    # ############################################ HOME MODE - MANAGEMENT ####
-    def home_mode_management(self) -> None:
-        """
-        Get the distances from corner and from player.
-        According to triggers, switch in home mode and move back to its corner.
+        According to the distance to the player:
+           - switch in patroling mode
+           - come back to chasing mode
         """
 
         if self.current_floor in self.maze.graph_costs:
-            from_home = self.maze.graph_corners[self.corner_id][
-                self.current_floor
-            ]
             from_player = self.maze.graph_costs[self.current_floor]
 
             match self.mode:
                 case VEntityEnemy.Mode.CHASING:
-                    if (
-                        from_player > self.hmode_trig_to_player
-                        and from_home > self.hmode_trig_to_home
-                    ):
-                        self.mode = VEntityEnemy.Mode.HOME
-                case VEntityEnemy.Mode.HOME:
-                    if (
-                        from_home < self.hmode_go_home_up_to
-                        or from_player < self.hmode_trig_to_player
-                    ):
+                    if from_player > self.patroling_trigger:
+                        self.mode = VEntityEnemy.Mode.PATROLING
+                        print_debug(f"Enemy {self.corner_id} is patroling")
+                case VEntityEnemy.Mode.PATROLING:
+                    if from_player <= self.patroling_trigger:
                         self.mode = VEntityEnemy.Mode.CHASING
+                        print_debug(f"Enemy {self.corner_id} is chasing !!")
                 case _:
                     pass
+
+    # ########################################################################
+    # ############################################################# SPEED ####
+    @property
+    def speed(self) -> float:
+        """Get speed according to the current mode."""
+        match self.mode:
+            case VEntityEnemy.Mode.CHASING:
+                return self.base_speed * 1.2
+            case VEntityEnemy.Mode.PATROLING:
+                return self.base_speed * 0.8
+            case VEntityEnemy.Mode.FLEEING:
+                return self.base_speed * 1.1
+            case VEntityEnemy.Mode.DEAD:
+                return self.base_speed * 0.5
