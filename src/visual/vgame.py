@@ -18,7 +18,7 @@ from src.visual.entities.venemy_variants import (
 from src.maze.maze_wrapper import MazeGeneratorWrapper
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
-from src.visual.entities.ventity_enemy import VEntityEnemyCommon
+from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 
 
@@ -85,19 +85,19 @@ class VGame(arcade.View):
 
         self.setup_done = True
 
+    # ########################################################################
+    # ################################################### PLAYER PROPERTY ####
     @property
     def player(self) -> VEntityPlayer:
-        # if self.player_list:
         return self.player_list[0]
-        # return None
 
+    # ########################################################################
+    # ################################## SPAWN PLAYER / ENEMIES / PACGUMS ####
     def spawn_entities(self) -> None:
         self.spawn_player()
         self.spawn_enemies()
         self.spawn_pacgums()
 
-    # ########################################################################
-    # ############################################ SPAWN PLAYER / ENEMIES ####
     def spawn_player(self) -> None:
         self.player_list.clear()
         self.player_list.append(
@@ -184,13 +184,6 @@ class VGame(arcade.View):
         # the style switching feature
         pass
 
-        # self.walls.reload(
-        #     self.maze_gen.walls.union(self.maze_gen.forty_two),
-        #     self.maze_gen.floors,
-        # )
-        # self.floors.reload(self.maze_gen.floors)
-        # self.cameras_update()
-
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
@@ -225,22 +218,6 @@ class VGame(arcade.View):
         self.player_list.draw_hit_boxes(arcade.color.GRANNY_SMITH_APPLE, 2)
         self.enemy_list.draw_hit_boxes(arcade.color.RED_DEVIL, 2)
 
-    def draw_enemy_paths(self) -> None:
-        pass
-        # if self.display_hitboxes:
-        #     self.maze.floors.up_debug_graph(self.maze.graph_costs)
-        # pass
-        # if self.display_enemy_paths:
-        #     line_width = VData.SPRITE_SIZE // 1.8
-        #     if self.display_enemy_paths:
-        #         for val, enemy in enumerate(self.enemy_list):
-        #             arcade.draw_line_strip(
-        #                 enemy.bfs.path,
-        #                 Color(val * 30, val * 50, val * 80),
-        #                 line_width,
-        #             )
-        #             line_width -= 4
-
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
@@ -265,7 +242,7 @@ class VGame(arcade.View):
     def pacgum_collisions(self) -> None:
         for pacgum in arcade.check_for_collision_with_list(
             self.player,
-            self.combined_pacgum_list,
+            self.pacgum_list,
         ):
             self.gamestate.increment_score(pacgum.get_points())
             pacgum.kill()
@@ -282,12 +259,12 @@ class VGame(arcade.View):
             self.player, self.enemy_list
         ):
             match enemy.mode:
-                case VEntityEnemyCommon.Mode.CHASING:
+                case VEntityEnemy.Mode.CHASING:
                     if not self.cheats.god_mode:
                         self.player_death()
 
-                case VEntityEnemyCommon.Mode.FLEEING:
-                    enemy.mode = VEntityEnemyCommon.Mode.DEAD
+                case VEntityEnemy.Mode.FLEEING:
+                    enemy.mode = VEntityEnemy.Mode.DEAD
 
     # ########################################################################
     # ###################################################### PLAYER DEATH ####
@@ -304,8 +281,8 @@ class VGame(arcade.View):
     # ######################################### SWITCH ENEMIES TO FLEEING ####
     def switch_all_enemies_to_fleeing(self) -> None:
         for enemy in self.enemy_list:
-            if enemy.mode != VEntityEnemyCommon.Mode.DEAD:
-                enemy.mode = VEntityEnemyCommon.Mode.FLEEING
+            if enemy.mode != VEntityEnemy.Mode.DEAD:
+                enemy.mode = VEntityEnemy.Mode.FLEEING
 
     # ########################################################################
     # ############################################################## KEYS ####

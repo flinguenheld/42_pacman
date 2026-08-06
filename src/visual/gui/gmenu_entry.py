@@ -7,7 +7,7 @@ from src.visual.vatlas import VAtlas
 from src.visual.gui.gframe import GFrame
 from src.visual.gui.gwidget import GWidget
 from src.visual.gui.gbutton import GButton
-from src.visual.entities.ventity_enemy import VEntityEnemyCommon
+from src.visual.entities.ventity_enemy import VEntityEnemy
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▄█░█▀▀░█▀█░█░█░░░█▀▀░█▀█░▀█▀░█▀▄░█░█░░
@@ -51,7 +51,7 @@ class GMenuEntry(GWidget):
         possible_tiles = ["player"]
         for id in range(self.atlas.nb_of_enemies):
             possible_tiles.append(
-                f"enemy_{id}_{VEntityEnemyCommon.Mode.CHASING.value}"
+                f"enemy_{id}_{VEntityEnemy.Mode.CHASING.value}"
             )
 
         tile_name = random.choice(possible_tiles)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from enum import Enum, auto
 from typing import Self
+from enum import Enum, auto
 
 from src.config.config import Config
 
@@ -21,10 +21,21 @@ class VNames(Enum):
     VIEW_WELCOME = auto()
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░▀█▀░█░█░█░░░█▀▀░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░▀▀█░░█░░░█░░█░░░█▀▀░▀▀█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░░▀░░░▀░░▀▀▀░▀▀▀░▀▀▀░░
+class VStyles(Enum):
+    SUMMER = "summer"
+    EDGE = "edge"
+
+
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▄░█░█░█▀▀░░░█▄█░█▀█░█▀▄░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀▄░█░█░█░█░░░█░█░█░█░█░█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀░░▀▀▀░▀▀░░▀▀▀░▀▀▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░░
 class DebugMode(Enum):
-    OFF = auto()
-    HITBOXES = auto()
-    ALGO = auto()
+    OFF = 0
+    HITBOXES = 1
+    ALGO = 2
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░░░█▀▄░█▀█░▀█▀░█▀█░░
@@ -75,22 +86,12 @@ class VData:
     # ####################################################### _DEBUG MODE ####
     @classmethod
     def toggle_debug_mode(cls) -> None:
-        match cls.debug_mode:
-            case DebugMode.OFF:
-                cls.debug_mode = DebugMode.HITBOXES
-            case DebugMode.HITBOXES:
-                cls.debug_mode = DebugMode.ALGO
-            case DebugMode.ALGO:
-                cls.debug_mode = DebugMode.OFF
+        cls.debug_mode = DebugMode((cls.debug_mode.value + 1) % len(DebugMode))
 
     @classmethod
     def deactivate_debug_mode(cls) -> None:
         cls.debug_mode = DebugMode.OFF
 
-
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░▀█▀░█░█░█░░░█▀▀░█▀▀░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░▀▀█░░█░░░█░░█░░░█▀▀░▀▀█░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░░▀░░░▀░░▀▀▀░▀▀▀░▀▀▀░░
-class VStyles(Enum):
-    SUMMER = "summer"
-    EDGE = "edge"
+    @classmethod
+    def is_debug_on(cls) -> None:
+        cls.debug_mode.value > DebugMode.OFF.value

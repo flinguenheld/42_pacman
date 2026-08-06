@@ -4,14 +4,14 @@ from src.maze.maze import Maze
 from src.visual.vatlas import VAtlas
 from src.visual.gamestate import GameState
 from src.visual.entities.ventity_player import VEntityPlayer
-from src.visual.entities.ventity_enemy import VEntityEnemyCommon
+from src.visual.entities.ventity_enemy import VEntityEnemy
 
 
 type EnemyVariantClass = type["Johnny | Michael | Charlie | ReverseMichael"]
 type EnemyVariant = "Johnny | Michael | Charlie | ReverseMichael"
 
 
-class Johnny(VEntityEnemyCommon):
+class Johnny(VEntityEnemy):
     """
     Johnny is a simple enemy that follows the player directly.
     Its goal is straightforward, it is to directly kill the player.
@@ -30,7 +30,7 @@ class Johnny(VEntityEnemyCommon):
         self.speed *= 0.9
 
 
-class Michael(VEntityEnemyCommon):
+class Michael(VEntityEnemy):
     """
     Michael is a more advanced enemy that tries to predict the player's
     movement.
@@ -65,7 +65,7 @@ class Michael(VEntityEnemyCommon):
     #     return self.maze.closest_floor_of(possible)
 
 
-class Charlie(VEntityEnemyCommon):
+class Charlie(VEntityEnemy):
     """
     Charlie is a creepy enemy that follows the player, but 3 seconds behind.
     He is faster than other ennemies, but a bit slower than the player,
@@ -113,7 +113,7 @@ class Charlie(VEntityEnemyCommon):
     #     return self.maze.closest_floor_of(possible)
 
 
-class ReverseMichael(VEntityEnemyCommon):
+class ReverseMichael(VEntityEnemy):
     """
     ReverseMichael is a more advanced enemy that tries to predict the player's
     movement.

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 
 from enum import Enum
 from arcade import Vec2
@@ -6,6 +7,7 @@ from arcade import Vec2
 from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
+from src.utils.usage import print_debug
 from src.visual.gamestate import GameState
 from src.visual.entities.ventity_moving import VEntityMoving
 from src.visual.entities.ventity_player import VEntityPlayer
@@ -14,7 +16,7 @@ from src.visual.entities.ventity_player import VEntityPlayer
 # ░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀▀░█▀█░▀█▀░▀█▀░▀█▀░█░█░░░█▀▀░█▀█░█▀▀░█▄█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀▀░█░█░░█░░░█░░░█░░░█░░░░█▀▀░█░█░█▀▀░█░█░░█░░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░░▀░░▀▀▀░░▀░░░▀░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░░
-class VEntityEnemyCommon(VEntityMoving):
+class VEntityEnemy(VEntityMoving):
     class Mode(Enum):
         CHASING = "chasing"
         FLEEING = "fleeing"
@@ -31,7 +33,7 @@ class VEntityEnemyCommon(VEntityMoving):
     ) -> None:
         self.corner_id = corner_id
         self.texture_id = corner_id % atlas.nb_of_enemies
-        self.mode = VEntityEnemyCommon.Mode.CHASING
+        self.mode = VEntityEnemy.Mode.CHASING
 
         super().__init__(
             atlas,
@@ -75,18 +77,16 @@ class VEntityEnemyCommon(VEntityMoving):
             self.home_mode_management()
 
             match self.mode:
-                case VEntityEnemyCommon.Mode.CHASING:
+                case VEntityEnemy.Mode.CHASING:
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor
                     )
-                case VEntityEnemyCommon.Mode.FLEEING:
+                case VEntityEnemy.Mode.FLEEING:
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor,
                         reversed=True,
                     )
-                case (
-                    VEntityEnemyCommon.Mode.DEAD | VEntityEnemyCommon.Mode.HOME
-                ):
+                case VEntityEnemy.Mode.DEAD | VEntityEnemy.Mode.HOME:
                     self.next_position = self.maze.get_next_lowest(
                         self.current_floor,
                         corner=self.corner_id,
@@ -125,33 +125,33 @@ class VEntityEnemyCommon(VEntityMoving):
     # ############################################################ TIMERS ####
     def update_timers(self, delta_time: float = 1 / 60) -> None:
         match self.mode:
-            case VEntityEnemyCommon.Mode.FLEEING:
+            case VEntityEnemy.Mode.FLEEING:
                 self.timer_fleeing -= delta_time
                 if self.timer_fleeing <= 0:
-                    self.mode = VEntityEnemyCommon.Mode.CHASING
-            case VEntityEnemyCommon.Mode.DEAD:
+                    self.mode = VEntityEnemy.Mode.CHASING
+            case VEntityEnemy.Mode.DEAD:
                 self.timer_dead -= delta_time
                 if self.timer_dead <= 0:
-                    self.mode = VEntityEnemyCommon.Mode.CHASING
+                    self.mode = VEntityEnemy.Mode.CHASING
             case _:
                 pass
 
     # ########################################################################
     # ################################################### MODE PROPERTIES ####
     @property
-    def mode(self) -> VEntityEnemyCommon.Mode:
+    def mode(self) -> VEntityEnemy.Mode:
         return self._mode
 
     @mode.setter
-    def mode(self, new_mode: VEntityEnemyCommon.Mode) -> None:
+    def mode(self, new_mode: VEntityEnemy.Mode) -> None:
         self._mode = new_mode
         match new_mode:
-            case VEntityEnemyCommon.Mode.CHASING:
+            case VEntityEnemy.Mode.CHASING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
-            case VEntityEnemyCommon.Mode.FLEEING:
+            case VEntityEnemy.Mode.FLEEING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
                 self.timer_fleeing = VData.TIMER_ENEMY_FLEEING
-            case VEntityEnemyCommon.Mode.DEAD:
+            case VEntityEnemy.Mode.DEAD:
                 self._sprite_name = f"enemy_{new_mode.value}"
                 self.timer_dead = VData.TIMER_ENEMY_DEATH
                 self.update_texture(force=True)
@@ -165,21 +165,30 @@ class VEntityEnemyCommon(VEntityMoving):
 
     def set_home_mode_triggers(self) -> None:
         """Set the triggers used in the home mode:
-        - max_from_home: the enemy will come back near its start
-        - max_from_player: if closer to player, it will continue to chase
+        - hmode_trig_to_home: the enemy will come back near its start
+        - hmode_trig_to_player: if closer to player, it will continue to chase
+        - hmode_go_home_up_to: no need to touch the center
         """
 
-        # TODO: Overload this method to change their behaviours ?
-        # TODO: Overload this method to change their behaviours ?
+        # TODO: Not very cool -_-'
+        # TODO: It would be great if the enemy has a kind of default path
+        #       And turn in its area like a guard...
 
-        value = max(self.maze.width, self.maze.height)
-        value //= VData.SPRITE_SIZE
+        manhattan_to_center = self.maze.center_position // VData.SPRITE_SIZE
+        max_axis = int(max(manhattan_to_center.x, manhattan_to_center.y))
 
-        self.max_from_home = int(value * 0.8)
-        self.max_from_player = int(value * 0.4)
+        self.hmode_trig_to_home = random.randint(
+            int(max_axis * 0.8), int(max_axis * 1.8)
+        )
+        self.hmode_trig_to_player = random.randint(4, 8)
+        self.hmode_go_home_up_to = random.randint(1, 5)
 
-        print(f"trigger from home: {self.max_from_home}")
-        print(f"trigger from player: {self.max_from_player}")
+        print_debug(f"-- enemy: {self.corner_id}")
+        print_debug(f"HM: manhattan to center: {manhattan_to_center}")
+        print_debug(f"HM: max axis: {max_axis}")
+        print_debug(f"HM: trigger from home: {self.hmode_trig_to_home}")
+        print_debug(f"HM: trigger from player: {self.hmode_trig_to_player}")
+        print_debug(f"HM: go home up to: {self.hmode_go_home_up_to}")
 
     # ########################################################################
     # ############################################ HOME MODE - MANAGEMENT ####
@@ -196,15 +205,17 @@ class VEntityEnemyCommon(VEntityMoving):
             from_player = self.maze.graph_costs[self.current_floor]
 
             match self.mode:
-                case VEntityEnemyCommon.Mode.CHASING:
+                case VEntityEnemy.Mode.CHASING:
                     if (
-                        from_player > self.max_from_player
-                        and from_home > self.max_from_home
+                        from_player > self.hmode_trig_to_player
+                        and from_home > self.hmode_trig_to_home
                     ):
-                        self.mode = VEntityEnemyCommon.Mode.HOME
-                case VEntityEnemyCommon.Mode.HOME:
-                    # TODO: Magic number to check --
-                    if from_home < 5 or from_player < self.max_from_player:
-                        self.mode = VEntityEnemyCommon.Mode.CHASING
+                        self.mode = VEntityEnemy.Mode.HOME
+                case VEntityEnemy.Mode.HOME:
+                    if (
+                        from_home < self.hmode_go_home_up_to
+                        or from_player < self.hmode_trig_to_player
+                    ):
+                        self.mode = VEntityEnemy.Mode.CHASING
                 case _:
                     pass
