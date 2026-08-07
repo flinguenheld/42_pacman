@@ -172,7 +172,7 @@ class VGame(arcade.View):
                 return random.randint(1, 100000)
 
         seed = get_seed()
-        raw_width = random.randint(10, 20)
+        raw_width = random.randint(10, 15)
         raw_height = random.randint(5, 15)
         maze_gen = MazeGeneratorWrapper()
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
