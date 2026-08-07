@@ -1,3 +1,4 @@
+from termcolor import cprint
 import random
 import arcade
 from arcade import SpriteList, Vec2, LBWH
@@ -47,17 +48,8 @@ class VGame(arcade.View):
         # Maze --
         self.new_maze()
 
-        # Background --
-        self.background = GBackground(self.atlas)
-        self.background.build(self.maze.center_position, self.maze.rect)
-        arcade.set_background_color(self.atlas.get_color("background"))
-
-        # HUD --
-        self.hud = VHud(
-            self.maze,
-            self.atlas,
-            self.gamestate,
-        )
+        # Background & hud
+        self.setup_background_and_hud()
 
         # Init sprite lists first --
         self.enemy_list: SpriteList[VEntityEnemy] = arcade.SpriteList()
@@ -72,6 +64,16 @@ class VGame(arcade.View):
         self.spawn_entities()
 
         self.setup_done = True
+
+    # ################################################
+    # ########################## BACKGROUND & HUD ####
+    def setup_background_and_hud(self):
+        self.background = GBackground(self.atlas)
+        self.background.build(self.maze.center_position, self.maze.rect)
+        arcade.set_background_color(self.atlas.get_color("background"))
+
+        # --
+        self.hud = VHud(self.maze, self.atlas, self.gamestate)
 
     # ########################################################################
     # ################################################### PLAYER PROPERTY ####
@@ -180,13 +182,6 @@ class VGame(arcade.View):
         )
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
-
-    # ########################################################################
-    # #################################################### RELOAD SPRITES ####
-    def reload_maze_sprites(self) -> None:
-        # TODO: Might need this function if we reimplement
-        # the style switching feature
-        pass
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -318,14 +313,22 @@ class VGame(arcade.View):
                 case arcade.key.H:
                     VData.toggle_debug_mode()
 
+                case arcade.key.T:
+                    if not self.maze.graph_costs and self.setup_done:
+                        self.setup_done = False
+                        self.atlas.next_style()
+                        self.maze._build_sprites()
+                        self.setup_background_and_hud()
+                        self.setup_done = True
+                    else:
+                        cprint(
+                            "*** You can only change the theme "
+                            "at the beginning of a maze. ***",
+                            color="yellow",
+                        )
+
                 case _:
                     pass
-
-            # TODO: reimplement style switching feature and change key
-            # elif symbol == arcade.key.S:
-            #     self.sprite_manager.next_style()
-            #     self.sprite_manager.reload(self.maze_gen, reload_atlas=True)
-            #     arcade.set_background_color(self.sprite_manager.background_color)
 
             self.player.on_key_press(symbol)
 

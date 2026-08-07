@@ -49,11 +49,16 @@ class VAtlas:
     # TODO: MOVE NEXT STYLE IN VGAME OR WHERE ????
     def next_style(self) -> None:
         match self.style:
-            case VStyles.SUMMER:
+            case VStyles.EDGE:
+                self.style = VStyles.EDGE_NO_TILE
+
+            case VStyles.EDGE_NO_TILE:
+                self.style = VStyles.EDGE_RED
+
+            case VStyles.EDGE_RED:
                 self.style = VStyles.EDGE
 
-            case VStyles.EDGE:
-                self.style = VStyles.SUMMER
+        self.load()
 
     # ########################################################################
     # ############################################# LOAD INFORMATION FILE ####
