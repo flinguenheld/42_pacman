@@ -44,6 +44,6 @@ def sprite_center(sprite: Sprite) -> Vec2:
 
 # ############################################################################
 # ########################################################## PRINT DEBUG #####
-def print_debug(text: str, color: str = "magenta", end: str = "\n"):
+def print_debug(text: str, color: str = "magenta", end: str = "\n") -> None:
     if VData.is_debug_on():
         cprint(f"   {text}", color=color, end=end)

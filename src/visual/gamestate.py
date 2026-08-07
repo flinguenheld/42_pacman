@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 from src.visual.vdata import VData
 
 
@@ -31,6 +32,7 @@ class GameState:
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
+        self._enemy_patroling_trigger: float = 7
 
         self.cheats: Cheats = Cheats(self)
 
@@ -58,6 +60,22 @@ class GameState:
     def player_speed(self) -> float:
         return self._player_speed
 
+    # QUESTION: I put that here in case you want to adapt the level difficulty
+    #           The trigger is the distance from the player an enemy will turn
+    #           into chasing mode.
+    #           We can imagine tons of ways to deal with:
+    #             - simply fixed in VEntityEnemy
+    #             - linked to the level
+    #             - linked to the maze size
+    #             - ...
     @property
     def enemy_speed(self) -> float:
-        return self._enemy_speed
+        # QUESTION: Is it good here ?
+        return self._enemy_speed * random.uniform(0.8, 1.2)
+
+    # ########################################################################
+    # ################################################# PATROLING TRIGGER ####
+    @property
+    def enemy_patroling_trigger(self) -> int:
+        # QUESTION: Is it good here ?
+        return int(self._enemy_patroling_trigger * random.uniform(0.5, 1.5))

@@ -8,17 +8,10 @@ from src.visual.gui.ghud import VHud
 from src.visual.gamestate import GameState
 from src.visual.gui.gbackground import GBackground
 from src.visual.vdata import VNames, VData, DebugMode
-from src.visual.entities.venemy_variants import (
-    Charlie,
-    EnemyVariant,
-    Johnny,
-    Michael,
-    ReverseMichael,
-)
 from src.maze.maze_wrapper import MazeGeneratorWrapper
+from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.entities.ventity_player import VEntityPlayer
 from src.visual.entities.ventity_pacgum import VEntityPacGum
-from src.visual.entities.ventity_enemy import VEntityEnemy
 from src.visual.entities.ventity_super_pacgum import VEntitySuperPacGum
 
 
@@ -67,7 +60,7 @@ class VGame(arcade.View):
         )
 
         # Init sprite lists first --
-        self.enemy_list: SpriteList[EnemyVariant] = arcade.SpriteList()
+        self.enemy_list: SpriteList[VEntityEnemy] = arcade.SpriteList()
         self.player_list: SpriteList[VEntityPlayer] = arcade.SpriteList()
         self.pacgum_list: SpriteList[VEntityPacGum] = arcade.SpriteList()
         self.super_pacgum_list: SpriteList[VEntitySuperPacGum] = (
@@ -104,14 +97,17 @@ class VGame(arcade.View):
         )
 
     def spawn_enemies(self) -> None:
+        self.maze.clear_costs()
         self.enemy_list.clear()
-        for who in (Johnny, Michael, Charlie, ReverseMichael):
+
+        for id in range(4):
             self.enemy_list.append(
-                who(
+                VEntityEnemy(
+                    corner_id=id,
                     atlas=self.atlas,
                     maze=self.maze,
-                    player=self.player,
-                    gamestate=self.gamestate,
+                    speed=self.gamestate.enemy_speed,
+                    patroling_trigger=self.gamestate.enemy_patroling_trigger,
                 )
             )
 
@@ -195,7 +191,7 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################## DRAW ####
     def on_draw(self) -> None:
-        def draw_people():
+        def draw_people() -> None:
             self.player_list.draw(pixelated=True)
             self.enemy_list.draw(pixelated=True)
 

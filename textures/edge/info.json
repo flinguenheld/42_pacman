@@ -229,6 +229,7 @@
       ]
     },
     {
+      "comment": "################################################ PLAYER ####",
       "name": "player_top",
       "nb": 4,
       "animated": true,
@@ -290,6 +291,7 @@
       }
     },
     {
+      "comment": "############################################### PACGUMS ####",
       "name": "pacgum_wait",
       "nb": 9,
       "animated": true,
@@ -350,11 +352,135 @@
       }
     },
     {
-      "name": "enemy_0_chasing_top",
+      "comment": "############################################# PATROLING ####",
+      "name": "enemy_0_patroling_top",
       "nb": 4,
       "animated": true,
       "duration": [
         200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "comment": "############################################### CHASING ####",
+      "name": "enemy_0_chasing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -366,7 +492,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -378,7 +504,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -390,7 +516,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -415,7 +541,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -427,7 +553,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -439,7 +565,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -451,7 +577,7 @@
       "nb": 4,
       "animated": true,
       "duration": [
-        200
+        100
       ],
       "hitbox": {
         "size": 20,
@@ -472,6 +598,7 @@
       }
     },
     {
+      "comment": "############################################### FLEEING ####",
       "name": "enemy_0_fleeing_top",
       "nb": 4,
       "animated": true,
@@ -594,6 +721,7 @@
       }
     },
     {
+      "comment": "################################################## DEAD ####",
       "name": "enemy_dead_top",
       "nb": 3,
       "animated": true,
@@ -636,26 +764,6 @@
     {
       "name": "debug_square",
       "nb": 1
-    },
-    {
-      "name": "checkbox_off",
-      "nb": 4,
-      "allowed_rotation": [
-        0,
-        90,
-        180,
-        270
-      ]
-    },
-    {
-      "name": "checkbox_on",
-      "nb": 4,
-      "allowed_rotation": [
-        0,
-        90,
-        180,
-        270
-      ]
     }
   ]
 }
