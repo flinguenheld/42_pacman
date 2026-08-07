@@ -39,7 +39,6 @@ class VGame(arcade.View):
 
         self.gamestate = gamestate
         self.cheats = gamestate.cheats
-        self.level_data = gamestate.level_data
         self.setup()
 
     # ########################################################################
@@ -169,18 +168,19 @@ class VGame(arcade.View):
     # ########################################################## NEW MAZE ####
     def new_maze(self) -> None:
         def get_seed() -> int:
-            if self.level_data.level_id == 1:
+            if self.gamestate.level == 1:
                 return 42
             else:
-                return random.randint(1, 200)
+                return random.randint(1, 100000)
 
-        raw_width = self.level_data.maze_width
-        raw_height = self.level_data.maze_height
         seed = get_seed()
+        raw_width = random.randint(10, 20)
+        raw_height = random.randint(5, 15)
         maze_gen = MazeGeneratorWrapper()
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
         print(
-            f"Generated new maze - Seed: {seed}, Size: {raw_width}x{raw_height}"
+            "Generated new maze - "
+            f"Seed: {seed}, Size: {raw_width}x{raw_height}"
         )
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
@@ -252,15 +252,18 @@ class VGame(arcade.View):
             self.player,
             self.pacgum_list,
         ):
-            self.gamestate.increment_score(pacgum.get_points())
+            self.gamestate.score += pacgum.get_points()
             pacgum.kill()
 
         for super_pacgum in arcade.check_for_collision_with_list(
             self.player, self.super_pacgum_list
         ):
-            self.gamestate.increment_score(super_pacgum.get_points())
+            self.gamestate.score += super_pacgum.get_points()
             self.switch_all_enemies_to_fleeing()
             super_pacgum.kill()
+
+        if len(self.combined_pacgum_list) == 0:
+            self.go_to_next_level()
 
     def enemy_collisions(self) -> None:
         for enemy in arcade.check_for_collision_with_list(
@@ -285,6 +288,9 @@ class VGame(arcade.View):
         else:
             self.spawn_entities()
             self.cameras_update()
+
+    def go_to_next_level(self) -> None:
+        self.window.switch_view(VNames.VIEW_GAME_NEXT_LEVEL)
 
     # ########################################################################
     # ######################################### SWITCH ENEMIES TO FLEEING ####

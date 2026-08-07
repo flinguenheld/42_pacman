@@ -1,5 +1,5 @@
 from __future__ import annotations
-from src.visual.vdata import VData, VLevelData
+from src.visual.vdata import VData
 
 
 class Cheats:
@@ -23,20 +23,11 @@ class Cheats:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█░█░█▀▀░▀▀█░░█░░█▀█░░█░░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░▀░░▀░▀░░▀░░▀▀▀░░
 class GameState:
-    def __init__(self, level_data: VLevelData) -> None:
-        self.level_data = level_data
-
-        self.setup()
-
-    def setup(self) -> None:
-        """
-        Initializes the game state with default values.
-        Let's us reset the game state in a more elegant way
-        """
-        # TODO: Check if this is the right solution for that problem
+    def __init__(self) -> None:
         self.score = 0
         self.lives = 3
         self.timer = VData.time_max
+        self.level = 1
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
@@ -45,9 +36,6 @@ class GameState:
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####
-    def increment_score(self, points: int) -> None:
-        self.score += points
-
     def decrement_lives(self) -> None:
         if self.lives > 0:
             self.lives -= 1
