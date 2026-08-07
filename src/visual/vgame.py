@@ -221,9 +221,7 @@ class VGame(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
-            if self.gamestate.is_game_over:
-                self.game_over()
-            else:
+            if not self.defeat():
                 self.maze.update(delta_time)
                 self.background.update(delta_time)
                 self.enemy_list.update(delta_time)
@@ -265,25 +263,31 @@ class VGame(arcade.View):
         ):
             match enemy.mode:
                 case VEntityEnemy.Mode.CHASING:
-                    self.player_death()
+                    self.player.alive = False
                 case VEntityEnemy.Mode.FLEEING:
                     enemy.mode = VEntityEnemy.Mode.DEAD
                 case _:
                     pass
 
+    def defeat(self) -> bool:
+        if self.cheats.god_mode:
+            return False
+        if self.gamestate.is_game_over:
+            self.game_over()
+            return True
+        elif not self.player.alive:
+            self.player_death()
+            return True
+        return False
+
     # ########################################################################
     # ###################################################### PLAYER DEATH ####
     def player_death(self) -> None:
-        if self.cheats.god_mode:
-            return
         self.gamestate.decrement_lives()
 
-        if self.gamestate.is_game_over:
-            self.game_over()
-        else:
-            self.spawn_moving_entities()
-            self.gamestate.reset_timer()
-            self.cameras_update()
+        self.spawn_moving_entities()
+        self.gamestate.reset_timer()
+        self.cameras_update()
 
     def go_to_next_level(self) -> None:
         self.window.switch_view(VNames.VIEW_GAME_NEXT_LEVEL)

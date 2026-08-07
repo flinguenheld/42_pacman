@@ -55,6 +55,19 @@ class VEntityPlayer(VEntityMoving):
 
         self.gamestate: GameState = gamestate
         self.directions_from_keys: set[Vec2] = set()
+        self._alive: bool = True
+
+    # ########################################################################
+    # ############################################################# ALIVE ####
+    @property
+    def alive(self) -> bool:
+        return self._alive
+
+    @alive.setter
+    def alive(self, value: bool) -> None:
+        if self.gamestate.cheats.god_mode and not value:
+            return
+        self._alive = value
 
     # ########################################################################
     # ############################################################ UPDATE ####
