@@ -1,6 +1,6 @@
-from termcolor import cprint
 import random
 import arcade
+from termcolor import cprint
 from arcade import SpriteList, Vec2, LBWH
 
 from src.maze.maze import Maze
@@ -40,9 +40,6 @@ class VGame(arcade.View):
     def setup(self) -> None:
         """Restart the game."""
 
-        # TODO: Implement the logic when the level is done
-        # TODO:   -> Call setup and level - 1
-
         self.setup_done = False
 
         # Maze --
@@ -67,7 +64,7 @@ class VGame(arcade.View):
 
     # ################################################
     # ########################## BACKGROUND & HUD ####
-    def setup_background_and_hud(self):
+    def setup_background_and_hud(self) -> None:
         self.background = GBackground(self.atlas)
         self.background.build(self.maze.center_position, self.maze.rect)
         arcade.set_background_color(self.atlas.get_color("background"))
@@ -328,7 +325,7 @@ class VGame(arcade.View):
                     if not self.maze.graph_costs and self.setup_done:
                         self.setup_done = False
                         self.atlas.next_style()
-                        self.maze._build_sprites()
+                        self.maze.build_sprites()
                         self.setup_background_and_hud()
                         self.setup_done = True
                     else:

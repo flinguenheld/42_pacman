@@ -43,10 +43,10 @@ Ghosts! More ghosts!
     - [X] Remaining lives
     - [X] Remaining time
     - [ ] Correction checks
-      - [ ] You can move in the maze
-      - [ ] You can't cross walls
-      - [ ] You can eat pacgums and super pacgums
-      - [ ] You can die and re-spawn.
+      - [X] You can move in the maze
+      - [X] You can't cross walls
+      - [X] You can eat pacgums and super pacgums
+      - [X] You can die and re-spawn.
 
   - [X] Pause
     - [X] Resume the game
@@ -100,13 +100,13 @@ Ghosts! More ghosts!
   - [ ] Pacgum
     - [X] Create texture
     - [X] Spawn in most corridors (3 out of 4 cases?)
-    - [ ] Manage counter
+    - [X] Manage counter
 
   - [ ] Super-Pacgum
     - [X] Create texture
     - [X] 1 per corner
     - [X] Makes ghosts edible for a short time
-    - [ ] Eating an edible ghost increases the score by Z points
+    - [X] Eating an edible ghost increases the score by Z points
 
   - [ ] Ghost
     - [X] Create algo to move them
@@ -117,7 +117,7 @@ Ghosts! More ghosts!
         - [X] ReverseMichael: Block the player but on the opposite direction
       - [X] Hunter on regular
       - [X] Run away when edible
-      - [ ] Variable speed ?
+      - [X] Variable speed ?
     - [X] 1 ghost per corner
     - [X] Respawn
       - [X] In their corner

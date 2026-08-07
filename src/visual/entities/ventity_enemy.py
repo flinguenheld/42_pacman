@@ -150,7 +150,6 @@ class VEntityEnemy(VEntityMoving):
 
     @mode.setter
     def mode(self, new_mode: VEntityEnemy.Mode) -> None:
-        print("new mode")
         self._mode = new_mode
         match new_mode:
             case VEntityEnemy.Mode.PATROLING | VEntityEnemy.Mode.CHASING:

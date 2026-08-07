@@ -66,7 +66,7 @@ class Maze:
         include_graph = False to skip the algorithm management.
         """
 
-        self._build_sprites(sprite_offset)
+        self.build_sprites(sprite_offset)
 
         if include_graph:
             self._build_floor_graph()
@@ -78,7 +78,7 @@ class Maze:
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
-    def _build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
+    def build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
 

@@ -4,11 +4,11 @@ from arcade.types import Color
 from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 
 from src.maze.maze import Maze
-from src.visual.vdata import VData, DebugMode
 from src.visual.vatlas import VAtlas
 from src.visual.gui.glabel import GLabel
 from src.visual.gui.gframe import GFrame
 from src.visual.gamestate import GameState
+from src.visual.vdata import VData, DebugMode
 from src.visual.gui.gbackground import GBackground
 
 
@@ -60,6 +60,12 @@ class VHud:
         )
 
         self.add_field(
+            entry_name="level",
+            x=self.frame.width / 4 - VData.SPRITE_SIZE,
+            color=self.atlas.get_color("hud_font"),
+        )
+
+        self.add_field(
             entry_name="lives",
             icon_name="heart_hud",
             x=self.frame.width / 2 - VData.SPRITE_SIZE * 3.2,
@@ -74,7 +80,7 @@ class VHud:
 
         self.add_field(
             entry_name="fps",
-            x=self.frame.width / -4,
+            x=self.frame.width / -4 + VData.SPRITE_SIZE,
             color=self.atlas.get_color("hud_font_debug"),
             debug=True,
         )
@@ -127,6 +133,7 @@ class VHud:
         self.icons.draw(pixelated=True)
 
         self.fields["score"].text = str(self.gamestate.score)
+        self.fields["level"].text = f"{self.gamestate.level}/10"
         self.fields["lives"].text = f"{self.gamestate.lives:>2}"
         self.fields["timer"].text = self.get_time_left()
 
