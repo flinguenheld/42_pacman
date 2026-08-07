@@ -1,0 +1,765 @@
+{
+  "url": "https://fr.pinterest.com/pin/733946070550276240/",
+  "url2": "https://pipoya.itch.io/pipoya-free-rpg-character-sprites-32x32",
+  "default_width": 32,
+  "default_height": 32,
+  "default_hitbox": {
+    "comment": "Default values to override --",
+    "automatic": false,
+    "deactivated": false,
+    "size": 20,
+    "bevel": 0,
+    "full_top": false,
+    "full_right": false,
+    "full_bot": false,
+    "full_left": false
+  },
+  "number_of_enemies": 2,
+  "font": {
+    "name": "Kenney Mini",
+    "size": 25
+  },
+  "colors": {
+    "background": {
+      "r": 158,
+      "g": 179,
+      "b": 65
+    },
+    "hud_font": {
+      "r": 119,
+      "g": 67,
+      "b": 59
+    },
+    "hud_font_debug": {
+      "r": 188,
+      "g": 33,
+      "b": 23
+    },
+    "menu_font": {
+      "r": 119,
+      "g": 67,
+      "b": 59
+    },
+    "menu_font_active": {
+      "r": 130,
+      "g": 154,
+      "b": 51
+    },
+    "high_scores": {
+      "r": 86,
+      "g": 65,
+      "b": 179
+    }
+  },
+  "lines": [
+    {
+      "name": "wall_with_floor_on_top",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_right",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_bottom",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_left",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_top_right",
+      "nb": 2
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom",
+      "nb": 2
+    },
+    {
+      "name": "wall_with_floor_on_top_left",
+      "nb": 2
+    },
+    {
+      "name": "wall_with_floor_on_bottom_left",
+      "nb": 2
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom",
+      "nb": 6
+    },
+    {
+      "name": "wall_with_floor_on_right_left",
+      "nb": 6
+    },
+    {
+      "name": "wall_with_floor_on_top_right_left",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_top_right_bottom",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_right_bottom_left",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_top_bottom_left",
+      "nb": 4
+    },
+    {
+      "name": "wall_with_floor_on_top_right_bottom_left",
+      "nb": 1,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "wall_extra_corner_bot_right",
+      "nb": 1
+    },
+    {
+      "name": "wall_extra_corner_top_right",
+      "nb": 1
+    },
+    {
+      "name": "wall_extra_corner_bot_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_extra_corner_top_left",
+      "nb": 1
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 3,
+      "probability": 90,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 7,
+      "probability": 10
+    },
+    {
+      "name": "wall_open_full",
+      "nb": 7,
+      "probability": 10
+    },
+    {
+      "name": "floor",
+      "nb": 6,
+      "probability": 100
+    },
+    {
+      "name": "floor",
+      "nb": 12,
+      "probability": 50,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "comment": "This special floor is used to create frames --",
+      "name": "frame",
+      "nb": 6,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "background",
+      "nb": 1,
+      "width": 128,
+      "height": 128,
+      "allowed_rotation": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "name": "background",
+      "nb": 4,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "name": "background",
+      "nb": 4,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "name": "heart_hud",
+      "nb": 15,
+      "animated": true,
+      "duration": [
+        5550,
+        25
+      ]
+    },
+    {
+      "name": "score_hud",
+      "nb": 16,
+      "animated": true,
+      "duration": [
+        7700,
+        50
+      ]
+    },
+    {
+      "comment": "################################################ PLAYER ####",
+      "name": "player_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "player_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "player_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "player_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "player_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "comment": "############################################### PACGUMS ####",
+      "name": "pacgum_wait",
+      "nb": 9,
+      "animated": true,
+      "duration": [
+        5555,
+        100
+      ],
+      "hitbox": {
+        "size": 16
+      }
+    },
+    {
+      "name": "pacgum_wait",
+      "nb": 14,
+      "animated": true,
+      "duration": [
+        8888,
+        75
+      ],
+      "hitbox": {
+        "size": 16
+      }
+    },
+    {
+      "name": "pacgum_wait",
+      "nb": 14,
+      "animated": true,
+      "duration": [
+        11111,
+        75
+      ],
+      "hitbox": {
+        "size": 16
+      }
+    },
+    {
+      "name": "super_pacgum_wait",
+      "nb": 13,
+      "animated": true,
+      "duration": [
+        5000,
+        25
+      ],
+      "hitbox": {
+        "size": 16
+      }
+    },
+    {
+      "name": "super_pacgum_wait",
+      "nb": 8,
+      "animated": true,
+      "duration": [
+        5000,
+        150
+      ],
+      "hitbox": {
+        "size": 16
+      }
+    },
+    {
+      "comment": "############################################# PATROLING ####",
+      "name": "enemy_0_patroling_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_patroling_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        200
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_patroling_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "comment": "############################################### CHASING ####",
+      "name": "enemy_0_chasing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_chasing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_chasing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_chasing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_chasing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_chasing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_chasing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_chasing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_chasing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        100
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_chasing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "comment": "############################################### FLEEING ####",
+      "name": "enemy_0_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_0_fleeing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_top",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_right",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_bot",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_left",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        50
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "name": "enemy_1_fleeing_wait",
+      "nb": 4,
+      "animated": true,
+      "duration": [
+        5000,
+        80
+      ],
+      "hitbox": {
+        "size": 20,
+        "bevel": 5
+      }
+    },
+    {
+      "comment": "################################################## DEAD ####",
+      "name": "enemy_dead_top",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        150
+      ]
+    },
+    {
+      "name": "enemy_dead_right",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        150
+      ]
+    },
+    {
+      "name": "enemy_dead_bot",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        150
+      ]
+    },
+    {
+      "name": "enemy_dead_left",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        150
+      ]
+    },
+    {
+      "name": "enemy_dead_wait",
+      "nb": 3,
+      "animated": true,
+      "duration": [
+        200
+      ]
+    },
+    {
+      "name": "debug_square",
+      "nb": 1
+    }
+  ]
+}
