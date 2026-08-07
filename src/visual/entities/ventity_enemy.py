@@ -18,7 +18,7 @@ class VEntityEnemy(VEntityMoving):
     class Mode(Enum):
         CHASING = "chasing"
         FLEEING = "fleeing"
-        PATROLING = "no texture"
+        PATROLING = "patroling"
         DEAD = "dead"
 
     def __init__(
@@ -29,15 +29,16 @@ class VEntityEnemy(VEntityMoving):
         speed: int | float,
         patroling_trigger: int,
     ) -> None:
+        self._mode = VEntityEnemy.Mode.CHASING
         self.corner_id = corner_id % len(maze.floor_corners)
         self.texture_id = self.corner_id % atlas.nb_of_enemies
-        self.mode = VEntityEnemy.Mode.CHASING
+        self.affected_corner = maze.floor_corners[self.corner_id]
 
         super().__init__(
             atlas,
             maze,
-            f"enemy_{self.texture_id}_{self.mode.value}",
-            maze.floor_corners[self.corner_id],
+            f"enemy_{self.texture_id}_{self._mode.value}",
+            self.affected_corner,
         )
 
         self.base_speed = speed
@@ -134,9 +135,10 @@ class VEntityEnemy(VEntityMoving):
                 if self.timer_fleeing <= 0:
                     self.mode = VEntityEnemy.Mode.CHASING
             case VEntityEnemy.Mode.DEAD:
-                self.timer_dead -= delta_time
-                if self.timer_dead <= 0:
-                    self.mode = VEntityEnemy.Mode.CHASING
+                if self.current_floor == self.affected_corner:
+                    self.timer_dead -= delta_time
+                    if self.timer_dead <= 0:
+                        self.mode = VEntityEnemy.Mode.CHASING
             case _:
                 pass
 
@@ -148,9 +150,10 @@ class VEntityEnemy(VEntityMoving):
 
     @mode.setter
     def mode(self, new_mode: VEntityEnemy.Mode) -> None:
+        print("new mode")
         self._mode = new_mode
         match new_mode:
-            case VEntityEnemy.Mode.CHASING:
+            case VEntityEnemy.Mode.PATROLING | VEntityEnemy.Mode.CHASING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
             case VEntityEnemy.Mode.FLEEING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
@@ -158,9 +161,8 @@ class VEntityEnemy(VEntityMoving):
             case VEntityEnemy.Mode.DEAD:
                 self._sprite_name = f"enemy_{new_mode.value}"
                 self.timer_dead = VData.TIMER_ENEMY_DEATH
-                self.update_texture(force=True)
-            case _:
-                pass
+
+        self.update_texture(force=True)
 
     # ########################################################################
     # ####################################### PATROLING MODE - MANAGEMENT ####

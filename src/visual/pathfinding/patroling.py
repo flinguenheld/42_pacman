@@ -50,7 +50,7 @@ class Patroling:
 
     # ########################################################################
     # ############################################## CORNER ####
-    def _home_mode_manager(self, start: Vec2):
+    def _home_mode_manager(self, start: Vec2) -> None:
         """
         Set/unset the home mode according to the given start.
         """
@@ -64,7 +64,7 @@ class Patroling:
         elif dist_to_corner > self.home_trigger:
             self.home_state = True
             self.home_to_reach = random.randint(2, self.home_trigger // 2)
-            self.print_debug(f"Go back to corner {self.home_to_reach}")
+            self.print_debug(f"Go back to corner up to {self.home_to_reach}")
 
     # ########################################################################
     # ############################################## NEXT RANDOM POSITION ####

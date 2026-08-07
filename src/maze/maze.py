@@ -210,6 +210,6 @@ class Maze:
 
     # ########################################################################
     # ####################################################### CLEAR COSTS ####
-    def clear_costs(self):
+    def clear_costs(self) -> None:
         """Useful on player death, otherwise enemies follow obsolete values"""
         self.graph_costs.clear()
