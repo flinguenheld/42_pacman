@@ -61,7 +61,7 @@ class VGame(arcade.View):
         self.combined_pacgum_list: SpriteList[
             VEntityPacGum | VEntitySuperPacGum
         ] = arcade.SpriteList()
-        self.spawn_entities()
+        self.spawn_all_entities()
 
         self.setup_done = True
 
@@ -83,10 +83,13 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ################################## SPAWN PLAYER / ENEMIES / PACGUMS ####
-    def spawn_entities(self) -> None:
+    def spawn_all_entities(self) -> None:
+        self.spawn_moving_entities()
+        self.spawn_pacgums()
+
+    def spawn_moving_entities(self) -> None:
         self.spawn_player()
         self.spawn_enemies()
-        self.spawn_pacgums()
 
     def spawn_player(self) -> None:
         self.player_list.clear()
@@ -221,20 +224,23 @@ class VGame(arcade.View):
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         if self.setup_done and self.process_updates:
-            self.maze.update(delta_time)
-            self.background.update(delta_time)
-            self.enemy_list.update(delta_time)
-            self.player_list.update(delta_time)
-            self.pacgum_collisions()
-            self.enemy_collisions()
+            if self.gamestate.is_game_over:
+                self.game_over()
+            else:
+                self.maze.update(delta_time)
+                self.background.update(delta_time)
+                self.enemy_list.update(delta_time)
+                self.player_list.update(delta_time)
+                self.pacgum_collisions()
+                self.enemy_collisions()
 
-            self.enemy_list.update_animation(delta_time)
-            self.player_list.update_animation(delta_time)
-            self.combined_pacgum_list.update_animation(delta_time)
+                self.enemy_list.update_animation(delta_time)
+                self.player_list.update_animation(delta_time)
+                self.combined_pacgum_list.update_animation(delta_time)
 
-            self.hud.update(delta_time)
+                self.hud.update(delta_time)
 
-            self.gamestate.update(delta_time)
+                self.gamestate.update(delta_time)
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
@@ -262,8 +268,7 @@ class VGame(arcade.View):
         ):
             match enemy.mode:
                 case VEntityEnemy.Mode.CHASING:
-                    if not self.cheats.god_mode:
-                        self.player_death()
+                    self.player_death()
                 case VEntityEnemy.Mode.FLEEING:
                     enemy.mode = VEntityEnemy.Mode.DEAD
                 case _:
@@ -272,16 +277,22 @@ class VGame(arcade.View):
     # ########################################################################
     # ###################################################### PLAYER DEATH ####
     def player_death(self) -> None:
+        if self.cheats.god_mode:
+            return
         self.gamestate.decrement_lives()
 
         if self.gamestate.is_game_over:
-            self.window.switch_view(VNames.VIEW_GAMEOVER)
+            self.game_over()
         else:
-            self.spawn_entities()
+            self.spawn_moving_entities()
+            self.gamestate.reset_timer()
             self.cameras_update()
 
     def go_to_next_level(self) -> None:
         self.window.switch_view(VNames.VIEW_GAME_NEXT_LEVEL)
+
+    def game_over(self) -> None:
+        self.window.switch_view(VNames.VIEW_GAMEOVER)
 
     # ########################################################################
     # ######################################### SWITCH ENEMIES TO FLEEING ####
@@ -305,7 +316,7 @@ class VGame(arcade.View):
                     self.setup()
                     self.cameras_update()
                 case arcade.key.R:
-                    self.spawn_entities()
+                    self.spawn_all_entities()
 
                 case arcade.key.SPACE:
                     self.process_updates = not self.process_updates

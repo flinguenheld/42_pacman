@@ -201,4 +201,4 @@ class VEntityEnemy(VEntityMoving):
             case VEntityEnemy.Mode.FLEEING:
                 return self.base_speed * 1.1
             case VEntityEnemy.Mode.DEAD:
-                return self.base_speed * 0.5
+                return self.base_speed * 0.8

@@ -27,14 +27,21 @@ class GameState:
     def __init__(self) -> None:
         self.score = 0
         self.lives = 3
-        self.timer = VData.time_max
         self.level = 1
+        self.reset_timer()
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
         self._enemy_patroling_trigger: float = 7
 
         self.cheats: Cheats = Cheats(self)
+
+    def next_level(self) -> None:
+        self.level += 1
+        self.reset_timer()
+
+    def reset_timer(self) -> None:
+        self.timer = VData.time_max
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####
@@ -71,7 +78,12 @@ class GameState:
     @property
     def enemy_speed(self) -> float:
         # QUESTION: Is it good here ?
-        return self._enemy_speed * random.uniform(0.8, 1.2)
+        level_factor = 1 + ((self.level - 1) * 0.01)
+        random_factor = random.uniform(0.8, 1.1)
+
+        speed = self._enemy_speed * level_factor * random_factor
+        # Cap the speed to avoid enemies being too fast
+        return min(speed, self.player_speed * 0.9)
 
     # ########################################################################
     # ################################################# PATROLING TRIGGER ####
