@@ -1,9 +1,9 @@
 import sys
 from termcolor import cprint
 
-from src.visual.vdata import VData
-from src.visual.vmain import VMain
-from src.utils.usage import print_usage
+from src.data.vdata import VData
+from src.views.vmain import VMain
+from src.utils.utils import print_usage
 from src.config.utils import get_config, ConfigError
 
 

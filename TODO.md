@@ -1,7 +1,4 @@
-- [ ] Management
-  - [ ] Create a sub directory
-  - [ ] Add some files ??
-  - [ ] Yes it is required in the correction
+### Todo list
 
 - [ ] Readme
   - [ ] Check the project management part
@@ -31,36 +28,36 @@
 
 - [ ] Views
   - [ ] Menus
-    - [ ] Main menu
-      - [ ] Display highscore
+    - [X] Main menu
+      - [X] Display highscore
       - [ ] Instructions
-      - [ ] Exit
+      - [X] Exit
 
-  - [ ] Options menu ? (Not required)
-
-  - [ ] Game view
-    - [ ] Current score
-    - [ ] Remaining lives
-    - [ ] Remaining time
+  - [X] Game view (HUD)
+    - [X] Current score
+    - [X] Remaining lives
+    - [X] Remaining time
     - [ ] Correction checks
-      - [ ] You can move in the maze
-      - [ ] You can't cross walls
-      - [ ] You can eat pacgums and super pacgums
-      - [ ] You can die and re-spawn.
+      - [X] You can move in the maze
+      - [X] You can't cross walls
+      - [X] You can eat pacgums and super pacgums
+      - [X] You can die and re-spawn.
 
-  - [ ] Pause
-    - [ ] Resume the game
-    - [ ] Return to main (give up)
+  - [X] Pause
+    - [X] Resume the game
+    - [X] Link to instructions
+    - [X] Return to main (give up)
 
-  - [ ] Game over
-    - [ ] Display final score
-    - [ ] Highscore: enter player name
+  - [X] Game over
+    - [X] Display final score
+    - [X] Highscore: enter player name
+      - [X] Max 10 characters, alphanumeric and spaces only
 
-  - [ ] Victory
-    - [ ] Display final score
-    - [ ] Congratulation
-    - [ ] Highscore: enter player name
-
+  - [X] Victory
+    - [X] Display final score
+    - [X] Congratulation
+    - [X] Highscore: enter player name
+      - [X] Max 10 characters, alphanumeric and spaces only
 
 - [ ] Deployment
   - [ ] Deployment to a public gaming platform (Itch.io)
@@ -69,39 +66,42 @@
   - [ ] Provide minimal in-package instructions(controls, options, configuration)
   - [ ] Git repository must contain the full source and the packaging script/spec at the root
 
-- [ ] Integrate maze generation
-  - [ ] Use as-is
-  - [ ] PERFECT = False
-  - [ ] Handle errors gracefully
+- [X] Integrate maze generation
+  - [X] Use as-is
+  - [X] PERFECT = False
+  - [X] Handle errors gracefully
 
-- [ ] Highscore system
-  - [ ] JSON File management
-    - [ ] Player name: max 10 chars, only alphanumeric and spaces
-    - [ ] Score: Only non-negative integers
-    - [ ] Store max top 10 highscores
-  - [ ] Manage display on screen
-  - [ ] Handle empty file
-  - [ ] Handle adding new highscores (View, System)
-  - [ ] Allow players to enter their name and register new high score
-  - [ ] Do not update previous high score of the same name, add new entry
+- [X] Highscore system
+  - [X] JSON File management
+    - [X] Player name: max 10 chars, only alphanumeric and spaces
+    - [X] Score: Only non-negative integers
+    - [X] Store max top 10 highscores
+  - [X] Manage display on screen
+  - [X] Handle empty file
+  - [X] Handle adding new highscores (View, System)
+  - [X] Allow players to enter their name and register new high score
+  - [X] Do not update previous high score of the same name, add new entry
 
 - [ ] Game
-  - [X] Player
+  - [ ] Player
+    - [X] Create texture
     - [X] Player spawns in the middle
     - [X] Move with arrow keys or WASD
       - [X] If necessary, handle AZERTY preset (ZQSD) as an option
     - [X] Ghost touch player = player loses one life
       - [X] Player respawns in the middle
       - [X] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
-    - [ ] Pacgum
-      - [ ] Create texture
-      - [ ] Spawn in most corridors (3 out of 4 cases?)
-      - [ ] Manage counter
-    - [ ] Super-Pacgum
-      - [ ] Create texture
-      - [ ] 1 per corner
-      - [ ] Makes ghosts edible for a short time
-      - [ ] Eating an edible ghost increases the score by Z points
+
+  - [ ] Pacgum
+    - [X] Create texture
+    - [X] Spawn in most corridors (3 out of 4 cases?)
+    - [X] Manage counter
+
+  - [ ] Super-Pacgum
+    - [X] Create texture
+    - [X] 1 per corner
+    - [X] Makes ghosts edible for a short time
+    - [X] Eating an edible ghost increases the score by Z points
 
   - [ ] Ghost
     - [X] Create algo to move them
@@ -110,22 +110,20 @@
         - [X] Michael: Block the player
         - [X] Charlie: Follow the player with a delay
         - [X] ReverseMichael: Block the player but on the opposite direction
-      - [ ] Allow to switch their algo on the fly ?
-      - [ ] Hunter on regular
-      - [ ] Run away when edible
-      - [ ] Variable speed ?
+      - [X] Hunter on regular
+      - [X] Run away when edible
+      - [X] Variable speed ?
     - [X] 1 ghost per corner
-    - [ ] Respawn
-      - [ ] In their corner
-      - [ ] After 5 or 10 seconds (variable ?)
+    - [X] Respawn
+      - [X] In their corner
+      - [X] After 5 or 10 seconds (variable ?)
 
   - [ ] Cheat mode
-    - [ ] Activation ?
     - [ ] Features
-      - [ ] Invincibility (no life lost; ghosts cannot eat the player)
+      - [X] Invincibility (no life lost; ghosts cannot eat the player)
       - [ ] Level skip (immediately win the current level)
       - [ ] Ghost freeze (ghosts stop moving)
-      - [ ] Extra lives (add extra lives to the player)
+      - [X] Extra lives (add extra lives to the player)
       - [ ] Increased speed (player moves faster)
 
   - [ ] Game progression
@@ -133,9 +131,16 @@
     - [ ] Random seed for other levels
     - [ ] At least 10 levels
     - [ ] Time limit per level
-      - [ ] Display time left
+      - [X] Display time left
       - [ ] Time ends
         - [ ] Kill Pacman ?
         - [ ] Restart Level ?
         - [ ] Game over ?
     - [ ] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
+
+  - [] Entity system
+    - [X] VEntity ABC, common API for entities
+    - [X] VEntityPlayer
+    - [ ] VEntityEnemyCommon
+    - [ ] VEntityPacgum
+    - [ ] VEntitySuperPacgum
