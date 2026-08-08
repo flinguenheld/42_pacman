@@ -169,7 +169,9 @@ class VGame(arcade.View):
 
         # Maze parameters
         seed = (
-            42 if self.gamestate.level == 1 else random.randint(0, sys.maxsize)
+            VData.seed
+            if self.gamestate.level == 1
+            else random.randint(0, sys.maxsize)
         )
         raw_width = random.randint(6, 16)
         raw_height = random.randint(5, 15)
