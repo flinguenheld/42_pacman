@@ -30,6 +30,14 @@ class VTile:
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█▀█░░█░░█░░░█▀█░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░░▀░░▀▀▀░▀░▀░▀▀▀░░
 class VAtlas:
+    """
+    From a large PNG containing 32x32 tiles.
+    And a JSON file containing information lines by lines.
+
+    Cut and save textures which can be used to create
+    sprites and animated sprites.
+    """
+
     INFO_FILENAME = "info.json"
 
     def __init__(self) -> None:
@@ -45,8 +53,6 @@ class VAtlas:
 
     # ########################################################################
     # ######################################################## NEXT STYLE ####
-    # TODO: MOVE NEXT STYLE IN VGAME OR WHERE ????
-    # TODO: MOVE NEXT STYLE IN VGAME OR WHERE ????
     def next_style(self) -> None:
         match self.style:
             case VStyles.EDGE:

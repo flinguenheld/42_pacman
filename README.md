@@ -52,7 +52,6 @@ Here the available keys:
 }
 ```
 
-
 ### Maze Generation
 
 ##### Wrapper
@@ -142,6 +141,12 @@ The maze manages important dictionaries used by enemies:
 The dict of costs is updated each time the player moves into a new floor.  
 Enemies just have to move to a lower-cost neighbour to go to the player.  
 
+### General Software Architecture
+
+<div align="center">
+    <img src="./images/general_architecture.excalidraw.png">
+</div>
+
 ### Highscore
 Highscores work with a JSON file. The [HighScores]() class allows the program to create and open the file.  
 To be JSON proof and simple, the file contains a list of dictionaries which contain two entries:
@@ -160,12 +165,6 @@ It will create a HighScore object and save the new one in this process:
 - Keep the tenth firsts
 - Overwrite the JSON file
 
-### General Software Architecture
-
-<div align="center">
-    <img src="./images/general_architecture.excalidraw.png">
-</div>
-
 ### Implementation
 
 If you read that, you're a meticulous examiner.  
@@ -179,5 +178,6 @@ A more advanced system such a Kanban looked too much for this project.
 ### Resources
 [UV](https://docs.astral.sh/uv/)  
 [Arcade](https://api.arcade.academy/en/stable/index.html)  
-[JSON GeeksForGeeks](https://www.geeksforgeeks.org/python/json-with-python/)  
+[GeeksForGeeks JSON](https://www.geeksforgeeks.org/python/json-with-python/)  
+[Excalidraw](https://excalidraw.com/)  
 
