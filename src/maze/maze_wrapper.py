@@ -52,9 +52,9 @@ class MazeGeneratorWrapper:
         !! Arcade works from bottom left with X, Y !!
         !! Here, we still think in row / col !!
 
-        raw  ->       0       1       2       3       4
+        hexa  ->       0       1       2       3       4
          |
-         v  maze  0   1   2   3   4   5   6   7   8   9  10
+         v  raw  0   1   2   3   4   5   6   7   8   9  10
 
                 ┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓
              0  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
