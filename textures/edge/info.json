@@ -352,8 +352,8 @@
       }
     },
     {
-      "comment": "############################################# PATROLING ####",
-      "name": "enemy_0_patroling_top",
+      "comment": "############################################ PATROLLING ####",
+      "name": "enemy_0_patrolling_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -365,7 +365,7 @@
       }
     },
     {
-      "name": "enemy_0_patroling_right",
+      "name": "enemy_0_patrolling_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -377,7 +377,7 @@
       }
     },
     {
-      "name": "enemy_0_patroling_bot",
+      "name": "enemy_0_patrolling_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -389,7 +389,7 @@
       }
     },
     {
-      "name": "enemy_0_patroling_left",
+      "name": "enemy_0_patrolling_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -401,7 +401,7 @@
       }
     },
     {
-      "name": "enemy_0_patroling_wait",
+      "name": "enemy_0_patrolling_wait",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -414,7 +414,7 @@
       }
     },
     {
-      "name": "enemy_1_patroling_top",
+      "name": "enemy_1_patrolling_top",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -426,7 +426,7 @@
       }
     },
     {
-      "name": "enemy_1_patroling_right",
+      "name": "enemy_1_patrolling_right",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -438,7 +438,7 @@
       }
     },
     {
-      "name": "enemy_1_patroling_bot",
+      "name": "enemy_1_patrolling_bot",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -450,7 +450,7 @@
       }
     },
     {
-      "name": "enemy_1_patroling_left",
+      "name": "enemy_1_patrolling_left",
       "nb": 4,
       "animated": true,
       "duration": [
@@ -462,7 +462,7 @@
       }
     },
     {
-      "name": "enemy_1_patroling_wait",
+      "name": "enemy_1_patrolling_wait",
       "nb": 4,
       "animated": true,
       "duration": [

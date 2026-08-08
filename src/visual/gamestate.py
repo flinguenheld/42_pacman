@@ -32,7 +32,7 @@ class GameState:
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
-        self._enemy_patroling_trigger: float = 7
+        self._enemy_patrolling_trigger: float = 7
 
         self.cheats: Cheats = Cheats(self)
 
@@ -62,7 +62,6 @@ class GameState:
 
     # ########################################################################
     # ############################################################# SPEED ####
-    # QUESTION Useful here ?
     @property
     def player_speed(self) -> float:
         return self._player_speed
@@ -86,8 +85,7 @@ class GameState:
         return min(speed, self.player_speed * 0.9)
 
     # ########################################################################
-    # ################################################# PATROLING TRIGGER ####
+    # ################################################ PATROLLING TRIGGER ####
     @property
-    def enemy_patroling_trigger(self) -> int:
-        # QUESTION: Is it good here ?
-        return int(self._enemy_patroling_trigger * random.uniform(0.5, 1.5))
+    def enemy_patrolling_trigger(self) -> int:
+        return int(self._enemy_patrolling_trigger * random.uniform(0.5, 1.5))

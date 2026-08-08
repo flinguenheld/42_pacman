@@ -5,12 +5,12 @@ from src.maze.maze import Maze
 from src.utils.usage import print_debug
 
 
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀█░█▀█░▀█▀░█▀▄░█▀█░█░░░▀█▀░█▀█░█▀▀░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░░█░░█▀▄░█░█░█░░░░█░░█░█░█░█░░
-# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░▀░▀░░▀░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░░
-class Patroling:
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀█░█▀█░▀█▀░█▀▄░█▀█░█░░░█░░░▀█▀░█▀█░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░░█░░█▀▄░█░█░█░░░█░░░░█░░█░█░█░█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░▀░▀░░▀░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░░
+class Patrolling:
     """
-    Patroling algorithm,
+    Patrolling algorithm,
     From the maze graph {floor point: list of all neighbours} and a start:
       - Randomly get a next position.
       - Remember the path to avoid coming back.
@@ -18,7 +18,7 @@ class Patroling:
 
           + Set a trigger (the distance from corner to the maze center).
           + If the given start is further than the home trigger:
-              - Set patroling as 'home mode'.
+              - Set patrolling as 'home mode'.
               - 'Next position' will return the shortest path to the corner.
               - Once reached, unset 'home mode'
     """
@@ -86,4 +86,4 @@ class Patroling:
     # ########################################################################
     # ####################################################### PRINT DEBUG ####
     def print_debug(self, text: str) -> None:
-        print_debug(f"Patroling {self.corner_id}: {text}")
+        print_debug(f"Patrolling {self.corner_id}: {text}")

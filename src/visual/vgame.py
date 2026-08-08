@@ -109,7 +109,7 @@ class VGame(arcade.View):
                     atlas=self.atlas,
                     maze=self.maze,
                     speed=self.gamestate.enemy_speed,
-                    patroling_trigger=self.gamestate.enemy_patroling_trigger,
+                    patrolling_trigger=self.gamestate.enemy_patrolling_trigger,
                 )
             )
 

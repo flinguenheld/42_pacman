@@ -7,7 +7,7 @@ from src.maze.maze import Maze
 from src.visual.vdata import VData
 from src.visual.vatlas import VAtlas
 from src.utils.usage import print_debug
-from src.visual.pathfinding.patroling import Patroling
+from src.visual.pathfinding.patrolling import Patrolling
 from src.visual.entities.ventity_moving import VEntityMoving
 
 
@@ -18,7 +18,7 @@ class VEntityEnemy(VEntityMoving):
     class Mode(Enum):
         CHASING = "chasing"
         FLEEING = "fleeing"
-        PATROLING = "patroling"
+        PATROLLING = "patrolling"
         DEAD = "dead"
 
     def __init__(
@@ -27,7 +27,7 @@ class VEntityEnemy(VEntityMoving):
         atlas: VAtlas,
         maze: Maze,
         speed: int | float,
-        patroling_trigger: int,
+        patrolling_trigger: int,
     ) -> None:
         self._mode = VEntityEnemy.Mode.CHASING
         self.corner_id = corner_id % len(maze.floor_corners)
@@ -44,9 +44,9 @@ class VEntityEnemy(VEntityMoving):
         self.base_speed = speed
         self.next_position: Vec2 = self.center
 
-        # Patroling mode --
-        self.patroling_algo = Patroling(self.maze, self.corner_id)
-        self.patroling_trigger = patroling_trigger
+        # Patrolling mode --
+        self.patrolling_algo = Patrolling(self.maze, self.corner_id)
+        self.patrolling_trigger = patrolling_trigger
 
         # Timers --
         self.timer_dead = 0.0
@@ -54,7 +54,7 @@ class VEntityEnemy(VEntityMoving):
 
         # --
         print_debug(f"Enemy {self.corner_id} spawned:")
-        print_debug(f"  -> speed {speed} - trigger {patroling_trigger}")
+        print_debug(f"  -> speed {speed} - trigger {patrolling_trigger}")
 
     # ########################################################################
     # ############################################################ UPDATE ####
@@ -75,7 +75,7 @@ class VEntityEnemy(VEntityMoving):
 
         # Wait to be close to the next position.
         if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
-            self.patroling_mode_management()
+            self.patrolling_mode_management()
 
             match self.mode:
                 case VEntityEnemy.Mode.CHASING:
@@ -87,8 +87,8 @@ class VEntityEnemy(VEntityMoving):
                         self.current_floor,
                         reversed=True,
                     )
-                case VEntityEnemy.Mode.PATROLING:
-                    self.next_position = self.patroling_algo.next_position(
+                case VEntityEnemy.Mode.PATROLLING:
+                    self.next_position = self.patrolling_algo.next_position(
                         self.current_floor
                     )
                 case VEntityEnemy.Mode.DEAD:
@@ -152,7 +152,7 @@ class VEntityEnemy(VEntityMoving):
     def mode(self, new_mode: VEntityEnemy.Mode) -> None:
         self._mode = new_mode
         match new_mode:
-            case VEntityEnemy.Mode.PATROLING | VEntityEnemy.Mode.CHASING:
+            case VEntityEnemy.Mode.PATROLLING | VEntityEnemy.Mode.CHASING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
             case VEntityEnemy.Mode.FLEEING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
@@ -164,11 +164,11 @@ class VEntityEnemy(VEntityMoving):
         self.update_texture(force=True)
 
     # ########################################################################
-    # ####################################### PATROLING MODE - MANAGEMENT ####
-    def patroling_mode_management(self) -> None:
+    # ###################################### PATROLLING MODE - MANAGEMENT ####
+    def patrolling_mode_management(self) -> None:
         """
         According to the distance to the player:
-           - switch in patroling mode
+           - switch in patrolling mode
            - come back to chasing mode
         """
 
@@ -177,11 +177,11 @@ class VEntityEnemy(VEntityMoving):
 
             match self.mode:
                 case VEntityEnemy.Mode.CHASING:
-                    if from_player > self.patroling_trigger:
-                        self.mode = VEntityEnemy.Mode.PATROLING
-                        print_debug(f"Enemy {self.corner_id} is patroling")
-                case VEntityEnemy.Mode.PATROLING:
-                    if from_player <= self.patroling_trigger:
+                    if from_player > self.patrolling_trigger:
+                        self.mode = VEntityEnemy.Mode.PATROLLING
+                        print_debug(f"Enemy {self.corner_id} is patrolling")
+                case VEntityEnemy.Mode.PATROLLING:
+                    if from_player <= self.patrolling_trigger:
                         self.mode = VEntityEnemy.Mode.CHASING
                         print_debug(f"Enemy {self.corner_id} is chasing !!")
                 case _:
@@ -195,7 +195,7 @@ class VEntityEnemy(VEntityMoving):
         match self.mode:
             case VEntityEnemy.Mode.CHASING:
                 return self.base_speed * 1.2
-            case VEntityEnemy.Mode.PATROLING:
+            case VEntityEnemy.Mode.PATROLLING:
                 return self.base_speed * 0.8
             case VEntityEnemy.Mode.FLEEING:
                 return self.base_speed * 1.1
