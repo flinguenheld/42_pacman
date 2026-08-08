@@ -239,7 +239,9 @@ class VGame(arcade.View):
 
                 self.hud.update(delta_time)
 
-                self.gamestate.update(delta_time)
+                if self.maze.graph_costs:
+                    # Only start the timer after the player has moved
+                    self.gamestate.update(delta_time)
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
