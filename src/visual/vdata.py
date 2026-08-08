@@ -71,6 +71,7 @@ class VData:
     points_per_pacgum: int = 50
     points_per_super_pacgum: int = 200
 
+    seed: int = 42
     time_max: float = 90.0
     TIMER_ENEMY_DEATH: float = 10.0
     TIMER_ENEMY_FLEEING: float = 10.0
@@ -82,6 +83,7 @@ class VData:
         cls.points_per_super_pacgum = config.points_per_super_pacgum
 
         cls.time_max = config.level_max_time
+        cls.seed = config.seed
 
     # ########################################################################
     # ####################################################### _DEBUG MODE ####
