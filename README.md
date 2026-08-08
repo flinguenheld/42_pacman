@@ -22,6 +22,10 @@ Command to launch the game:
 uv run python pac-man.py [CONFIG_FILE]
 uv run python pac-man.py --help
 ```
+Or with make which uses the default config file:
+```bash
+make run
+```
 
 ### Configuration
 
@@ -47,10 +51,6 @@ Here the available keys:
   #  Comment Python
 }
 ```
-### Resources
-[UV](https://docs.astral.sh/uv/)
-[Arcade](https://api.arcade.academy/en/stable/index.html)
-
 
 ### Highscore
 Highscores work with a JSON file. The [HighScores]() class allows the program to create and open the file.  
@@ -142,6 +142,9 @@ What ?
 
 ### General Software Architecture
 
+<div align="center">
+    <img src="./images/general_architecture.excalidraw.png">
+</div>
 
 
 ### Project Management
@@ -149,3 +152,9 @@ What ?
 To complete our project, we first created a [todo list]() with all required point in the subject.  
 Then we affected our tasks, then refactored the code and fill the checkboxes when they were done.  
 A more advanced system such a Kanban looked too much for this project.  
+
+### Resources
+[UV](https://docs.astral.sh/uv/)  
+[Arcade](https://api.arcade.academy/en/stable/index.html)  
+[JSON GeeksForGeeks](https://www.geeksforgeeks.org/python/json-with-python/)  
+
