@@ -1,4 +1,5 @@
 import random
+import sys
 import arcade
 from termcolor import cprint
 from arcade import SpriteList, Vec2, LBWH
@@ -165,21 +166,22 @@ class VGame(arcade.View):
     # ########################################################################
     # ########################################################## NEW MAZE ####
     def new_maze(self) -> None:
-        def get_seed() -> int:
-            if self.gamestate.level == 1:
-                return 42
-            else:
-                return random.randint(1, 100000)
 
-        seed = get_seed()
-        raw_width = random.randint(10, 15)
+        # Maze parameters
+        seed = (
+            42 if self.gamestate.level == 1 else random.randint(0, sys.maxsize)
+        )
+        raw_width = random.randint(6, 16)
         raw_height = random.randint(5, 15)
+
+        # Generate a raw maze (list[list[int]]) using the MazeGeneratorWrapper
         maze_gen = MazeGeneratorWrapper()
         maze_gen.generate_new_maze(raw_width, raw_height, seed)
         print(
             "Generated new maze - "
             f"Seed: {seed}, Size: {raw_width}x{raw_height}"
         )
+        # Convert the maze to a Maze instance and build the maze and its graph
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
         self.maze.build(include_graph=True)
 
