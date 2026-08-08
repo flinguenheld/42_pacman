@@ -135,7 +135,7 @@ The maze manages important dictionaries used by enemies:
    - A dict of costs for each corner (used by enemies to go back to their corner).
 
 <div align="center">
-    <img src="./images/basic_maze_costs.png">
+    <img src="./images/basic_maze_costs.gif">
 </div>
 
 The dict of costs is updated each time the player moves into a new floor.  
