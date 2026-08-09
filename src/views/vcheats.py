@@ -20,14 +20,17 @@ class VCheats(GWindow):
             title=GTitleCheats(atlas),
             frame=GFrame(
                 atlas=atlas,
-                nb_rows=14,
-                nb_cols=24,
+                nb_rows=17,
+                nb_cols=26,
                 bevels=True,
             ),
         )
         self.game_state = game_state
         self.cheats = game_state.cheats
 
+        self.setup()
+
+    def setup(self) -> None:
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,
@@ -39,6 +42,14 @@ class VCheats(GWindow):
                         "text": "GOD MODE",
                         "callback": lambda: self.cheats.toggle_god_mode(),
                         "pressed": self.game_state.cheats.god_mode,
+                    },
+                ),
+                (
+                    GToggleButton,
+                    {
+                        "text": "NO CLIP",
+                        "callback": lambda: self.cheats.toggle_no_clip(),
+                        "pressed": self.game_state.cheats.no_clip,
                     },
                 ),
                 (
@@ -70,8 +81,8 @@ class VCheats(GWindow):
                     },
                 ),
             ],
-            y_first_entry_from_frame_center=140,
-            extra_line_spaces=[2],
+            y_first_entry_from_frame_center=175,
+            extra_line_spaces=[3],
         )
 
         self.to_draw_and_update.append(self.menu)
