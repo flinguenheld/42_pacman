@@ -45,7 +45,7 @@ class VWelcome(GWindow):
                     {
                         "text": "PLAY",
                         "callback": lambda: self.window.switch_view(
-                            VNames.VIEW_GAME_NEW
+                            VNames.VIEW_NEW_GAME
                         ),
                     },
                 ),

@@ -36,10 +36,14 @@ class GameState:
 
         self.cheats: Cheats = Cheats(self)
 
+    # ########################################################################
+    # ############################################################# LEVEL ####
     def next_level(self) -> None:
         self.level += 1
         self.reset_timer()
 
+    # ########################################################################
+    # ####################################################### RESET TIMER ####
     def reset_timer(self) -> None:
         self.timer = VData.time_max
 

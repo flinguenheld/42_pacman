@@ -9,6 +9,7 @@ from src.views.vwelcome import VWelcome
 from src.data.vdata import VNames, VData
 from src.data.gamestate import GameState
 from src.views.vgame_over import VGameOver
+from src.views.vnext_level import VNextLevel
 from src.views.vinstructions import VIinstructions
 
 
@@ -49,40 +50,43 @@ class VMain(arcade.Window):
             self.show_view(which)
 
         match to:
-            case VNames.VIEW_GAME_NEW:
+            case VNames.VIEW_NEW_GAME:
                 # --> Init a new game here <--
-                self.game_state = GameState()
-                self.vgame = VGame(self.atlas, self.game_state)
+                self.gamestate = GameState()
+                self.vgame = VGame(self.atlas, self.gamestate)
                 save_and_show(self.vgame)
-
             case VNames.VIEW_GAME_RESUME:
                 save_and_show(self.vgame)
-
-            case VNames.VIEW_GAME_NEXT_LEVEL:
-                # list index is 0-indexed, but level_id is 1-indexed
-                self.game_state.next_level()
-                if self.game_state.level > 10:
-                    self.switch_view(VNames.VIEW_VICTORY)
-                    return
-                self.vgame = VGame(self.atlas, self.game_state)
+            case VNames.VIEW_GAME_NEW_LEVEL:
+                self.vgame = VGame(self.atlas, self.gamestate)
                 save_and_show(self.vgame)
-
             case VNames.VIEW_GAMEOVER:
-                save_and_show(VGameOver(self.atlas, self.game_state.score))
+                save_and_show(VGameOver(self.atlas, self.gamestate.score))
             case VNames.VIEW_INSTRUCTIONS:
                 save_and_show(VIinstructions(self.atlas))
             case VNames.VIEW_PAUSE:
                 save_and_show(VPause(self.atlas))
+            case VNames.VIEW_NEXT_LEVEL:
+                if self.gamestate.level >= VData.NUMBER_OF_LEVEL:
+                    self.switch_view(VNames.VIEW_VICTORY)
+                else:
+                    self.gamestate.next_level()
+                    save_and_show(
+                        VNextLevel(
+                            self.atlas,
+                            self.gamestate.level,
+                        )
+                    )
             case VNames.VIEW_WELCOME:
                 save_and_show(VWelcome(self.atlas))
             case VNames.VIEW_VICTORY:
-                save_and_show(VVictory(self.atlas, self.game_state.score))
+                save_and_show(VVictory(self.atlas, self.gamestate.score))
             case VNames.VIEW_CHEATS:
-                save_and_show(VCheats(self.atlas, self.game_state))
+                save_and_show(VCheats(self.atlas, self.gamestate))
 
             # --
             case VNames.VIEW_PREVIOUS:
-                if self.previous_vname == VNames.VIEW_GAME_NEW:
+                if self.previous_vname == VNames.VIEW_NEW_GAME:
                     self.switch_view(VNames.VIEW_GAME_RESUME)
                 else:
                     self.switch_view(self.previous_vname)

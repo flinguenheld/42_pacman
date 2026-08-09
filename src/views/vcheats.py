@@ -56,7 +56,7 @@ class VCheats(GWindow):
                     {
                         "text": "GO TO NEXT LEVEL",
                         "callback": lambda: self.window.switch_view(
-                            VNames.VIEW_GAME_NEXT_LEVEL
+                            VNames.VIEW_NEXT_LEVEL
                         ),
                     },
                 ),

@@ -132,11 +132,7 @@ class VHud:
         self.frame.draw()
         self.icons.draw(pixelated=True)
 
-        self.fields["score"].text = str(self.gamestate.score)
-        self.fields["level"].text = f"{self.gamestate.level}/10"
-        self.fields["lives"].text = f"{self.gamestate.lives:>2}"
-        self.fields["timer"].text = self.get_time_left()
-
+        # TODO: Find a way to fit values when the maze is small
         for text in self.fields.values():
             text.draw()
 
@@ -163,6 +159,13 @@ class VHud:
         self.frame.update(delta_time)
         self.background.update(delta_time)
         self.icons.update_animation(delta_time)
+
+        # --
+        nb_levels = VData.NUMBER_OF_LEVEL
+        self.fields["level"].text = f"{self.gamestate.level}/{nb_levels}"
+        self.fields["lives"].text = f"{self.gamestate.lives:>2}"
+        self.fields["score"].text = str(self.gamestate.score)
+        self.fields["timer"].text = self.get_time_left()
 
     # ########################################################################
     # ############################################################ CENTER ####

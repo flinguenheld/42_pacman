@@ -1,14 +1,14 @@
-import random
 import sys
 import arcade
+import random
 from termcolor import cprint
 from arcade import SpriteList, Vec2, LBWH
 
 from src.gui.ghud import VHud
 from src.maze.maze import Maze
 from src.sprites.vatlas import VAtlas
-from src.data.gamestate import GameState
 from src.utils.utils import print_debug
+from src.data.gamestate import GameState
 from src.gui.gbackground import GBackground
 from src.data.vdata import VNames, VData, DebugMode
 from src.entities.ventity_enemy import VEntityEnemy
@@ -224,24 +224,23 @@ class VGame(arcade.View):
     # ########################################################################
     # ############################################################ UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
-        if self.setup_done and self.process_updates:
-            if not self.defeat():
-                self.maze.update(delta_time)
-                self.background.update(delta_time)
-                self.enemy_list.update(delta_time)
-                self.player_list.update(delta_time)
-                self.pacgum_collisions()
-                self.enemy_collisions()
+        if self.setup_done and self.process_updates and not self.defeat():
+            self.maze.update(delta_time)
+            self.background.update(delta_time)
+            self.enemy_list.update(delta_time)
+            self.player_list.update(delta_time)
+            self.pacgum_collisions()
+            self.enemy_collisions()
 
-                self.enemy_list.update_animation(delta_time)
-                self.player_list.update_animation(delta_time)
-                self.combined_pacgum_list.update_animation(delta_time)
+            self.enemy_list.update_animation(delta_time)
+            self.player_list.update_animation(delta_time)
+            self.combined_pacgum_list.update_animation(delta_time)
 
-                self.hud.update(delta_time)
+            self.hud.update(delta_time)
 
-                if self.maze.graph_costs:
-                    # Only start the timer after the player has moved
-                    self.gamestate.update(delta_time)
+            # Only start the timer after the player has moved
+            if self.maze.graph_costs:
+                self.gamestate.update(delta_time)
 
     # ########################################################################
     # ######################################################## COLLISIONS ####
@@ -260,8 +259,8 @@ class VGame(arcade.View):
             self.switch_all_enemies_to_fleeing()
             super_pacgum.kill()
 
-        if len(self.combined_pacgum_list) == 0:
-            self.go_to_next_level()
+        if not self.combined_pacgum_list:
+            self.window.switch_view(VNames.VIEW_NEXT_LEVEL)
 
     def enemy_collisions(self) -> None:
         for enemy in arcade.check_for_collision_with_list(
@@ -275,15 +274,18 @@ class VGame(arcade.View):
                 case _:
                     pass
 
+    # ########################################################################
+    # ############################################################ DEFEAT ####
     def defeat(self) -> bool:
         if self.cheats.god_mode:
             return False
         if self.gamestate.is_game_over:
-            self.game_over()
+            self.window.switch_view(VNames.VIEW_GAMEOVER)
             return True
-        elif not self.player.alive:
+        if not self.player.alive:
             self.player_death()
             return True
+
         return False
 
     # ########################################################################
@@ -294,12 +296,6 @@ class VGame(arcade.View):
         self.spawn_moving_entities()
         self.gamestate.reset_timer()
         self.cameras_update()
-
-    def go_to_next_level(self) -> None:
-        self.window.switch_view(VNames.VIEW_GAME_NEXT_LEVEL)
-
-    def game_over(self) -> None:
-        self.window.switch_view(VNames.VIEW_GAMEOVER)
 
     # ########################################################################
     # ######################################### SWITCH ENEMIES TO FLEEING ####

@@ -10,11 +10,12 @@ from src.config.config import Config
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀░░
 class VNames(Enum):
     VIEW_CHEATS = auto()
+    VIEW_GAME_NEW_LEVEL = auto()
+    VIEW_NEW_GAME = auto()
     VIEW_GAME_RESUME = auto()
-    VIEW_GAME_NEW = auto()
-    VIEW_GAME_NEXT_LEVEL = auto()
     VIEW_GAMEOVER = auto()
     VIEW_INSTRUCTIONS = auto()
+    VIEW_NEXT_LEVEL = auto()
     VIEW_PAUSE = auto()
     VIEW_PREVIOUS = auto()
     VIEW_VICTORY = auto()
@@ -75,6 +76,7 @@ class VData:
     time_max: float = 90.0
     TIMER_ENEMY_DEATH: float = 10.0
     TIMER_ENEMY_FLEEING: float = 10.0
+    NUMBER_OF_LEVEL: int = 10
 
     @classmethod
     def apply_config(cls, config: Config) -> None:
