@@ -13,13 +13,15 @@ def main() -> None:
         if len(sys.argv) != 2:
             raise ConfigError("Wrong argument.")
 
-        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+        arg = sys.argv[1]
+
+        if arg in {"-h", "--help"}:
             print_usage()
             exit()
 
         else:
             print("Hello from 42-pacman!")
-            config = get_config(sys.argv[1])
+            config = get_config(arg)
             VData.apply_config(config)
 
             window = VMain()

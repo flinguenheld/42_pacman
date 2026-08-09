@@ -173,8 +173,8 @@ class VGame(arcade.View):
             if self.gamestate.level == 1
             else random.randint(0, sys.maxsize)
         )
-        raw_width = random.randint(6, 16)
-        raw_height = random.randint(5, 15)
+        raw_width = random.randint(7, 15)
+        raw_height = random.randint(5, 14)
 
         # Generate a raw maze (list[list[int]]) using the MazeGeneratorWrapper
         maze_gen = MazeGeneratorWrapper()

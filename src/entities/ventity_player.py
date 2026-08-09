@@ -146,8 +146,8 @@ class VEntityPlayer(VEntityMoving):
                 self.center = final_position
 
             # Has moved to a new floor ? --
-            next_floor = self.is_in_a_neighbour(final_position)
-            if next_floor:
+
+            if next_floor := self.is_in_a_neighbour(final_position):
                 self.center = final_position
 
                 # Update the floor and the maze graph costs !!
@@ -157,11 +157,9 @@ class VEntityPlayer(VEntityMoving):
     # ########################################################################
     # ############################################################ ON KEY ####
     def on_key_press(self, symbol: int) -> None:
-        direction = VPlayerDirection.return_direction_from_key(symbol)
-        if direction is not None:
+        if direction := VPlayerDirection.return_direction_from_key(symbol):
             self.directions_from_keys.add(direction.value)
 
     def on_key_release(self, symbol: int) -> None:
-        direction = VPlayerDirection.return_direction_from_key(symbol)
-        if direction is not None:
+        if direction := VPlayerDirection.return_direction_from_key(symbol):
             self.directions_from_keys.discard(direction.value)

@@ -87,6 +87,8 @@ class GWindow(arcade.View):
         for widget in self.to_draw_and_update:
             if hasattr(widget, "update"):
                 widget.update(delta_time)
+            if hasattr(widget, "update_animation"):
+                widget.update_animation(delta_time)
 
     # ########################################################################
     # ############################################### ON RESIZE / ON SHOW ####
