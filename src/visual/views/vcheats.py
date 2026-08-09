@@ -28,6 +28,9 @@ class VCheats(GWindow):
         self.game_state = game_state
         self.cheats = game_state.cheats
 
+        self.setup()
+
+    def setup(self) -> None:
         # Menu ######################
         self.menu = GMenu(
             atlas=self.atlas,

@@ -40,13 +40,17 @@ class VEndBase(GWindow):
             ),
         )
         self.score = score
+        self.text = text
 
+        self.setup()
+
+    def setup(self) -> None:
         # Score #############################
         self.text_score = GLabel(
             atlas=self.atlas,
             frame=self.frame,
             font_size_factor=1.7,
-            text=text,
+            text=self.text,
             multiline=True,
             offset_from_center_frame=Vec2(0, 290),
         )
