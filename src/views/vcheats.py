@@ -14,7 +14,7 @@ from src.gui.titles.gtitle_cheats import GTitleCheats
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░░░█▀█░█▀▀░█▀█░░█░░▀▀█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░▀▀▀░░
 class VCheats(GWindow):
-    def __init__(self, atlas: VAtlas, game_state: GameState) -> None:
+    def __init__(self, atlas: VAtlas, gamestate: GameState) -> None:
         super().__init__(
             atlas,
             title=GTitleCheats(atlas),
@@ -26,8 +26,8 @@ class VCheats(GWindow):
                 separators=[12],
             ),
         )
-        self.game_state = game_state
-        self.cheats = game_state.cheats
+        self.gamestate = gamestate
+        self.cheats = gamestate.cheats
 
         self.setup()
 
@@ -44,7 +44,7 @@ class VCheats(GWindow):
                     {
                         "text": "GOD MODE",
                         "callback": lambda: self.cheats.toggle_god_mode(),
-                        "pressed": self.game_state.cheats.god_mode,
+                        "pressed": self.gamestate.cheats.god_mode,
                     },
                 ),
                 (
@@ -52,7 +52,7 @@ class VCheats(GWindow):
                     {
                         "text": "NO CLIP",
                         "callback": lambda: self.cheats.toggle_no_clip(),
-                        "pressed": self.game_state.cheats.no_clip,
+                        "pressed": self.gamestate.cheats.no_clip,
                     },
                 ),
                 (
@@ -62,7 +62,7 @@ class VCheats(GWindow):
                         "callback": lambda button: self.cheats.update_lives(
                             button.count
                         ),
-                        "count": self.game_state.lives,
+                        "count": self.gamestate.lives,
                     },
                 ),
                 (
@@ -72,7 +72,7 @@ class VCheats(GWindow):
                         "callback": lambda button: (
                             self.cheats.update_amount_of_enemies(button.count)
                         ),
-                        "count": VData.AMOUNT_OF_ENEMIES,
+                        "count": self.gamestate.amount_of_enemies,
                     },
                 ),
                 (
