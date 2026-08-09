@@ -122,8 +122,7 @@ class VEntityEnemy(VEntityMoving):
     def update_current_floor(self) -> None:
         """Update the current floor according to the position."""
 
-        next_floor = self.is_in_a_neighbour(self.center)
-        if next_floor:
+        if next_floor := self.is_in_a_neighbour(self.center):
             self.current_floor = next_floor
 
     # ########################################################################
