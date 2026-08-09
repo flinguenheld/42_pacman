@@ -1,11 +1,11 @@
 from src.gui.gmenu import GMenu
-from src.data.vdata import VNames
 from src.gui.gframe import GFrame
 from src.gui.gwindow import GWindow
 from src.gui.gbutton import GButton
 from src.sprites.vatlas import VAtlas
 from src.gui.gcounter import GCounter
 from src.data.gamestate import GameState
+from src.data.vdata import VNames, VData
 from src.gui.gtoggle_button import GToggleButton
 from src.gui.titles.gtitle_cheats import GTitleCheats
 
@@ -20,9 +20,10 @@ class VCheats(GWindow):
             title=GTitleCheats(atlas),
             frame=GFrame(
                 atlas=atlas,
-                nb_rows=17,
-                nb_cols=26,
+                nb_rows=20,
+                nb_cols=30,
                 bevels=True,
+                separators=[12],
             ),
         )
         self.game_state = game_state
@@ -63,6 +64,16 @@ class VCheats(GWindow):
                     },
                 ),
                 (
+                    GCounter,
+                    {
+                        "text": "AMOUNT OF ENEMIES",
+                        "callback": lambda button: (
+                            self.cheats.update_amount_of_enemies(button.count)
+                        ),
+                        "count": VData.AMOUNT_OF_ENEMIES,
+                    },
+                ),
+                (
                     GButton,
                     {
                         "text": "GO TO NEXT LEVEL",
@@ -81,7 +92,7 @@ class VCheats(GWindow):
                     },
                 ),
             ],
-            y_first_entry_from_frame_center=175,
+            y_first_entry_from_frame_center=210,
             extra_line_spaces=[3],
         )
 

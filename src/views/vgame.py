@@ -104,7 +104,7 @@ class VGame(arcade.View):
         self.maze.clear_costs()
         self.enemy_list.clear()
 
-        for id in range(4):
+        for id in range(self.gamestate.amount_of_enemies):
             self.enemy_list.append(
                 VEntityEnemy(
                     corner_id=id,

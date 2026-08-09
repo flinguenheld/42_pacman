@@ -77,6 +77,7 @@ class VData:
     TIMER_ENEMY_DEATH: float = 10.0
     TIMER_ENEMY_FLEEING: float = 10.0
     NUMBER_OF_LEVEL: int = 10
+    AMOUNT_OF_ENEMIES: int = 4
 
     @classmethod
     def apply_config(cls, config: Config) -> None:

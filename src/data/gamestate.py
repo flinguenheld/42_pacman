@@ -3,9 +3,12 @@ import random
 from src.data.vdata import VData
 
 
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░█░█▀▀░█▀█░▀█▀░█▀▀░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░░░█▀█░█▀▀░█▀█░░█░░▀▀█░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░▀▀▀░░
 class Cheats:
-    def __init__(self, game_state: GameState) -> None:
-        self.game_state = game_state
+    def __init__(self, gamestate: GameState) -> None:
+        self.gamestate = gamestate
 
         self.god_mode: bool = False
         self.no_clip: bool = False
@@ -17,7 +20,10 @@ class Cheats:
         self.no_clip = not self.no_clip
 
     def update_lives(self, lives: int) -> None:
-        self.game_state.lives = lives
+        self.gamestate.lives = lives
+
+    def update_amount_of_enemies(self, amount: int) -> None:
+        self.gamestate.amount_of_enemies = amount
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▄█░█▀▀░█▀▀░▀█▀░█▀█░▀█▀░█▀▀░░
@@ -29,6 +35,7 @@ class GameState:
         self.lives = 3
         self.level = 1
         self.reset_timer()
+        self.amount_of_enemies = VData.AMOUNT_OF_ENEMIES
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
