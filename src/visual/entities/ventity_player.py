@@ -98,6 +98,17 @@ class VEntityPlayer(VEntityMoving):
         If the player has moved in a new floor, update the maze graph.
         """
 
+        # Cheat: No Clip --
+        if self.gamestate.cheats.no_clip:
+            # Did this to avoid bugs with the normal logic
+            # and to keep the cheat logic separate.
+            final_position = self.center + Vec2(self.change_x, self.change_y)
+            if final_position != self.center:
+                self.center = final_position
+                self.current_floor = self.maze.closest_floor_of(self.center)
+                self.maze.update_graph_values(self.current_floor)
+            return
+
         def can_move_on(position: Vec2) -> bool:
             return (
                 self.is_in_sprite(position, self.current_floor)

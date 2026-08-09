@@ -276,8 +276,10 @@ class VGame(arcade.View):
                     pass
 
     def defeat(self) -> bool:
+        # Cheat: God Mode --
         if self.cheats.god_mode:
             return False
+
         if self.gamestate.is_game_over:
             self.game_over()
             return True
