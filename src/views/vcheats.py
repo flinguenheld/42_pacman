@@ -1,11 +1,11 @@
 from src.gui.gmenu import GMenu
+from src.data.vdata import VNames
 from src.gui.gframe import GFrame
 from src.gui.gwindow import GWindow
 from src.gui.gbutton import GButton
 from src.sprites.vatlas import VAtlas
 from src.gui.gcounter import GCounter
 from src.data.gamestate import GameState
-from src.data.vdata import VNames, VData
 from src.gui.gtoggle_button import GToggleButton
 from src.gui.titles.gtitle_cheats import GTitleCheats
 
