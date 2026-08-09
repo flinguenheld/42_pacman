@@ -3,152 +3,6 @@
 ## 42_pacman
 Ghosts! More ghosts!
 
-### Todo list
-
-- [ ] Readme
-  - [ ] Check the project management part
-  - [ ] Description
-  - [ ] Instructions
-  - [ ] Resources
-  - [ ] Configuration
-  - [ ] Highscore
-  - [ ] Maze Generation
-  - [ ] Implementation
-  - [ ] General Software Architecture
-  - [ ] Project Management
-
-- [ ] Linter
-
-- [X] Makefile
-  - [ ] Add a build target for the package
-
-- [X] Usage: python3 pac-man.py config.json
-  - [ ] Allow only one argument (.json config file)
-  - [ ] Handle errors gracefully, no crash, no Python traceback
-
-- [ ] JSON Config file
-  - [X] Handle comments
-  - [X] Fallback to safe defaults in case of errors or invalid keys
-  - [ ] Update README.md to explain configuration in details
-
-- [ ] Views
-  - [ ] Menus
-    - [X] Main menu
-      - [X] Display highscore
-      - [ ] Instructions
-      - [X] Exit
-
-  - [X] Game view (HUD)
-    - [X] Current score
-    - [X] Remaining lives
-    - [X] Remaining time
-    - [ ] Correction checks
-      - [X] You can move in the maze
-      - [X] You can't cross walls
-      - [X] You can eat pacgums and super pacgums
-      - [X] You can die and re-spawn.
-
-  - [X] Pause
-    - [X] Resume the game
-    - [X] Link to instructions
-    - [X] Return to main (give up)
-
-  - [X] Game over
-    - [X] Display final score
-    - [X] Highscore: enter player name
-      - [X] Max 10 characters, alphanumeric and spaces only
-
-  - [X] Victory
-    - [X] Display final score
-    - [X] Congratulation
-    - [X] Highscore: enter player name
-      - [X] Max 10 characters, alphanumeric and spaces only
-
-- [ ] Deployment
-  - [ ] Deployment to a public gaming platform (Itch.io)
-  - [ ] as a free but unlisted/private build
-  - [ ] Build as a standalone package
-  - [ ] Provide minimal in-package instructions(controls, options, configuration)
-  - [ ] Git repository must contain the full source and the packaging script/spec at the root
-
-- [X] Integrate maze generation
-  - [X] Use as-is
-  - [X] PERFECT = False
-  - [X] Handle errors gracefully
-
-- [X] Highscore system
-  - [X] JSON File management
-    - [X] Player name: max 10 chars, only alphanumeric and spaces
-    - [X] Score: Only non-negative integers
-    - [X] Store max top 10 highscores
-  - [X] Manage display on screen
-  - [X] Handle empty file
-  - [X] Handle adding new highscores (View, System)
-  - [X] Allow players to enter their name and register new high score
-  - [X] Do not update previous high score of the same name, add new entry
-
-- [ ] Game
-  - [ ] Player
-    - [X] Create texture
-    - [X] Player spawns in the middle
-    - [X] Move with arrow keys or WASD
-      - [X] If necessary, handle AZERTY preset (ZQSD) as an option
-    - [X] Ghost touch player = player loses one life
-      - [X] Player respawns in the middle
-      - [X] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
-
-  - [ ] Pacgum
-    - [X] Create texture
-    - [X] Spawn in most corridors (3 out of 4 cases?)
-    - [X] Manage counter
-
-  - [ ] Super-Pacgum
-    - [X] Create texture
-    - [X] 1 per corner
-    - [X] Makes ghosts edible for a short time
-    - [X] Eating an edible ghost increases the score by Z points
-
-  - [ ] Ghost
-    - [X] Create algo to move them
-      - [X] Different variants and behaviors
-        - [X] Johnny: Chase the player
-        - [X] Michael: Block the player
-        - [X] Charlie: Follow the player with a delay
-        - [X] ReverseMichael: Block the player but on the opposite direction
-      - [X] Hunter on regular
-      - [X] Run away when edible
-      - [X] Variable speed ?
-    - [X] 1 ghost per corner
-    - [X] Respawn
-      - [X] In their corner
-      - [X] After 5 or 10 seconds (variable ?)
-
-  - [ ] Cheat mode
-    - [ ] Features
-      - [X] Invincibility (no life lost; ghosts cannot eat the player)
-      - [ ] Level skip (immediately win the current level)
-      - [ ] Ghost freeze (ghosts stop moving)
-      - [X] Extra lives (add extra lives to the player)
-      - [ ] Increased speed (player moves faster)
-
-  - [ ] Game progression
-    - [ ] Fixed seed for first level
-    - [ ] Random seed for other levels
-    - [ ] At least 10 levels
-    - [ ] Time limit per level
-      - [X] Display time left
-      - [ ] Time ends
-        - [ ] Kill Pacman ?
-        - [ ] Restart Level ?
-        - [ ] Game over ?
-    - [ ] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
-
-  - [] Entity system
-    - [X] VEntity ABC, common API for entities
-    - [X] VEntityPlayer
-    - [ ] VEntityEnemyCommon
-    - [ ] VEntityPacgum
-    - [ ] VEntitySuperPacgum
 
 ### Description
 
@@ -167,6 +21,10 @@ Command to launch the game:
 ```bash
 uv run python pac-man.py [CONFIG_FILE]
 uv run python pac-man.py --help
+```
+Or with make which uses the default config file:
+```bash
+make run
 ```
 
 ### Configuration
@@ -193,10 +51,101 @@ Here the available keys:
   #  Comment Python
 }
 ```
-### Resources
-[UV](https://docs.astral.sh/uv/)
-[Arcade](https://api.arcade.academy/en/stable/index.html)
 
+### Maze Generation
+
+##### Wrapper
+
+Maze generation is done with the [MazeGeneratorWrapper]() class.  
+It's an interface between the maze generated by A-Maze-ing package and our Pacman.  
+
+The purpose is to convert an 'Hexa maze' `list[list[int]]` into a 'raw maze' `list[list[int]]`.
+
+```
+                  0   1   2   3   4
+
+                ┏━━━┳━━━┳━━━┳━━━┳━━━┓
+             0  ┃ 6 ┃ A ┃ 5 ┃ 2 ┃ 8 ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━┫
+             1  ┃ 1 ┃ 2 ┃ 3 ┃ B ┃ C ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━┫
+             2  ┃ 6 ┃ 8 ┃ 9 ┃ A ┃ 2 ┃
+                ┗━━━┻━━━┻━━━┻━━━┻━━━┛
+```
+And:
+- Splits all values into nine cases to get the walls with their angles and the floors.
+- Set them with 0 or 1 according to the  (0b1111 -> Left|Bottom|Right|Top).
+
+```
+        hexa  ->       0       1       2       3       4
+         |
+         v  raw  0   1   2   3   4   5   6   7   8   9  10
+
+                ┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓
+             0  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+         0   1  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+             2  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+         1   3  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+             4  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+         2   5  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
+                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
+             6  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
+                ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
+```
+
+Thanks to this raw maze step, we can use mazes for [GFrame]() and [GTitles]() 🐙.
+
+##### Maze
+
+The Maze contains real world coordinates for walls an floors in two sets as well as all geometric properties.  
+We only use arcade.Vec2 coordinates.
+
+So it will:
+- Create a set of walls and a set of floors.
+- Reverse the row/col logic to work in X/Y as Arcade does (all arcades coordinates are from bottom left).
+- Convert coordinates to the real arcade world according to the defined SpriteSize.
+- Fill sets according to the raw values.
+
+Then thanks to these sets, we can create [SpriteLists]() and display our maze.  
+Textures are saved in the [VAtlas]() class and contains entries such as:
+- "wall_with_floor_on_top"
+- "wall_with_floor_on_top_right"
+- ...
+
+By looping in the walls set, we can create sprites according to the current coordinate and its environement.  
+
+<div align="center">
+    <img src="./images/basic_maze.png">
+</div>
+
+##### Algorithm
+
+The maze manages important dictionaries used by enemies:  
+- A [dict of neighbours]() `dict[Vec2, list[Vec2]]`.
+   - Each floor entries will contain the list of floors it can access.
+   - Thanks to the hashmap, the access of neighbours has a O(1) complexity.
+- A [dict of costs]() `dict[Vec2, int]`
+   - From a given point, set the cost for each floor to reach the point.
+- A [graph corners]() `list[dict[Vec2, int]]`
+   - A dict of costs for each corner (used by enemies to go back to their corner).
+
+<div align="center">
+    <img src="./images/basic_maze_costs.gif">
+</div>
+
+The dict of costs is updated each time the player moves into a new floor.  
+Enemies just have to move to a lower-cost neighbour to go to the player.  
+
+### General Software Architecture
+
+<div align="center">
+    <img src="./images/general_architecture.excalidraw.png">
+</div>
 
 ### Highscore
 Highscores work with a JSON file. The [HighScores]() class allows the program to create and open the file.  
@@ -216,78 +165,19 @@ It will create a HighScore object and save the new one in this process:
 - Keep the tenth firsts
 - Overwrite the JSON file
 
-### Maze Generation
-
-Maze generation is done with the [MazeGeneratorWrapper]() class.  
-It's an interface between the maze generated by A-Maze-ing package and our Pacman.  
-
-The purpose is to create a [Maze]() object.
-Since we work with sprites and world coordinates, we opted to convert the maze into two set of coordinates:
-- One set for walls
-- One set for floors
-
-So our interface perform the conversion from a raw maze (matrix of hexadecimal values): 
-
-```
-                  0   1   2   3   4
-
-                ┏━━━┳━━━┳━━━┳━━━┳━━━┓
-             0  ┃ 6 ┃ A ┃ 5 ┃ 2 ┃ 8 ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━┫
-             1  ┃ 1 ┃ 2 ┃ 3 ┃ B ┃ C ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━┫
-             2  ┃ 6 ┃ 8 ┃ 9 ┃ A ┃ 2 ┃
-                ┗━━━┻━━━┻━━━┻━━━┻━━━┛
-```
-And:
-- Splits all values into nine coordinates to get the walls and the angles and the floors.
-- Get their coordinates according to the defined SpriteSize and their coordinates.
-- Add add them either in walls or floors according to the hexadecimal value. (0b1111 -> Left|Bottom|Right|Top).
-- Reverse the row/col logic to work in X/Y as Arcade does.
-
-```
-        raw  ->       0       1       2       3       4
-         |
-         v  maze  0   1   2   3   4   5   6   7   8   9  10
-
-                ┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓
-             0  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-         0   1  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-             2  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-         1   3  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-             4  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-         2   5  ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃ H ┃   ┃
-                ┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫
-             6  ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃   ┃
-                ┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛
-```
-
-These sets are saved in a Maze object, thanks to them, we can create [SpriteLists]() and display our maze.  
-Textures are saved in the [VAtlas]() class and contains entries such as:
-- "wall_with_floor_on_top"
-- "wall_with_floor_on_top_right"
-- ...
-
-By looping in the walls set, we can create sprites according to the current coordinate and its environement.  
-
-
-The last step is used for our algorithm and specialised for floors:  
-We create a [dict of neighbours]() `dict[Vec2, list[Vec2]]`.
-Each floor entries will contain the list of floors it can access.  
-Thanks to the hashmap system, the access of Neighbours has a O(1) complexity.  
-
-
 ### Implementation
 
-What ?
-
-### General Software Architecture
-
-
+If you read that, you're a meticulous examiner.  
 
 ### Project Management
+
+To complete our project, we first created a [todo list]() with all required point in the subject.  
+Then we affected our tasks, then refactored the code and fill the checkboxes when they were done.  
+A more advanced system such a Kanban looked too much for this project.  
+
+### Resources
+[UV](https://docs.astral.sh/uv/)  
+[Arcade](https://api.arcade.academy/en/stable/index.html)  
+[GeeksForGeeks JSON](https://www.geeksforgeeks.org/python/json-with-python/)  
+[Excalidraw](https://excalidraw.com/)  
+

@@ -1,13 +1,13 @@
 import random
 from arcade import Vec2, Rect
 
-from src.visual.vatlas import VAtlas
-from src.utils.usage import sprite_center
-from src.visual.sprites.swall import SWall
-from src.visual.pathfinding.bfs import BFS
-from src.visual.sprites.sfloor import SFloor
-from src.visual.vdata import VData, DebugMode
-from src.visual.sprites.sfloor_debug import SFloorDebug
+from src.sprites.swall import SWall
+from src.pathfinding.bfs import BFS
+from src.sprites.sfloor import SFloor
+from src.sprites.vatlas import VAtlas
+from src.utils.utils import sprite_center
+from src.data.vdata import VData, DebugMode
+from src.sprites.sfloor_debug import SFloorDebug
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
