@@ -24,7 +24,11 @@ class VIinstructions(GWindow):
             ),
         )
 
-        # --
+        self.setup()
+
+    # ########################################################################
+    # ############################################################# SETUP ####
+    def setup(self) -> None:
         self.menu = GMenu(
             atlas=self.atlas,
             frame=self.frame,
