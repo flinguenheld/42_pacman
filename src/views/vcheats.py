@@ -30,6 +30,7 @@ class VCheats(GWindow):
         self.cheats = gamestate.cheats
 
         self.setup()
+        self.to_draw_update_press_release.append(self.menu)
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -97,10 +98,3 @@ class VCheats(GWindow):
             y_first_entry_from_frame_center=210,
             extra_line_spaces=[3],
         )
-
-        self.to_draw_and_update.append(self.menu)
-
-    # ########################################################################
-    # ############################################################## KEYS ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)

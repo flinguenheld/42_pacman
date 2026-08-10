@@ -48,8 +48,8 @@ class GButton(GLabel):
             callback(self)
 
     # ########################################################################
-    # ####################################################### KEY PRESSED ####
-    def on_key_press(self, symbol: int) -> None:
+    # ############################################ KEY PRESSED / RELEASED ####
+    def key_press(self, symbol: int, modifiers: int) -> None:
         if symbol in [
             arcade.key.ENTER,
             arcade.key.NUM_ENTER,

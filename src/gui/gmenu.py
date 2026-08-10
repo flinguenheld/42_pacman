@@ -56,20 +56,21 @@ class GMenu(GWidget):
 
             # --
             self.entries.append(new_entry)
-            self.elements.append(new_entry)  # Manage draw & update
+            self.to_draw_update_press_release.append(new_entry)
 
         # --
         self.current = 0
         self.entries[self.current].toggle_hoover()
 
     # ########################################################################
-    # ####################################################### KEY PRESSED ####
-    def key_press(self, symbol: int) -> None:
+    # ############################################ KEY PRESSED / RELEASED ####
+    def key_press(self, symbol: int, modifiers: int) -> None:
         match symbol:
             case arcade.key.ESCAPE:
-                self.entries[self.escape_widget_index].on_key_press(
-                    arcade.key.ENTER
-                )
+                # QUESTION: Still works as expected ?
+                self.to_draw_update_press_release[
+                    self.escape_widget_index
+                ].key_press(arcade.key.ENTER, modifiers)
             case arcade.key.UP:
                 self.next_up()
             case arcade.key.DOWN:
@@ -77,7 +78,10 @@ class GMenu(GWidget):
             case _:
                 pass
 
-        self.entries[self.current].on_key_press(symbol)
+        self.entries[self.current].key_press(symbol, modifiers)
+
+    def key_release(self, symbol: int, modifiers: int) -> None:
+        self.entries[self.current].key_release(symbol, modifiers)
 
     # ########################################################################
     # ######################################################### UP / DOWN ####

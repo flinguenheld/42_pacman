@@ -43,6 +43,7 @@ class GMenuEntry(GWidget):
 
         # --
         self.setup_icons()
+        self.to_draw_update_press_release.extend([self.button, self.icons])
 
     # ########################################################################
     # ####################################################### SETUP ICONS ####
@@ -97,13 +98,3 @@ class GMenuEntry(GWidget):
 
         if self.is_hoover:
             self.icons.draw(pixelated=True)
-
-    # ########################################################################
-    # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
-        self.icons.update_animation(delta_time)
-
-    # ########################################################################
-    # ################################################ HANDLE KEY PRESSES ####
-    def on_key_press(self, symbol: int) -> None:
-        self.button.on_key_press(symbol)

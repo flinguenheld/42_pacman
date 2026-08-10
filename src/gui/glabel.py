@@ -51,7 +51,7 @@ class GLabel(GWidget):
             width=width_for_multi,
         )
 
-        self.elements.append(self._text_widget)
+        self.to_draw_update_press_release.append(self._text_widget)
 
     # ########################################################################
     # ########################################################## GEOMETRY ####

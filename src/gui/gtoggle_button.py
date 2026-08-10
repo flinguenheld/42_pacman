@@ -58,8 +58,8 @@ class GToggleButton(GButton):
             self.text = f"{self.base_text}:  OFF"
 
     # ########################################################################
-    # ######################################################### KEY PRESS ####
-    def on_key_press(self, symbol: int) -> None:
+    # ###################################################### ON KEY PRESS ####
+    def key_press(self, symbol: int, modifiers: int) -> None:
         if symbol in [
             arcade.key.ENTER,
             arcade.key.NUM_ENTER,

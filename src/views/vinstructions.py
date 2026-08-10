@@ -59,7 +59,7 @@ class VIinstructions(GWindow):
         self.setup_entity_sprites()
         self.setup_controls_section()
 
-        self.to_draw_and_update.extend(
+        self.to_draw_update_press_release.extend(
             [
                 self._sprite_list,
                 self.menu,
@@ -138,7 +138,7 @@ class VIinstructions(GWindow):
             offset_from_center_frame=Vec2(x_offset, start_y),
             multiline=True,
         )
-        self.to_draw_and_update.extend(
+        self.to_draw_update_press_release.extend(
             [
                 self.gameplay_header,
                 self.player_instructions,
@@ -235,11 +235,6 @@ class VIinstructions(GWindow):
             font_size_factor=self.font_size_factor,
             offset_from_center_frame=Vec2(0, start_y),
         )
-        self.to_draw_and_update.extend(
+        self.to_draw_update_press_release.extend(
             [self.controls_header, self.controls_instructions]
         )
-
-    # ########################################################################
-    # ############################################################## KEYS ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)

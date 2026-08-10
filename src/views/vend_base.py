@@ -43,6 +43,9 @@ class VEndBase(GWindow):
         self.text = text
 
         self.setup()
+        self.to_draw_update_press_release.extend(
+            [self.text_score, self.text_request, self.input, self.menu]
+        )
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -99,27 +102,13 @@ class VEndBase(GWindow):
             y_first_entry_from_frame_center=-245,
         )
 
-        # --
-        self.to_draw_and_update.append(self.menu)
-        self.to_draw_and_update.append(self.input)
-        self.to_draw_and_update.append(self.text_score)
-        self.to_draw_and_update.append(self.text_request)
-
     # ########################################################################
     # ##################################################### PROCESS INPUT ####
     def process_input(self) -> None:
 
         user_value = self.input.text.strip()
 
-        if not user_value:
-            self.input.toggle_help()
-        else:
+        if user_value:
             high_scores = HighScores()
             high_scores.save(user_value, self.score)
             self.window.switch_view(VNames.VIEW_WELCOME)
-
-    # ########################################################################
-    # ############################################################## KEYS ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.input.key_press_management(symbol, modifiers)
-        self.menu.key_press(symbol)

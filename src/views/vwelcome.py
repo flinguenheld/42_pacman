@@ -87,11 +87,6 @@ class VWelcome(GWindow):
             color=self.atlas.get_color("high_scores"),
         )
 
-        self.to_draw_and_update.append(self.menu)
-        self.to_draw_and_update.append(self.text_highscores_title)
-        self.to_draw_and_update.append(self.text_highscores)
-
-    # ########################################################################
-    # ############################################################## KEYS ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)
+        self.to_draw_update_press_release.extend(
+            [self.menu, self.text_highscores_title, self.text_highscores]
+        )

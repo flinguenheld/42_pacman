@@ -24,6 +24,7 @@ class VPause(GWindow):
         )
 
         self.setup()
+        self.to_draw_update_press_release.append(self.menu)
 
     # ########################################################################
     # ############################################################# SETUP ####
@@ -73,10 +74,3 @@ class VPause(GWindow):
             y_first_entry_from_frame_center=110,
             escape_widget_index=0,
         )
-
-        self.to_draw_and_update.append(self.menu)
-
-    # ########################################################################
-    # ############################################################## KEYS ####
-    def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self.menu.key_press(symbol)

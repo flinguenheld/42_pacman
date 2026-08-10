@@ -63,11 +63,14 @@ class GInput(GWidget):
         self.icons.append(self.icon)
 
         # --
-        self.elements.extend([self.label, self.icons, self.help])
+        self.to_draw_update_press_release.extend(
+            [self.label, self.icons, self.help]
+        )
 
     # ########################################################################
     # ####################################################### KEY PRESSED ####
-    def key_press_management(self, symbol: int, modifiers: int) -> None:
+    def key_press(self, symbol: int, modifiers: int) -> None:
+        super().key_press(symbol, modifiers)
 
         if symbol == key.BACKSPACE and self.text:
             self.text = self.text[:-1]
@@ -108,8 +111,3 @@ class GInput(GWidget):
     @text.setter
     def text(self, value: str) -> None:
         self.label.text = value
-
-    # ########################################################################
-    # ####################################################### TOGGLE HELP ####
-    def toggle_help(self) -> None:
-        self.help_on = not self.help_on
