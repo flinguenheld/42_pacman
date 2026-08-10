@@ -129,11 +129,11 @@ class VIinstructions(GWindow):
                 x_offset + VData.SPRITE_SIZE, start_y
             ),
         )
-        start_y -= 55 * self.font_size_factor
+        start_y -= 60 * self.font_size_factor
         self.super_pacgum_instructions2 = GLabel(
             atlas=self.atlas,
             frame=self.frame,
-            text="Invulnerability\nMakes enemies eatable for a short time",
+            text="Makes enemies eatable\nfor a short time",
             font_size_factor=self.font_size_factor / 1.2,
             offset_from_center_frame=Vec2(x_offset, start_y),
             multiline=True,
@@ -151,6 +151,8 @@ class VIinstructions(GWindow):
         )
 
     def setup_entity_sprites(self) -> None:
+        sprite_size = int(VData.SPRITE_SIZE * self.font_size_factor * 1.2)
+
         # Player sprite --
         self.player_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("player_right"),
@@ -158,7 +160,7 @@ class VIinstructions(GWindow):
                 self.player_instructions.left - (VData.SPRITE_SIZE * 2.0),
                 self.player_instructions.center.y,
             ),
-            sprite_size=int(VData.SPRITE_SIZE * self.font_size_factor * 1.2),
+            sprite_size=sprite_size,
         )
 
         # Enemy sprites --
@@ -168,7 +170,7 @@ class VIinstructions(GWindow):
                 self.enemy_instructions.left - (VData.SPRITE_SIZE * 2.0),
                 self.enemy_instructions.center.y,
             ),
-            sprite_size=int(VData.SPRITE_SIZE * self.font_size_factor * 1.2),
+            sprite_size=sprite_size,
         )
         self.enemy_1_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("enemy_1_chasing_right"),
@@ -176,7 +178,7 @@ class VIinstructions(GWindow):
                 self.enemy_instructions.left - (VData.SPRITE_SIZE * 4.0),
                 self.enemy_instructions.center.y,
             ),
-            sprite_size=int(VData.SPRITE_SIZE * self.font_size_factor * 1.2),
+            sprite_size=sprite_size,
         )
         self.pacgum_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("pacgum_wait"),
@@ -184,7 +186,7 @@ class VIinstructions(GWindow):
                 self.pacgum_instructions.left - (VData.SPRITE_SIZE * 2.0),
                 self.pacgum_instructions.center.y,
             ),
-            sprite_size=int(VData.SPRITE_SIZE * self.font_size_factor * 1.2),
+            sprite_size=sprite_size,
         )
         self.super_pacgum_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("super_pacgum_wait"),
@@ -193,7 +195,7 @@ class VIinstructions(GWindow):
                 - (VData.SPRITE_SIZE * 2.0),
                 self.super_pacgum_instructions.center.y,
             ),
-            sprite_size=int(VData.SPRITE_SIZE * self.font_size_factor * 1.2),
+            sprite_size=sprite_size,
         )
         # --
         self._sprite_list.extend(
