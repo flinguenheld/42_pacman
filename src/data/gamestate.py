@@ -69,7 +69,7 @@ class GameState:
     # ######################################################### GAME OVER ####
     @property
     def is_game_over(self) -> bool:
-        return self.is_timer_over or self.lives <= 0
+        return self.lives <= 0
 
     # ########################################################################
     # ############################################################ UPDATE ####

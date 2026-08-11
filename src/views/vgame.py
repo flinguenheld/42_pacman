@@ -288,7 +288,7 @@ class VGame(arcade.View):
         if self.gamestate.is_game_over:
             self.window.switch_view(VNames.VIEW_GAMEOVER)
             return True
-        if not self.player.alive:
+        if not self.player.alive or self.gamestate.is_timer_over:
             self.player_death()
             return True
 
