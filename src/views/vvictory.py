@@ -11,6 +11,6 @@ class VVictory(VEndBase):
         super().__init__(
             atlas=atlas,
             title=GTitleVictory(atlas),
-            text=f"!! Congratulations !!\nYou win with {score} points !",
+            text=f"Congratulations, you win!\nFinal score: {score}",
             score=score,
         )
