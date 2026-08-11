@@ -54,7 +54,12 @@ class VMain(arcade.Window):
                 # --> Init a new game here <--
                 self.gamestate = GameState()
                 self.vgame = VGame(self.atlas, self.gamestate)
-                save_and_show(self.vgame)
+                save_and_show(
+                    VNextLevel(
+                        self.atlas,
+                        self.gamestate.level,
+                    )
+                )
             case VNames.VIEW_GAME_RESUME:
                 save_and_show(self.vgame)
             case VNames.VIEW_GAME_NEW_LEVEL:
