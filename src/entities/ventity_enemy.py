@@ -4,7 +4,7 @@ from enum import Enum
 from arcade import Vec2
 
 from src.maze.maze import Maze
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.utils.utils import print_debug
 from src.pathfinding.patrolling import Patrolling
@@ -74,7 +74,7 @@ class VEntityEnemy(VEntityMoving):
         """
 
         # Wait to be close to the next position.
-        if self.center.distance(self.next_position) <= VData.SPRITE_SIZE / 10:
+        if self.center.distance(self.next_position) <= Config.SPRITE_SIZE / 10:
             self.patrolling_mode_management()
 
             match self.mode:
@@ -155,10 +155,10 @@ class VEntityEnemy(VEntityMoving):
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
             case VEntityEnemy.Mode.FLEEING:
                 self._sprite_name = f"enemy_{self.texture_id}_{new_mode.value}"
-                self.timer_fleeing = VData.TIMER_ENEMY_FLEEING
+                self.timer_fleeing = Config.timer_enemy_fleeing
             case VEntityEnemy.Mode.DEAD:
                 self._sprite_name = f"enemy_{new_mode.value}"
-                self.timer_dead = VData.TIMER_ENEMY_DEATH
+                self.timer_dead = Config.timer_enemy_death
 
         self.update_texture(force=True)
 

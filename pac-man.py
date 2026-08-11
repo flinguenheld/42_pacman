@@ -1,10 +1,9 @@
 import sys
 from termcolor import cprint
 
-from src.data.vdata import VData
 from src.views.vmain import VMain
 from src.utils.utils import print_usage
-from src.config.utils import get_config, ConfigError
+from src.config.utils import ConfigError, apply_config
 
 
 def main() -> None:
@@ -21,8 +20,7 @@ def main() -> None:
 
         else:
             print("Hello from 42-pacman!")
-            config = get_config(arg)
-            VData.apply_config(config)
+            apply_config(arg)
 
             window = VMain()
             window.run()

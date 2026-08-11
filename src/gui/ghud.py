@@ -6,9 +6,10 @@ from arcade import Sprite, TextureAnimationSprite, Vec2, SpriteList
 from src.maze.maze import Maze
 from src.gui.glabel import GLabel
 from src.gui.gframe import GFrame
+from src.data.enums import DebugMode
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.data.gamestate import GameState
-from src.data.vdata import VData, DebugMode
 from src.gui.gbackground import GBackground
 
 
@@ -32,7 +33,7 @@ class VHud:
         self.frame = GFrame(
             atlas,
             bot_left=Vec2(VHud.OFFSET, VHud.OFFSET),
-            nb_cols=ceil(self.maze.width / VData.SPRITE_SIZE),
+            nb_cols=ceil(self.maze.width / Config.SPRITE_SIZE),
             nb_rows=3,
         )
         self.icons: SpriteList[Sprite | TextureAnimationSprite] = (
@@ -48,27 +49,27 @@ class VHud:
     # ########################################################################
     # ############################################################# SETUP ####
     def build_fields(self) -> None:
-        self.font_size = VData.SPRITE_SIZE * 0.6
-        self.y_text_line = VHud.OFFSET + VData.SPRITE_SIZE
+        self.font_size = Config.SPRITE_SIZE * 0.6
+        self.y_text_line = VHud.OFFSET + Config.SPRITE_SIZE
 
         self.add_field(
             entry_name="score",
             icon_name="score_hud",
-            x=self.frame.width / -2 + VData.SPRITE_SIZE * 3.2,
+            x=self.frame.width / -2 + Config.SPRITE_SIZE * 3.2,
             anchor_x="left",
             color=self.atlas.get_color("hud_font"),
         )
 
         self.add_field(
             entry_name="level",
-            x=self.frame.width / 4 - VData.SPRITE_SIZE,
+            x=self.frame.width / 4 - Config.SPRITE_SIZE,
             color=self.atlas.get_color("hud_font"),
         )
 
         self.add_field(
             entry_name="lives",
             icon_name="heart_hud",
-            x=self.frame.width / 2 - VData.SPRITE_SIZE * 3.2,
+            x=self.frame.width / 2 - Config.SPRITE_SIZE * 3.2,
             anchor_x="right",
             color=self.atlas.get_color("hud_font"),
         )
@@ -80,7 +81,7 @@ class VHud:
 
         self.add_field(
             entry_name="fps",
-            x=self.frame.width / -4 + VData.SPRITE_SIZE,
+            x=self.frame.width / -4 + Config.SPRITE_SIZE,
             color=self.atlas.get_color("hud_font_debug"),
             debug=True,
         )
@@ -111,11 +112,11 @@ class VHud:
         if icon_name:
             match anchor_x:
                 case "left":
-                    x = container[entry_name].left - VData.SPRITE_SIZE / 1.3
+                    x = container[entry_name].left - Config.SPRITE_SIZE / 1.3
                 case "center":
-                    x = container[entry_name].left - VData.SPRITE_SIZE
+                    x = container[entry_name].left - Config.SPRITE_SIZE
                 case _:
-                    x = container[entry_name].right + VData.SPRITE_SIZE / 1.3
+                    x = container[entry_name].right + Config.SPRITE_SIZE / 1.3
 
             tile = self.atlas.pick_tile(icon_name)
             self.icons.append(
@@ -137,7 +138,7 @@ class VHud:
             text.draw()
 
         # Debug --
-        if VData.debug_mode != DebugMode.OFF:
+        if Config.debug_mode != DebugMode.OFF:
             self.fields_debug["fps"].text = f"FPS: {arcade.get_fps():.2f}"
             for text in self.fields_debug.values():
                 text.draw()
@@ -161,7 +162,7 @@ class VHud:
         self.icons.update_animation(delta_time)
 
         # --
-        nb_levels = VData.NUMBER_OF_LEVEL
+        nb_levels = Config.amount_of_levels
         self.fields["level"].text = f"{self.gamestate.level}/{nb_levels}"
         self.fields["lives"].text = f"{self.gamestate.lives:>2}"
         self.fields["score"].text = str(self.gamestate.score)

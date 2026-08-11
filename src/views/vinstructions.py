@@ -1,11 +1,12 @@
 from arcade import Sprite, SpriteList, TextureAnimationSprite, Vec2
 
 from src.gui.gmenu import GMenu
-from src.data.vdata import VData, VNames
+from src.data.enums import VNames
 from src.gui.glabel import GLabel
 from src.gui.gframe import GFrame
 from src.gui.gwindow import GWindow
 from src.gui.gbutton import GButton
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.gui.titles.gtitle_instructions import GTitleInstructions
 
@@ -84,7 +85,7 @@ class VIinstructions(GWindow):
             text="= Player",
             font_size_factor=self.font_size_factor,
             offset_from_center_frame=Vec2(
-                x_offset + VData.SPRITE_SIZE, start_y
+                x_offset + Config.SPRITE_SIZE, start_y
             ),
         )
         start_y -= 60 * self.font_size_factor
@@ -94,7 +95,7 @@ class VIinstructions(GWindow):
             text="= Enemy",
             font_size_factor=self.font_size_factor,
             offset_from_center_frame=Vec2(
-                x_offset + VData.SPRITE_SIZE, start_y
+                x_offset + Config.SPRITE_SIZE, start_y
             ),
         )
 
@@ -108,7 +109,7 @@ class VIinstructions(GWindow):
             text="= Pacgum",
             font_size_factor=self.font_size_factor,
             offset_from_center_frame=Vec2(
-                x_offset + VData.SPRITE_SIZE, start_y
+                x_offset + Config.SPRITE_SIZE, start_y
             ),
         )
         start_y -= 45 * self.font_size_factor
@@ -126,7 +127,7 @@ class VIinstructions(GWindow):
             text="= Super Pacgum",
             font_size_factor=self.font_size_factor,
             offset_from_center_frame=Vec2(
-                x_offset + VData.SPRITE_SIZE, start_y
+                x_offset + Config.SPRITE_SIZE, start_y
             ),
         )
         start_y -= 60 * self.font_size_factor
@@ -151,13 +152,13 @@ class VIinstructions(GWindow):
         )
 
     def setup_entity_sprites(self) -> None:
-        sprite_size = int(VData.SPRITE_SIZE * self.font_size_factor * 1.2)
+        sprite_size = int(Config.SPRITE_SIZE * self.font_size_factor * 1.2)
 
         # Player sprite --
         self.player_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("player_right"),
             center=Vec2(
-                self.player_instructions.left - (VData.SPRITE_SIZE * 2.0),
+                self.player_instructions.left - (Config.SPRITE_SIZE * 2.0),
                 self.player_instructions.center.y,
             ),
             sprite_size=sprite_size,
@@ -167,7 +168,7 @@ class VIinstructions(GWindow):
         self.enemy_0_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("enemy_0_chasing_right"),
             center=Vec2(
-                self.enemy_instructions.left - (VData.SPRITE_SIZE * 2.0),
+                self.enemy_instructions.left - (Config.SPRITE_SIZE * 2.0),
                 self.enemy_instructions.center.y,
             ),
             sprite_size=sprite_size,
@@ -175,7 +176,7 @@ class VIinstructions(GWindow):
         self.enemy_1_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("enemy_1_chasing_right"),
             center=Vec2(
-                self.enemy_instructions.left - (VData.SPRITE_SIZE * 4.0),
+                self.enemy_instructions.left - (Config.SPRITE_SIZE * 4.0),
                 self.enemy_instructions.center.y,
             ),
             sprite_size=sprite_size,
@@ -183,7 +184,7 @@ class VIinstructions(GWindow):
         self.pacgum_sprite = self.atlas.tile_to_sprite(
             tile=self.atlas.pick_tile("pacgum_wait"),
             center=Vec2(
-                self.pacgum_instructions.left - (VData.SPRITE_SIZE * 2.0),
+                self.pacgum_instructions.left - (Config.SPRITE_SIZE * 2.0),
                 self.pacgum_instructions.center.y,
             ),
             sprite_size=sprite_size,
@@ -192,7 +193,7 @@ class VIinstructions(GWindow):
             tile=self.atlas.pick_tile("super_pacgum_wait"),
             center=Vec2(
                 self.super_pacgum_instructions.left
-                - (VData.SPRITE_SIZE * 2.0),
+                - (Config.SPRITE_SIZE * 2.0),
                 self.super_pacgum_instructions.center.y,
             ),
             sprite_size=sprite_size,

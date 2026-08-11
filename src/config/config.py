@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from termcolor import cprint
 from dataclasses import dataclass
-from typing import Generator, Tuple
+from typing import Generator, Tuple, ClassVar
+
+from src.data.enums import DebugMode
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀█░█▀▀░▀█▀░█▀▀░░
@@ -11,6 +13,8 @@ from typing import Generator, Tuple
 @dataclass
 class Config:
     """Store the config data.
+       Useful program data, accessible everywhere in the codebase.
+
 
     Has to be fed with 'from_json()'.
     The purpose is to not block the program.
@@ -21,30 +25,51 @@ class Config:
 
     _title: bool = False
 
-    highscore_filename: str = "scores.txt"
-    lives: int = 5
-    pacgum: int = 42
+    # Manageable variables with the config file --
+    lives: ClassVar[int] = 3
 
-    points_per_ghost: int = 10
-    points_per_pacgum: int = 50
-    points_per_super_pacgum: int = 200
+    points_per_ghost: ClassVar[int] = 10
+    points_per_pacgum: ClassVar[int] = 50
+    points_per_super_pacgum: ClassVar[int] = 200
 
-    seed: int = 42
-    level_max_time: int = 90
+    seed_first_level: ClassVar[int] = 42
+    amount_of_levels: ClassVar[int] = 10
+    amount_of_enemies: ClassVar[int] = 4
+
+    timer_level: ClassVar[float] = 90.0
+    timer_enemy_death: ClassVar[float] = 10.0
+    timer_enemy_fleeing: ClassVar[float] = 10.0
+
+    highscore_filename: ClassVar[str] = "scores.txt"
+    floor_debug_max_numbers: ClassVar[int] = 10
+    texture_folder: ClassVar[str] = "textures"
+
+    height: ClassVar[int] = 1300
+    width: ClassVar[int] = 1300
+
+    # Non manageable variable --
+    debug_mode: ClassVar[DebugMode] = DebugMode.OFF
+
+    SPRITE_SIZE: ClassVar[int] = 32
+    SPRITE_SIZE_BACKGROUND: ClassVar[int] = SPRITE_SIZE * 4
+
+    CAMERA_MARGIN: ClassVar[int] = 100
+    CAMERA_MAX_ZOOM: ClassVar[float] = 2.8
 
     # ########################################################################
     # ######################################################## FROM JSON #####
-    def from_json(self, values_from_json: dict[str, str | int]) -> None:
+    @classmethod
+    def from_json(cls, values_from_json: dict[str, str | int | float]) -> None:
 
-        for att_name, att_value in self._next_attribute():
+        for att_name, att_value in cls._next_manageable_attribute():
             # Is in the json ?
             if att_name not in values_from_json:
-                self.log_default(att_name, "No value in the config file")
+                cls.log_default(att_name, "No value in the config file")
                 continue
 
             # Is the same type ?
             if type(values_from_json[att_name]) is not type(att_value):
-                self.log_default(att_name, "Wrong value type")
+                cls.log_default(att_name, "Wrong value type")
                 continue
 
             # Per type --
@@ -53,38 +78,67 @@ class Config:
             # str: is empty ?
             if type(json_value) is str:
                 if len(json_value) == 0:
-                    self.log_default(att_name, "Empty string")
+                    cls.log_default(att_name, "Empty string")
                     continue
 
             # int: is supp to 0 ?
             if type(json_value) is int:
                 if json_value <= 0:
-                    self.log_default(att_name, "Value <= 0")
+                    cls.log_default(att_name, "Value <= 0")
+                    continue
+
+            # float: is supp to 0 ?
+            if type(json_value) is float:
+                if json_value <= 0.0:
+                    cls.log_default(att_name, "Value <= 0.0")
                     continue
 
             # Ok --
-            self.__setattr__(att_name, json_value)
+            setattr(cls, att_name, att_value)
 
-        self.log_close()
+        cls.log_close()
 
     # ########################################################################
-    # ################################################### NEXT ATTRIBUTE #####
-    def _next_attribute(self) -> Generator[Tuple[str, str | int]]:
-        for key, val in vars(self).items():
-            if not key.startswith("_"):
-                yield key, val
+    # ######################################## NEXT MANAGEABLE ATTRIBUTE #####
+    @classmethod
+    def _next_manageable_attribute(
+        cls,
+    ) -> Generator[Tuple[str, str | int | float]]:
+        manageable_fields = [
+            "lives",
+            "points_per_ghost",
+            "points_per_pacgum",
+            "points_per_super_pacgum",
+            "seed_first_level",
+            "amount_of_levels",
+            "amount_of_enemies",
+            "timer_level",
+            "timer_enemy_death",
+            "timer_enemy_fleeing",
+            "highscore_filename",
+            "floor_debug_max_numbers",
+            "texture_folder",
+            "height",
+            "width",
+        ]
+
+        for key in manageable_fields:
+            yield key, getattr(cls, key)
 
     # ########################################################################
     # ############################################################## LOG #####
+    @classmethod
     def log_title(self) -> None:
         if not self._title:
             cprint(f"{'=' * 36} Config warnings {'=' * 36}", "yellow")
             self._title = True
 
+    @classmethod
     def log_close(self) -> None:
         if self._title:
             cprint(f"{'=' * 89}", "yellow")
 
+    @classmethod
     def log_default(self, field: str, message: str) -> None:
         self.log_title()
         default = getattr(self, field)
@@ -99,6 +153,20 @@ class Config:
         return "\n".join(
             (
                 f"{' ' * 10}- {key} -> {val}"
-                for key, val in self._next_attribute()
+                for key, val in self._next_manageable_attribute()
             )
         )
+
+    # ########################################################################
+    # ####################################################### _DEBUG MODE ####
+    @classmethod
+    def toggle_debug_mode(cls) -> None:
+        cls.debug_mode = DebugMode((cls.debug_mode.value + 1) % len(DebugMode))
+
+    @classmethod
+    def deactivate_debug_mode(cls) -> None:
+        cls.debug_mode = DebugMode.OFF
+
+    @classmethod
+    def is_debug_on(cls) -> bool:
+        return cls.debug_mode.value > DebugMode.OFF.value

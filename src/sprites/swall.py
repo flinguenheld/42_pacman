@@ -1,7 +1,7 @@
 from arcade import Vec2
 from functools import partial
 
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.sprites.ssprites import SSprites
 
@@ -53,7 +53,7 @@ class SWall(SSprites):
         # ##########################################
         # ################################################
         for point in walls:
-            SS = VData.SPRITE_SIZE
+            SS = Config.SPRITE_SIZE
 
             is_floor_on_top = Vec2(point.x, point.y + SS) in floors
             is_floor_on_right = Vec2(point.x + SS, point.y) in floors

@@ -2,7 +2,7 @@ import arcade
 from arcade import Vec2
 
 from src.maze.maze import Maze
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.entities.ventity import VEntity
 
@@ -100,10 +100,10 @@ class VEntityMoving(VEntity):
         """
 
         return (
-            point.x >= sprite_center.x - VData.SPRITE_SIZE // 2
-            and point.x <= sprite_center.x + VData.SPRITE_SIZE // 2
-            and point.y >= sprite_center.y - VData.SPRITE_SIZE // 2
-            and point.y <= sprite_center.y + VData.SPRITE_SIZE // 2
+            point.x >= sprite_center.x - Config.SPRITE_SIZE // 2
+            and point.x <= sprite_center.x + Config.SPRITE_SIZE // 2
+            and point.y >= sprite_center.y - Config.SPRITE_SIZE // 2
+            and point.y <= sprite_center.y + Config.SPRITE_SIZE // 2
         )
 
     # ########################################################################

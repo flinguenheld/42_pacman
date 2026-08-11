@@ -1,7 +1,7 @@
 import arcade
 from arcade import Vec2, TextureAnimationSprite
 
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 
 
@@ -30,7 +30,7 @@ class VEntity(TextureAnimationSprite):
         super().__init__(
             animation=tile.texture,
             center=position,
-            scale=tile.width / VData.SPRITE_SIZE,
+            scale=tile.width / Config.SPRITE_SIZE,
         )
 
     # ########################################################################

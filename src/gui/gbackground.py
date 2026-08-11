@@ -1,6 +1,6 @@
 from arcade import SpriteList, Vec2, LBWH, Rect
 
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 
 
@@ -23,13 +23,13 @@ class GBackground:
     def build(self, center: Vec2, to_avoid: Rect | list[Rect]) -> None:
         self.sprites.clear()
 
-        top = int(center.y + VData.height)
-        bot = int(center.y - VData.height)
+        top = int(center.y + Config.height)
+        bot = int(center.y - Config.height)
 
-        left = int(center.x - VData.width)
-        right = int(center.x + VData.width)
+        left = int(center.x - Config.width)
+        right = int(center.x + Config.width)
 
-        sprite_size = VData.SPRITE_SIZE_BACKGROUND
+        sprite_size = Config.SPRITE_SIZE_BACKGROUND
         sprite_name = "background"
 
         if not isinstance(to_avoid, list):
@@ -53,10 +53,10 @@ class GBackground:
     def does_not_overlap(self, x: int, y: int, to_avoid: list[Rect]) -> bool:
 
         rect = LBWH(
-            x - VData.SPRITE_SIZE_BACKGROUND // 2,
-            y - VData.SPRITE_SIZE_BACKGROUND // 2,
-            VData.SPRITE_SIZE_BACKGROUND,
-            VData.SPRITE_SIZE_BACKGROUND,
+            x - Config.SPRITE_SIZE_BACKGROUND // 2,
+            y - Config.SPRITE_SIZE_BACKGROUND // 2,
+            Config.SPRITE_SIZE_BACKGROUND,
+            Config.SPRITE_SIZE_BACKGROUND,
         )
 
         return not any(rect.overlaps(ta) for ta in to_avoid)

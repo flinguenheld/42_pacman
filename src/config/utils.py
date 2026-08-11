@@ -14,19 +14,16 @@ class ConfigError(Exception):
 
 
 # ############################################################################
-# ############################################################# GET JSON #####
-def get_config(file_name: str) -> Config:
+# ######################################################### APPLY CONFIG #####
+def apply_config(file_name: str) -> None:
 
     values = read_json(file_name)
-
-    config = Config()
-    config.from_json(values)
-    return config
+    Config().from_json(values)
 
 
 # ############################################################################
 # ############################################################ READ JSON #####
-def read_json(file_name: str) -> dict[str, str | int] | Any:
+def read_json(file_name: str) -> dict[str, str | int | float] | Any:
     """
     Read the JSON file to return values in a dictionary
     Could raise:

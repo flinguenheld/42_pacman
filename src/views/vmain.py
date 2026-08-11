@@ -1,12 +1,13 @@
 import arcade
 
+from src.data.enums import VNames
 from src.views.vgame import VGame
 from src.views.vpause import VPause
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.views.vcheats import VCheats
 from src.views.vvictory import VVictory
 from src.views.vwelcome import VWelcome
-from src.data.vdata import VNames, VData
 from src.data.gamestate import GameState
 from src.views.vgame_over import VGameOver
 from src.views.vnext_level import VNextLevel
@@ -19,8 +20,8 @@ from src.views.vinstructions import VIinstructions
 class VMain(arcade.Window):
     def __init__(self) -> None:
         super().__init__(
-            VData.width,
-            VData.height,
+            Config.width,
+            Config.height,
             "Pac-man",
             resizable=True,
         )
@@ -72,7 +73,7 @@ class VMain(arcade.Window):
             case VNames.VIEW_PAUSE:
                 save_and_show(VPause(self.atlas))
             case VNames.VIEW_NEXT_LEVEL:
-                if self.gamestate.level >= VData.NUMBER_OF_LEVEL:
+                if self.gamestate.level >= Config.amount_of_levels:
                     self.switch_view(VNames.VIEW_VICTORY)
                 else:
                     self.gamestate.next_level()
@@ -99,5 +100,5 @@ class VMain(arcade.Window):
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        VData.width = width
-        VData.height = height
+        Config.width = width
+        Config.height = height

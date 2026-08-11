@@ -1,6 +1,6 @@
 from arcade import Vec2
 
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.entities.ventity import VEntity
 
@@ -19,4 +19,4 @@ class VEntityPacGum(VEntity):
 
     @staticmethod
     def get_points() -> int:
-        return VData.points_per_pacgum
+        return Config.points_per_pacgum

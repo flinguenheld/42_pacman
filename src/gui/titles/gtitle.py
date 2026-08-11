@@ -1,7 +1,7 @@
 from arcade import Vec2, Rect
 
 from src.maze.maze import Maze
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 
 
@@ -21,9 +21,9 @@ class GTitle:
     # ############################################################# BUILD ####
     def build(self, bottom_middle: Vec2) -> None:
 
-        future_width = (len(self.raw_maze[0])) * VData.SPRITE_SIZE
+        future_width = (len(self.raw_maze[0])) * Config.SPRITE_SIZE
         offset = Vec2(
-            bottom_middle.x - future_width / 2 + VData.SPRITE_SIZE / 2,
+            bottom_middle.x - future_width / 2 + Config.SPRITE_SIZE / 2,
             bottom_middle.y,
         )
 

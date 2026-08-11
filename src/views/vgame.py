@@ -6,11 +6,12 @@ from arcade import SpriteList, Vec2, LBWH
 
 from src.gui.ghud import VHud
 from src.maze.maze import Maze
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.utils.utils import print_debug
 from src.data.gamestate import GameState
 from src.gui.gbackground import GBackground
-from src.data.vdata import VNames, VData, DebugMode
+from src.data.enums import VNames, DebugMode
 from src.entities.ventity_enemy import VEntityEnemy
 from src.entities.ventity_player import VEntityPlayer
 from src.entities.ventity_pacgum import VEntityPacGum
@@ -169,7 +170,7 @@ class VGame(arcade.View):
     def new_maze(self) -> None:
         # Maze parameters
         seed = (
-            VData.seed
+            Config.seed_first_level
             if self.gamestate.level == 1
             else random.randint(0, sys.maxsize)
         )
@@ -200,7 +201,7 @@ class VGame(arcade.View):
                 self.background.draw()
                 self.maze.draw()
 
-                match VData.debug_mode:
+                match Config.debug_mode:
                     case DebugMode.HITBOXES:
                         self.combined_pacgum_list.draw(pixelated=True)
                         draw_people()
@@ -327,7 +328,7 @@ class VGame(arcade.View):
                     self.process_updates = not self.process_updates
 
                 case arcade.key.H:
-                    VData.toggle_debug_mode()
+                    Config.toggle_debug_mode()
 
                 case arcade.key.T:
                     if not self.maze.graph_costs and self.setup_done:
@@ -381,15 +382,15 @@ class VGame(arcade.View):
         def cameras_zoom() -> None:
             if self.setup_done:
                 scale_hori = (
-                    self.camera.viewport.width - VData.CAMERA_MARGIN
+                    self.camera.viewport.width - Config.CAMERA_MARGIN
                 ) / self.maze.width
                 scale_vert = (
-                    self.camera.viewport.height - VData.CAMERA_MARGIN
+                    self.camera.viewport.height - Config.CAMERA_MARGIN
                 ) / self.maze.height
 
                 zoom = min(scale_hori, scale_vert)
-                if zoom > VData.CAMERA_MAX_ZOOM:
-                    zoom = VData.CAMERA_MAX_ZOOM
+                if zoom > Config.CAMERA_MAX_ZOOM:
+                    zoom = Config.CAMERA_MAX_ZOOM
 
                 self.camera.zoom = zoom
                 self.camera_hud.zoom = zoom

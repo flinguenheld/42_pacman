@@ -2,10 +2,10 @@ import random
 from typing import Any, Type
 from arcade import Vec2, SpriteList, Sprite
 
-from src.data.vdata import VData
 from src.gui.gframe import GFrame
 from src.gui.gwidget import GWidget
 from src.gui.gbutton import GButton
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.entities.ventity_enemy import VEntityEnemy
 
@@ -20,7 +20,7 @@ class GMenuEntry(GWidget):
     """
 
     FONT_SIZE_FACTOR: float = 1.7
-    PADDING_ICON = VData.SPRITE_SIZE * 3
+    PADDING_ICON = Config.SPRITE_SIZE * 3
 
     def __init__(
         self,

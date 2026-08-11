@@ -1,9 +1,9 @@
 import arcade
 from arcade import Vec2
 
-from src.data.vdata import VData
 from src.gui.gframe import GFrame
 from src.gui.gwidget import GWidget
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.gui.titles.gtitle import GTitle
 from src.gui.gbackground import GBackground
@@ -23,14 +23,14 @@ class GWindow(arcade.View, GWidget):
     def __init__(self, atlas: VAtlas, title: GTitle, frame: GFrame) -> None:
         GWidget.__init__(self, atlas, frame)
         arcade.View.__init__(self)
-        VData.deactivate_debug_mode()
+        Config.deactivate_debug_mode()
 
         # Title --
         self.title = title
         self.title.build(
             Vec2(
                 self.frame.center_position.x,
-                self.frame.rect.top + VData.SPRITE_SIZE * 2,
+                self.frame.rect.top + Config.SPRITE_SIZE * 2,
             )
         )
 
@@ -54,12 +54,12 @@ class GWindow(arcade.View, GWidget):
         position += Vec2(0, self.title.height / 2)
 
         width_to_scale = max(self.frame.width, self.title.width)
-        scale_hori = self.width / (width_to_scale + VData.CAMERA_MARGIN)
-        scale_vert = self.height / (self.frame.height + VData.CAMERA_MARGIN)
+        scale_hori = self.width / (width_to_scale + Config.CAMERA_MARGIN)
+        scale_vert = self.height / (self.frame.height + Config.CAMERA_MARGIN)
 
         zoom = min(scale_hori, scale_vert)
-        if zoom > VData.CAMERA_MAX_ZOOM:
-            zoom = VData.CAMERA_MAX_ZOOM
+        if zoom > Config.CAMERA_MAX_ZOOM:
+            zoom = Config.CAMERA_MAX_ZOOM
 
         self.camera = arcade.Camera2D(
             self.window.rect,

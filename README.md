@@ -35,16 +35,26 @@ All invalid values are ignored.
 Here the available keys:
 ```json
 {
-  "highscore_filename": "test.txt",
-  "lives": 15,
-  "pacgum": 42,
+  "lives": 3,
 
   "points_per_ghost": 10,
   "points_per_pacgum": 50,
   "points_per_super_pacgum": 200,
 
-  "seed": 42,
-  "level_max_time": 90
+  "seed_first_level": 42,
+  "amount_of_levels": 10,
+  "amount_of_enemies": 4,
+
+  "timer_level": 90.0,
+  "timer_enemy_death": 10.0,
+  "timer_enemy_fleeing": 10.0,
+
+  "highscore_filename": "test.txt",
+  "floor_debug_max_numbers": 10,
+  "texture_folder": "textures",
+
+  "height": 1300,
+  "width": 1300
 
   // Comment C
   /* Comment C */

@@ -1,10 +1,10 @@
 from arcade.types import Color
 from arcade import Sprite, Vec2, key, SpriteList
 
-from src.data.vdata import VData
 from src.gui.gframe import GFrame
 from src.gui.glabel import GLabel
 from src.gui.gwidget import GWidget
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 
 
@@ -98,7 +98,7 @@ class GInput(GWidget):
     # ############################################## UPDATE ICON POSITION ####
     def update_icon_position(self) -> None:
         if self.text:
-            self.icon.center_x = self.label.right + VData.SPRITE_SIZE
+            self.icon.center_x = self.label.right + Config.SPRITE_SIZE
         else:
             self.icon.center_x = self.label.right
 

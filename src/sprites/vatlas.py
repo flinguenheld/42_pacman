@@ -11,7 +11,8 @@ from arcade import (
     Sprite,
     Vec2,
 )
-from src.data.vdata import VStyles, VData
+from src.data.enums import VStyles
+from src.config.config import Config
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░▀█▀░█░░░█▀▀░░
@@ -69,7 +70,7 @@ class VAtlas:
     # ########################################################################
     # ############################################# LOAD INFORMATION FILE ####
     def _load_info(self) -> None:
-        self.path = f"{VData.TEXTURES}/{self.style.value}"
+        self.path = f"{Config.texture_folder}/{self.style.value}"
         self.info = self._open_info_file(self.path)
         self.default_width = self.info["default_width"]
         self.default_height = self.info["default_height"]
@@ -146,6 +147,7 @@ class VAtlas:
             height = self._get_data(data_line, "height", self.default_height)
 
             # Only One hitbox for the line even if it's an animation
+            # QUESTION: UNUSED ??
             hitbox = self._generate_hitbox(data_line, height, width)
 
             # Allows the atlas to have several textures with the same name
@@ -282,7 +284,7 @@ class VAtlas:
         tile: VTile,
         center: Vec2,
         angle: int = 0,
-        sprite_size: int = VData.SPRITE_SIZE,
+        sprite_size: int = Config.SPRITE_SIZE,
     ) -> Sprite | TextureAnimationSprite:
         """
         Create a Sprite from the given VTile.

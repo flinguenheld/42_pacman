@@ -1,6 +1,6 @@
 from src.gui.gmenu import GMenu
 from src.gui.gframe import GFrame
-from src.data.vdata import VNames
+from src.data.enums import VNames
 from src.gui.gwindow import GWindow
 from src.gui.gbutton import GButton
 from src.sprites.vatlas import VAtlas

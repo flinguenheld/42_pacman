@@ -1,6 +1,7 @@
 from __future__ import annotations
 import random
-from src.data.vdata import VData
+
+from src.config.config import Config
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█░█░█▀▀░█▀█░▀█▀░█▀▀░░
@@ -32,10 +33,10 @@ class Cheats:
 class GameState:
     def __init__(self) -> None:
         self.score = 0
-        self.lives = 3
+        self.lives = Config.lives
         self.level = 1
         self.reset_timer()
-        self.amount_of_enemies = VData.AMOUNT_OF_ENEMIES
+        self.amount_of_enemies = Config.amount_of_enemies
 
         self._player_speed: float = 30.0
         self._enemy_speed: float = 15.0
@@ -52,7 +53,7 @@ class GameState:
     # ########################################################################
     # ####################################################### RESET TIMER ####
     def reset_timer(self) -> None:
-        self.timer = VData.time_max
+        self.timer = Config.timer_level
 
     # ########################################################################
     # ##################################################### SCORE & LIVES ####

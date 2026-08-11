@@ -1,10 +1,11 @@
 import arcade
 
+from src.data.enums import VNames
 from src.gui.gframe import GFrame
 from src.gui.gwindow import GWindow
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 from src.gui.titles.gtitle import GTitle
-from src.data.vdata import VNames, VData
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░█▀▀░█░█░▀█▀░█░░░█▀▀░█░█░█▀▀░█░░░░
@@ -28,7 +29,7 @@ class VNextLevel(GWindow):
 
         self.add_number(next_level)
         self.add_slash()
-        self.add_number(VData.NUMBER_OF_LEVEL)
+        self.add_number(Config.amount_of_levels)
 
         super().__init__(
             atlas,
@@ -68,6 +69,8 @@ class VNextLevel(GWindow):
             for title, nb in zip(self.raw_title, raw_digit):
                 title.extend(nb)
 
+    # ########################################################################
+    # ######################################################### ON UPDATE ####
     def on_update(self, delta_time: int | float) -> None:
         self.timer -= delta_time
         if self.timer <= 0:
@@ -86,6 +89,8 @@ class VNextLevel(GWindow):
         ]:
             self.window.switch_view(VNames.VIEW_GAME_NEW_LEVEL)
 
+    # ########################################################################
+    # #################################################### DIGIT PATTERNS ####
     DIGIT_PATTERNS = {
         0: [
             [1, 1, 1, 1, 1, 1],

@@ -2,7 +2,7 @@ import sys
 import random
 from arcade import Sprite, SpriteList, Vec2, Rect, LBWH
 
-from src.data.vdata import VData
+from src.config.config import Config
 from src.sprites.vatlas import VAtlas
 
 
@@ -24,7 +24,7 @@ class SSprites:
         texture_name: str,
         center: Vec2,
         force_first_texture: bool = False,
-        sprite_size: int = VData.SPRITE_SIZE,
+        sprite_size: int = Config.SPRITE_SIZE,
     ) -> None:
         tile = self.atlas.pick_tile(texture_name, not force_first_texture)
         angle = random.choice(tile.allowed_angles)
@@ -89,17 +89,17 @@ class SSprites:
     @property
     def width(self) -> int:
         """Width from edge to edge"""
-        return (self.__right - self.__left) + VData.SPRITE_SIZE
+        return (self.__right - self.__left) + Config.SPRITE_SIZE
 
     @property
     def height(self) -> int:
         """Height from edge to edge"""
-        return (self.__top - self.__bot) + VData.SPRITE_SIZE
+        return (self.__top - self.__bot) + Config.SPRITE_SIZE
 
     @property
     def rect(self) -> Rect:
         """Rect from edges to edges"""
-        half = VData.SPRITE_SIZE / 2
+        half = Config.SPRITE_SIZE / 2
         return LBWH(
             self.__left - half, self.__bot - half, self.width, self.height
         )

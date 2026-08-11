@@ -3,8 +3,9 @@ from typing import Tuple
 from pyglet.graphics import Batch
 from arcade import Vec2, SpriteList, Sprite
 
+from src.config.config import Config
+from src.data.enums import DebugMode
 from src.sprites.vatlas import VAtlas
-from src.data.vdata import VData, DebugMode
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀▀░█░░░█▀█░█▀█░█▀▄░░░█▀▄░█▀▀░█▀▄░█░█░█▀▀░░
@@ -46,7 +47,7 @@ class SFloorDebug:
                 align="center",
                 batch=self.texts_batch,
                 # bold=True,
-                font_size=VData.SPRITE_SIZE * 0.4,
+                font_size=Config.SPRITE_SIZE * 0.4,
             )
 
             square_tile = self.atlas.pick_tile("debug_square")
@@ -77,10 +78,10 @@ class SFloorDebug:
             return (red, green, blue)
 
         # --
-        if VData.debug_mode == DebugMode.ALGO:
+        if Config.debug_mode == DebugMode.ALGO:
             for point, cost in graph_costs.items():
                 self.squares[point].color = colour(cost)
-                if cost <= VData.FLOOR_DEBUG_MAX_NUMBERS:
+                if cost <= Config.floor_debug_max_numbers:
                     self.texts[point].text = f"{cost}"
                 else:
                     self.texts[point].text = ""

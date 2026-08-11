@@ -3,10 +3,11 @@ from arcade import Vec2, Rect
 
 from src.sprites.swall import SWall
 from src.pathfinding.bfs import BFS
+from src.data.enums import DebugMode
+from src.config.config import Config
 from src.sprites.sfloor import SFloor
 from src.sprites.vatlas import VAtlas
 from src.utils.utils import sprite_center
-from src.data.vdata import VData, DebugMode
 from src.sprites.sfloor_debug import SFloorDebug
 
 
@@ -25,14 +26,14 @@ class Maze:
     """
 
     NEIGHBOURS: list[Vec2] = [
-        Vec2(-VData.SPRITE_SIZE, VData.SPRITE_SIZE),
-        Vec2(0, VData.SPRITE_SIZE),
-        Vec2(VData.SPRITE_SIZE, VData.SPRITE_SIZE),
-        Vec2(VData.SPRITE_SIZE, 0),
-        Vec2(VData.SPRITE_SIZE, -VData.SPRITE_SIZE),
-        Vec2(0, -VData.SPRITE_SIZE),
-        Vec2(-VData.SPRITE_SIZE, -VData.SPRITE_SIZE),
-        Vec2(-VData.SPRITE_SIZE, 0),
+        Vec2(-Config.SPRITE_SIZE, Config.SPRITE_SIZE),
+        Vec2(0, Config.SPRITE_SIZE),
+        Vec2(Config.SPRITE_SIZE, Config.SPRITE_SIZE),
+        Vec2(Config.SPRITE_SIZE, 0),
+        Vec2(Config.SPRITE_SIZE, -Config.SPRITE_SIZE),
+        Vec2(0, -Config.SPRITE_SIZE),
+        Vec2(-Config.SPRITE_SIZE, -Config.SPRITE_SIZE),
+        Vec2(-Config.SPRITE_SIZE, 0),
     ]
 
     def __init__(
@@ -83,7 +84,7 @@ class Maze:
         floor_points: set[Vec2] = set()
 
         # !! Reverse the rows to switch in X/Y !!
-        sprite_size = VData.SPRITE_SIZE
+        sprite_size = Config.SPRITE_SIZE
         for y, row in enumerate(reversed(self.raw_maze)):
             for x, value in enumerate(row):
                 point = Vec2(
@@ -132,7 +133,7 @@ class Maze:
     def draw(self) -> None:
         self.walls.draw()
         self.floors.draw()
-        if VData.debug_mode == DebugMode.ALGO:
+        if Config.debug_mode == DebugMode.ALGO:
             self.floors_debug.draw()
 
     # ########################################################################

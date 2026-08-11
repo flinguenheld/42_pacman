@@ -2,7 +2,7 @@ import arcade
 from arcade import Vec2
 
 from src.gui.gmenu import GMenu
-from src.data.vdata import VNames
+from src.data.enums import VNames
 from src.gui.gframe import GFrame
 from src.gui.glabel import GLabel
 from src.gui.gbutton import GButton
