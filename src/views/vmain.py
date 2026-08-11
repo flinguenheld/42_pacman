@@ -9,6 +9,7 @@ from src.views.vcheats import VCheats
 from src.views.vvictory import VVictory
 from src.views.vwelcome import VWelcome
 from src.data.gamestate import GameState
+from src.config.utils import apply_config
 from src.views.vgame_over import VGameOver
 from src.views.vnext_level import VNextLevel
 from src.views.vinstructions import VIinstructions
@@ -18,13 +19,15 @@ from src.views.vinstructions import VIinstructions
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█▀█░░█░░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀░▀░▀░▀░▀▀▀░▀░▀░░
 class VMain(arcade.Window):
-    def __init__(self) -> None:
+    def __init__(self, config_path: str) -> None:
         super().__init__(
             Config.width,
             Config.height,
             "Pac-man",
             resizable=True,
         )
+
+        apply_config(config_path)
 
         arcade.enable_timings()
         arcade.resources.load_kenney_fonts()

@@ -3,7 +3,7 @@ from termcolor import cprint
 
 from src.views.vmain import VMain
 from src.utils.utils import print_usage
-from src.config.utils import ConfigError, apply_config
+from src.config.utils import ConfigError
 
 
 def main() -> None:
@@ -13,19 +13,14 @@ def main() -> None:
             raise ConfigError("Wrong argument.")
 
         arg = sys.argv[1]
-
         if arg in {"-h", "--help"}:
             print_usage()
             exit()
 
-        else:
-            print("Hello from 42-pacman!")
-            apply_config(arg)
-
-            window = VMain()
-            window.run()
-
-    except ConfigError as e:
+        window = VMain(config_path=arg)
+        window.run()
+    # QUESTION: Should we catch all exceptions here? I feel like we should
+    except Exception as e:
         cprint(f"Error: {e}\n", "light_red")
         print_usage(file=sys.stderr)
         exit(1)

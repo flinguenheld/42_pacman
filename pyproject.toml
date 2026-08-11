@@ -11,6 +11,7 @@ dependencies = [
     "mypy>=2.1.0",
     "pydantic>=2.13.4",
     "pyglet>=2.1.15",
+    "pyinstaller>=6.22.0",
     "ruff>=0.15.17",
     "termcolor>=3.3.0",
     "ty>=0.0.49",
