@@ -1,12 +1,8 @@
 import sys
 from typing import TextIO
-
 from termcolor import cprint
-from arcade import Sprite, Vec2
 
 from src.config.config import Config
-
-# TODO: Rename this file to utils ?
 
 
 # ############################################################################
@@ -29,16 +25,6 @@ def print_usage(file: TextIO = sys.stdout) -> None:
     cprint("", file=file)
     cprint("   --help, -h", "light_green", file=file)
     cprint("     Print this message and exit.", file=file)
-
-
-# ############################################################################
-# ######################################################## SPRITE CENTER #####
-# QUESTION: Put here but is it really clean ?
-#           It's a visual util...
-#           Maybe an overload of Sprite could be another solution...
-#           No, it could be a pain with spritelists
-def sprite_center(sprite: Sprite) -> Vec2:
-    return Vec2(sprite.center_x, sprite.center_y)
 
 
 # ############################################################################

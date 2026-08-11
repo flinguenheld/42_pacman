@@ -31,9 +31,8 @@ class VEntityMoving(VEntity):
         super().__init__(atlas, sprite_name, position)
         self.maze = maze
 
-        # TODO: Confirm that --
         # Used by children to know where they are
-        # Has to be updated on after each move
+        # Has to be updated on after each move - Avoid useless calculations
         self.current_floor = self.maze.closest_floor_of(self.center)
 
         # Texture helpers --

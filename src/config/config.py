@@ -94,7 +94,7 @@ class Config:
                     continue
 
             # Ok --
-            setattr(cls, att_name, att_value)
+            setattr(cls, att_name, json_value)
 
         cls.log_close()
 

@@ -147,7 +147,6 @@ class VAtlas:
             height = self._get_data(data_line, "height", self.default_height)
 
             # Only One hitbox for the line even if it's an animation
-            # QUESTION: UNUSED ??
             hitbox = self._generate_hitbox(data_line, height, width)
 
             # Allows the atlas to have several textures with the same name

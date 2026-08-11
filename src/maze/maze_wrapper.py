@@ -1,3 +1,4 @@
+from termcolor import cprint
 from mazegenerator import MazeGenerator
 
 
@@ -42,8 +43,8 @@ class MazeGeneratorWrapper:
             self.hexa_maze = maze_gen.maze
             self._hexa_to_raw()
 
-        except RecursionError:
-            # TODO: add something ????
+        except RecursionError as e:
+            cprint(f"Maze generator error -> {e}", "red")
             exit(42)
 
     def _hexa_to_raw(self) -> None:

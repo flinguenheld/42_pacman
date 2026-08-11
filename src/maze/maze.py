@@ -7,7 +7,6 @@ from src.data.enums import DebugMode
 from src.config.config import Config
 from src.sprites.sfloor import SFloor
 from src.sprites.vatlas import VAtlas
-from src.utils.utils import sprite_center
 from src.sprites.sfloor_debug import SFloorDebug
 
 
@@ -111,7 +110,7 @@ class Maze:
         """
 
         self.graph_neighbours = {
-            sprite_center(sp): [] for sp in self.floors.sprites
+            Vec2(sp.center_x, sp.center_y): [] for sp in self.floors.sprites
         }
 
         for point, neighbours in self.graph_neighbours.items():
@@ -177,8 +176,6 @@ class Maze:
 
     # ########################################################################
     # ################################################### GET NEXT LOWEST ####
-    # TODO: To refactor
-    # TODO: To refactor
     def get_next_lowest(
         self,
         point: Vec2,

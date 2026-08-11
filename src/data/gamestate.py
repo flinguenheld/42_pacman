@@ -88,7 +88,6 @@ class GameState:
     #             - ...
     @property
     def enemy_speed(self) -> float:
-        # QUESTION: Is it good here ?
         level_factor = 1 + ((self.level - 1) * 0.01)
         random_factor = random.uniform(0.8, 1.1)
 

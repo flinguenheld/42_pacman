@@ -17,6 +17,11 @@ from src.gui.gbackground import GBackground
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀▄▀░█░█░█░█░█░█░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░░▀▀▀░▀▀▀░▀▀░░░
 class VHud:
+    """
+    Display the score, time, level and lives in a frame.
+    Omit the level when the maze is too small.
+    """
+
     OFFSET: int = 10000
 
     def __init__(
@@ -52,24 +57,39 @@ class VHud:
         self.font_size = Config.SPRITE_SIZE * 0.6
         self.y_text_line = VHud.OFFSET + Config.SPRITE_SIZE
 
-        self.add_field(
-            entry_name="score",
-            icon_name="score_hud",
-            x=self.frame.width / -2 + Config.SPRITE_SIZE * 3.2,
-            anchor_x="left",
-            color=self.atlas.get_color("hud_font"),
-        )
+        score_x = self.frame.width / -2 + Config.SPRITE_SIZE * 3.2
+        level_x = self.frame.width / 4 - Config.SPRITE_SIZE
+        lives_x = self.frame.width / 2 - Config.SPRITE_SIZE * 3.2
 
-        self.add_field(
-            entry_name="level",
-            x=self.frame.width / 4 - Config.SPRITE_SIZE,
-            color=self.atlas.get_color("hud_font"),
-        )
+        # For score, remove the icon to get more space when the maze is small
+        if abs(score_x) > self.font_size * 8:
+            self.add_field(
+                entry_name="score",
+                icon_name="score_hud",
+                x=score_x,
+                anchor_x="left",
+                color=self.atlas.get_color("hud_font"),
+            )
+        else:
+            self.add_field(
+                entry_name="score",
+                x=score_x - Config.SPRITE_SIZE * 1.5,
+                anchor_x="left",
+                color=self.atlas.get_color("hud_font"),
+            )
+
+        # For level, omit the field when the maze is small
+        if lives_x - level_x > self.font_size * 5:
+            self.add_field(
+                entry_name="level",
+                x=level_x,
+                color=self.atlas.get_color("hud_font"),
+            )
 
         self.add_field(
             entry_name="lives",
             icon_name="heart_hud",
-            x=self.frame.width / 2 - Config.SPRITE_SIZE * 3.2,
+            x=lives_x,
             anchor_x="right",
             color=self.atlas.get_color("hud_font"),
         )
@@ -133,7 +153,6 @@ class VHud:
         self.frame.draw()
         self.icons.draw(pixelated=True)
 
-        # TODO: Find a way to fit values when the maze is small
         for text in self.fields.values():
             text.draw()
 
@@ -162,11 +181,15 @@ class VHud:
         self.icons.update_animation(delta_time)
 
         # --
-        nb_levels = Config.amount_of_levels
-        self.fields["level"].text = f"{self.gamestate.level}/{nb_levels}"
         self.fields["lives"].text = f"{self.gamestate.lives:>2}"
-        self.fields["score"].text = str(self.gamestate.score)
         self.fields["timer"].text = self.get_time_left()
+        self.fields["score"].text = str(self.gamestate.score)
+
+        # Level can be omit if there's not enough space
+        if "level" in self.fields:
+            self.fields[
+                "level"
+            ].text = f"{self.gamestate.level}/{Config.amount_of_levels}"
 
     # ########################################################################
     # ############################################################ CENTER ####
