@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from termcolor import cprint
+from typing import ClassVar, Any
 from dataclasses import dataclass
-from typing import Generator, Tuple, ClassVar
 
 from src.data.enums import DebugMode
 
@@ -25,14 +25,18 @@ class Config:
 
     _title: bool = False
 
-    # Manageable variables with the config file --
+    # ################################################
+    # ### Manageable variables with the config file ##
     lives: ClassVar[int] = 3
 
     points_per_ghost: ClassVar[int] = 10
     points_per_pacgum: ClassVar[int] = 50
     points_per_super_pacgum: ClassVar[int] = 200
 
-    seed_first_level: ClassVar[int] = 42
+    first_level_seed: ClassVar[int] = 42
+    first_level_width: ClassVar[int] = 8
+    first_level_height: ClassVar[int] = 8
+
     amount_of_levels: ClassVar[int] = 10
     amount_of_enemies: ClassVar[int] = 4
 
@@ -41,89 +45,112 @@ class Config:
     timer_enemy_fleeing: ClassVar[float] = 10.0
 
     highscore_filename: ClassVar[str] = "scores.txt"
+
     floor_debug_max_numbers: ClassVar[int] = 10
-    texture_folder: ClassVar[str] = "textures"
 
-    height: ClassVar[int] = 1300
-    width: ClassVar[int] = 1300
+    window_height: ClassVar[int] = 1300
+    window_width: ClassVar[int] = 1300
 
-    # Non manageable variable --
+    # ################################################
+    # #################### Non manageable variables ##
     debug_mode: ClassVar[DebugMode] = DebugMode.OFF
 
     SPRITE_SIZE: ClassVar[int] = 32
     SPRITE_SIZE_BACKGROUND: ClassVar[int] = SPRITE_SIZE * 4
+    TEXTURE_FOLDER: ClassVar[str] = "textures"
 
     CAMERA_MARGIN: ClassVar[int] = 100
     CAMERA_MAX_ZOOM: ClassVar[float] = 2.8
+
+    # Set which attributes are manageables and their limits --
+    MANAGEABLE_FIELDS: ClassVar[dict[str, dict[str, str | int | float]]] = {
+        "lives": {"min": 1, "max": 100},
+        # --
+        "points_per_ghost": {"min": 0},
+        "points_per_pacgum": {"min": 0},
+        "points_per_super_pacgum": {"min": 0},
+        # --
+        "first_level_seed": {"min": 1},
+        "first_level_width": {"min": 5, "max": 20},
+        "first_level_height": {"min": 7, "max": 20},
+        # --
+        "amount_of_levels": {"min": 1, "max": 1000},
+        "amount_of_enemies": {"min": 0, "max": 1000},
+        # --
+        "timer_level": {"min": 5.0, "max": 200.0},
+        "timer_enemy_death": {"min": 5.0, "max": 200.0},
+        "timer_enemy_fleeing": {"min": 5.0, "max": 200.0},
+        # --
+        "highscore_filename": {"filename": True},
+        # --
+        "floor_debug_max_numbers": {"min": 5, "max": 50},
+        # --
+        "window_height": {"min": 100, "max": 5000},
+        "window_width": {"min": 100, "max": 5000},
+    }
 
     # ########################################################################
     # ######################################################## FROM JSON #####
     @classmethod
     def from_json(cls, values_from_json: dict[str, str | int | float]) -> None:
 
-        for att_name, att_value in cls._next_manageable_attribute():
+        for att_name, info in cls.MANAGEABLE_FIELDS.items():
+            default_value = getattr(cls, att_name)
+
             # Is in the json ?
             if att_name not in values_from_json:
                 cls.log_default(att_name, "No value in the config file")
                 continue
 
-            # Is the same type ?
-            if type(values_from_json[att_name]) is not type(att_value):
-                cls.log_default(att_name, "Wrong value type")
-                continue
-
-            # Per type --
+            # --
             json_value = values_from_json[att_name]
+
+            # Is the same type ?
+            if type(json_value) is not type(default_value):
+                cls.log_default(
+                    att_name,
+                    f"Wrong value type, must be -> {type(default_value)}",
+                    wrong_val=json_value,
+                )
+                continue
 
             # str: is empty ?
             if type(json_value) is str:
                 if len(json_value) == 0:
                     cls.log_default(att_name, "Empty string")
                     continue
+                if info.get("filename", False):
+                    if len(json_value) < 5 or not all(
+                        c.isalnum() or c in ["_", "-", "."] for c in json_value
+                    ):
+                        cls.log_default(
+                            att_name,
+                            "Filename: (only: [a-z][0-9][_-.], min 5 chars)",
+                            wrong_val=json_value,
+                        )
+                        continue
 
-            # int: is supp to 0 ?
-            if type(json_value) is int:
-                if json_value <= 0:
-                    cls.log_default(att_name, "Value <= 0")
+            # int/float: is in the min/max ?
+            if type(json_value) is int or type(json_value) is float:
+                if "min" in info and float(json_value) < float(info["min"]):
+                    cls.log_default(
+                        att_name,
+                        f"Must be minimum: {info['min']}",
+                        wrong_val=json_value,
+                    )
                     continue
-
-            # float: is supp to 0 ?
-            if type(json_value) is float:
-                if json_value <= 0.0:
-                    cls.log_default(att_name, "Value <= 0.0")
+                if "max" in info and float(json_value) > float(info["max"]):
+                    cls.log_default(
+                        att_name,
+                        f"Must be maximum: {info['max']}",
+                        wrong_val=json_value,
+                    )
                     continue
 
             # Ok --
             setattr(cls, att_name, json_value)
 
         cls.log_close()
-
-    # ########################################################################
-    # ######################################## NEXT MANAGEABLE ATTRIBUTE #####
-    @classmethod
-    def _next_manageable_attribute(
-        cls,
-    ) -> Generator[Tuple[str, str | int | float]]:
-        manageable_fields = [
-            "lives",
-            "points_per_ghost",
-            "points_per_pacgum",
-            "points_per_super_pacgum",
-            "seed_first_level",
-            "amount_of_levels",
-            "amount_of_enemies",
-            "timer_level",
-            "timer_enemy_death",
-            "timer_enemy_fleeing",
-            "highscore_filename",
-            "floor_debug_max_numbers",
-            "texture_folder",
-            "height",
-            "width",
-        ]
-
-        for key in manageable_fields:
-            yield key, getattr(cls, key)
 
     # ########################################################################
     # ############################################################## LOG #####
@@ -139,23 +166,29 @@ class Config:
             cprint(f"{'=' * 89}", "yellow")
 
     @classmethod
-    def log_default(self, field: str, message: str) -> None:
+    def log_default(
+        self,
+        field: str,
+        message: str,
+        wrong_val: Any = "",
+    ) -> None:
         self.log_title()
         default = getattr(self, field)
         space = " " * (30 - len(field))
 
-        cprint(f"   Field '{field}' incorrect {space} ── {message}", "yellow")
-        cprint(f"{' ' * 12} ╰─── Use default: {default}", "green")
-
-    # ########################################################################
-    # ############################################################## STR #####
-    def __str__(self) -> str:
-        return "\n".join(
-            (
-                f"{' ' * 10}- {key} -> {val}"
-                for key, val in self._next_manageable_attribute()
+        if wrong_val:
+            cprint(
+                f"   Field '{field}' incorrect. {space} ──> "
+                f"'{wrong_val}': {message}",
+                "yellow",
             )
-        )
+        else:
+            cprint(
+                f"   Field '{field}' incorrect {space} ──>  {message}",
+                "yellow",
+            )
+
+        cprint(f"{' ' * 12} ╰─── Use default: {default}", "green")
 
     # ########################################################################
     # ####################################################### _DEBUG MODE ####

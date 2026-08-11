@@ -23,11 +23,11 @@ class GBackground:
     def build(self, center: Vec2, to_avoid: Rect | list[Rect]) -> None:
         self.sprites.clear()
 
-        top = int(center.y + Config.height)
-        bot = int(center.y - Config.height)
+        top = int(center.y + Config.window_height)
+        bot = int(center.y - Config.window_height)
 
-        left = int(center.x - Config.width)
-        right = int(center.x + Config.width)
+        left = int(center.x - Config.window_width)
+        right = int(center.x + Config.window_width)
 
         sprite_size = Config.SPRITE_SIZE_BACKGROUND
         sprite_name = "background"

@@ -41,7 +41,10 @@ Here the available keys:
   "points_per_pacgum": 50,
   "points_per_super_pacgum": 200,
 
-  "seed_first_level": 42,
+  "first_level_seed": 42,
+  "first_level_width": 8,
+  "first_level_height": 8,
+
   "amount_of_levels": 10,
   "amount_of_enemies": 4,
 
@@ -51,10 +54,9 @@ Here the available keys:
 
   "highscore_filename": "test.txt",
   "floor_debug_max_numbers": 10,
-  "texture_folder": "textures",
 
-  "height": 1300,
-  "width": 1300
+  "window_height": 1300,
+  "window_width": 1300
 
   // Comment C
   /* Comment C */

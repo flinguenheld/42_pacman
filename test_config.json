@@ -1,6 +1,5 @@
 {
-  "highscore_filename": "test.txt",
-  "lives": 5,
+  "lives": 3,
   "pacgum": 42,
 
   "points_per_ghost": "10",
@@ -13,9 +12,16 @@
   """ Comment Python """
   ''' Comment Python '''
 
-  "seed": 42,
-  "timer_level": 10.0,
+  "first_level_seed": 42,
+  "first_level_width": 11,
+  "first_level_height": 11,
+
   "amount_of_levels": 10,
   "amount_of_enemies": 4,
+
+  "highscore_filename": "scores.txt",
+  
+  "timer_level": 90.0,
   "floor_debug_max_numbers": 10
+
 }

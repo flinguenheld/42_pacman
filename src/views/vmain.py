@@ -20,8 +20,8 @@ from src.views.vinstructions import VIinstructions
 class VMain(arcade.Window):
     def __init__(self) -> None:
         super().__init__(
-            Config.width,
-            Config.height,
+            Config.window_width,
+            Config.window_height,
             "Pac-man",
             resizable=True,
         )
@@ -100,5 +100,5 @@ class VMain(arcade.Window):
     # ########################################################################
     # ######################################################### ON RESIZE ####
     def on_resize(self, width: int, height: int) -> None:
-        Config.width = width
-        Config.height = height
+        Config.window_width = width
+        Config.window_height = height
