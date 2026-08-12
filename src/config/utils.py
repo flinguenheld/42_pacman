@@ -18,7 +18,7 @@ class ConfigError(Exception):
 def apply_config(file_name: str) -> None:
 
     values = read_json(file_name)
-    Config().from_json(values)
+    Config.from_json(values)
 
 
 # ############################################################################

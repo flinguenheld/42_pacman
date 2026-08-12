@@ -119,16 +119,18 @@ class Config:
                 if len(json_value) == 0:
                     cls.log_default(att_name, "Empty string")
                     continue
-                if info.get("filename", False):
-                    if len(json_value) < 5 or not all(
+                if info.get("filename", False) and (
+                    len(json_value) < 5
+                    or not all(
                         c.isalnum() or c in ["_", "-", "."] for c in json_value
-                    ):
-                        cls.log_default(
-                            att_name,
-                            "Filename: (only: [a-z][0-9][_-.], min 5 chars)",
-                            wrong_val=json_value,
-                        )
-                        continue
+                    )
+                ):
+                    cls.log_default(
+                        att_name,
+                        "Filename: (only: [a-z][0-9][_-.], min 5 chars)",
+                        wrong_val=json_value,
+                    )
+                    continue
 
             # int/float: is in the min/max ?
             if type(json_value) is int or type(json_value) is float:
@@ -155,25 +157,25 @@ class Config:
     # ########################################################################
     # ############################################################## LOG #####
     @classmethod
-    def log_title(self) -> None:
-        if not self._title:
+    def log_title(cls) -> None:
+        if not cls._title:
             cprint(f"{'=' * 36} Config warnings {'=' * 36}", "yellow")
-            self._title = True
+            cls._title = True
 
     @classmethod
-    def log_close(self) -> None:
-        if self._title:
+    def log_close(cls) -> None:
+        if cls._title:
             cprint(f"{'=' * 89}", "yellow")
 
     @classmethod
     def log_default(
-        self,
+        cls,
         field: str,
         message: str,
         wrong_val: Any = "",
     ) -> None:
-        self.log_title()
-        default = getattr(self, field)
+        cls.log_title()
+        default = getattr(cls, field)
         space = " " * (30 - len(field))
 
         if wrong_val:
