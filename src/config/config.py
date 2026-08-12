@@ -29,8 +29,8 @@ class Config:
     _title: bool = False
 
     highscore_folder: ClassVar[Path] = (
-        Path(sys.argv[0]).parent / "highscores"
-    ).resolve()
+        Path(sys.argv[0]).parent.resolve() / "highscores"
+    )
 
     # ################################################
     # ### Manageable variables with the config file ##

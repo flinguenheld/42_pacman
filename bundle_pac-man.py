@@ -1,16 +1,15 @@
 import os
 import sys
-
-# Required by PyInstaller. Changes the current working directory
-# to the temporary folder where the executable is unpacked.
-if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-    os.chdir(sys._MEIPASS)
-
 from json import JSONDecodeError
 
 from termcolor import cprint
 
 from src.views.vmain import VMain
+
+# Required by PyInstaller. Changes the current working directory
+# to the temporary folder where the executable is unpacked.
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    os.chdir(sys._MEIPASS)
 
 
 def main_bundle() -> None:
