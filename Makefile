@@ -11,6 +11,8 @@ helix:
 run:
 	${UV} run python ${NAME} test_config.json
 
+build:
+	sh build_standalone_exe.sh
 clean:
 	rm -rf	.mypy_cache .venv \ __pycache__ \
 			src/__pycache__ \
@@ -34,4 +36,4 @@ lint:
 			--disallow-untyped-defs \
 			--check-untyped-defs \
 
-.PHONY: install helix run clean lint
+.PHONY: install build helix run clean lint
