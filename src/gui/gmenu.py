@@ -31,8 +31,6 @@ class GMenu(GWidget):
         extra_line_spaces: list[int] | None = None,
         escape_widget_index: int = -1,
     ) -> None:
-        if extra_line_spaces is None:
-            extra_line_spaces = []
 
         super().__init__(atlas, frame)
         self.escape_widget_index = escape_widget_index
@@ -51,7 +49,7 @@ class GMenu(GWidget):
             )
 
             # Ligne space --
-            if i in extra_line_spaces:
+            if extra_line_spaces and i in extra_line_spaces:
                 space = atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 3
             else:
                 space = atlas.font_size * GMenuEntry.FONT_SIZE_FACTOR * 1.7

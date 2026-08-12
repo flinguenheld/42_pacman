@@ -28,8 +28,8 @@ class GToggleButton(GButton):
         frame: GFrame,
         callback: GButton.Callback[GToggleButton],
         text: str,
+        offset_from_center_frame: Vec2,
         pressed: bool = False,
-        offset_from_center_frame: Vec2 | None = None,
         font_size_factor: float = 1.7,
         color: Color | None = None,
     ) -> None:

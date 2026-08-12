@@ -21,6 +21,7 @@ class VIinstructions(GWindow):
             title=GTitleInstructions(atlas),
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=35,
                 nb_cols=43,
                 bevels=True,

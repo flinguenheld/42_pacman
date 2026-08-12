@@ -33,6 +33,7 @@ class VEndBase(GWindow):
             title=title,
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=26,
                 nb_cols=36,
                 bevels=True,
