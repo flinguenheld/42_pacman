@@ -1,4 +1,5 @@
 import random
+
 from arcade import Vec2
 
 from src.maze.maze import Maze

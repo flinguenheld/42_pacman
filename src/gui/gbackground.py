@@ -68,5 +68,5 @@ class GBackground:
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         self.sprites.update_animation(delta_time)

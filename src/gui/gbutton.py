@@ -2,7 +2,8 @@ import arcade
 import inspect
 from arcade import Vec2
 from arcade.types import Color
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 from src.gui.gframe import GFrame
 from src.gui.glabel import GLabel
@@ -20,7 +21,7 @@ class GButton(GLabel):
         atlas: VAtlas,
         frame: GFrame,
         callback: Callback[Any],
-        offset_from_center_frame: Vec2 = Vec2(0, 0),
+        offset_from_center_frame: Vec2 | None = None,
         font_size_factor: float = 1.7,
         text: str = "",
         color: Color | None = None,

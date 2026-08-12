@@ -1,4 +1,5 @@
 import random
+from typing import ClassVar
 from arcade import Vec2, Rect
 
 from src.sprites.swall import SWall
@@ -8,6 +9,8 @@ from src.config.config import Config
 from src.sprites.sfloor import SFloor
 from src.sprites.vatlas import VAtlas
 from src.sprites.sfloor_debug import SFloorDebug
+
+VEC2_ZERO = Vec2(0, 0)
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
@@ -24,7 +27,7 @@ class Maze:
     Use sprite_lists properties for the maze such as center_position or rect...
     """
 
-    NEIGHBOURS: list[Vec2] = [
+    NEIGHBOURS: ClassVar[list[Vec2]] = [
         Vec2(-Config.SPRITE_SIZE, Config.SPRITE_SIZE),
         Vec2(0, Config.SPRITE_SIZE),
         Vec2(Config.SPRITE_SIZE, Config.SPRITE_SIZE),
@@ -50,35 +53,34 @@ class Maze:
         self.floors_debug: SFloorDebug = SFloorDebug(self.atlas)
 
         # Graph --
-        self.graph_neighbours: dict[Vec2, list[Vec2]] = dict()
-        self.graph_costs: dict[Vec2, int] = dict()
-        self.graph_corners: list[dict[Vec2, int]] = list()
+        self.graph_neighbours: dict[Vec2, list[Vec2]] = {}
+        self.graph_costs: dict[Vec2, int] = {}
+        self.graph_corners: list[dict[Vec2, int]] = []
 
     # ########################################################################
     # ############################################################# BUILD ####
     def build(
         self,
-        sprite_offset: Vec2 = Vec2(0, 0),
+        sprite_offset: Vec2 = VEC2_ZERO,
         include_graph: bool = False,
     ) -> None:
         """
         Build the maze, its sprites and the graph for the BFS.
         include_graph = False to skip the algorithm management.
         """
-
         self.build_sprites(sprite_offset)
 
         if include_graph:
             self._build_floor_graph()
             self.bfs = BFS(self.graph_neighbours)
 
-            self.graph_corners = list()
+            self.graph_corners = []
             for corner in self.floor_corners:
                 self.graph_corners.append(self.bfs.get_costs(corner))
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
-    def build_sprites(self, offset: Vec2 = Vec2(0, 0)) -> None:
+    def build_sprites(self, offset: Vec2 = VEC2_ZERO) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
 
@@ -115,7 +117,7 @@ class Maze:
 
         for point, neighbours in self.graph_neighbours.items():
             for possible_neighbour in (n + point for n in Maze.NEIGHBOURS):
-                if possible_neighbour in self.graph_neighbours.keys():
+                if possible_neighbour in self.graph_neighbours:
                     neighbours.append(possible_neighbour)
 
     # ########################################################################
@@ -137,7 +139,7 @@ class Maze:
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         self.walls.update(delta_time)
         self.floors.update(delta_time)
 

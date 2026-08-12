@@ -30,7 +30,7 @@ class GWidget:
             if hasattr(widget, "draw"):
                 widget.draw()
 
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         for widget in self.to_draw_update_press_release:
             if hasattr(widget, "update"):
                 widget.update(delta_time)

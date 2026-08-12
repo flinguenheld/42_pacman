@@ -29,11 +29,10 @@ class GToggleButton(GButton):
         callback: GButton.Callback[GToggleButton],
         text: str,
         pressed: bool = False,
-        offset_from_center_frame: Vec2 = Vec2(0, 0),
+        offset_from_center_frame: Vec2 | None = None,
         font_size_factor: float = 1.7,
         color: Color | None = None,
     ) -> None:
-
         super().__init__(
             atlas=atlas,
             frame=frame,

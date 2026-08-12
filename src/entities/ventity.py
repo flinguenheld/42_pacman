@@ -25,7 +25,7 @@ class VEntity(TextureAnimationSprite):
         )
 
         if not isinstance(tile.texture, arcade.TextureAnimation):
-            raise ValueError("The given texture has to be animated.")
+            raise TypeError("The given texture has to be animated.")
 
         super().__init__(
             animation=tile.texture,

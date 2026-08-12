@@ -58,8 +58,7 @@ class GWindow(arcade.View, GWidget):
         scale_vert = self.height / (self.frame.height + Config.CAMERA_MARGIN)
 
         zoom = min(scale_hori, scale_vert)
-        if zoom > Config.CAMERA_MAX_ZOOM:
-            zoom = Config.CAMERA_MAX_ZOOM
+        zoom = min(zoom, Config.CAMERA_MAX_ZOOM)
 
         self.camera = arcade.Camera2D(
             self.window.rect,
@@ -82,7 +81,7 @@ class GWindow(arcade.View, GWidget):
         with self.camera.activate():
             GWidget.draw(self)
 
-    def on_update(self, delta_time: int | float) -> None:
+    def on_update(self, delta_time: float) -> None:
         GWidget.update(self, delta_time)
 
     # ########################################################################

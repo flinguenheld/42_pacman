@@ -27,10 +27,13 @@ class GMenu(GWidget):
         atlas: VAtlas,
         frame: GFrame,
         widgets: list[tuple[type[GButton], dict[str, Any]]],
-        y_first_entry_from_frame_center: int | float,
-        extra_line_spaces: list[int] = list(),
+        y_first_entry_from_frame_center: float,
+        extra_line_spaces: list[int] | None = None,
         escape_widget_index: int = -1,
     ) -> None:
+        if extra_line_spaces is None:
+            extra_line_spaces = []
+
         super().__init__(atlas, frame)
         self.escape_widget_index = escape_widget_index
         self.entries: list[GMenuEntry] = []

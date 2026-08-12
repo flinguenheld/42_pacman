@@ -26,7 +26,7 @@ class VEntityEnemy(VEntityMoving):
         corner_id: int,
         atlas: VAtlas,
         maze: Maze,
-        speed: int | float,
+        speed: float,
         patrolling_trigger: int,
     ) -> None:
         self._mode = VEntityEnemy.Mode.CHASING

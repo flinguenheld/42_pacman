@@ -1,6 +1,7 @@
 import sys
 import random
-from arcade import Sprite, SpriteList, Vec2, Rect, LBWH
+
+from arcade import LBWH, Rect, Sprite, SpriteList, Vec2
 
 from src.config.config import Config
 from src.sprites.vatlas import VAtlas
@@ -46,7 +47,7 @@ class SSprites:
 
     # ########################################################################
     # ################################################## UPDATE ANIMATION ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         self.sprites.update_animation(delta_time)
 
     # ########################################################################

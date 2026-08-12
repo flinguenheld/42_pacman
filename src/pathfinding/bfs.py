@@ -1,6 +1,7 @@
 import sys
-from arcade import Vec2
 from collections import deque
+
+from arcade import Vec2
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▄░█▀▀░█▀▀░░

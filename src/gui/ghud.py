@@ -164,7 +164,7 @@ class VHud:
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         self.frame.update(delta_time)
         self.background.update(delta_time)
         self.icons.update_animation(delta_time)

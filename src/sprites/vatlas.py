@@ -1,16 +1,19 @@
 import random
-import arcade
-from arcade.types import Color
-from typing import Any, Sequence
+from typing import Any
 from json import load as json_load
+from collections.abc import Sequence
 from dataclasses import dataclass, field
+
+import arcade
 from arcade import (
-    TextureAnimationSprite,
-    TextureAnimation,
-    Texture,
     Sprite,
+    Texture,
+    TextureAnimation,
+    TextureAnimationSprite,
     Vec2,
 )
+from arcade.types import Color
+
 from src.data.enums import VStyles
 from src.config.config import Config
 
@@ -43,8 +46,8 @@ class VAtlas:
 
     def __init__(self) -> None:
         self.style = VStyles.EDGE
-        self.info: dict[str, Any] = dict()
-        self.textures: dict[str, list[VTile]] = dict()
+        self.info: dict[str, Any] = {}
+        self.textures: dict[str, list[VTile]] = {}
 
     # ########################################################################
     # ############################################################## LOAD ####
@@ -151,7 +154,7 @@ class VAtlas:
 
             # Allows the atlas to have several textures with the same name
             if data_line["name"] not in self.textures:
-                self.textures[data_line["name"]] = list()
+                self.textures[data_line["name"]] = []
 
             if self._get_data(data_line, "animated", False):
                 add_animated_texture(y, data_line)

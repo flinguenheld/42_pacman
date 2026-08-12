@@ -1,5 +1,6 @@
 import sys
 from typing import TextIO
+
 from termcolor import cprint
 
 from src.config.config import Config

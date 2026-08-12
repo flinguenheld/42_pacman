@@ -1,5 +1,5 @@
 import random
-from typing import Any, Type
+from typing import Any
 from arcade import Vec2, SpriteList, Sprite
 
 from src.gui.gframe import GFrame
@@ -26,7 +26,7 @@ class GMenuEntry(GWidget):
         self,
         atlas: VAtlas,
         frame: GFrame,
-        button_class: Type[GButton],
+        button_class: type[GButton],
         kwargs: dict[str, Any],
         offset_from_frame_center: Vec2,
     ) -> None:

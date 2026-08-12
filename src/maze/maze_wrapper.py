@@ -1,3 +1,5 @@
+import sys
+
 from termcolor import cprint
 from mazegenerator import MazeGenerator
 
@@ -21,8 +23,8 @@ class MazeGeneratorWrapper:
     # ########################################################################
     # ############################################################# SETUP ####
     def setup(self) -> None:
-        self.hexa_maze: list[list[int]] = list()
-        self.raw_maze: list[list[int]] = list()
+        self.hexa_maze: list[list[int]] = []
+        self.raw_maze: list[list[int]] = []
 
     # ########################################################################
     # ################################################# GENERATE NEW MAZE ####
@@ -32,7 +34,6 @@ class MazeGeneratorWrapper:
         raw_height: int = 15,
         seed: int = 42,
     ) -> None:
-
         try:
             maze_gen = MazeGenerator(
                 size=(raw_width, raw_height),
@@ -45,7 +46,7 @@ class MazeGeneratorWrapper:
 
         except RecursionError as e:
             cprint(f"Maze generator error -> {e}", "red")
-            exit(42)
+            sys.exit(42)
 
     def _hexa_to_raw(self) -> None:
         """

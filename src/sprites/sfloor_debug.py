@@ -1,7 +1,6 @@
 import arcade
-from typing import Tuple
+from arcade import Sprite, SpriteList, Vec2
 from pyglet.graphics import Batch
-from arcade import Vec2, SpriteList, Sprite
 
 from src.config.config import Config
 from src.data.enums import DebugMode
@@ -21,10 +20,10 @@ class SFloorDebug:
         Create a batch and a dict to easily update them (text & squares).
         """
 
-        self.texts: dict[Vec2, arcade.Text] = dict()
+        self.texts: dict[Vec2, arcade.Text] = {}
         self.texts_batch = Batch()
 
-        self.squares: dict[Vec2, Sprite] = dict()
+        self.squares: dict[Vec2, Sprite] = {}
         self.squares_batch = SpriteList[Sprite]()
 
     # ########################################################################
@@ -64,7 +63,7 @@ class SFloorDebug:
         Limit the amount of texts to preserve fps.
         """
 
-        def colour(value: int) -> Tuple[int, int, int]:
+        def colour(value: int) -> tuple[int, int, int]:
             if value > 45:
                 value -= 45
                 red = (100 + value * 2) % 255

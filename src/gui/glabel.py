@@ -17,7 +17,7 @@ class GLabel(GWidget):
         atlas: VAtlas,
         frame: GFrame,
         text: str = "",
-        offset_from_center_frame: Vec2 = Vec2(0, 0),
+        offset_from_center_frame: Vec2 | None = None,
         font_size_factor: float = 1,
         color: Color | None = None,
         align: str = "center",
@@ -26,6 +26,9 @@ class GLabel(GWidget):
         multiline: bool = False,
         width: int | None = None,  # Only for multilines
     ):
+        if offset_from_center_frame is None:
+            offset_from_center_frame = Vec2(0, 0)
+
         super().__init__(atlas, frame)
 
         if not color:

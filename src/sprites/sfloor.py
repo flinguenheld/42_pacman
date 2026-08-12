@@ -1,4 +1,5 @@
 from arcade import Vec2
+
 from src.sprites.vatlas import VAtlas
 from src.sprites.ssprites import SSprites
 

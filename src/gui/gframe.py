@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 from arcade import Vec2, Rect
 
 from src.maze.maze import Maze
@@ -21,10 +20,14 @@ class GFrame:
         atlas: VAtlas,
         nb_cols: int = 10,
         nb_rows: int = 10,
-        bot_left: Vec2 = Vec2(0, 0),
-        separators: list[int] = [],
+        bot_left: Vec2 | None = None,
+        separators: list[int] | None = None,
         bevels: bool = False,
     ) -> None:
+        if separators is None:
+            separators = []
+        if bot_left is None:
+            bot_left = Vec2(0, 0)
 
         self.separators = separators
         raw_maze = self.build_raw_maze(nb_rows, nb_cols, bevels)
@@ -49,11 +52,11 @@ class GFrame:
         for row in range(nb_rows):
             new_row: list[int] = []
             for col in range(nb_cols):
-                if col == 0 or col == nb_cols - 1:
-                    new_row.append(1)
-                elif row == 0 or row == nb_rows - 1:
-                    new_row.append(1)
-                elif (row, col) in BEVELS:
+                if (
+                    (col == 0 or col == nb_cols - 1)
+                    or (row == 0 or row == nb_rows - 1)
+                    or (row, col) in BEVELS
+                ):
                     new_row.append(1)
                 elif (row, col) in BEVELS_SEP:
                     new_row.append(0)
@@ -77,27 +80,25 @@ class GFrame:
         active: bool,
         nb_rows: int,
         nb_cols: int,
-    ) -> set[Tuple[int, int]]:
+    ) -> set[tuple[int, int]]:
 
         if not active:
             return set()
 
-        return set(
-            [
-                (1, 1),
-                (1, 2),
-                (2, 1),
-                (1, nb_cols - 2),
-                (1, nb_cols - 3),
-                (2, nb_cols - 2),
-                (nb_rows - 2, nb_cols - 2),
-                (nb_rows - 2, nb_cols - 3),
-                (nb_rows - 3, nb_cols - 2),
-                (nb_rows - 2, 1),
-                (nb_rows - 2, 2),
-                (nb_rows - 3, 1),
-            ]
-        )
+        return {
+            (1, 1),
+            (1, 2),
+            (2, 1),
+            (1, nb_cols - 2),
+            (1, nb_cols - 3),
+            (2, nb_cols - 2),
+            (nb_rows - 2, nb_cols - 2),
+            (nb_rows - 2, nb_cols - 3),
+            (nb_rows - 3, nb_cols - 2),
+            (nb_rows - 2, 1),
+            (nb_rows - 2, 2),
+            (nb_rows - 3, 1),
+        }
 
     # ########################################################################
     # ################################################# BEVELS SEPARATORS ####
@@ -105,14 +106,14 @@ class GFrame:
         self,
         active: bool,
         nb_cols: int,
-    ) -> set[Tuple[int, int]]:
+    ) -> set[tuple[int, int]]:
         """
         Loop in the separators to find consecutive ones.
         If there are, add their corners in the set.
         """
 
         GAP = GFrame.SEPARATOR_GAP + 1
-        bevels: set[Tuple[int, int]] = set()
+        bevels: set[tuple[int, int]] = set()
 
         if not active:
             return bevels
@@ -128,9 +129,7 @@ class GFrame:
         # --
         group: list[int] = []
         for sep in self.separators:
-            if not group:
-                group.append(sep)
-            elif group[-1] == sep - 1:
+            if not group or group[-1] == sep - 1:
                 group.append(sep)
             else:
                 add_bevel_separator()
@@ -157,7 +156,7 @@ class GFrame:
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
         self.maze.update(delta_time)
 
     # ########################################################################

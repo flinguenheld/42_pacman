@@ -27,7 +27,7 @@ class GCounter(GButton):
         callback: GButton.Callback[GCounter],
         text: str,
         color: Color,
-        offset_from_center_frame: Vec2 = Vec2(0, 0),
+        offset_from_center_frame: Vec2 | None = None,
         font_size_factor: float = 1.7,
         count: int = 0,
         min: int = 0,
@@ -71,7 +71,7 @@ class GCounter(GButton):
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def update(self, delta_time: int | float) -> None:
+    def update(self, delta_time: float) -> None:
 
         if self.velocity != 0:
             if self.time_pressed == 0:
