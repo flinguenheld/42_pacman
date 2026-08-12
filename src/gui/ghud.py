@@ -19,7 +19,7 @@ from src.gui.gbackground import GBackground
 class VHud:
     """
     Display the score, time, level and lives in a frame.
-    Omit the level when the maze is too small.
+    Reduce the font size when the maze is small.
     """
 
     OFFSET: int = 10000
@@ -44,8 +44,8 @@ class VHud:
         self.icons: SpriteList[Sprite | TextureAnimationSprite] = (
             arcade.SpriteList()
         )
-        self.fields_debug: dict[str, GLabel] = dict()
-        self.fields: dict[str, GLabel] = dict()
+        self.fields_debug: dict[str, GLabel] = {}
+        self.fields: dict[str, GLabel] = {}
 
         self.build_fields()
         self.background = GBackground(atlas)
@@ -54,37 +54,24 @@ class VHud:
     # ########################################################################
     # ############################################################# SETUP ####
     def build_fields(self) -> None:
-        self.font_size = Config.SPRITE_SIZE * 0.6
-        self.y_text_line = VHud.OFFSET + Config.SPRITE_SIZE
-
-        score_x = self.frame.width / -2 + Config.SPRITE_SIZE * 3.2
+        score_x = self.frame.width / -2 + Config.SPRITE_SIZE * 2.7
         level_x = self.frame.width / 4 - Config.SPRITE_SIZE
-        lives_x = self.frame.width / 2 - Config.SPRITE_SIZE * 3.2
+        lives_x = self.frame.width / 2 - Config.SPRITE_SIZE * 2.7
 
-        # For score, remove the icon to get more space when the maze is small
-        if abs(score_x) > self.font_size * 8:
-            self.add_field(
-                entry_name="score",
-                icon_name="score_hud",
-                x=score_x,
-                anchor_x="left",
-                color=self.atlas.get_color("hud_font"),
-            )
-        else:
-            self.add_field(
-                entry_name="score",
-                x=score_x - Config.SPRITE_SIZE * 1.5,
-                anchor_x="left",
-                color=self.atlas.get_color("hud_font"),
-            )
+        self.add_field(
+            entry_name="score",
+            icon_name="score_hud",
+            x=score_x,
+            anchor_x="left",
+            color=self.atlas.get_color("hud_font"),
+        )
 
-        # For level, omit the field when the maze is small
-        if lives_x - level_x > self.font_size * 5:
-            self.add_field(
-                entry_name="level",
-                x=level_x,
-                color=self.atlas.get_color("hud_font"),
-            )
+        self.add_field(
+            entry_name="level",
+            x=level_x,
+            color=self.atlas.get_color("menu_font_active"),
+            text=f"{self.gamestate.level}/{Config.amount_of_levels}",
+        )
 
         self.add_field(
             entry_name="lives",
@@ -112,6 +99,7 @@ class VHud:
         self,
         color: Color,
         entry_name: str,
+        text: str = "",
         icon_name: str | None = None,
         anchor_x: str = "center",
         x: float = 0,
@@ -122,6 +110,7 @@ class VHud:
         container[entry_name] = GLabel(
             atlas=self.atlas,
             frame=self.frame,
+            text=text,
             align=anchor_x,
             anchor_x=anchor_x,
             offset_from_center_frame=Vec2(x, 2),
@@ -185,11 +174,23 @@ class VHud:
         self.fields["timer"].text = self.get_time_left()
         self.fields["score"].text = str(self.gamestate.score)
 
-        # Level can be omit if there's not enough space
-        if "level" in self.fields:
-            self.fields[
-                "level"
-            ].text = f"{self.gamestate.level}/{Config.amount_of_levels}"
+        # --
+        self.adapt_font_size()
+
+    # ########################################################################
+    # ################################################### ADAPT TEXT SIZE ####
+    def adapt_font_size(self) -> None:
+        """Reduce the font size as long as fields overlap each others."""
+
+        while (
+            self.fields["score"].rect.overlaps(self.fields["timer"].rect)
+            or self.fields["level"].rect.overlaps(self.fields["timer"].rect)
+            or self.fields["level"].rect.overlaps(self.fields["lives"].rect)
+        ):
+            for text in self.fields.values():
+                text.font_size = text.font_size * 0.9
+            for text in self.fields_debug.values():
+                text.font_size = text.font_size * 0.9
 
     # ########################################################################
     # ############################################################ CENTER ####

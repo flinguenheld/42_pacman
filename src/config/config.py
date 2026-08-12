@@ -34,8 +34,8 @@ class Config:
     points_per_super_pacgum: ClassVar[int] = 200
 
     first_level_seed: ClassVar[int] = 42
-    first_level_width: ClassVar[int] = 8
-    first_level_height: ClassVar[int] = 8
+    first_level_width: ClassVar[int] = 10
+    first_level_height: ClassVar[int] = 10
 
     amount_of_levels: ClassVar[int] = 10
     amount_of_enemies: ClassVar[int] = 4

@@ -86,6 +86,16 @@ class GLabel(GWidget):
         self._text_widget.text = value
 
     # ########################################################################
+    # ######################################################### FONT SIZE ####
+    @property
+    def font_size(self) -> float:
+        return self._text_widget.font_size
+
+    @font_size.setter
+    def font_size(self, value: float) -> None:
+        self._text_widget.font_size = value
+
+    # ########################################################################
     # ############################################################# COLOR ####
     @property
     def color(self) -> Color:
