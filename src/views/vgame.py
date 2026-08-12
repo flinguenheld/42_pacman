@@ -169,13 +169,16 @@ class VGame(arcade.View):
     # ########################################################## NEW MAZE ####
     def new_maze(self) -> None:
         # Maze parameters
-        seed = (
-            Config.seed_first_level
-            if self.gamestate.level == 1
-            else random.randint(0, sys.maxsize)
-        )
-        raw_width = random.randint(7, 15)
-        raw_height = random.randint(5, 14)
+        # The first level has to be exactly be the same in the subject
+        # And it uses raw values
+        if self.gamestate.level == 1:
+            seed = Config.first_level_seed
+            raw_width = Config.first_level_width // 2 + 1
+            raw_height = Config.first_level_height // 2 + 1
+        else:
+            seed = random.randint(0, sys.maxsize)
+            raw_width = random.randint(7, 15)
+            raw_height = random.randint(5, 14)
 
         # Generate a raw maze (list[list[int]]) using the MazeGeneratorWrapper
         maze_gen = MazeGeneratorWrapper()
@@ -285,7 +288,7 @@ class VGame(arcade.View):
         if self.gamestate.is_game_over:
             self.window.switch_view(VNames.VIEW_GAMEOVER)
             return True
-        if not self.player.alive:
+        if not self.player.alive or self.gamestate.is_timer_over:
             self.player_death()
             return True
 

@@ -1,6 +1,9 @@
 import sys
 import json
+from pathlib import Path
 from termcolor import cprint
+
+from src.config.config import Config
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░▀█▀░█▀▀░█░█░░░█▀▀░█▀▀░█▀█░█▀▄░█▀▀░█▀▀░░
@@ -8,8 +11,13 @@ from termcolor import cprint
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀░▀░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░░
 class HighScores:
     MAX_ENTRIES = 10
-    FILE_NAME = "high_scores.json"
     WARNING_COLOR = "yellow"
+
+    def __init__(self) -> None:
+        # Force high scores in this folder to avoid file name checks
+        self.file_name = f"high_scores/{Config.highscore_filename}"
+        file_path = Path(self.file_name)
+        file_path.parent.mkdir(exist_ok=True)
 
     # ########################################################################
     # ############################################################## SAVE ####
@@ -30,7 +38,7 @@ class HighScores:
 
             # Overwrite file --
             try:
-                with open(HighScores.FILE_NAME, "w+") as file:
+                with open(self.file_name, "w+") as file:
                     file.write(json.dumps(entries))
             except IOError:
                 cprint(
@@ -106,18 +114,18 @@ class HighScores:
         """
 
         try:
-            with open(HighScores.FILE_NAME) as file:
+            with open(self.file_name) as file:
                 return self._check_format(json.load(file))
 
         except IOError:
             cprint(
-                "No high scores files. Create a new one.",
+                "No high scores files. A new file will be created.",
                 HighScores.WARNING_COLOR,
                 file=sys.stdout,
             )
         except json.JSONDecodeError:
             cprint(
-                "High scores files corrupted. Create a new one.",
+                "High scores files corrupted. The file will be replaced.",
                 HighScores.WARNING_COLOR,
                 file=sys.stdout,
             )

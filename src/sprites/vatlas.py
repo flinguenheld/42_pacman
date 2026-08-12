@@ -70,7 +70,7 @@ class VAtlas:
     # ########################################################################
     # ############################################# LOAD INFORMATION FILE ####
     def _load_info(self) -> None:
-        self.path = f"{Config.texture_folder}/{self.style.value}"
+        self.path = f"{Config.TEXTURE_FOLDER}/{self.style.value}"
         self.info = self._open_info_file(self.path)
         self.default_width = self.info["default_width"]
         self.default_height = self.info["default_height"]

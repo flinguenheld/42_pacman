@@ -1,3 +1,17 @@
+# Project Management
+
+To complete our project, we first created a [todo list]() with all required point in the subject.  
+
+Then we followed this process:
+  - Get a task
+  - Write some code / updates
+  - Commit / push in a separated branch
+  - Ask a review & refactor
+  - If ok, merge in the dev branch
+  - Refactor again
+
+A more advanced system such a Kanban looked too much for this project.  
+
 ### Todo list
 
 - [ ] Readme
