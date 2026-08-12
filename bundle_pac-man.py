@@ -1,3 +1,10 @@
+import os
+import sys
+
+
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    os.chdir(sys._MEIPASS)
+
 from termcolor import cprint
 
 from src.views.vmain import VMain
@@ -13,3 +20,7 @@ def main_bundle() -> None:
     except Exception as e:
         cprint(f"Error: {e}\n", "light_red")
         exit(1)
+
+
+if __name__ == "__main__":
+    main_bundle()
