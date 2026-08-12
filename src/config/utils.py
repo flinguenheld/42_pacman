@@ -1,7 +1,8 @@
 import re
-from typing import Any
 from io import TextIOWrapper
-from json import JSONDecodeError, loads as json_loads
+from json import JSONDecodeError
+from json import loads as json_loads
+from typing import Any
 
 from src.config.config import Config
 

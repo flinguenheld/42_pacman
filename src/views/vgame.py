@@ -134,11 +134,12 @@ class VGame(arcade.View):
         forbidden = {*self.maze.floor_corners, self.player.center}
 
         for floor_sprite in self.maze.floors.sprites:
-            if floor_sprite.position not in forbidden:
-                if random.choices([True, False], weights=[70, 30])[0]:
-                    position = Vec2(*floor_sprite.position)
-                    pacgum = VEntityPacGum(self.atlas, position)
-                    self.pacgum_list.append(pacgum)
+            if (floor_sprite.position not in forbidden) and random.choices(
+                [True, False], weights=[70, 30]
+            )[0]:
+                position = Vec2(*floor_sprite.position)
+                pacgum = VEntityPacGum(self.atlas, position)
+                self.pacgum_list.append(pacgum)
 
     def _spawn_super_pacgums(self) -> None:
         """
@@ -227,7 +228,7 @@ class VGame(arcade.View):
 
     # ########################################################################
     # ############################################################ UPDATE ####
-    def on_update(self, delta_time: int | float) -> None:
+    def on_update(self, delta_time: float) -> None:
         if self.setup_done and self.process_updates and not self.defeat():
             self.maze.update(delta_time)
             self.background.update(delta_time)
@@ -392,8 +393,7 @@ class VGame(arcade.View):
                 ) / self.maze.height
 
                 zoom = min(scale_hori, scale_vert)
-                if zoom > Config.CAMERA_MAX_ZOOM:
-                    zoom = Config.CAMERA_MAX_ZOOM
+                zoom = min(zoom, Config.CAMERA_MAX_ZOOM)
 
                 self.camera.zoom = zoom
                 self.camera_hud.zoom = zoom

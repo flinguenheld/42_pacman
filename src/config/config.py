@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 from termcolor import cprint
 from typing import ClassVar, Any
 from dataclasses import dataclass
@@ -24,6 +27,10 @@ class Config:
     """
 
     _title: bool = False
+
+    highscore_folder: ClassVar[Path] = (
+        Path(sys.argv[0]).parent / "highscores"
+    ).resolve()
 
     # ################################################
     # ### Manageable variables with the config file ##

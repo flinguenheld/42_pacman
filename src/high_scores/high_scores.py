@@ -1,6 +1,6 @@
-import sys
 import json
-from pathlib import Path
+import sys
+
 from termcolor import cprint
 
 from src.config.config import Config
@@ -15,9 +15,8 @@ class HighScores:
 
     def __init__(self) -> None:
         # Force high scores in this folder to avoid file name checks
-        self.file_name = f"highscores/{Config.highscore_filename}"
-        file_path = Path(self.file_name)
-        file_path.parent.mkdir(exist_ok=True)
+        self.file_path = Config.highscore_folder / Config.highscore_filename
+        self.file_path.parent.mkdir(exist_ok=True)
 
     # ########################################################################
     # ############################################################## SAVE ####
@@ -38,7 +37,7 @@ class HighScores:
 
             # Overwrite file --
             try:
-                with open(self.file_name, "w+") as file:
+                with open(self.file_path, "w+") as file:
                     file.write(json.dumps(entries))
             except OSError:
                 cprint(
@@ -114,7 +113,7 @@ class HighScores:
         """
 
         try:
-            with open(self.file_name) as file:
+            with open(self.file_path) as file:
                 return self._check_format(json.load(file))
 
         except OSError:
