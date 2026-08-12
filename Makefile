@@ -13,6 +13,10 @@ run:
 
 build:
 	sh build_standalone_exe.sh
+
+build-run: build
+	./dist/Pac-Man
+
 clean:
 	rm -rf	.mypy_cache .venv \ __pycache__ \
 			src/__pycache__ \
@@ -27,6 +31,7 @@ clean:
 			src/sprites/__pycache__ \
 			src/utils/__pycache__ \
 			src/views/__pycache__ \
+			build dist
 
 lint:
 	${UV} run flake8 . --extend-exclude '.venv/'
@@ -36,4 +41,4 @@ lint:
 			--disallow-untyped-defs \
 			--check-untyped-defs \
 
-.PHONY: install build helix run clean lint
+.PHONY: install helix run build build-run clean lint
