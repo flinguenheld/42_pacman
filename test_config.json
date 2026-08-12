@@ -19,7 +19,7 @@
   "amount_of_levels": 10,
   "amount_of_enemies": 4,
 
-  "highscore_filename": "scores.txt",
+  "highscore_filename": "scores.json",
 
   "timer_level": 90.0,
   "floor_debug_max_numbers": 10

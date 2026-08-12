@@ -44,7 +44,7 @@ class Config:
     timer_enemy_death: ClassVar[float] = 10.0
     timer_enemy_fleeing: ClassVar[float] = 10.0
 
-    highscore_filename: ClassVar[str] = "scores.txt"
+    highscore_filename: ClassVar[str] = "scores.json"
 
     floor_debug_max_numbers: ClassVar[int] = 10
 

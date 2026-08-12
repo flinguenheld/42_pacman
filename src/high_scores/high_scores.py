@@ -15,7 +15,7 @@ class HighScores:
 
     def __init__(self) -> None:
         # Force high scores in this folder to avoid file name checks
-        self.file_name = f"high_scores/{Config.highscore_filename}"
+        self.file_name = f"highscores/{Config.highscore_filename}"
         file_path = Path(self.file_name)
         file_path.parent.mkdir(exist_ok=True)
 
@@ -40,7 +40,7 @@ class HighScores:
             try:
                 with open(self.file_name, "w+") as file:
                     file.write(json.dumps(entries))
-            except IOError:
+            except OSError:
                 cprint(
                     "Cannot save high scores.",
                     HighScores.WARNING_COLOR,
@@ -117,7 +117,7 @@ class HighScores:
             with open(self.file_name) as file:
                 return self._check_format(json.load(file))
 
-        except IOError:
+        except OSError:
             cprint(
                 "No high scores files. A new file will be created.",
                 HighScores.WARNING_COLOR,
