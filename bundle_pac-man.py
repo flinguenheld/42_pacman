@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
     os.chdir(sys._MEIPASS)
 
@@ -19,7 +18,7 @@ def main_bundle() -> None:
     # QUESTION: Should we catch all exceptions here? I feel like we should
     except Exception as e:
         cprint(f"Error: {e}\n", "light_red")
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

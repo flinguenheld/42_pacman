@@ -1,4 +1,5 @@
 import sys
+
 from termcolor import cprint
 
 from src.views.vmain import VMain
@@ -7,7 +8,6 @@ from src.config.utils import ConfigError
 
 
 def main() -> None:
-
     try:
         if len(sys.argv) != 2:
             raise ConfigError("Wrong argument.")
@@ -15,7 +15,7 @@ def main() -> None:
         arg = sys.argv[1]
         if arg in {"-h", "--help"}:
             print_usage()
-            exit()
+            sys.exit()
 
         window = VMain(config_path=arg)
         window.run()
@@ -23,7 +23,7 @@ def main() -> None:
     except Exception as e:
         cprint(f"Error: {e}\n", "light_red")
         print_usage(file=sys.stderr)
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
