@@ -1,4 +1,5 @@
 import sys
+from json import JSONDecodeError
 
 from termcolor import cprint
 
@@ -19,8 +20,7 @@ def main() -> None:
 
         window = VMain(config_path=arg)
         window.run()
-    # QUESTION: Should we catch all exceptions here? I feel like we should
-    except Exception as e:
+    except (ConfigError, FileNotFoundError, JSONDecodeError) as e:
         cprint(f"Error: {e}\n", "light_red")
         print_usage(file=sys.stderr)
         sys.exit(1)

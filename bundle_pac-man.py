@@ -1,5 +1,6 @@
 import os
 import sys
+from json import JSONDecodeError
 
 if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
     os.chdir(sys._MEIPASS)
@@ -16,7 +17,7 @@ def main_bundle() -> None:
         window = VMain(config_path)
         window.run()
     # QUESTION: Should we catch all exceptions here? I feel like we should
-    except Exception as e:
+    except (FileNotFoundError, JSONDecodeError) as e:
         cprint(f"Error: {e}\n", "light_red")
         sys.exit(1)
 

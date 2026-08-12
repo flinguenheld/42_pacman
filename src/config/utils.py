@@ -35,7 +35,7 @@ def read_json(file_name: str) -> dict[str, str | int | float] | Any:
         """Only get lines which start with " { }"""
 
         reg = re.compile("""^ *"[^"]|^ *{|^ *}""")
-        return "".join((line for line in file.readlines() if reg.match(line)))
+        return "".join(line for line in file if reg.match(line))
 
     try:
         with open(file_name, "r") as file:
