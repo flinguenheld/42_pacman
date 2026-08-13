@@ -1,6 +1,6 @@
 # Project Management
 
-To complete our project, we first created a [todo list]() with all required point in the subject.  
+To complete our project, we first created a *todo list* with all required point in the subject.  
 
 Then we followed this process:
   - Get a task
@@ -16,35 +16,35 @@ A more advanced system such a Kanban looked too much for this project.
 
 - [ ] Readme
   - [ ] Check the project management part
-  - [ ] Description
-  - [ ] Instructions
-  - [ ] Resources
-  - [ ] Configuration
-  - [ ] Highscore
-  - [ ] Maze Generation
-  - [ ] Implementation
-  - [ ] General Software Architecture
-  - [ ] Project Management
+  - [X] Description
+  - [X] Instructions
+  - [X] Resources
+  - [X] Configuration
+  - [X] Highscore
+  - [X] Maze Generation
+  - [X] Implementation
+  - [X] General Software Architecture
+  - [X] Project Management
 
-- [ ] Linter
+- [X] Linter
 
 - [X] Makefile
   - [ ] Add a build target for the package
 
 - [X] Usage: python3 pac-man.py config.json
-  - [ ] Allow only one argument (.json config file)
-  - [ ] Handle errors gracefully, no crash, no Python traceback
+  - [X] Allow only one argument (.json config file)
+  - [X] Handle errors gracefully, no crash, no Python traceback
 
-- [ ] JSON Config file
+- [X] JSON Config file
   - [X] Handle comments
   - [X] Fallback to safe defaults in case of errors or invalid keys
-  - [ ] Update README.md to explain configuration in details
+  - [X] Update README.md to explain configuration in details
 
-- [ ] Views
-  - [ ] Menus
+- [X] Views
+  - [X] Menus
     - [X] Main menu
       - [X] Display highscore
-      - [ ] Instructions
+      - [X] Instructions
       - [X] Exit
 
   - [X] Game view (HUD)
@@ -96,8 +96,8 @@ A more advanced system such a Kanban looked too much for this project.
   - [X] Allow players to enter their name and register new high score
   - [X] Do not update previous high score of the same name, add new entry
 
-- [ ] Game
-  - [ ] Player
+- [X] Game
+  - [X] Player
     - [X] Create texture
     - [X] Player spawns in the middle
     - [X] Move with arrow keys or WASD
@@ -106,18 +106,18 @@ A more advanced system such a Kanban looked too much for this project.
       - [X] Player respawns in the middle
       - [X] For (re)spawning, check if the case is a valid position, if it isn't, find the first valid case to spawn on
 
-  - [ ] Pacgum
+  - [X] Pacgum
     - [X] Create texture
     - [X] Spawn in most corridors (3 out of 4 cases?)
     - [X] Manage counter
 
-  - [ ] Super-Pacgum
+  - [X] Super-Pacgum
     - [X] Create texture
     - [X] 1 per corner
     - [X] Makes ghosts edible for a short time
     - [X] Eating an edible ghost increases the score by Z points
 
-  - [ ] Ghost
+  - [X] Ghost
     - [X] Create algo to move them
       - [X] Different variants and behaviors
         - [X] Johnny: Chase the player
@@ -135,26 +135,26 @@ A more advanced system such a Kanban looked too much for this project.
   - [ ] Cheat mode
     - [ ] Features
       - [X] Invincibility (no life lost; ghosts cannot eat the player)
-      - [ ] Level skip (immediately win the current level)
+      - [X] Level skip (immediately win the current level)
       - [ ] Ghost freeze (ghosts stop moving)
       - [X] Extra lives (add extra lives to the player)
       - [ ] Increased speed (player moves faster)
 
   - [ ] Game progression
-    - [ ] Fixed seed for first level
-    - [ ] Random seed for other levels
-    - [ ] At least 10 levels
-    - [ ] Time limit per level
+    - [X] Fixed seed for first level
+    - [X] Random seed for other levels
+    - [X] At least 10 levels
+    - [X] Time limit per level
       - [X] Display time left
       - [ ] Time ends
         - [ ] Kill Pacman ?
         - [ ] Restart Level ?
         - [ ] Game over ?
-    - [ ] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
+    - [X] Main Menu > start game > Win or Lose > Enter name for highscore > Back to Main Menu
 
-  - [] Entity system
-    - [X] VEntity ABC, common API for entities
+  - [X] Entity system
+    - [X] Common API for entities
     - [X] VEntityPlayer
-    - [ ] VEntityEnemyCommon
-    - [ ] VEntityPacgum
-    - [ ] VEntitySuperPacgum
+    - [X] VEntityEnemyCommon
+    - [X] VEntityPacgum
+    - [X] VEntitySuperPacgum

@@ -13,8 +13,8 @@
   ''' Comment Python '''
 
   "first_level_seed": 42,
-  "first_level_width": 11,
-  "first_level_height": 11,
+  "first_level_width": 12,
+  "first_level_height": 12,
 
   "amount_of_levels": 10,
   "amount_of_enemies": 4,
