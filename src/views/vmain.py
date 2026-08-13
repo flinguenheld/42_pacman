@@ -26,6 +26,7 @@ class VMain(arcade.Window):
             "Pac-man",
             resizable=True,
         )
+        self.set_minimum_size(200, 100)
 
         apply_config(config_path)
 
