@@ -1,10 +1,17 @@
 import re
+import sys
+
+from typing import Any
+from pathlib import Path
 from io import TextIOWrapper
 from json import JSONDecodeError
 from json import loads as json_loads
-from typing import Any
 
 from src.config.config import Config
+
+# Needed to read config file from
+# the main module/standalone executable's folder
+ROOT_DIR = Path(sys.argv[0]).parent.resolve()
 
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▀▀░█▀█░█▀█░█▀▀░▀█▀░█▀▀░░░█▀▀░█▀▄░█▀▄░█▀█░█▀▄░░
@@ -31,6 +38,7 @@ def read_json(file_name: str) -> dict[str, str | int | float] | Any:
        - FileNotFoundError
        - JSONDecodeError
     """
+    file_path = ROOT_DIR / file_name
 
     def no_comment(file: TextIOWrapper) -> str:
         """Only get lines which start with " { }"""
@@ -39,11 +47,11 @@ def read_json(file_name: str) -> dict[str, str | int | float] | Any:
         return "".join(line for line in file if reg.match(line))
 
     try:
-        with open(file_name, "r") as file:
+        with open(file_path, "r") as file:
             return json_loads(no_comment(file))
 
     except FileNotFoundError:
-        raise ConfigError(f"File '{file_name}' not found.")
+        raise ConfigError(f"File '{file_path}' not found.")
 
     except JSONDecodeError as e:
-        raise ConfigError(f"JSON '{file_name}' -> line {e.lineno}: '{e.msg}'.")
+        raise ConfigError(f"JSON '{file_path}' -> line {e.lineno}: '{e.msg}'.")

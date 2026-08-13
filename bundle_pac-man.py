@@ -13,12 +13,11 @@ if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
 
 
 def main_bundle() -> None:
-    config_path = "test_config.json"
+    config_path = "config.json"
 
     try:
         window = VMain(config_path)
         window.run()
-    # QUESTION: Should we catch all exceptions here? I feel like we should
     except (FileNotFoundError, JSONDecodeError) as e:
         cprint(f"Error: {e}\n", "light_red")
         sys.exit(1)

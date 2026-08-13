@@ -1,6 +1,7 @@
 NAME=pac-man.py
 UV=UV_SKIP_WHEEL_FILENAME_CHECK=1 uv
 PYINSTALLER_BUILD_NAME=Pac-Man
+CONFIG_JSON=config.json
 
 install:
 	${UV} sync
@@ -9,14 +10,15 @@ helix:
 	${UV} run hx .
 
 run:
-	${UV} run python ${NAME} test_config.json
+	${UV} run python ${NAME} ${CONFIG_JSON}
 
 debug:
-	${UV} run python -m pdb ${NAME} test_config.json
+	${UV} run python -m pdb ${NAME} ${CONFIG_JSON}
 
 build:
-	rm -rf dist/${PYINSTALLER_BUILD_NAME} build/${PYINSTALLER_BUILD_NAME}
-	${UV} run pyinstaller -F -n ${PYINSTALLER_BUILD_NAME} --add-data=test_config.json:. --add-data=textures:textures bundle_pac-man.py
+	rm -rf dist
+	${UV} run pyinstaller -F -n ${PYINSTALLER_BUILD_NAME} --add-data=${CONFIG_JSON}:. --add-data=textures:textures bundle_pac-man.py
+	cp ${CONFIG_JSON} dist/
 
 build-run: build
 	./dist/${PYINSTALLER_BUILD_NAME}
