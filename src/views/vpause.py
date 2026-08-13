@@ -1,3 +1,5 @@
+from arcade import Vec2
+
 from src.gui.gmenu import GMenu
 from src.gui.gframe import GFrame
 from src.data.enums import VNames
@@ -17,6 +19,7 @@ class VPause(GWindow):
             title=GTitlePause(atlas),
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=15,
                 nb_cols=24,
                 bevels=True,

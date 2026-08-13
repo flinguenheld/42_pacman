@@ -21,7 +21,7 @@ class GButton(GLabel):
         atlas: VAtlas,
         frame: GFrame,
         callback: Callback[Any],
-        offset_from_center_frame: Vec2 | None = None,
+        offset_from_center_frame: Vec2,
         font_size_factor: float = 1.7,
         text: str = "",
         color: Color | None = None,

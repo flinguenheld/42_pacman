@@ -190,7 +190,7 @@ class VGame(arcade.View):
         )
         # Convert the maze to a Maze instance and build the maze and its graph
         self.maze = Maze(self.atlas, maze_gen.raw_maze)
-        self.maze.build(include_graph=True)
+        self.maze.build(include_graph=True, sprite_offset=Vec2(0, 0))
 
     # ########################################################################
     # ############################################################## DRAW ####
@@ -338,7 +338,7 @@ class VGame(arcade.View):
                     if not self.maze.graph_costs and self.setup_done:
                         self.setup_done = False
                         self.atlas.next_style()
-                        self.maze.build_sprites()
+                        self.maze.build_sprites(offset=Vec2(0, 0))
                         self.setup_background_and_hud()
                         self.setup_done = True
                     else:

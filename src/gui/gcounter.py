@@ -27,7 +27,7 @@ class GCounter(GButton):
         callback: GButton.Callback[GCounter],
         text: str,
         color: Color,
-        offset_from_center_frame: Vec2 | None = None,
+        offset_from_center_frame: Vec2,
         font_size_factor: float = 1.7,
         count: int = 0,
         min: int = 0,

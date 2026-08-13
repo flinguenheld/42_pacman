@@ -10,8 +10,6 @@ from src.sprites.sfloor import SFloor
 from src.sprites.vatlas import VAtlas
 from src.sprites.sfloor_debug import SFloorDebug
 
-VEC2_ZERO = Vec2(0, 0)
-
 
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░█▀█░▀▀█░█▀▀░░
 # ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░█░█▀█░▄▀░░█▀▀░░
@@ -61,7 +59,7 @@ class Maze:
     # ############################################################# BUILD ####
     def build(
         self,
-        sprite_offset: Vec2 = VEC2_ZERO,
+        sprite_offset: Vec2,
         include_graph: bool = False,
     ) -> None:
         """
@@ -80,7 +78,7 @@ class Maze:
 
     # ########################################################################
     # ##################################################### BUILD SPRITES ####
-    def build_sprites(self, offset: Vec2 = VEC2_ZERO) -> None:
+    def build_sprites(self, offset: Vec2) -> None:
         wall_points: set[Vec2] = set()
         floor_points: set[Vec2] = set()
 

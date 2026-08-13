@@ -18,18 +18,13 @@ class GFrame:
     def __init__(
         self,
         atlas: VAtlas,
+        bot_left: Vec2,
         nb_cols: int = 10,
         nb_rows: int = 10,
-        bot_left: Vec2 | None = None,
         separators: list[int] | None = None,
         bevels: bool = False,
     ) -> None:
-        if separators is None:
-            separators = []
-        if bot_left is None:
-            bot_left = Vec2(0, 0)
-
-        self.separators = separators
+        self.separators = separators if separators else []
         raw_maze = self.build_raw_maze(nb_rows, nb_cols, bevels)
         raw_maze = self.randomise_raw_maze(raw_maze)
         self.maze = Maze(atlas, raw_maze, floor_as_frame=True)

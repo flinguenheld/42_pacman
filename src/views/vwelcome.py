@@ -22,6 +22,7 @@ class VWelcome(GWindow):
             title=GTitlePacman(atlas),
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=29,
                 nb_cols=35,
                 separators=[s for s in range(9, 27)],

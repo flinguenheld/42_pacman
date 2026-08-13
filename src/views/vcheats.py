@@ -1,3 +1,5 @@
+from arcade import Vec2
+
 from src.gui.gmenu import GMenu
 from src.data.enums import VNames
 from src.gui.gframe import GFrame
@@ -20,6 +22,7 @@ class VCheats(GWindow):
             title=GTitleCheats(atlas),
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=20,
                 nb_cols=30,
                 bevels=True,

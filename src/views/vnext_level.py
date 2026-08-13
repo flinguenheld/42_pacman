@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 import arcade
+from arcade import Vec2
 
 from src.data.enums import VNames
 from src.gui.gframe import GFrame
@@ -38,6 +39,7 @@ class VNextLevel(GWindow):
             title=GTitle(atlas, self.raw_title),
             frame=GFrame(
                 atlas=atlas,
+                bot_left=Vec2(0, 0),
                 nb_rows=1,
                 nb_cols=1,
             ),
